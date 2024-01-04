@@ -57,18 +57,16 @@ export class DiscardChanges extends React.Component<
 
   private getOkButtonLabel() {
     if (this.props.discardingAllChanges) {
-      return __DARWIN__ ? 'Discard All Changes' : 'Discard all changes'
+      return __DARWIN__ ? '放弃所有改动' : '放弃所有改动'
     }
-    return __DARWIN__ ? 'Discard Changes' : 'Discard changes'
+    return __DARWIN__ ? '放弃改动' : '放弃改动'
   }
 
   private getDialogTitle() {
     if (this.props.discardingAllChanges) {
-      return __DARWIN__
-        ? 'Confirm Discard All Changes'
-        : 'Confirm discard all changes'
+      return __DARWIN__ ? '放弃所有改动' : '放弃所有改动'
     }
-    return __DARWIN__ ? 'Confirm Discard Changes' : 'Confirm discard changes'
+    return __DARWIN__ ? '放弃改动' : '放弃改动'
   }
 
   public render() {
@@ -90,8 +88,7 @@ export class DiscardChanges extends React.Component<
         <DialogContent>
           {this.renderFileList()}
           <p id="discard-changes-confirmation-message">
-            Changes can be restored by retrieving them from the {TrashNameLabel}
-            .
+            改动可以从{TrashNameLabel}恢复。
           </p>
           {this.renderConfirmDiscardChanges()}
         </DialogContent>
@@ -112,7 +109,7 @@ export class DiscardChanges extends React.Component<
     if (this.props.showDiscardChangesSetting) {
       return (
         <Checkbox
-          label="Do not show this message again"
+          label="不再显示"
           value={
             this.state.confirmDiscardChanges
               ? CheckboxValue.Off
@@ -133,14 +130,13 @@ export class DiscardChanges extends React.Component<
     if (this.props.files.length > MaxFilesToList) {
       return (
         <p id="discard-changes-confirmation-file-list">
-          Are you sure you want to discard all {this.props.files.length} changed
-          files?
+          您确定要放弃对全部{this.props.files.length}个文件的改动吗？
         </p>
       )
     } else {
       return (
         <div id="discard-changes-confirmation-file-list">
-          <p>Are you sure you want to discard all changes to:</p>
+          <p>您确定要放弃对以下文件的改动吗：</p>
           <div className="file-list">
             <ul>
               {this.props.files.map(p => (

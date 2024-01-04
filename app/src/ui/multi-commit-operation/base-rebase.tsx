@@ -49,7 +49,7 @@ export abstract class BaseRebase extends BaseMultiCommitOperation {
     const thierBranch =
       this.rebaseKind === MultiCommitOperationKind.Rebase
         ? baseBranch || ''
-        : `${this.rebaseKind.toLowerCase()} commit`
+        : `${this.rebaseKind.toLowerCase()}基础提交`
 
     await dispatcher.processMultiCommitOperationRebaseResult(
       this.rebaseKind,

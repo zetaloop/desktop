@@ -123,7 +123,7 @@ export class UserAutocompletionProvider
     ) : (
       <div className="user unknown" key={item.username}>
         <span className="username">{item.username}</span>
-        <span className="description">Search for user</span>
+        <span className="description">查找该用户</span>
       </div>
     )
   }

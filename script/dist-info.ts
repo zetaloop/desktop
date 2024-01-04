@@ -106,8 +106,8 @@ export function getBundleSizes() {
     mainBundleSize: Fs.statSync(Path.join(outPath, 'main.js')).size,
   }
 }
-export const isPublishable = () =>
-  ['production', 'beta', 'test'].includes(getChannel())
+export const isPublishable = () => false // Desktop-CN: I dont have a key, so never sign.
+// ['production', 'beta', 'test'].includes(getChannel())
 
 export const getChannel = () =>
   process.env.RELEASE_CHANNEL ?? process.env.NODE_ENV ?? 'development'
@@ -139,14 +139,24 @@ export function getUpdatesURL() {
   // original URL without architecture in it (which will still work for
   // compatibility reasons) in case anything goes wrong until we have everything
   // sorted out.
-  const architecturePath = getDistArchitecture() === 'arm64' ? 'arm64/' : ''
-  return `https://central.github.com/api/deployments/desktop/desktop/${architecturePath}latest?version=${version}&env=${getChannel()}`
+  // const architecturePath = getDistArchitecture() === 'arm64' ? 'arm64/' : ''
+  // return `https://central.github.com/api/deployments/desktop/desktop/${architecturePath}latest?version=${version}&env=${getChannel()}`
+  if (process.platform === 'win32') {
+    return `https://zetaloop.github.io/desktop-metadata/win32-${getDistArchitecture()}-${getChannel()}`
+    // example: https://zetaloop.github.io/desktop-metadata/win32-x64-production/RELEASES
+  } else if (process.platform === 'darwin') {
+    return `https://zetaloop.github.io/desktop-metadata/darwin-${getDistArchitecture()}-${getChannel()}/releases.json`
+    // example: https://zetaloop.github.io/desktop-metadata/darwin-arm64-production/releases.json
+  } else {
+    throw new Error(`No updates available for platform: ${process.platform}`)
+  }
 }
 
 export function shouldMakeDelta() {
   // Only production and beta channels include deltas. Test releases aren't
   // necessarily sequential so deltas wouldn't make sense.
-  return ['production', 'beta'].includes(getChannel())
+  // return ['production', 'beta'].includes(getChannel())
+  return false // Desktop-CN: Prevent building error.
 }
 
 export function getIconFileName(): string {
