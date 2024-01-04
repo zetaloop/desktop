@@ -13,7 +13,7 @@ export class NewImageDiff extends React.Component<INewImageDiffProps, {}> {
     return (
       <div className="panel image" id="diff">
         <div className="image-diff-current">
-          <div className="image-diff-header">Added</div>
+          <div className="image-diff-header">新增</div>
           <ImageContainer image={this.props.current} />
         </div>
       </div>

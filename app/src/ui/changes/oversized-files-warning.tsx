@@ -9,7 +9,8 @@ import { DefaultCommitMessage } from '../../models/commit-message'
 import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
 
 const GitLFSWebsiteURL =
-  'https://help.github.com/articles/versioning-large-files/'
+  // 'https://help.github.com/articles/versioning-large-files/'
+  'https://docs.github.com/zh/repositories/working-with-files/managing-large-files' // cn, 注意地址更新
 
 interface IOversizedFilesProps {
   readonly oversizedFiles: ReadonlyArray<string>
@@ -29,31 +30,30 @@ export class OversizedFiles extends React.Component<IOversizedFilesProps> {
     return (
       <Dialog
         id="oversized-files"
-        title={__DARWIN__ ? 'Files Too Large' : 'Files too large'}
+        title={__DARWIN__ ? '文件过大' : '文件过大'}
         onSubmit={this.onSubmit}
         onDismissed={this.props.onDismissed}
         type="warning"
       >
         <DialogContent>
           <p>
-            The following files are over 100MB.{' '}
+            以下文件大小超过 100MB。
             <strong>
-              If you commit these files, you will no longer be able to push this
-              repository to GitHub.com.
+              如果您提交这些文件，那就没办法推送到 GitHub.com 了。
             </strong>
           </p>
           {this.renderFileList()}
           <p className="recommendation">
-            We recommend you avoid committing these files or use{' '}
-            <LinkButton uri={GitLFSWebsiteURL}>Git LFS</LinkButton> to store
-            large files on GitHub.
+            推荐不要提交这么大的文件，或者可以使用{' '}
+            <LinkButton uri={GitLFSWebsiteURL}>Git LFS</LinkButton> 来在 GitHub
+            上储存大文件。
           </p>
         </DialogContent>
 
         <DialogFooter>
           <OkCancelButtonGroup
             destructive={true}
-            okButtonText={__DARWIN__ ? 'Commit Anyway' : 'Commit anyway'}
+            okButtonText={__DARWIN__ ? '仍要提交' : '仍要提交'}
           />
         </DialogFooter>
       </Dialog>

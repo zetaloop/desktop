@@ -16,21 +16,20 @@ interface IConfigureGitProps {
 export class ConfigureGit extends React.Component<IConfigureGitProps, {}> {
   public render() {
     return (
-      <section id="configure-git" aria-label="Configure Git">
-        <h1 className="welcome-title">Configure Git</h1>
+      <section id="configure-git" aria-label="配置 Git">
+        <h1 className="welcome-title">配置 Git</h1>
         <p className="welcome-text">
-          This is used to identify the commits you create. Anyone will be able
-          to see this information if you publish commits.
+          用于标记您的提交。如果您发布提交，任何人都可以看到这个信息。
         </p>
 
         <ConfigureGitUser
           accounts={this.props.accounts}
           onSave={this.props.done}
-          saveLabel="Finish"
+          saveLabel="完成"
           globalUserName={this.props.globalUserName}
           globalUserEmail={this.props.globalUserEmail}
         >
-          <Button onClick={this.cancel}>Cancel</Button>
+          <Button onClick={this.cancel}>取消</Button>
         </ConfigureGitUser>
       </section>
     )
