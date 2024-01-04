@@ -2,10 +2,10 @@ import { Branch } from './branch'
 import { assertNever } from '../lib/fatal-error'
 
 export enum TipState {
-  Unknown = 'Unknown',
-  Unborn = 'Unborn',
-  Detached = 'Detached',
-  Valid = 'Valid',
+  Unknown = '未知',
+  Unborn = '未初始化',
+  Detached = '游离',
+  Valid = '有效',
 }
 
 export interface IUnknownRepository {

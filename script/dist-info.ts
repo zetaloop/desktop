@@ -139,8 +139,17 @@ export function getUpdatesURL() {
   // original URL without architecture in it (which will still work for
   // compatibility reasons) in case anything goes wrong until we have everything
   // sorted out.
-  const architecturePath = getDistArchitecture() === 'arm64' ? 'arm64/' : ''
-  return `https://central.github.com/api/deployments/desktop/desktop/${architecturePath}latest?version=${version}&env=${getChannel()}`
+  // const architecturePath = getDistArchitecture() === 'arm64' ? 'arm64/' : ''
+  // return `https://central.github.com/api/deployments/desktop/desktop/${architecturePath}latest?version=${version}&env=${getChannel()}`
+  if (process.platform === 'win32') {
+    return `https://zetaloop.github.io/desktop-metadata/win32-${getDistArchitecture()}-${getChannel()}`
+    // example: https://zetaloop.github.io/desktop-metadata/win32-x64-production/RELEASES
+  } else if (process.platform === 'darwin') {
+    return `https://zetaloop.github.io/desktop-metadata/darwin-${getDistArchitecture()}-${getChannel()}/releases.json`
+    // example: https://zetaloop.github.io/desktop-metadata/darwin-arm64-production/releases.json
+  } else {
+    throw new Error(`No updates available for platform: ${process.platform}`)
+  }
 }
 
 export function shouldMakeDelta() {

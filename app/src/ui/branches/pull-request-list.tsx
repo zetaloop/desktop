@@ -130,11 +130,11 @@ export class PullRequestList extends React.Component<
     const loadingComplete =
       this.props.isLoadingPullRequests && !nextProps.isLoadingPullRequests
     const numPullRequests = this.props.pullRequests.length
-    const plural = numPullRequests === 1 ? '' : 's'
+    const plural = numPullRequests === 1 ? '' : ''
     const screenReaderStateMessage = loadingStarted
-      ? 'Hang Tight. Loading pull requests as fast as I can!'
+      ? '请稍候，正在以最快速度加载拉取请求啦！'
       : loadingComplete
-      ? `${numPullRequests} pull request${plural} found`
+      ? `已找到 ${numPullRequests} 个拉取请求${plural}`
       : null
 
     this.setState({
@@ -308,7 +308,7 @@ export class PullRequestList extends React.Component<
   private renderListHeader = () => {
     return (
       <div className="filter-list-group-header">
-        Pull requests in {this.getRepositoryName()}
+        {this.getRepositoryName()} 的拉取请求
       </div>
     )
   }
@@ -318,7 +318,7 @@ export class PullRequestList extends React.Component<
   }
 
   private renderPostFilter = () => {
-    const tooltip = 'Refresh the list of pull requests'
+    const tooltip = '刷新拉取请求列表'
 
     return (
       <Button
@@ -347,7 +347,7 @@ export class PullRequestList extends React.Component<
 
 function getSubtitle(pr: PullRequest) {
   const timeAgo = formatRelative(pr.created.getTime() - Date.now())
-  return `#${pr.pullRequestNumber} opened ${timeAgo} by ${pr.author}`
+  return `#${pr.pullRequestNumber} 由 ${pr.author} 开启于${timeAgo}`
 }
 
 function createListItems(

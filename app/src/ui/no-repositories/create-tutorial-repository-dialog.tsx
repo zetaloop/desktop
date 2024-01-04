@@ -73,7 +73,7 @@ export class CreateTutorialRepositoryDialog extends React.Component<ICreateTutor
     return (
       <Dialog
         id="create-tutorial-repository-dialog"
-        title="Start tutorial"
+        title="开始教程"
         onDismissed={this.props.onDismissed}
         onSubmit={this.onSubmit}
         dismissDisabled={loading}
@@ -82,18 +82,17 @@ export class CreateTutorialRepositoryDialog extends React.Component<ICreateTutor
       >
         <DialogContent>
           <div>
-            This will create a repository on your local machine, and push it to
-            your account <Ref>@{this.props.account.login}</Ref> on{' '}
+            现在，我们将在这台电脑上创建一个本地仓库，然后推送到你的{' '}
             <LinkButton uri={getHTMLURL(account.endpoint)}>
               {friendlyEndpointName(account)}
-            </LinkButton>
-            . This repository will only be visible to you, and not visible
-            publicly.
+            </LinkButton>{' '}
+            账号 <Ref>@{this.props.account.login}</Ref>{' '}
+            上。这个仓库只有你能看见，不会公开。
           </div>
           {this.renderProgress()}
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup okButtonText="Continue" />
+          <OkCancelButtonGroup okButtonText="继续" />
         </DialogFooter>
       </Dialog>
     )

@@ -33,7 +33,7 @@ export class ContinueRebase extends React.Component<IContinueRebaseProps, {}> {
     const { manualResolutions } = this.props.rebaseConflictState
 
     let canCommit = true
-    let tooltip = 'Continue rebase'
+    let tooltip = '继续重构'
 
     const conflictedFilesCount = getConflictedFiles(
       this.props.workingDirectory,
@@ -41,7 +41,7 @@ export class ContinueRebase extends React.Component<IContinueRebaseProps, {}> {
     ).length
 
     if (conflictedFilesCount > 0) {
-      tooltip = 'Resolve all conflicts before continuing'
+      tooltip = '解决所有冲突后才能继续'
       canCommit = false
     }
 
@@ -65,7 +65,7 @@ export class ContinueRebase extends React.Component<IContinueRebaseProps, {}> {
           tooltip={tooltip}
         >
           {loading}
-          <span>{loading !== undefined ? 'Rebasing' : 'Continue rebase'}</span>
+          <span>{loading !== undefined ? '正在重构' : '继续重构'}</span>
         </Button>
 
         {warnAboutUntrackedFiles}
