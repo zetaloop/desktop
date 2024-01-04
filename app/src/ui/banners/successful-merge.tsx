@@ -13,21 +13,21 @@ export function SuccessfulMerge({
   const message =
     theirBranch !== undefined ? (
       <span>
-        {'Successfully merged '}
+        {'成功将 '}
         <strong>{theirBranch}</strong>
-        {' into '}
+        {' 合并到 '}
         <strong>{ourBranch}</strong>
       </span>
     ) : (
       <span>
-        {'Successfully merged into '}
+        {'成功合并到 '}
         <strong>{ourBranch}</strong>
       </span>
     )
 
   return (
     <SuccessBanner timeout={5000} onDismissed={onDismissed}>
-      <div className="banner-message">{message}</div>
+      <div className="banner-message">{message}。</div>
     </SuccessBanner>
   )
 }
