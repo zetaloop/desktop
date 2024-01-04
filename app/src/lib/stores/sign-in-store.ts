@@ -268,9 +268,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
       currentState?.kind !== SignInStep.ExistingAccountWarning
     ) {
       const stepText = currentState ? currentState.kind : 'null'
-      return fatalError(
-        `Sign in step '${stepText}' not compatible with browser authentication`
-      )
+      return fatalError(`登录步骤 '${stepText}' 与浏览器认证不兼容`)
     }
 
     this.setState({ ...currentState, loading: true })
@@ -355,9 +353,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
       const account = await fetchUser(endpoint, token)
       this.state.oauthState.onAuthCompleted(account)
     } else {
-      this.state.oauthState.onAuthError(
-        new Error('Failed retrieving authenticated user')
-      )
+      this.state.oauthState.onAuthError(new Error('无法获取已认证用户信息'))
     }
   }
 
@@ -402,9 +398,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
       currentState?.kind !== SignInStep.ExistingAccountWarning
     ) {
       const stepText = currentState ? currentState.kind : 'null'
-      return fatalError(
-        `Sign in step '${stepText}' not compatible with endpoint entry`
-      )
+      return fatalError(`登录步骤 '${stepText}' 与接入点入口不兼容`)
     }
 
     /**
@@ -425,11 +419,11 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
       let error = e
       if (e.name === InvalidURLErrorName) {
         error = new Error(
-          `The GitHub Enterprise instance address doesn't appear to be a valid URL. We're expecting something like https://github.example.com.`
+          `该 GitHub 企业版实例地址不是一个有效的 URL。请填入一个类似于 https://github.example.com 的地址。`
         )
       } else if (e.name === InvalidProtocolErrorName) {
         error = new Error(
-          'Unsupported protocol. Only https is supported when authenticating with GitHub Enterprise instances.'
+          '不支持该协议。仅支持通过 https 协议认证 GitHub 企业版实例。'
         )
       }
 
