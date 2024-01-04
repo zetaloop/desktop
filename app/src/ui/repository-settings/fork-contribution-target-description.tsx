@@ -18,23 +18,19 @@ export function ForkSettingsDescription(props: IForkSettingsDescription) {
   return (
     <ul className="fork-settings-description">
       <li>
-        Pull requests targeting <strong>{targetRepository.fullName}</strong>{' '}
-        will be shown in the pull request list.
+        显示 <strong>{targetRepository.fullName}</strong> 的拉取请求。
       </li>
       <li>
-        Issues will be created in <strong>{targetRepository.fullName}</strong>.
+        创建 <strong>{targetRepository.fullName}</strong> 的议题。
       </li>
       <li>
-        "View on GitHub" will open <strong>{targetRepository.fullName}</strong>{' '}
-        in the browser.
+        打开 <strong>{targetRepository.fullName}</strong> 的 GitHub 地址。
       </li>
       <li>
-        New branches will be based on{' '}
-        <strong>{targetRepository.fullName}</strong>'s default branch.
+        基于 <strong>{targetRepository.fullName}</strong> 的默认分支来新建分支。
       </li>
       <li>
-        Autocompletion of user and issues will be based on{' '}
-        <strong>{targetRepository.fullName}</strong>.
+        使用 <strong>{targetRepository.fullName}</strong> 的用户和议题信息。
       </li>
     </ul>
   )

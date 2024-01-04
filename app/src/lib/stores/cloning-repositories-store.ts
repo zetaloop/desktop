@@ -25,7 +25,7 @@ export class CloningRepositoriesStore extends BaseStore {
     const repository = new CloningRepository(path, url)
     this._repositories.push(repository)
 
-    const title = `Cloning into ${path}`
+    const title = `正在克隆到 ${path}`
 
     this.stateByID.set(repository.id, { kind: 'clone', title, value: 0 })
     this.emitUpdate()

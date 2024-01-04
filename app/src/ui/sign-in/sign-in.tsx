@@ -28,17 +28,14 @@ interface ISignInState {
   readonly endpoint: string
 }
 
-const SignInWithBrowserTitle = __DARWIN__
-  ? 'Sign in Using Your Browser'
-  : 'Sign in using your browser'
+const SignInWithBrowserTitle = __DARWIN__ ? '通过浏览器登录' : '通过浏览器登录'
 
-const DefaultTitle = 'Sign in'
+const DefaultTitle = '登录'
 
 const browserSignInInfoContent = (
   <p>
-    Your browser will redirect you back to GitHub Desktop once you've signed in.
-    If your browser asks for your permission to launch GitHub Desktop, please
-    allow it.
+    登录完成后，浏览器会跳转回到 GitHub Desktop。如果浏览器询问是否允许打开
+    GitHub Desktop，请选择允许。
   </p>
 )
 
@@ -120,14 +117,12 @@ export class SignIn extends React.Component<ISignInProps, ISignInState> {
 
     let primaryButtonText: string
     const stepKind = state.kind
-    const continueWithBrowserLabel = __DARWIN__
-      ? 'Continue With Browser'
-      : 'Continue with browser'
+    const continueWithBrowserLabel = __DARWIN__ ? '打开浏览器' : '打开浏览器'
 
     switch (state.kind) {
       case SignInStep.EndpointEntry:
         disableSubmit = this.state.endpoint.length === 0
-        primaryButtonText = 'Continue'
+        primaryButtonText = '继续'
         break
       case SignInStep.ExistingAccountWarning:
         primaryButtonText = continueWithBrowserLabel
@@ -154,10 +149,9 @@ export class SignIn extends React.Component<ISignInProps, ISignInState> {
     return (
       <DialogContent>
         <p className="existing-account-warning">
-          You're already signed in to{' '}
-          <Ref>{new URL(getHTMLURL(state.endpoint)).host}</Ref> with the account{' '}
-          <Ref>{state.existingAccount.login}</Ref>. If you continue, you will
-          first be signed out.
+          您已登录 <Ref>{new URL(getHTMLURL(state.endpoint)).host}</Ref> 上的{' '}
+          <Ref>{state.existingAccount.login}</Ref>{' '}
+          账号。如果再继续登录的话，当前账号会先退出。
         </p>
         {browserSignInInfoContent}
       </DialogContent>
@@ -169,7 +163,7 @@ export class SignIn extends React.Component<ISignInProps, ISignInState> {
       <DialogContent>
         <Row>
           <TextBox
-            label="Enterprise address"
+            label="企业版网址"
             value={this.state.endpoint}
             onValueChanged={this.onEndpointChanged}
             placeholder="https://github.example.com"
@@ -183,8 +177,7 @@ export class SignIn extends React.Component<ISignInProps, ISignInState> {
     const credentialHelperInfo =
       this.props.isCredentialHelperSignIn && this.props.credentialHelperUrl ? (
         <p>
-          Git requesting credentials to access{' '}
-          <Ref>{this.props.credentialHelperUrl}</Ref>.
+          Git 请求使用凭据来访问 <Ref>{this.props.credentialHelperUrl}</Ref>。
         </p>
       ) : undefined
 

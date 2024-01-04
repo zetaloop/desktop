@@ -147,15 +147,15 @@ export class CommitMessageAvatar extends React.Component<
     let ariaLabel = ''
     switch (warningType) {
       case 'none':
-        ariaLabel = 'View commit author information'
+        ariaLabel = '查看提交作者信息'
         break
 
       case 'misattribution':
-        ariaLabel = 'Commit may be misattributed. View warning.'
+        ariaLabel = '该提交可能归属错误，点击查看警告。'
         break
 
       case 'disallowedEmail':
-        ariaLabel = 'Email address is disallowed. View warning.'
+        ariaLabel = '邮箱地址不被允许，点击查看警告。'
         break
     }
 
@@ -230,30 +230,27 @@ export class CommitMessageAvatar extends React.Component<
     const { user } = this.props
     const { isGitConfigLocal } = this.state
 
-    const location = isGitConfigLocal ? 'local' : 'global'
-    const locationDesc = isGitConfigLocal ? 'for your repository' : ''
-    const settingsName = __DARWIN__ ? 'settings' : 'options'
-    const settings = isGitConfigLocal
-      ? 'repository settings'
-      : `git ${settingsName}`
-    const buttonText = __DARWIN__ ? 'Open Git Settings' : 'Open git settings'
+    const location = isGitConfigLocal ? '本地' : '全局'
+    const locationDesc = isGitConfigLocal ? '为您的仓库' : ''
+    const settingsName = __DARWIN__ ? '设置' : '设置'
+    const settings = isGitConfigLocal ? '仓库设置' : ` Git ${settingsName}`
+    const buttonText = __DARWIN__ ? '打开 Git 设置' : '打开 Git 设置'
 
     return (
       <>
-        <p>{user && user.name && `Email: ${user.email}`}</p>
+        <p>{user && user.name && `邮箱：${user.email}`}</p>
 
         <p>
-          You can update your {location} git configuration {locationDesc} in
-          your {settings}.
+          您可以在{settings}中{locationDesc}更新您的{location} Git 信息。
         </p>
 
         {!isGitConfigLocal && (
           <p className="secondary-text">
-            You can also set an email local to this repository from the{' '}
+            您也可以在{' '}
             <LinkButton onClick={this.onRepositorySettingsClick}>
-              repository settings
-            </LinkButton>
-            .
+              仓库设置
+            </LinkButton>{' '}
+            中单独设置在该仓库中使用的邮箱。
           </p>
         )}
         <Row className="button-row">
@@ -270,12 +267,12 @@ export class CommitMessageAvatar extends React.Component<
   private renderWarningPopover() {
     const { warningType, emailRuleFailures } = this.props
 
-    const updateEmailTitle = __DARWIN__ ? 'Update Email' : 'Update email'
+    const updateEmailTitle = __DARWIN__ ? '更新全局邮箱' : '更新全局邮箱'
 
     const sharedHeader = (
       <>
-        The email in your global Git config (
-        <span className="git-email">{this.props.email}</span>)
+        当前 Git 信息中的邮箱（
+        <span className="git-email">{this.props.email}</span>）
       </>
     )
 
@@ -286,7 +283,7 @@ export class CommitMessageAvatar extends React.Component<
         {hasEmails && (
           <Row>
             <Select
-              label="Your Account Emails"
+              label="选择账号邮箱"
               value={this.state.accountEmail}
               onChange={this.onSelectedGitHubEmailChange}
             >
@@ -300,17 +297,16 @@ export class CommitMessageAvatar extends React.Component<
         )}
         <Row>
           <div className="secondary-text">
-            You can{hasEmails ? ' also' : ''} choose an email local to this
-            repository from the{' '}
+            您{hasEmails ? '也' : ''}可以在{' '}
             <LinkButton onClick={this.onRepositorySettingsClick}>
-              repository settings
-            </LinkButton>
-            .
+              仓库设置
+            </LinkButton>{' '}
+            中单独设置在该仓库中使用的邮箱。
           </div>
         </Row>
         <Row className="button-row">
           <Button onClick={this.onIgnoreClick} type="button">
-            Ignore
+            忽略
           </Button>
           {hasEmails && (
             <Button onClick={this.onUpdateEmailClick} type="submit">
@@ -322,26 +318,23 @@ export class CommitMessageAvatar extends React.Component<
     )
 
     if (warningType === 'misattribution') {
-      const accountTypeSuffix = this.props.isEnterpriseAccount
-        ? ' Enterprise'
-        : ''
+      const accountTypeSuffix = this.props.isEnterpriseAccount ? '企业版' : ''
 
       const userName =
         this.props.user && this.props.user.name
-          ? ` for ${this.props.user.name}`
+          ? ` ${this.props.user.name} `
           : ''
 
       return (
         <>
           <Row>
             <div>
-              {sharedHeader} doesn't match your GitHub{accountTypeSuffix}{' '}
-              account{userName}.{' '}
+              {sharedHeader}与 GitHub {accountTypeSuffix}账号{userName}不匹配。
               <LinkButton
-                ariaLabel="Learn more about commit attribution"
-                uri="https://docs.github.com/en/github/committing-changes-to-your-project/why-are-my-commits-linked-to-the-wrong-user"
+                ariaLabel="了解关于提交归属的详细信息"
+                uri="https://docs.github.com/zh/github/committing-changes-to-your-project/why-are-my-commits-linked-to-the-wrong-user"
               >
-                Learn more
+                了解详情
               </LinkButton>
             </div>
           </Row>
@@ -374,7 +367,7 @@ export class CommitMessageAvatar extends React.Component<
     const { user } = this.props
 
     if (user === undefined) {
-      return 'Unknown user'
+      return '未知用户'
     }
 
     const { name, email } = user
@@ -382,12 +375,12 @@ export class CommitMessageAvatar extends React.Component<
     if (name) {
       return (
         <>
-          Committing as <strong>{name}</strong>
+          以 <strong>{name}</strong> 的身份提交
         </>
       )
     }
 
-    return <>Committing with {email}</>
+    return <>以 {email} 的身份提交</>
   }
 
   private renderPopover() {
@@ -396,11 +389,11 @@ export class CommitMessageAvatar extends React.Component<
     let header: string | JSX.Element | undefined = ''
     switch (this.props.warningType) {
       case 'misattribution':
-        header = 'This commit will be misattributed'
+        header = '归属错误'
         break
 
       case 'disallowedEmail':
-        header = 'This email address is disallowed'
+        header = '邮箱不被允许'
         break
 
       default:

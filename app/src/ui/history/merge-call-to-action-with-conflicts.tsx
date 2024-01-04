@@ -191,7 +191,7 @@ export class MergeCallToActionWithConflicts extends React.Component<
         <DropdownSelectButton
           checkedOption={this.state.selectedOperation}
           options={getMergeOptions()}
-          dropdownAriaLabel="Merge options"
+          dropdownAriaLabel="合并选项"
           disabled={disabled}
           onCheckedOptionChange={this.onOperationChange}
           onSubmit={this.onOperationInvoked}
@@ -249,8 +249,7 @@ export class MergeCallToActionWithConflicts extends React.Component<
   private renderLoadingMessage() {
     return (
       <div className="merge-message merge-message-loading">
-        Checking for ability to {this.state.selectedOperation.toLowerCase()}{' '}
-        automatically…
+        正在检查是否可以自动{this.state.selectedOperation.toLowerCase()}…
       </div>
     )
   }
@@ -260,27 +259,22 @@ export class MergeCallToActionWithConflicts extends React.Component<
       return null
     }
 
-    const pluralized = this.commitCount === 1 ? 'commit' : 'commits'
+    const pluralized = this.commitCount === 1 ? '提交' : '提交'
 
     if (this.state.selectedOperation === MultiCommitOperationKind.Rebase) {
       return (
         <div className="merge-message">
-          This will update <strong>{currentBranch.name}</strong>
-          {` by applying its `}
-          <strong>{`${this.commitCount} ${pluralized}`}</strong>
-          {` on top of `}
-          <strong>{branch.name}</strong>
+          以 <strong>{branch.name}</strong> 为基础，添加{' '}
+          <strong>{currentBranch.name}</strong> 所改动的
+          <strong>{`${this.commitCount}个${pluralized}`}</strong>
         </div>
       )
     }
 
     return (
       <div className="merge-message">
-        This will merge
-        <strong>{` ${this.commitCount} ${pluralized}`}</strong>
-        {` from `}
-        <strong>{branch.name}</strong>
-        {` into `}
+        从 <strong>{branch.name}</strong> 合并
+        <strong>{`${this.commitCount}个${pluralized}`}</strong>到{' '}
         <strong>{currentBranch.name}</strong>
       </div>
     )
@@ -288,17 +282,11 @@ export class MergeCallToActionWithConflicts extends React.Component<
 
   private renderInvalidMessage() {
     if (this.state.selectedOperation === MultiCommitOperationKind.Rebase) {
-      return (
-        <div className="merge-message">
-          Unable to start rebase. Check you have chosen a valid branch.
-        </div>
-      )
+      return <div className="merge-message">无法重构，该分支不能作为基础。</div>
     }
 
     return (
-      <div className="merge-message">
-        Unable to merge unrelated histories in this repository
-      </div>
+      <div className="merge-message">无法合并，该分支的历史记录不相关。</div>
     )
   }
 
@@ -307,15 +295,12 @@ export class MergeCallToActionWithConflicts extends React.Component<
     branch: Branch,
     count: number
   ) {
-    const pluralized = count === 1 ? 'file' : 'files'
+    const pluralized = count === 1 ? '文件' : '文件'
     return (
       <div className="merge-message">
-        There will be
-        <strong>{` ${count} conflicted ${pluralized}`}</strong>
-        {` when merging `}
-        <strong>{branch.name}</strong>
-        {` into `}
-        <strong>{currentBranch.name}</strong>
+        将 <strong>{branch.name}</strong> 合并到{' '}
+        <strong>{currentBranch.name}</strong> 时有
+        <strong>{`${count}个${pluralized}产生冲突`}</strong>
       </div>
     )
   }
