@@ -34,7 +34,7 @@ export class InitializeLFS extends React.Component<IInitializeLFSProps, {}> {
     return (
       <Dialog
         id="initialize-lfs"
-        title="Initialize Git LFS"
+        title="初始化 Git LFS"
         backdropDismissable={false}
         onSubmit={this.onInitialize}
         onDismissed={this.props.onDismissed}
@@ -43,8 +43,8 @@ export class InitializeLFS extends React.Component<IInitializeLFSProps, {}> {
 
         <DialogFooter>
           <OkCancelButtonGroup
-            okButtonText="Initialize Git LFS"
-            cancelButtonText={__DARWIN__ ? 'Not Now' : 'Not now'}
+            okButtonText="执行初始化"
+            cancelButtonText={__DARWIN__ ? '忽略' : '忽略'}
             onCancelButtonClick={this.props.onDismissed}
           />
         </DialogFooter>
@@ -61,24 +61,25 @@ export class InitializeLFS extends React.Component<IInitializeLFSProps, {}> {
     if (this.props.repositories.length > MaxRepositoriesToList) {
       return (
         <p>
-          {this.props.repositories.length} repositories use{' '}
-          <LinkButton uri={LFSURL}>Git LFS</LinkButton>. To contribute to them,
-          Git LFS must first be initialized. Would you like to do so now?
+          这{this.props.repositories.length}个储存库使用了{' '}
+          <LinkButton uri={LFSURL}>Git LFS</LinkButton>{' '}
+          大文件储存服务。要贡献给这些储存库，需要先初始化 Git
+          LFS，是否现在执行？
         </p>
       )
     } else {
       const plural = this.props.repositories.length !== 1
       const pluralizedRepositories = plural
-        ? 'The repositories use'
-        : 'This repository uses'
-      const pluralizedUse = plural ? 'them' : 'it'
+        ? '这些储存库使用了'
+        : '该储存库使用了'
+      const pluralizedUse = plural ? '这些储存库' : '它'
       return (
         <div>
           <p>
             {pluralizedRepositories}{' '}
-            <LinkButton uri={LFSURL}>Git LFS</LinkButton>. To contribute to{' '}
-            {pluralizedUse}, Git LFS must first be initialized. Would you like
-            to do so now?
+            <LinkButton uri={LFSURL}>Git LFS</LinkButton>{' '}
+            大文件储存服务。要贡献给
+            {pluralizedUse}，需要先初始化 Git LFS，是否现在执行？
           </p>
           <ul>
             {this.props.repositories.map(r => (

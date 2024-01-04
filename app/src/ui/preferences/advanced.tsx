@@ -64,8 +64,8 @@ export class Advanced extends React.Component<
   private reportDesktopUsageLabel() {
     return (
       <span>
-        Help GitHub Desktop improve by submitting{' '}
-        <LinkButton uri={SamplesURL}>usage stats</LinkButton>
+        发送 <LinkButton uri={SamplesURL}>使用情况数据</LinkButton> 帮助 GitHub
+        Desktop 变得更好
       </span>
     )
   }
@@ -74,9 +74,9 @@ export class Advanced extends React.Component<
     return (
       <DialogContent>
         <div className="advanced-section">
-          <h2>Background updates</h2>
+          <h2>后台更新</h2>
           <Checkbox
-            label="Show status icons in the repository list"
+            label="在储存库列表中显示状态图标"
             value={
               this.props.repositoryIndicatorsEnabled
                 ? CheckboxValue.On
@@ -90,20 +90,16 @@ export class Advanced extends React.Component<
             className="git-settings-description"
           >
             <p>
-              These icons indicate which repositories have local or remote
-              changes, and require the periodic fetching of repositories that
-              are not currently selected.
+              这些小图标显示了储存库是否有本地和远程的改动，它需要定期获取更新所有储存库。
             </p>
             <p>
-              Turning this off will not stop the periodic fetching of your
-              currently selected repository, but may improve overall app
-              performance for users with many repositories.
+              关闭后，就只会定期更新当前选中的储存库。如果您有很多储存库，关掉它可以提升性能。
             </p>
           </div>
         </div>
         {this.renderSSHSettings()}
         <div className="advanced-section">
-          <h2>Usage</h2>
+          <h2>使用情况</h2>
           <Checkbox
             label={this.reportDesktopUsageLabel()}
             value={
@@ -127,7 +123,7 @@ export class Advanced extends React.Component<
       <div className="advanced-section">
         <h2>SSH</h2>
         <Checkbox
-          label="Use system OpenSSH (recommended)"
+          label="使用系统环境的 OpenSSH（推荐）"
           value={
             this.props.useWindowsOpenSSH ? CheckboxValue.On : CheckboxValue.Off
           }

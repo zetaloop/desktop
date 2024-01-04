@@ -117,7 +117,7 @@ export abstract class PullRequestCommentLike extends React.Component<IPullReques
             <LinkButton uri={user.html_url} className="author">
               {user.login}
             </LinkButton>{' '}
-            {eventVerb} your pull request{' '}
+            {eventVerb}了您的拉取请求{' '}
             <LinkButton uri={externalURL} className="submission-date">
               {relativeReviewDate}
             </LinkButton>
@@ -176,7 +176,7 @@ export abstract class PullRequestCommentLike extends React.Component<IPullReques
         onMarkdownLinkClicked={this.onMarkdownLinkClicked}
         markdownContext={'PullRequestComment'}
         underlineLinks={this.props.underlineLinks}
-        ariaLabel="Pull request markdown comment"
+        ariaLabel="拉取请求Markdown评论"
       />
     )
   }

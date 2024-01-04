@@ -23,18 +23,18 @@ const avatarTokenCache = new ExpiringOperationCache<
   ({ endpoint }) => endpoint,
   async ({ endpoint, accounts }) => {
     if (!isGHE(endpoint)) {
-      throw new Error('Avatar tokens are only available for ghe.com')
+      throw new Error('头像令牌仅适用于 ghe.com')
     }
 
     const account = accounts.find(a => a.endpoint === endpoint)
     if (!account) {
-      throw new Error('No account found for endpoint')
+      throw new Error('接入点没有该用户')
     }
 
     const api = new API(endpoint, account.token)
     const token = await api.getAvatarToken()
 
-    return forceUnwrap('Avatar token missing', token)
+    return forceUnwrap('头像令牌缺失', token)
   },
   () => offsetFrom(0, 50, 'minutes')
 )
@@ -58,26 +58,26 @@ const botAvatarCache = new ExpiringOperationCache<
   async ({ user, accounts }) => {
     const { endpoint } = user
     if (user.avatarURL !== undefined || endpoint === null) {
-      throw new Error('Avatar URL already resolved or endpoint is missing')
+      throw new Error('头像网址已解析或接入点缺失')
     }
 
     const account = accounts.find(a => a.endpoint === user.endpoint)
 
     if (!account) {
-      throw new Error('No account found for endpoint')
+      throw new Error('接入点没有该用户')
     }
 
     const login = getBotLogin(user)
 
     if (!login) {
-      throw new Error('Email does not appear to be a bot email')
+      throw new Error('邮箱不是机器人邮箱')
     }
 
     const api = new API(endpoint, account.token)
     const apiUser = await api.fetchUser(login)
 
     if (!apiUser?.avatar_url) {
-      throw new Error('No avatar url returned from API')
+      throw new Error('API 未返回头像地址')
     }
 
     return { ...user, avatarURL: apiUser.avatar_url }
@@ -354,7 +354,7 @@ export class Avatar extends React.Component<IAvatarProps, IAvatarState> {
       )
     }
 
-    return user?.email ?? 'Unknown user'
+    return user?.email ?? '未知用户'
   }
 
   private onImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -372,9 +372,7 @@ export class Avatar extends React.Component<IAvatarProps, IAvatarState> {
   public render() {
     const title = this.getTitle()
     const { imageError, user } = this.state
-    const alt = user
-      ? `Avatar for ${user.name || user.email}`
-      : `Avatar for unknown user`
+    const alt = user ? `${user.name || user.email} 的头像` : `未知用户的头像`
 
     const now = Date.now()
     const src = this.state.candidates.find(c => {

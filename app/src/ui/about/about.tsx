@@ -143,9 +143,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
       case UpdateStatus.UpdateReady:
         return (
           <Row>
-            <Button onClick={this.onQuitAndInstall}>
-              Quit and Install Update
-            </Button>
+            <Button onClick={this.onQuitAndInstall}>退出并安装更新</Button>
           </Row>
         )
       case UpdateStatus.UpdateNotAvailable:
@@ -162,12 +160,10 @@ export class About extends React.Component<IAboutProps, IAboutState> {
           ? this.props.onCheckForNonStaggeredUpdates
           : this.props.onCheckForUpdates
 
-        const buttonTitle = this.state.altKeyPressed
-          ? 'Ensure Latest Version'
-          : 'Check for Updates'
+        const buttonTitle = this.state.altKeyPressed ? '强制最新版' : '检查更新'
 
         const tooltip = this.state.altKeyPressed
-          ? "GitHub Desktop may release updates to our user base gradually to ensure we catch any problems early. This lets you bypass the gradual rollout and jump straight to the latest version if there's one available."
+          ? '为了尽早发现和处理问题，GitHub Desktop 会分批次推送更新，选择强制更新则会忽略这个限制，立刻更新到最新版本。'
           : ''
 
         return (
@@ -189,7 +185,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
     return (
       <Row className="update-status">
         <Loading />
-        <span>Checking for updates…</span>
+        <span>正在检查更新…</span>
       </Row>
     )
   }
@@ -198,7 +194,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
     return (
       <Row className="update-status">
         <Loading />
-        <span>Downloading update…</span>
+        <span>正在下载更新…</span>
       </Row>
     )
   }
@@ -213,18 +209,14 @@ export class About extends React.Component<IAboutProps, IAboutState> {
 
     return (
       <p className="update-status">
-        You have the latest version (last checked{' '}
+        已是最新版本 (检查于
         <RelativeTime date={lastCheckedDate} />)
       </p>
     )
   }
 
   private renderUpdateReady() {
-    return (
-      <p className="update-status">
-        An update has been downloaded and is ready to be installed.
-      </p>
-    )
+    return <p className="update-status">更新已准备就绪</p>
   }
 
   private renderUpdateDetails() {
@@ -233,12 +225,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
     }
 
     if (__RELEASE_CHANNEL__ === 'development') {
-      return (
-        <p>
-          The application is currently running in development and will not
-          receive any updates.
-        </p>
-      )
+      return <p>开发版本不接收更新</p>
     }
 
     const updateState = this.state.updateState
@@ -274,10 +261,9 @@ export class About extends React.Component<IAboutProps, IAboutState> {
     if (isOSNoLongerSupportedByElectron()) {
       return (
         <DialogError>
-          This operating system is no longer supported. Software updates have
-          been disabled.{' '}
-          <LinkButton uri="https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/overview/supported-operating-systems">
-            Supported operating systems
+          您的系统版本太低，软件将停止更新。{' '}
+          <LinkButton uri="https://docs.github.com/zh/desktop/installing-and-configuring-github-desktop/overview/supported-operating-systems">
+            支持的操作系统
           </LinkButton>
         </DialogError>
       )
@@ -286,9 +272,8 @@ export class About extends React.Component<IAboutProps, IAboutState> {
     if (!this.state.updateState.lastSuccessfulCheck) {
       return (
         <DialogError>
-          Couldn't determine the last time an update check was performed. You
-          may be running an old version. Please try manually checking for
-          updates and contact GitHub Support if the problem persists
+          无法确定上次检查更新的时间，当前版本可能过旧。请手动检查更新。如果问题依旧，请联系
+          GitHub 支持。
         </DialogError>
       )
     }
@@ -303,11 +288,11 @@ export class About extends React.Component<IAboutProps, IAboutState> {
 
     return (
       <div>
-        <p className="no-padding">Looking for the latest features?</p>
+        <p className="no-padding">想试试最新功能吗?</p>
         <p className="no-padding">
-          Check out the{' '}
+          安装{' '}
           <LinkButton uri="https://desktop.github.com/beta">
-            Beta Channel
+            Beta 内测版
           </LinkButton>
         </p>
       </div>
@@ -318,10 +303,10 @@ export class About extends React.Component<IAboutProps, IAboutState> {
     const name = this.props.applicationName
     const version = this.props.applicationVersion
     const releaseNotesLink = (
-      <LinkButton uri={ReleaseNotesUri}>release notes</LinkButton>
+      <LinkButton uri={ReleaseNotesUri}>更新日志</LinkButton>
     )
 
-    const versionText = __DEV__ ? `Build ${version}` : `Version ${version}`
+    const versionText = __DEV__ ? `构建 ${version}` : `版本 ${version}`
 
     return (
       <Dialog
@@ -343,17 +328,17 @@ export class About extends React.Component<IAboutProps, IAboutState> {
           <p className="no-padding">
             <span className="selectable-text">
               {versionText} ({this.props.applicationArchitecture})
-            </span>{' '}
-            ({releaseNotesLink})
+            </span>
           </p>
+          <p className="no-padding">{releaseNotesLink}</p>
           <p className="no-padding">
             <LinkButton onClick={this.props.onShowTermsAndConditions}>
-              Terms and Conditions
+              使用条款
             </LinkButton>
           </p>
           <p>
             <LinkButton onClick={this.props.onShowAcknowledgements}>
-              License and Open Source Notices
+              开源许可
             </LinkButton>
           </p>
           {this.renderUpdateDetails()}

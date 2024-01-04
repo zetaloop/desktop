@@ -103,7 +103,7 @@ export class GitLFSProgressParser {
       total: totalEstimated,
       percent: 0,
       done: false,
-      text: `${verb} ${fileName} (${finishedFiles} out of an estimated ${fileCount} completed, ${transferProgress})`,
+      text: `${verb} ${fileName} (共${fileCount}个，已完成${finishedFiles}个，${transferProgress})`,
     }
 
     return {
@@ -116,13 +116,13 @@ export class GitLFSProgressParser {
   private directionToHumanFacingVerb(direction: string): string {
     switch (direction) {
       case 'download':
-        return 'Downloading'
+        return '正在下载'
       case 'upload':
-        return 'Uploading'
+        return '正在上传'
       case 'checkout':
-        return 'Checking out'
+        return '正在检出'
       default:
-        return 'Downloading'
+        return '正在下载'
     }
   }
 }

@@ -300,11 +300,11 @@ export class BranchList extends React.Component<
 
   private getGroupLabel(identifier: BranchGroupIdentifier) {
     if (identifier === 'default') {
-      return __DARWIN__ ? 'Default Branch' : 'Default branch'
+      return __DARWIN__ ? '默认分支' : '默认分支'
     } else if (identifier === 'recent') {
-      return __DARWIN__ ? 'Recent Branches' : 'Recent branches'
+      return __DARWIN__ ? '最近分支' : '最近分支'
     } else if (identifier === 'other') {
-      return __DARWIN__ ? 'Other Branches' : 'Other branches'
+      return __DARWIN__ ? '其他分支' : '其他分支'
     } else {
       return assertNever(identifier, `Unknown identifier: ${identifier}`)
     }

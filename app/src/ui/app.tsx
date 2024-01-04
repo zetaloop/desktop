@@ -568,12 +568,11 @@ export class App extends React.Component<IAppProps, IAppState> {
     const userContributions: ReadonlyArray<ReleaseNote> = [
       {
         kind: 'fixed',
-        message: 'A totally awesome fix that fixes something - #123. Thanks!',
+        message: '一个特别棒的bug修复，修好了某个问题 - #123。谢谢！',
       },
       {
         kind: 'added',
-        message:
-          'You can now do this new thing that was added here - #456. Thanks!',
+        message: '这个新功能它真是又新又功能啊 - #456。谢谢！',
       },
     ]
 
@@ -610,10 +609,10 @@ export class App extends React.Component<IAppProps, IAppState> {
         userContributions: [
           {
             kind: 'new',
-            message: '[New] Added fake thank you dialog',
+            message: '[新功能] 假的感谢小卡片',
           },
         ],
-        friendlyName: 'kind contributor',
+        friendlyName: '某位心善的开发者',
         latestVersion: '3.0.0',
       })
     }
@@ -1565,7 +1564,7 @@ export class App extends React.Component<IAppProps, IAppState> {
   ) => {
     showCertificateTrustDialog(
       certificate,
-      'Could not securely connect to the server, because its certificate is not trusted. Attackers might be trying to steal your information.\n\nTo connect unsafely, which may put your data at risk, you can “Always trust” the certificate and try again.'
+      '无法安全地连接到服务器，因为其证书不可信任。可能有攻击者试图窃取您的数据。\n\n如需忽略风险继续连接，请选择“总是信任”该证书，然后重试。'
     )
   }
 
@@ -2958,10 +2957,10 @@ export class App extends React.Component<IAppProps, IAppState> {
       title = alias ?? repository.name
     } else if (this.state.repositories.length > 0) {
       icon = octicons.repo
-      title = __DARWIN__ ? 'Select a Repository' : 'Select a repository'
+      title = __DARWIN__ ? '选择一个储存库' : '选择一个储存库'
     } else {
       icon = octicons.repo
-      title = __DARWIN__ ? 'No Repositories' : 'No repositories'
+      title = __DARWIN__ ? '无储存库' : '无储存库'
     }
 
     const isOpen =
@@ -2992,7 +2991,7 @@ export class App extends React.Component<IAppProps, IAppState> {
       <ToolbarDropdown
         icon={icon}
         title={title}
-        description={__DARWIN__ ? 'Current Repository' : 'Current repository'}
+        description={__DARWIN__ ? '当前储存库' : '当前储存库'}
         tooltip={tooltip}
         foldoutStyle={foldoutStyle}
         onContextMenu={this.onRepositoryToolbarButtonContextMenu}

@@ -164,9 +164,7 @@ export class PullRequestFilesChanged extends React.Component<
     if (!fileExistsOnDisk) {
       showContextualMenu([
         {
-          label: __DARWIN__
-            ? 'File Does Not Exist on Disk'
-            : 'File does not exist on disk',
+          label: __DARWIN__ ? '文件在电脑上不存在' : '文件在电脑上不存在',
           enabled: false,
         },
       ])
@@ -179,7 +177,7 @@ export class PullRequestFilesChanged extends React.Component<
     const isSafeExtension = isSafeFileExtension(extension)
     const openInExternalEditor =
       externalEditorLabel !== undefined
-        ? `Open in ${externalEditorLabel}`
+        ? `打开 ${externalEditorLabel}`
         : DefaultEditorLabel
 
     const items: IMenuItem[] = [
@@ -216,7 +214,7 @@ export class PullRequestFilesChanged extends React.Component<
       gitHubRepository && gitHubRepository.endpoint !== getDotComAPIEndpoint()
 
     items.push({
-      label: `View on GitHub${isEnterprise ? ' Enterprise' : ''}`,
+      label: `打开 GitHub${isEnterprise ? ' 企业版' : ''}`,
       action: () => this.onViewOnGitHub(file),
       enabled: nonLocalCommitSHA !== null && gitHubRepository !== null,
     })
@@ -243,9 +241,7 @@ export class PullRequestFilesChanged extends React.Component<
     const { showSideBySideDiff } = this.state
     return (
       <div className="files-changed-header">
-        <div className="commits-displayed">
-          Showing changes from all commits
-        </div>
+        <div className="commits-displayed">将被拉取过去的提交</div>
         <DiffOptions
           isInteractiveDiff={false}
           hideWhitespaceChanges={hideWhitespaceInDiff}

@@ -15,9 +15,9 @@ export async function launchExternalEditor(
   const editorPath = editor.path
   const exists = await pathExists(editorPath)
   if (!exists) {
-    const label = __DARWIN__ ? 'Settings' : 'Options'
+    const label = __DARWIN__ ? '设置' : '设置'
     throw new ExternalEditorError(
-      `Could not find executable for '${editor.editor}' at path '${editor.path}'.  Please open ${label} and select an available editor.`,
+      `找不到编辑器 '${editor.editor}' 的可执行文件 '${editor.path}'。请打开${label}并选择一个可用的编辑器。`,
       { openPreferences: true }
     )
   }

@@ -19,26 +19,33 @@ import { ManualConflictResolution } from '../models/manual-conflict-resolution'
  *
  * Used in file lists.
  */
-export function mapStatus(status: AppFileStatus): string {
+export function mapStatus(status: AppFileStatus, cn: boolean = false): string {
+  // 拿UI文字来作为工作逻辑去找图标？？太抽象了，只能这么改了
   switch (status.kind) {
     case AppFileStatusKind.New:
     case AppFileStatusKind.Untracked:
-      return 'New'
+      return cn ? '新增' : 'New'
     case AppFileStatusKind.Modified:
-      return 'Modified'
+      return cn ? '修改' : 'Modified'
     case AppFileStatusKind.Deleted:
-      return 'Deleted'
+      return cn ? '删除' : 'Deleted'
     case AppFileStatusKind.Renamed:
-      return 'Renamed'
+      return cn ? '重命名' : 'Renamed'
     case AppFileStatusKind.Conflicted:
       if (isConflictWithMarkers(status)) {
         const conflictsCount = status.conflictMarkerCount
-        return conflictsCount > 0 ? 'Conflicted' : 'Resolved'
+        return conflictsCount > 0
+          ? cn
+            ? '冲突'
+            : 'Conflicted'
+          : cn
+          ? '已解决冲突'
+          : 'Resolved'
       }
 
-      return 'Conflicted'
+      return cn ? '冲突' : 'Conflicted'
     case AppFileStatusKind.Copied:
-      return 'Copied'
+      return cn ? '复制' : 'Copied'
     default:
       return assertNever(status, `Unknown file status ${status}`)
   }

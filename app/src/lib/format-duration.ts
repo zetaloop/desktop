@@ -50,9 +50,13 @@ export const formatLongPreciseDuration = (ms: number) => {
     if (parts.length > 0 || ms >= unit.ms || unit.shortUnit === 's') {
       const qty = Math.floor(ms / unit.ms)
       ms -= qty * unit.ms
-      parts.push(`${qty} ${unit.longUnit}${qty === 1 ? '' : 's'}`)
+      parts.push(`${qty} ${unit.longUnit}`)
     }
   }
 
-  return parts.join(' ')
+  return parts
+    .join('')
+    .replace(/hour/g, '小时')
+    .replace(/minute/g, '分钟')
+    .replace(/second/g, '秒')
 }
