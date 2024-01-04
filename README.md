@@ -1,8 +1,8 @@
-# [GitHub Desktop](https://desktop.github.com)
+> [!WARNING]
+> ### 汉化还没做完
+# GitHub Desktop 中文版
 
-[GitHub Desktop](https://desktop.github.com/) is an open-source [Electron](https://www.electronjs.org/)-based
-GitHub app. It is written in [TypeScript](https://www.typescriptlang.org) and
-uses [React](https://reactjs.org/).
+[GitHub Desktop](https://desktop.github.com/) 是一个开源的 GitHub 客户端，基于 [Electron](https://www.electronjs.org/) 技术，使用 [React](https://reactjs.org/) 框架，以 [TypeScript](https://www.typescriptlang.org) 编写。
 
 <picture>
   <source
