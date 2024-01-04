@@ -662,9 +662,7 @@ export class GitStore extends BaseStore {
     )
 
     if (status == null) {
-      throw new Error(
-        `Unable to undo commit because there are too many files in your repository's working directory.`
-      )
+      throw new Error(`无法撤回提交，仓库工作目录中的文件过多。`)
     }
 
     const paths = status.workingDirectory.files
@@ -1159,7 +1157,7 @@ export class GitStore extends BaseStore {
       return foundCommit
     }
 
-    throw new Error(`Could not load commit: '${sha}'`)
+    throw new Error(`无法加载提交: '${sha}'`)
   }
 
   /**
@@ -1317,10 +1315,7 @@ export class GitStore extends BaseStore {
       return
     }
 
-    const url = forceUnwrap(
-      'Parent repositories are fully loaded',
-      parent.cloneURL
-    )
+    const url = forceUnwrap('父仓库已全部加载', parent.cloneURL)
 
     this._upstreamRemote =
       (await this.performFailableOperation(() =>
@@ -1463,7 +1458,7 @@ export class GitStore extends BaseStore {
   ): Promise<MergeResult | undefined> {
     if (this.tip.kind !== TipState.Valid) {
       throw new Error(
-        `unable to merge as tip state is '${this.tip.kind}' and the application expects the repository to be on a branch currently`
+        `无法合并，当前分支需要是一个有效分支，但是当前的分支顶端状态为 '${this.tip.kind}'`
       )
     }
 
@@ -1625,17 +1620,14 @@ export class GitStore extends BaseStore {
    */
   public async updateExistingUpstreamRemote(): Promise<void> {
     const gitHubRepository = forceUnwrap(
-      'To update an upstream remote, the repository must be a GitHub repository',
+      '要更新上游远程，当前仓库必须是一个 GitHub 仓库',
       this.repository.gitHubRepository
     )
     const parent = forceUnwrap(
-      'To update an upstream remote, the repository must have a parent',
+      '要更新上游远程，当前仓库必须有父仓库',
       gitHubRepository.parent
     )
-    const url = forceUnwrap(
-      'Parent repositories are always fully loaded',
-      parent.cloneURL
-    )
+    const url = forceUnwrap('父仓库总是加载完全的', parent.cloneURL)
 
     await this.performFailableOperation(() =>
       setRemoteURL(this.repository, UpstreamRemoteName, url)

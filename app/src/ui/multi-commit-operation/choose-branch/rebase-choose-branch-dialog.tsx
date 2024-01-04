@@ -108,7 +108,7 @@ export class RebaseChooseBranchDialog extends React.Component<
     )
     return (
       <>
-        Rebase <strong>{truncatedName}</strong>
+        重构 <strong>{truncatedName}</strong>
       </>
     )
   }
@@ -147,11 +147,11 @@ export class RebaseChooseBranchDialog extends React.Component<
   }
 
   private renderLoadingRebaseMessage() {
-    return <>Checking for ability to rebase automatically…</>
+    return <>正在自动检查重构可行性…</>
   }
 
   private renderInvalidRebaseMessage() {
-    return <>Unable to start rebase. Check you have chosen a valid branch.</>
+    return <>无法启动重构，请检查选择的分支是否有效。</>
   }
 
   private renderCleanRebaseMessage(

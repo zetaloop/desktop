@@ -60,41 +60,35 @@ export class TutorialDone extends React.Component<ITutorialDoneProps, {}> {
         <div className="content">
           <div className="header">
             <div className="text">
-              <h1 ref={this.header}>You're done!</h1>
+              <h1 ref={this.header}>完成啦！</h1>
               <p>
-                You’ve learned the basics on how to use GitHub Desktop. Here are
-                some suggestions for what to do next.
+                你已经学会 GitHub Desktop
+                的基本用法了！以下是一些接下来可以尝试的建议。
               </p>
             </div>
-            <img
-              src={ClappingHandsImage}
-              className="image"
-              alt="Hands clapping"
-            />
+            <img src={ClappingHandsImage} className="image" alt="拍手" />
           </div>
           <SuggestedActionGroup>
             <SuggestedAction
-              title="Explore projects on GitHub"
-              description="Contribute to a project that interests you"
-              buttonText={__DARWIN__ ? 'Open in Browser' : 'Open in browser'}
+              title="探索 GitHub 上的项目"
+              description="为你感兴趣的项目做出贡献吧"
+              buttonText={__DARWIN__ ? '打开浏览器' : '打开浏览器'}
               onClick={this.openDotcomExplore}
               type="normal"
               image={TelescopeOcticon}
             />
             <SuggestedAction
-              title="Create a new repository"
-              description="Get started on a brand new project"
-              buttonText={
-                __DARWIN__ ? 'Create Repository' : 'Create repository'
-              }
+              title="创建新的仓库"
+              description="开启一个全新的项目"
+              buttonText={__DARWIN__ ? '新建仓库' : '新建仓库'}
               onClick={this.onCreateNewRepository}
               type="normal"
               image={PlusOcticon}
             />
             <SuggestedAction
-              title="Add a local repository"
-              description="Work on an existing project in GitHub Desktop"
-              buttonText={__DARWIN__ ? 'Add Repository' : 'Add repository'}
+              title="添加本地仓库"
+              description="在 GitHub Desktop 上继续现有的工作"
+              buttonText={__DARWIN__ ? '添加仓库' : '添加仓库'}
               onClick={this.onAddExistingRepository}
               type="normal"
               image={FileDirectoryOcticon}

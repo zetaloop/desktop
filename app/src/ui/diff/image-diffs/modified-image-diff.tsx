@@ -155,10 +155,10 @@ export class ModifiedImageDiff extends React.Component<
           onTabClicked={this.props.onChangeDiffType}
           type={TabBarType.Switch}
         >
-          <span>2-up</span>
-          <span>Swipe</span>
-          <span>Onion Skin</span>
-          <span>Difference</span>
+          <span>并列</span>
+          <span>滑动</span>
+          <span>叠加</span>
+          <span>差异</span>
         </TabBar>
       </div>
     )

@@ -203,19 +203,17 @@ export class ConflictsDialog extends React.Component<
     }
 
     if (countResolved === 0) {
-      return <DialogSuccess>All resolutions have been undone.</DialogSuccess>
+      return <DialogSuccess>所有冲突都已恢复原状。</DialogSuccess>
     }
 
     if (conflictedFilesCount === 0) {
-      return (
-        <DialogSuccess>All conflicted files have been resolved. </DialogSuccess>
-      )
+      return <DialogSuccess>所有冲突都已解决。</DialogSuccess>
     }
 
-    const conflictPluralized = countResolved === 1 ? 'file has' : 'files have'
+    const conflictPluralized = countResolved === 1 ? '文件' : '文件'
     return (
       <DialogSuccess>
-        {countResolved} conflicted {conflictPluralized} been resolved.
+        已解决{countResolved}个{conflictPluralized}的冲突。
       </DialogSuccess>
     )
   }
@@ -236,9 +234,7 @@ export class ConflictsDialog extends React.Component<
     )
 
     const tooltipString =
-      conflictedFiles.length > 0
-        ? 'Resolve all changes before continuing'
-        : undefined
+      conflictedFiles.length > 0 ? '请先解决所有改动产生的冲突' : undefined
 
     return (
       <Dialog

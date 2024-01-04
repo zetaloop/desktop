@@ -1,7 +1,7 @@
-> [!WARNING]
-> ### 汉化接近完工，可前往 [发布版](https://github.com/zetaloop/Desktop/releases) 下载尝鲜，不定时更新
-> ### 注意，目前汉化将会被软件自动更新覆盖，以后会有专属更新服务器
-> <i>何时正式发布？<br>1. 有足够的测试表明汉化无缺漏。<br>2. 等我弄完服务器。</i>
+> [!TIP]
+> This is the community Chinese localized version of GitHub Desktop, please visit [desktop/desktop](https://github.com/desktop/desktop).<br>
+> 这是 GitHub Desktop 的社区汉化版，原版请访问 [desktop/desktop](https://github.com/desktop/desktop)。
+
 # GitHub Desktop 中文版
 
 [GitHub Desktop](https://desktop.github.com/) 是一个开源的 GitHub 客户端，基于 [Electron](https://www.electronjs.org/) 技术，使用 [React](https://reactjs.org/) 框架，以 [TypeScript](https://www.typescriptlang.org) 编写。
@@ -20,32 +20,32 @@
 
 ## 安装
 
-下载对应系统的官方安装包：
+[**前往 GitHub 发行版**](https://github.com/zetaloop/desktop/releases/latest) 下载对应系统的中文版安装包：
 
- - [macOS](https://central.github.com/deployments/desktop/desktop/latest/darwin)
- - [macOS (Apple Silicon)](https://central.github.com/deployments/desktop/desktop/latest/darwin-arm64)
- - [Windows](https://central.github.com/deployments/desktop/desktop/latest/win32)
- - [Windows 为所有用户安装](https://central.github.com/deployments/desktop/desktop/latest/win32?format=msi)
+ - macOS --> `GitHubDesktop-macOS-x64.zip`
+ - macOS (Apple Silicon) --> `GitHubDesktop-macOS-arm64.zip`
+ - Windows --> `GitHubDesktop-Windows-x64.exe`
+ - Windows 为所有用户安装 --> `GitHubDesktop-Windows-x64.msi`
 
 暂未支持 Linux 系统，但是有第三方维护的分支可供使用，见 [社区发布版](https://github.com/zetaloop/Desktop#社区发布版) 一节。
 
 ### Beta 测试版
 
-想要更早体验到新功能和问题修复吗？安装 Beta 测试版即可提前体验开发中的早期版本：
+想要更早体验到新功能和问题修复吗？[安装 Beta 测试版](https://github.com/zetaloop/desktop/releases) 即可提前体验开发中的早期版本：
 
- - [macOS](https://central.github.com/deployments/desktop/desktop/latest/darwin?env=beta)
- - [macOS (Apple Silicon)](https://central.github.com/deployments/desktop/desktop/latest/darwin-arm64?env=beta)
- - [Windows](https://central.github.com/deployments/desktop/desktop/latest/win32?env=beta)
- - [Windows (ARM64)](https://central.github.com/deployments/desktop/desktop/latest/win32-arm64?env=beta)
+ - macOS --> `GitHubDesktop-macOS-x64.zip`
+ - macOS (Apple Silicon) --> `GitHubDesktop-macOS-arm64.zip`
+ - Windows --> `GitHubDesktop-Windows-x64.exe`
+ - Windows 为所有用户安装 --> `GitHubDesktop-Windows-x64.msi`
 
 查看 [测试版更新日志](https://desktop.github.com/release-notes/?env=beta)。
 
 ### 旧的版本
-可在 https://desktop.githubusercontent.com 下载旧版。旧版将会在安装后尝试自动更新到最新版本。
+可在 [GitHub 发行版](https://github.com/zetaloop/desktop/releases) 下载中文版旧版。旧版本将会在安装后尝试自动更新到最新版本。
 
 ### 社区发布版
 
-一些社区维护的包管理器可用于安装 GitHub Desktop：
+可以使用一些社区维护的包管理器来安装 GitHub Desktop **英文原版**：
  - Windows 用户可以用 [winget](https://docs.microsoft.com/en-us/windows/package-manager/winget/) `c:\> winget install github-desktop` 或者 [Chocolatey](https://chocolatey.org/) `c:\> choco install github-desktop`
  - macOS 用户可以用 [Homebrew](https://brew.sh/) `$ brew install --cask github`
 

@@ -56,7 +56,7 @@ export class CreateTag extends React.Component<
     return (
       <Dialog
         id="create-tag"
-        title={__DARWIN__ ? 'Create a Tag' : 'Create a tag'}
+        title={__DARWIN__ ? '创建标签' : '创建标签'}
         onSubmit={this.createTag}
         onDismissed={this.props.onDismissed}
         loading={this.state.isCreatingTag}
@@ -66,7 +66,7 @@ export class CreateTag extends React.Component<
 
         <DialogContent>
           <RefNameTextBox
-            label="Name"
+            label="名称"
             initialValue={this.props.initialName}
             onValueChange={this.updateTagName}
           />
@@ -76,7 +76,7 @@ export class CreateTag extends React.Component<
 
         <DialogFooter>
           <OkCancelButtonGroup
-            okButtonText={__DARWIN__ ? 'Create Tag' : 'Create tag'}
+            okButtonText={__DARWIN__ ? '创建' : '创建'}
             okButtonDisabled={disabled}
           />
         </DialogFooter>
@@ -96,14 +96,14 @@ export class CreateTag extends React.Component<
       return null
     }
 
-    const title = __DARWIN__ ? 'Previous Tags' : 'Previous tags'
+    const title = __DARWIN__ ? '之前的标签' : '之前的标签'
     const lastThreeTags = previousTags.slice(-3)
 
     return (
       <>
         <p>{title}</p>
         {lastThreeTags.length === 0 ? (
-          <p>{`No matches found for '${tagName}'`}</p>
+          <p>{`找不到 '${tagName}'`}</p>
         ) : (
           lastThreeTags.map((item: string, index: number) => (
             <Ref key={index}>{item}</Ref>
@@ -115,9 +115,7 @@ export class CreateTag extends React.Component<
 
   private getCurrentError(): JSX.Element | null {
     if (this.state.tagName.length > MaxTagNameLength) {
-      return (
-        <>The tag name cannot be longer than {MaxTagNameLength} characters</>
-      )
+      return <>标签不能超过{MaxTagNameLength}字</>
     }
 
     const alreadyExists =
@@ -125,7 +123,7 @@ export class CreateTag extends React.Component<
     if (alreadyExists) {
       return (
         <>
-          A tag named <Ref>{this.state.tagName}</Ref> already exists
+          已经存在名称为 <Ref>{this.state.tagName}</Ref> 的标签了
         </>
       )
     }
