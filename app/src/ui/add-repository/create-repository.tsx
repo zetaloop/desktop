@@ -43,11 +43,11 @@ import { CreateRepositoryError } from '../../lib/error-with-metadata'
 const submoduleDocsUrl = 'https://gh.io/git-submodules'
 
 /** The sentinel value used to indicate no gitignore should be used. */
-const NoGitIgnoreValue = 'None'
+const NoGitIgnoreValue = '无'
 
 /** The sentinel value used to indicate no license should be used. */
 const NoLicenseValue: ILicense = {
-  name: 'None',
+  name: '无',
   featured: false,
   body: '',
   hidden: false,
@@ -420,7 +420,7 @@ export class CreateRepository extends React.Component<
       const wd = status.workingDirectory
       const files = wd.files
       if (files.length > 0) {
-        await createCommit(repository, 'Initial commit', files)
+        await createCommit(repository, 'Initial commit', files) // Desktop-CN: 提交名称请勿翻译
       }
     } catch (e) {
       log.error(`createRepository: initial commit failed at ${fullPath}`, e)
@@ -464,12 +464,10 @@ export class CreateRepository extends React.Component<
       <InputWarning
         id="repo-sanitized-name-warning"
         trackedUserInput={this.state.name}
-        ariaLiveMessage={`Will be created as ${sanitizedName}. Spaces and invalid characters have been replaced by hyphens.`}
+        ariaLiveMessage={`仓库将会命名为 ${sanitizedName}，空格与无效字符会被替换成横线。`}
       >
-        <p>Will be created as {sanitizedName}</p>
-        <span className="sr-only">
-          Spaces and invalid characters have been replaced by hyphens.
-        </span>
+        <p>仓库将会命名为 {sanitizedName}</p>
+        <span className="sr-only">空格与无效字符会被替换成横线。</span>
       </InputWarning>
     )
   }
@@ -491,7 +489,7 @@ export class CreateRepository extends React.Component<
     return (
       <Row>
         <Select
-          label={__DARWIN__ ? 'Git Ignore' : 'Git ignore'}
+          label={__DARWIN__ ? 'Git 忽略规则' : 'Git 忽略规则'}
           value={this.state.gitIgnore}
           onChange={this.onGitIgnoreChange}
         >
@@ -516,7 +514,7 @@ export class CreateRepository extends React.Component<
     return (
       <Row>
         <Select
-          label="License"
+          label="许可证"
           value={this.state.license}
           onChange={this.onLicenseChange}
         >
@@ -544,12 +542,7 @@ export class CreateRepository extends React.Component<
       return null
     }
 
-    return (
-      <DialogError>
-        Directory could not be created at this path. You may not have
-        permissions to create a directory here.
-      </DialogError>
-    )
+    return <DialogError>无法在该路径创建文件夹，没有创建权限。</DialogError>
   }
 
   private renderGitRepositoryError() {
@@ -566,14 +559,13 @@ export class CreateRepository extends React.Component<
         <InputError
           id="existing-repository-path-error"
           trackedUserInput={this.state.path + this.state.name}
-          ariaLiveMessage={`The directory ${fullPath} appears to be a Git repository. Would you like to add this repository instead?`}
+          ariaLiveMessage={`文件夹 ${fullPath} 已经是一个 Git 仓库。是否需要直接添加这个仓库？`}
         >
-          The directory <Ref>{fullPath}</Ref>appears to be a Git repository.
-          Would you like to{' '}
+          文件夹 <Ref>{fullPath}</Ref> 已经是一个 Git 仓库。是否需要直接{' '}
           <LinkButton onClick={this.onAddRepositoryClicked}>
-            add this repository
-          </LinkButton>{' '}
-          instead?
+            添加这个仓库
+          </LinkButton>
+          ？
         </InputError>
       </Row>
     )
@@ -593,13 +585,10 @@ export class CreateRepository extends React.Component<
         <InputWarning
           id="path-is-subfolder-of-repository"
           trackedUserInput={this.state.path + this.state.name}
-          ariaLiveMessage={`The directory ${fullPath} appears to be a subfolder Git repository. Did you know about submodules?`}
+          ariaLiveMessage={`文件夹 ${fullPath} 是一个 Git 仓库的子目录。有兴趣了解一下子模块机制吗？`}
         >
-          The directory <Ref>{fullPath}</Ref>appears to be a subfolder of Git
-          repository.
-          <LinkButton uri={submoduleDocsUrl}>
-            Learn about submodules.
-          </LinkButton>
+          文件夹 <Ref>{fullPath}</Ref> 是一个 Git 仓库的子目录。
+          <LinkButton uri={submoduleDocsUrl}>点击了解子模块机制。</LinkButton>
         </InputWarning>
       </Row>
     )
@@ -622,11 +611,10 @@ export class CreateRepository extends React.Component<
         <InputWarning
           id="readme-overwrite-warning"
           trackedUserInput={this.state.createWithReadme}
-          ariaLiveMessage="This directory contains a README.md file already. Checking
-          this box will result in the existing file being overwritten."
+          ariaLiveMessage="该文件夹已经有一个 README.md 文件，如果再选择添加的话，现有的文件会被覆盖。"
         >
-          This directory contains a <Ref>README.md</Ref> file already. Checking
-          this box will result in the existing file being overwritten.
+          该文件夹已经有一个 <Ref>README.md</Ref>{' '}
+          文件，如果再选择添加的话，现有的文件会被覆盖。
         </InputWarning>
       </Row>
     )
@@ -643,7 +631,7 @@ export class CreateRepository extends React.Component<
 
     return (
       <div id="create-repo-path-msg">
-        The repository will be created at <Ref>{fullPath}</Ref>.
+        仓库将被创建在 <Ref>{fullPath}</Ref>。
       </div>
     )
   }
@@ -676,9 +664,7 @@ export class CreateRepository extends React.Component<
     return (
       <Dialog
         id="create-repository"
-        title={
-          __DARWIN__ ? 'Create a New Repository' : 'Create a new repository'
-        }
+        title={__DARWIN__ ? '创建仓库' : '创建仓库'}
         loading={this.state.creating}
         onSubmit={this.createRepository}
         onDismissed={this.props.onDismissed}
@@ -689,8 +675,8 @@ export class CreateRepository extends React.Component<
           <Row>
             <TextBox
               value={this.state.name}
-              label="Name"
-              placeholder="repository name"
+              label="名称"
+              placeholder="仓库的名字"
               onValueChanged={this.onNameChanged}
               ariaDescribedBy="existing-repository-path-error repo-sanitized-name-warning"
             />
@@ -701,7 +687,7 @@ export class CreateRepository extends React.Component<
           <Row>
             <TextBox
               value={this.state.description}
-              label="Description"
+              label="介绍"
               onValueChanged={this.onDescriptionChanged}
             />
           </Row>
@@ -709,8 +695,8 @@ export class CreateRepository extends React.Component<
           <Row>
             <TextBox
               value={this.state.path ?? ''}
-              label={__DARWIN__ ? 'Local Path' : 'Local path'}
-              placeholder="repository path"
+              label={__DARWIN__ ? '文件夹路径' : '文件夹路径'}
+              placeholder="仓库的位置"
               onValueChanged={this.onPathChanged}
               disabled={readOnlyPath || loadingDefaultDir}
               ariaDescribedBy="existing-repository-path-error path-is-subfolder-of-repository"
@@ -719,7 +705,7 @@ export class CreateRepository extends React.Component<
               onClick={this.showFilePicker}
               disabled={readOnlyPath || loadingDefaultDir}
             >
-              Choose…
+              选择…
             </Button>
           </Row>
 
@@ -728,7 +714,7 @@ export class CreateRepository extends React.Component<
 
           <Row>
             <Checkbox
-              label="Initialize this repository with a README"
+              label="添加 README 自述文件"
               value={
                 this.state.createWithReadme
                   ? CheckboxValue.On
@@ -747,9 +733,7 @@ export class CreateRepository extends React.Component<
         <DialogFooter>
           {this.renderPathMessage()}
           <OkCancelButtonGroup
-            okButtonText={
-              __DARWIN__ ? 'Create Repository' : 'Create repository'
-            }
+            okButtonText={__DARWIN__ ? '创建' : '创建'}
             okButtonDisabled={disabled || loadingDefaultDir}
             okButtonAriaDescribedBy="create-repo-path-msg"
           />

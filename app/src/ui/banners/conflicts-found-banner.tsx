@@ -43,10 +43,8 @@ export class ConflictsFoundBanner extends React.Component<
       >
         <Octicon className="alert-icon" symbol={octicons.alert} />
         <div className="banner-message">
-          <span>
-            Resolve conflicts to continue {this.props.operationDescription}.
-          </span>
-          <LinkButton onClick={this.openDialog}>View conflicts</LinkButton>
+          <span>解决冲突后才能继续{this.props.operationDescription}。</span>
+          <LinkButton onClick={this.openDialog}>查看冲突</LinkButton>
         </div>
       </Banner>
     )
