@@ -42,7 +42,7 @@ export class DiffHeader extends React.Component<IDiffHeaderProps, {}> {
         <Octicon
           symbol={iconForStatus(status)}
           className={'status status-' + fileStatus.toLowerCase()}
-          title={fileStatus}
+          title={mapStatus(status, true)} // cn
         />
       </div>
     )

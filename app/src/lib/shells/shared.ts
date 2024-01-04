@@ -44,9 +44,7 @@ export function parse(label: string): Shell {
     return Linux.parse(label)
   }
 
-  throw new Error(
-    `Platform not currently supported for resolving shells: ${process.platform}`
-  )
+  throw new Error(`平台目前不支持解析终端: ${process.platform}`)
 }
 
 /** Get the shells available for the user. */
@@ -68,9 +66,7 @@ export async function getAvailableShells(): Promise<
     return shellCache
   }
 
-  return Promise.reject(
-    `Platform not currently supported for resolving shells: ${process.platform}`
-  )
+  return Promise.reject(`平台目前不支持解析终端: ${process.platform}`)
 }
 
 /** Find the given shell or the default if the given shell can't be found. */
@@ -95,9 +91,9 @@ export async function launchShell(
   // platform-specific build targets.
   const exists = await pathExists(shell.path)
   if (!exists) {
-    const label = __DARWIN__ ? 'Settings' : 'Options'
+    const label = __DARWIN__ ? '设置' : '设置'
     throw new ShellError(
-      `Could not find executable for '${shell.shell}' at path '${shell.path}'.  Please open ${label} and select an available shell.`
+      `找不到终端 '${shell.shell}' 的可执行文件 '${shell.path}'。请打开${label}并选择一个可用的终端。`
     )
   }
 
@@ -115,9 +111,7 @@ export async function launchShell(
     addErrorTracing(shell.shell, cp, onError)
     return Promise.resolve()
   } else {
-    return Promise.reject(
-      `Platform not currently supported for launching shells: ${process.platform}`
-    )
+    return Promise.reject(`平台目前不支持解析终端: ${process.platform}`)
   }
 }
 

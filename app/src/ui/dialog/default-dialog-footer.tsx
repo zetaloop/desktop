@@ -36,7 +36,7 @@ export class DefaultDialogFooter extends React.Component<
     return (
       <DialogFooter>
         <OkCancelButtonGroup
-          okButtonText={this.props.buttonText || 'Close'}
+          okButtonText={this.props.buttonText || '关闭'}
           okButtonTitle={this.props.buttonTitle}
           onOkButtonClick={this.props.onButtonClick}
           okButtonDisabled={this.props.disabled}
