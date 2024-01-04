@@ -15,14 +15,14 @@ import {
 } from '../custom-integration'
 
 export enum Shell {
-  Cmd = 'Command Prompt',
+  Cmd = '命令提示符',
   PowerShell = 'PowerShell',
   PowerShellCore = 'PowerShell Core',
   Hyper = 'Hyper',
   GitBash = 'Git Bash',
   Cygwin = 'Cygwin',
   WSL = 'WSL',
-  WindowsTerminal = 'Windows Terminal',
+  WindowsTerminal = '终端', // 应用名显示为终端
   FluentTerminal = 'Fluent Terminal',
   Alacritty = 'Alacritty',
 }

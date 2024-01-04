@@ -117,9 +117,7 @@ export class CommitListItem extends React.PureComponent<
 
     const isDraggable = this.props.isDraggable || false
     const hasEmptySummary = commit.summary.length === 0
-    const commitSummary = hasEmptySummary
-      ? 'Empty commit message'
-      : commit.summary
+    const commitSummary = hasEmptySummary ? '空白的提交消息' : commit.summary
 
     const summaryClassNames = classNames('summary', {
       'empty-summary': hasEmptySummary,

@@ -10,7 +10,7 @@ export async function openFile(
   if (!result) {
     const error = {
       name: 'no-external-program',
-      message: `Unable to open file ${fullPath} in an external program. Please check you have a program associated with this file extension`,
+      message: `无法用外部软件打开 ${fullPath} 文件。请检查该文件扩展名是否存在默认处理软件。`,
     }
     await dispatcher.postError(error)
   }

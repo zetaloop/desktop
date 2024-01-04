@@ -39,7 +39,7 @@ export class CommittedFileItem extends React.Component<ICommittedFileItemProps> 
         <TooltippedContent
           ancestorFocused={focused}
           openOnFocus={true}
-          tooltip={fileStatus}
+          tooltip={mapStatus(status, true)} // cn
           direction={TooltipDirection.NORTH}
         >
           <Octicon
