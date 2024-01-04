@@ -23,24 +23,23 @@ export class DeletePullRequest extends React.Component<IDeleteBranchProps, {}> {
     return (
       <Dialog
         id="delete-branch"
-        title={__DARWIN__ ? 'Delete Branch' : 'Delete branch'}
+        title={__DARWIN__ ? '删除分支' : '删除分支'}
         type="warning"
         onDismissed={this.props.onDismissed}
         onSubmit={this.deleteBranch}
       >
         <DialogContent>
-          <p>This branch may have an open pull request associated with it.</p>
+          <p>注意该分支所关联的拉取请求尚未关闭。</p>
           <p>
-            If{' '}
+            如果{' '}
             <LinkButton onClick={this.openPullRequest}>
               #{this.props.pullRequest.pullRequestNumber}
             </LinkButton>{' '}
-            has been merged, you can also go to GitHub to delete the remote
-            branch.
+            已被合并，您可前往 GitHub 删除远程分支。
           </p>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup destructive={true} okButtonText="Delete" />
+          <OkCancelButtonGroup destructive={true} okButtonText="删除" />
         </DialogFooter>
       </Dialog>
     )

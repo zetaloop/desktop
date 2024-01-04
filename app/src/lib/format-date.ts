@@ -17,5 +17,5 @@ const getDateFormatter = mem(Intl.DateTimeFormat, {
  */
 export const formatDate = (date: Date, options: Intl.DateTimeFormatOptions) =>
   isNaN(date.valueOf())
-    ? 'Invalid date'
-    : getDateFormatter('en-US', options).format(date)
+    ? '无效日期'
+    : getDateFormatter('zh-CN', options).format(date)
