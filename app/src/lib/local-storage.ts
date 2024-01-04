@@ -119,6 +119,37 @@ export function setNumber(key: string, value: number) {
 }
 
 /**
+ * Returns the value for the provided key from local storage as a string,
+ * or the provided `defaultValue` if the key doesn't exist.
+ *
+ * @param key local storage entry to find
+ * @param defaultValue fallback value if key not found
+ */
+export function getString(key: string): string | undefined
+export function getString(key: string, defaultValue: string): string
+export function getString(
+  key: string,
+  defaultValue?: string
+): string | undefined {
+  const value = localStorage.getItem(key)
+  if (value === null) {
+    return defaultValue
+  }
+  return value
+}
+
+/**
+ * Set the provided key in local storage to a string value, or update the
+ * existing value if a key is already defined.
+ *
+ * @param key local storage entry to update
+ * @param value the string to set
+ */
+export function setString(key: string, value: string) {
+  localStorage.setItem(key, value)
+}
+
+/**
  * Retrieve an array of `number` values from a given local
  * storage entry, if found. The array will be empty if the
  * key doesn't exist or if the values cannot be converted

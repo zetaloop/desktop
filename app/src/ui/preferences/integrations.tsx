@@ -8,6 +8,8 @@ import { suggestedExternalEditor } from '../../lib/editors/shared'
 import { CustomIntegrationForm } from './custom-integration-form'
 import { ICustomIntegration } from '../../lib/custom-integration'
 import { enableCustomIntegration } from '../../lib/feature-flag'
+import { Checkbox, CheckboxValue } from '../lib/checkbox'
+import { TextBox } from '../lib/text-box'
 
 const CustomIntegrationValue = 'other'
 
@@ -26,6 +28,12 @@ interface IIntegrationsPreferencesProps {
   readonly onCustomEditorChanged: (customEditor: ICustomIntegration) => void
   readonly onUseCustomShellChanged: (useCustomShell: boolean) => void
   readonly onCustomShellChanged: (customShell: ICustomIntegration) => void
+  readonly copilotUseCommitHistoryStyle: boolean
+  readonly onCopilotUseCommitHistoryStyleChanged: (value: boolean) => void
+  readonly copilotCustomStyle: string
+  readonly onCopilotCustomStyleChanged: (value: string) => void
+  readonly copilotDiffTruncationLimit: number
+  readonly onCopilotDiffTruncationLimitChanged: (value: number) => void
 }
 
 interface IIntegrationsPreferencesState {
@@ -35,6 +43,9 @@ interface IIntegrationsPreferencesState {
   readonly customEditor: ICustomIntegration
   readonly useCustomShell: boolean
   readonly customShell: ICustomIntegration
+  readonly copilotUseCommitHistoryStyle: boolean
+  readonly copilotCustomStyle: string
+  readonly copilotDiffTruncationLimit: number
 }
 
 export class Integrations extends React.Component<
@@ -54,6 +65,9 @@ export class Integrations extends React.Component<
       customEditor: this.props.customEditor,
       useCustomShell: this.props.useCustomShell,
       customShell: this.props.customShell,
+      copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
+      copilotCustomStyle: this.props.copilotCustomStyle,
+      copilotDiffTruncationLimit: this.props.copilotDiffTruncationLimit,
     }
   }
 
@@ -88,6 +102,9 @@ export class Integrations extends React.Component<
       useCustomShell: nextProps.useCustomShell,
       customShell: nextProps.customShell,
       customEditor: nextProps.customEditor,
+      copilotUseCommitHistoryStyle: nextProps.copilotUseCommitHistoryStyle,
+      copilotCustomStyle: nextProps.copilotCustomStyle,
+      copilotDiffTruncationLimit: nextProps.copilotDiffTruncationLimit,
     })
   }
 
@@ -181,10 +198,31 @@ export class Integrations extends React.Component<
     }
   }
 
+  private onCopilotUseCommitHistoryStyleChanged = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    const checked = event.currentTarget.checked
+    this.setState({ copilotUseCommitHistoryStyle: checked })
+    this.props.onCopilotUseCommitHistoryStyleChanged(checked)
+  }
+
+  private onCopilotCustomStyleChanged = (value: string) => {
+    this.setState({ copilotCustomStyle: value })
+    this.props.onCopilotCustomStyleChanged(value)
+  }
+
+  private onCopilotDiffTruncationLimitChanged = (
+    event: React.FormEvent<HTMLSelectElement>
+  ) => {
+    const value = parseInt(event.currentTarget.value, 10)
+    this.setState({ copilotDiffTruncationLimit: value })
+    this.props.onCopilotDiffTruncationLimitChanged(value)
+  }
+
   private renderExternalEditor() {
     const options = this.props.availableEditors
     const { selectedExternalEditor, useCustomEditor } = this.state
-    const label = __DARWIN__ ? 'External Editor' : 'External editor'
+    const label = __DARWIN__ ? '编辑器' : '编辑器'
 
     if (!enableCustomIntegration() && options.length === 0) {
       // this is emulating the <Select/> component's UI so the styles are
@@ -196,10 +234,11 @@ export class Integrations extends React.Component<
         <div className="select-component no-options-found">
           <label>{label}</label>
           <span>
-            No editors found.{' '}
+            没有可用的编辑器。
             <LinkButton uri={suggestedExternalEditor.url}>
-              Install {suggestedExternalEditor.name}?
+              装个 {suggestedExternalEditor.name}
             </LinkButton>
+            ？
           </span>
         </div>
       )
@@ -208,7 +247,7 @@ export class Integrations extends React.Component<
     return (
       <Select
         label={enableCustomIntegration() ? undefined : label}
-        aria-label="External editor"
+        aria-label="编辑器"
         value={
           useCustomEditor
             ? CustomIntegrationValue
@@ -223,9 +262,7 @@ export class Integrations extends React.Component<
         ))}
         {enableCustomIntegration() && (
           <option key={CustomIntegrationValue} value={CustomIntegrationValue}>
-            {__DARWIN__
-              ? 'Configure Custom Editor…'
-              : 'Configure custom editor…'}
+            {__DARWIN__ ? '配置自定义编辑器…' : '配置自定义编辑器…'}
           </option>
         )}
       </Select>
@@ -242,10 +279,11 @@ export class Integrations extends React.Component<
       <Row>
         <div className="no-options-found">
           <span>
-            No other editors found.{' '}
+            需要一个编辑器？
             <LinkButton uri={suggestedExternalEditor.url}>
-              Install {suggestedExternalEditor.name}?
+              装个 {suggestedExternalEditor.name} 吧
             </LinkButton>
+            。
           </span>
         </div>
       </Row>
@@ -295,8 +333,8 @@ export class Integrations extends React.Component<
 
     return (
       <Select
-        label={enableCustomIntegration() ? undefined : 'Shell'}
-        aria-label="Shell"
+        label={enableCustomIntegration() ? undefined : '终端'}
+        aria-label="终端"
         value={useCustomShell ? CustomIntegrationValue : selectedShell}
         onChange={this.onSelectedShellChanged}
       >
@@ -307,7 +345,7 @@ export class Integrations extends React.Component<
         ))}
         {enableCustomIntegration() && (
           <option key={CustomIntegrationValue} value={CustomIntegrationValue}>
-            {__DARWIN__ ? 'Configure Custom Shell…' : 'Configure custom shell…'}
+            {__DARWIN__ ? '配置自定义终端…' : '配置自定义终端…'}
           </option>
         )}
       </Select>
@@ -351,11 +389,80 @@ export class Integrations extends React.Component<
     this.props.onCustomShellChanged(customShell)
   }
 
+  private renderCopilotSettings() {
+    const copilotHistoryDescId = 'copilot-history-description'
+    const copilotCustomStyleDescId = 'copilot-custom-style-description'
+    const copilotDiffTruncationLimitDescId =
+      'copilot-diff-truncation-limit-description'
+    const truncationOptions = [
+      { value: 0, label: '无限制' },
+      { value: 100000, label: '100k' },
+      { value: 200000, label: '200k' },
+      { value: 300000, label: '300k' },
+      { value: 400000, label: '400k' },
+      { value: 500000, label: '500k' },
+      { value: 600000, label: '600k' },
+      { value: 700000, label: '700k' },
+      { value: 800000, label: '800k' },
+      { value: 900000, label: '900k' },
+      { value: 1000000, label: '1000k' },
+    ]
+    return (
+      <div className="copilot-settings-component">
+        <h2>GitHub Copilot</h2>
+        <p className="git-settings-description">
+          以下调整选项是汉化版的增强功能。
+        </p>
+        <Checkbox
+          label="参考最近的提交历史"
+          value={
+            this.state.copilotUseCommitHistoryStyle
+              ? CheckboxValue.On
+              : CheckboxValue.Off
+          }
+          onChange={this.onCopilotUseCommitHistoryStyleChanged}
+          ariaDescribedBy={copilotHistoryDescId}
+        />
+        <p id={copilotHistoryDescId} className="git-settings-description">
+          生成提交消息时参考最近十条提交内容。
+        </p>
+        <TextBox
+          label="自定义提交风格"
+          value={this.state.copilotCustomStyle}
+          onValueChanged={this.onCopilotCustomStyleChanged}
+          placeholder="例如：采用简洁的 Conventional Commits 风格，使用中文"
+          ariaDescribedBy={copilotCustomStyleDescId}
+        />
+        <p id={copilotCustomStyleDescId} className="git-settings-description">
+          生成提交消息时采用此处要求的风格。
+        </p>
+        <Select
+          label="读取字数限制"
+          value={this.state.copilotDiffTruncationLimit.toString()}
+          onChange={this.onCopilotDiffTruncationLimitChanged}
+          aria-describedby={copilotDiffTruncationLimitDescId}
+        >
+          {truncationOptions.map(o => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </Select>
+        <p
+          id={copilotDiffTruncationLimitDescId}
+          className="git-settings-description"
+        >
+          生成提交消息时最多读取的改动字符数，超出的部分会被忽略。
+        </p>
+      </div>
+    )
+  }
+
   public render() {
     if (!enableCustomIntegration()) {
       return (
         <DialogContent>
-          <h2>Applications</h2>
+          <h2>默认应用</h2>
           <Row>{this.renderExternalEditor()}</Row>
           <Row>{this.renderSelectedShell()}</Row>
         </DialogContent>
@@ -366,7 +473,7 @@ export class Integrations extends React.Component<
       <DialogContent>
         <fieldset>
           <legend>
-            <h2>{__DARWIN__ ? 'External Editor' : 'External editor'}</h2>
+            <h2>{__DARWIN__ ? '编辑器' : '编辑器'}</h2>
           </legend>
           <Row>{this.renderExternalEditor()}</Row>
           {this.state.useCustomEditor && this.renderCustomExternalEditor()}
@@ -374,11 +481,12 @@ export class Integrations extends React.Component<
         </fieldset>
         <fieldset>
           <legend>
-            <h2>Shell</h2>
+            <h2>终端</h2>
           </legend>
           <Row>{this.renderSelectedShell()}</Row>
           {this.state.useCustomShell && this.renderCustomShell()}
         </fieldset>
+        {this.renderCopilotSettings()}
       </DialogContent>
     )
   }

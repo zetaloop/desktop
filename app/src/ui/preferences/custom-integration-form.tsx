@@ -68,21 +68,21 @@ export class CustomIntegrationForm extends React.Component<
       <div className="custom-integration-form-container">
         <div className="custom-integration-form-path-container">
           <TextBox
-            label="Path"
+            label="路径"
             value={this.state.path}
             ref={this.pathInputRef}
             onValueChanged={this.onPathChanged}
-            placeholder="Path to executable"
+            placeholder="程序的位置"
             ariaDescribedBy={`${this.props.id}-custom-integration-path-error`}
           />
-          <Button onClick={this.onChoosePath}>Choose…</Button>
+          <Button onClick={this.onChoosePath}>选择…</Button>
         </div>
         {this.renderPathErrors()}
         <TextBox
-          label="Arguments"
+          label="参数"
           value={this.state.arguments}
           onValueChanged={this.onParamsChanged}
-          placeholder="Command line arguments"
+          placeholder="命令行参数"
           ariaDescribedBy={`${this.props.id}-custom-integration-args-error`}
         />
         {this.renderArgsErrors()}
@@ -95,8 +95,7 @@ export class CustomIntegrationForm extends React.Component<
       return null
     }
 
-    const errorDescription =
-      'This path does not appear to be a valid executable.'
+    const errorDescription = '该路径不是一个有效程序。'
 
     return (
       <div className="custom-integration-form-error">
@@ -120,8 +119,8 @@ export class CustomIntegrationForm extends React.Component<
     }
 
     const errorDescription = this.state.showNonValidArgsError
-      ? 'These arguments are not valid.'
-      : `Arguments must include the target path placeholder (${TargetPathArgument}).`
+      ? '参数无效。'
+      : `参数必须包含目标路径（${TargetPathArgument}）。`
 
     return (
       <div className="custom-integration-form-error">

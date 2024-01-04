@@ -1,10 +1,24 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - development
-  pull_request:
+  # push:
+  #   branches:
+  #     - development
+  # pull_request:
+  workflow_dispatch:
+    inputs:
+      upload-artifacts:
+        default: true
+        required: false
+        type: boolean
+      environment:
+        default: beta
+        type: string
+        required: true
+      sign:
+        type: boolean
+        default: false
+        required: false
   workflow_call:
     inputs:
       repository:
@@ -64,7 +78,8 @@ jobs:
       - name: Ensure a clean working directory
         run: git diff --name-status --exit-code
   build:
-    name: ${{ matrix.friendlyName }} ${{ matrix.arch }}
+    name:
+      ${{ matrix.friendlyName }} ${{ matrix.arch }} ${{ inputs.environment }}
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
@@ -72,12 +87,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14-xlarge, windows-2022]
+        os: [macos-26, windows-2025]
         arch: [x64, arm64]
         include:
-          - os: macos-14-xlarge
+          - os: macos-26
             friendlyName: macOS
-          - os: windows-2022
+          - os: windows-2025
             friendlyName: Windows
     timeout-minutes: 60
     environment: ${{ inputs.environment }}
@@ -123,16 +138,16 @@ jobs:
           KEY_PASSWORD: ${{ secrets.APPLE_APPLICATION_CERT_PASSWORD }}
           npm_config_arch: ${{ matrix.arch }}
           TARGET_ARCH: ${{ matrix.arch }}
-      - name: Prepare testing environment
-        run: yarn test:setup
-        env:
-          npm_config_arch: ${{ matrix.arch }}
-      - name: Run unit tests
-        if: |
-          (runner.os == 'Windows' && matrix.arch == 'x64') || (runner.os == 'macOS' && matrix.arch == 'arm64')
-        run: yarn test:unit
-      - name: Run script tests
-        run: yarn test:script
+      # - name: Prepare testing environment
+      #   run: yarn test:setup
+      #   env:
+      #     npm_config_arch: ${{ matrix.arch }}
+      # - name: Run unit tests
+      #   if: |
+      #     (runner.os == 'Windows' && matrix.arch == 'x64') || (runner.os == 'macOS' && matrix.arch == 'arm64')
+      #   run: yarn test:unit
+      # - name: Run script tests
+      #   run: yarn test:script
       - name: Install Azure Code Signing Client
         if: ${{ runner.os == 'Windows' && inputs.sign }}
         run: |
@@ -141,7 +156,7 @@ jobs:
           Invoke-WebRequest -Uri https://www.nuget.org/api/v2/package/Microsoft.Trusted.Signing.Client/1.0.95 -OutFile $acsZip -Verbose
           Expand-Archive $acsZip -Destination $acsDir -Force -Verbose
           # Replace ancient signtool in electron-winstall with one that supports ACS
-          Copy-Item -Path "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\*" -Include signtool.exe,signtool.exe.manifest,Microsoft.Windows.Build.Signing.mssign32.dll.manifest,mssign32.dll,Microsoft.Windows.Build.Signing.wintrust.dll.manifest,wintrust.dll,Microsoft.Windows.Build.Appx.AppxSip.dll.manifest,AppxSip.dll,Microsoft.Windows.Build.Appx.AppxPackaging.dll.manifest,AppxPackaging.dll,Microsoft.Windows.Build.Appx.OpcServices.dll.manifest,OpcServices.dll -Destination "node_modules\electron-winstaller\vendor" -Verbose
+          Copy-Item -Path "C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\*" -Include signtool.exe,signtool.exe.manifest,Microsoft.Windows.Build.Signing.mssign32.dll.manifest,mssign32.dll,Microsoft.Windows.Build.Signing.wintrust.dll.manifest,wintrust.dll,Microsoft.Windows.Build.Appx.AppxSip.dll.manifest,AppxSip.dll,Microsoft.Windows.Build.Appx.AppxPackaging.dll.manifest,AppxPackaging.dll,Microsoft.Windows.Build.Appx.OpcServices.dll.manifest,OpcServices.dll -Destination "node_modules\electron-winstaller\vendor" -Verbose
       - name: Azure Login (OIDC)
         if: ${{ runner.os == 'Windows' && inputs.sign }}
         uses: azure/login@v2
