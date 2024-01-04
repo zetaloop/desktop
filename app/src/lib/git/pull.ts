@@ -47,7 +47,7 @@ export async function pull(
   }
 
   if (progressCallback) {
-    const title = `Pulling ${remote.name}`
+    const title = `正在拉取 ${remote.name}`
     const kind = 'pull'
 
     opts = await executionOptionsWithProgress(
@@ -59,7 +59,7 @@ export async function pull(
         // about ref updates. We don't need to bring those into the progress
         // stream so we'll just punt on anything we don't know about for now.
         if (progress.kind === 'context') {
-          if (!progress.text.startsWith('remote: Counting objects')) {
+          if (!progress.text_.startsWith('remote: Counting objects')) {
             return
           }
         }

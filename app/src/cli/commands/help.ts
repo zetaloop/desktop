@@ -5,8 +5,8 @@ import { commands, ICommandModule, IOption } from '../load-commands'
 import { dasherizeOption, printTable } from '../util'
 
 export const command: ICommandModule = {
-  command: 'help [command]',
-  description: 'Show the help page for a command',
+  command: 'help [命令]',
+  description: '显示命令的帮助页面',
   handler({ _: [command] }) {
     if (command) {
       printCommandHelp(command, commands[command])
@@ -17,7 +17,7 @@ export const command: ICommandModule = {
 }
 
 function printHelp() {
-  console.log(chalk.underline('Commands:'))
+  console.log(chalk.underline('命令:'))
   const table: string[][] = []
   for (const commandName of Object.keys(commands)) {
     const command = commands[commandName]
@@ -25,15 +25,27 @@ function printHelp() {
   }
   printTable(table)
   console.log(
-    `\nRun ${chalk.bold(
-      `github help ${chalk.gray('<command>')}`
-    )} for details about each command`
+    `\n运行 ${chalk.bold(
+      `github help ${chalk.gray('<命令>')}`
+    )} 查看各个命令的详细帮助信息`
+    // )} for details about each command`
   )
+}
+
+function typeTranslator(type: string) {
+  switch (type) {
+    case 'string':
+      return '字符串'
+    case 'boolean':
+      return '布尔值'
+    default:
+      return type
+  }
 }
 
 function printCommandHelp(name: string, command: ICommandModule) {
   if (!command) {
-    console.log(`Unrecognized command: ${chalk.bold.red.underline(name)}`)
+    console.log(`未知命令: ${chalk.bold.red.underline(name)}`)
     printHelp()
     return
   }
@@ -51,7 +63,7 @@ function printCommandHelp(name: string, command: ICommandModule) {
   }
   const { options, args } = command
   if (options) {
-    console.log(chalk.underline('\nOptions:'))
+    console.log(chalk.underline('\n选项:'))
     printTable(
       Object.keys(options)
         .map(k => [k, options[k]] as [string, IOption])
@@ -61,18 +73,18 @@ function printCommandHelp(name: string, command: ICommandModule) {
             .map(x => chalk.bold.blue(x))
             .join(chalk.gray(', ')),
           option.description,
-          chalk.gray(`[${chalk.underline(option.type)}]`),
+          chalk.gray(`[${chalk.underline(typeTranslator(option.type))}]`),
         ])
     )
   }
   if (args && args.length) {
-    console.log(chalk.underline('\nArguments:'))
+    console.log(chalk.underline('\n参数:'))
     printTable(
       args.map(arg => [
         (arg.required ? chalk.bold : chalk).blue(arg.name),
-        arg.required ? chalk.gray('(required)') : '',
+        arg.required ? chalk.gray('(必填)') : '',
         arg.description,
-        chalk.gray(`[${chalk.underline(arg.type)}]`),
+        chalk.gray(`[${chalk.underline(typeTranslator(arg.type))}]`),
       ])
     )
   }

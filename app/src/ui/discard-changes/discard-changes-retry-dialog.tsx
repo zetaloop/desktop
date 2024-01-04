@@ -32,7 +32,7 @@ export class DiscardChangesRetryDialog extends React.Component<
 
     return (
       <Dialog
-        title="Error"
+        title="错误"
         id="discard-changes-retry"
         loading={retrying}
         disabled={retrying}
@@ -41,17 +41,15 @@ export class DiscardChangesRetryDialog extends React.Component<
         type="error"
       >
         <DialogContent>
-          <p>Failed to discard changes to {TrashNameLabel}.</p>
+          <p>无法放弃改动，文件放不进{TrashNameLabel}。</p>
           <div>
-            Common reasons are:
+            通常原因如下：
             <ul>
-              <li>
-                The {TrashNameLabel} is configured to delete items immediately.
-              </li>
-              <li>Restricted access to move the file(s).</li>
+              <li>{TrashNameLabel}被设置为立刻删除文件。</li>
+              <li>没有文件移动权限。</li>
             </ul>
           </div>
-          <p>These changes will be unrecoverable from the {TrashNameLabel}.</p>
+          <p>这些改动将会无法从{TrashNameLabel}恢复。</p>
           {this.renderConfirmDiscardChanges()}
         </DialogContent>
         {this.renderFooter()}
@@ -62,7 +60,7 @@ export class DiscardChangesRetryDialog extends React.Component<
   private renderConfirmDiscardChanges() {
     return (
       <Checkbox
-        label="Do not show this message again"
+        label="不再显示"
         value={
           this.state.confirmDiscardChanges
             ? CheckboxValue.Off
@@ -77,13 +75,9 @@ export class DiscardChangesRetryDialog extends React.Component<
     return (
       <DialogFooter>
         <OkCancelButtonGroup
-          okButtonText={
-            __DARWIN__
-              ? 'Permanently Discard Changes'
-              : 'Permanently discard changes'
-          }
-          okButtonTitle={`This will discard changes and they will be unrecoverable.`}
-          cancelButtonText="Cancel"
+          okButtonText={__DARWIN__ ? '永久删除' : '永久删除'}
+          okButtonTitle={`文件会被永久删除，这些改动将无法恢复。`}
+          cancelButtonText="取消"
           destructive={true}
         />
       </DialogFooter>
