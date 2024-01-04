@@ -81,6 +81,8 @@ interface IPreferencesProps {
   readonly onEditGlobalGitConfig: () => void
   readonly underlineLinks: boolean
   readonly showDiffCheckMarks: boolean
+  readonly copilotUseCommitHistoryStyle: boolean
+  readonly copilotCustomStyle: string
 }
 
 interface IPreferencesState {
@@ -115,6 +117,8 @@ interface IPreferencesState {
   readonly selectedExternalEditor: string | null
   readonly availableShells: ReadonlyArray<Shell>
   readonly selectedShell: Shell
+  readonly copilotUseCommitHistoryStyle: boolean
+  readonly copilotCustomStyle: string
 
   /**
    * If unable to save Git configuration values (name, email)
@@ -192,6 +196,8 @@ export class Preferences extends React.Component<
       isLoadingGitConfig: true,
       underlineLinks: this.props.underlineLinks,
       showDiffCheckMarks: this.props.showDiffCheckMarks,
+      copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
+      copilotCustomStyle: this.props.copilotCustomStyle,
     }
   }
 
@@ -260,6 +266,8 @@ export class Preferences extends React.Component<
       useCustomShell: this.props.useCustomShell,
       customShell: this.props.customShell ?? DefaultCustomIntegration,
       isLoadingGitConfig: false,
+      copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
+      copilotCustomStyle: this.props.copilotCustomStyle,
     })
   }
 
@@ -278,7 +286,7 @@ export class Preferences extends React.Component<
     return (
       <Dialog
         id="preferences"
-        title={__DARWIN__ ? 'Settings' : 'Options'}
+        title={__DARWIN__ ? '设置' : '设置'}
         onDismissed={this.onCancel}
         onSubmit={this.onSave}
       >
@@ -291,11 +299,11 @@ export class Preferences extends React.Component<
           >
             <span id={this.getTabId(PreferencesTab.Accounts)}>
               <Octicon className="icon" symbol={octicons.home} />
-              Accounts
+              账号
             </span>
             <span id={this.getTabId(PreferencesTab.Integrations)}>
               <Octicon className="icon" symbol={octicons.person} />
-              Integrations
+              集成
             </span>
             <span id={this.getTabId(PreferencesTab.Git)}>
               <Octicon className="icon" symbol={octicons.gitCommit} />
@@ -303,23 +311,23 @@ export class Preferences extends React.Component<
             </span>
             <span id={this.getTabId(PreferencesTab.Appearance)}>
               <Octicon className="icon" symbol={octicons.paintbrush} />
-              Appearance
+              外观
             </span>
             <span id={this.getTabId(PreferencesTab.Notifications)}>
               <Octicon className="icon" symbol={octicons.bell} />
-              Notifications
+              通知
             </span>
             <span id={this.getTabId(PreferencesTab.Prompts)}>
               <Octicon className="icon" symbol={octicons.question} />
-              Prompts
+              提示
             </span>
             <span id={this.getTabId(PreferencesTab.Advanced)}>
               <Octicon className="icon" symbol={octicons.gear} />
-              Advanced
+              高级
             </span>
             <span id={this.getTabId(PreferencesTab.Accessibility)}>
               <Octicon className="icon" symbol={octicons.accessibility} />
-              Accessibility
+              辅助
             </span>
           </TabBar>
 
@@ -418,6 +426,14 @@ export class Preferences extends React.Component<
             onCustomEditorChanged={this.onCustomEditorChanged}
             onUseCustomShellChanged={this.onUseCustomShellChanged}
             onCustomShellChanged={this.onCustomShellChanged}
+            copilotUseCommitHistoryStyle={
+              this.state.copilotUseCommitHistoryStyle
+            }
+            onCopilotUseCommitHistoryStyleChanged={
+              this.onCopilotUseCommitHistoryStyleChanged
+            }
+            copilotCustomStyle={this.state.copilotCustomStyle}
+            onCopilotCustomStyleChanged={this.onCopilotCustomStyleChanged}
           />
         )
         break
@@ -697,13 +713,21 @@ export class Preferences extends React.Component<
     this.props.dispatcher.setSelectedTabSize(tabSize)
   }
 
+  private onCopilotUseCommitHistoryStyleChanged = (value: boolean) => {
+    this.setState({ copilotUseCommitHistoryStyle: value })
+  }
+
+  private onCopilotCustomStyleChanged = (value: string) => {
+    this.setState({ copilotCustomStyle: value })
+  }
+
   private renderFooter() {
     const hasDisabledError = this.state.disallowedCharactersMessage != null
 
     return (
       <DialogFooter>
         <OkCancelButtonGroup
-          okButtonText="Save"
+          okButtonText="保存"
           okButtonDisabled={hasDisabledError}
         />
       </DialogFooter>
@@ -842,6 +866,11 @@ export class Preferences extends React.Component<
     dispatcher.setUnderlineLinksSetting(this.state.underlineLinks)
 
     dispatcher.setDiffCheckMarksSetting(this.state.showDiffCheckMarks)
+
+    dispatcher.setCopilotUseCommitHistoryStyle(
+      this.state.copilotUseCommitHistoryStyle
+    )
+    dispatcher.setCopilotCustomStyle(this.state.copilotCustomStyle)
 
     this.props.onDismissed()
   }

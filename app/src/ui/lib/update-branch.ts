@@ -10,21 +10,20 @@ import { IDropdownSelectButtonOption } from '../dropdown-select-button'
 export function getMergeOptions(): ReadonlyArray<IDropdownSelectButtonOption> {
   return [
     {
-      label: 'Create a merge commit',
+      label: '合并',
       description:
-        'The commits from the selected branch will be added to the current branch via a merge commit.',
+        '通过创建一个合并提交，来把所选分支的新提交添加到当前分支上。',
       id: MultiCommitOperationKind.Merge,
     },
     {
-      label: 'Squash and merge',
-      description:
-        'The commits in the selected branch will be combined into one commit in the current branch.',
+      label: '压缩并合并',
+      description: '将所选分支的新提交，压缩进一个提交里，添加到当前分支上。',
       id: MultiCommitOperationKind.Squash,
     },
     {
-      label: 'Rebase',
+      label: '重构',
       description:
-        'The commits from the selected branch will be rebased and added to the current branch.',
+        '以所选分支为基础，把当前分支的改动在它之上重新应用一遍，从而将所选分支的新提交整合进当前分支的历史记录中。',
       id: MultiCommitOperationKind.Rebase,
     },
   ]

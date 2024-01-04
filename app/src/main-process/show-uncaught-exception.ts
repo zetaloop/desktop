@@ -26,11 +26,10 @@ export function showUncaughtException(isLaunchError: boolean, error: Error) {
   window.onFailedToLoad(async () => {
     await dialog.showMessageBox({
       type: 'error',
-      title: __DARWIN__ ? `Unrecoverable Error` : 'Unrecoverable error',
+      title: __DARWIN__ ? `无法恢复的错误` : '无法恢复的错误',
       message:
-        `GitHub Desktop has encountered an unrecoverable error and will need to restart.\n\n` +
-        `This has been reported to the team, but if you encounter this repeatedly please report ` +
-        `this issue to the GitHub Desktop issue tracker.\n\n${
+        `GitHub Desktop 遇到了一个无法恢复的错误，需要重新启动。n\n` +
+        `此问题已报告给开发团队。但如果您反复遇到这个错误，请在 GitHub Desktop 的问题跟踪器中报告此问题。\n\n${
           error.stack || error.message
         }`,
     })

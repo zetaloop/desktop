@@ -33,7 +33,7 @@ export class DeleteRemoteBranch extends React.Component<
     return (
       <Dialog
         id="delete-branch"
-        title={__DARWIN__ ? 'Delete Remote Branch' : 'Delete remote branch'}
+        title={__DARWIN__ ? '删除远程分支' : '删除远程分支'}
         type="warning"
         onSubmit={this.deleteBranch}
         onDismissed={this.props.onDismissed}
@@ -45,18 +45,15 @@ export class DeleteRemoteBranch extends React.Component<
         <DialogContent>
           <div id="delete-branch-confirmation-message">
             <p>
-              Delete remote branch <Ref>{this.props.branch.name}</Ref>?
+              确定要删除远程分支 <Ref>{this.props.branch.name}</Ref> 吗？
             </p>
-            <p>This action cannot be undone.</p>
+            <p>该操作不可逆。</p>
 
-            <p>
-              This branch does not exist locally. Deleting it may impact others
-              collaborating on this branch.
-            </p>
+            <p>请注意该分支并不在本地，删除该远程分支可能会妨碍他人使用。</p>
           </div>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup destructive={true} okButtonText="Delete" />
+          <OkCancelButtonGroup destructive={true} okButtonText="删除" />
         </DialogFooter>
       </Dialog>
     )
