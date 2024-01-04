@@ -18,7 +18,7 @@ interface IInvalidatedTokenProps {
  */
 export class InvalidatedToken extends React.Component<IInvalidatedTokenProps> {
   public render() {
-    const accountTypeSuffix = this.isEnterpriseAccount ? ' Enterprise' : ''
+    const accountTypeSuffix = this.isEnterpriseAccount ? ' 企业版' : ' '
 
     return (
       <Dialog
@@ -30,13 +30,12 @@ export class InvalidatedToken extends React.Component<IInvalidatedTokenProps> {
       >
         <DialogContent>
           <Row>
-            Your account token has been invalidated and you have been signed out
-            from your GitHub{accountTypeSuffix} account. Do you want to sign in
-            again?
+            账号登录令牌失效，您已退出 GitHub{accountTypeSuffix}
+            账号。需要重新登录吗？
           </Row>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup okButtonText="Yes" cancelButtonText="No" />
+          <OkCancelButtonGroup okButtonText="登录" cancelButtonText="取消" />
         </DialogFooter>
       </Dialog>
     )

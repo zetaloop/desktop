@@ -180,12 +180,12 @@ export class AuthorInput extends React.Component<
         </div>
         <div className="shadow-input" ref={this.shadowInputRef} />
         <label id="author-input-label" className="label" htmlFor="author-input">
-          Co-Authors&nbsp;
+          协作者&nbsp;
         </label>
         {this.renderAuthors()}
         <AutocompletingInput<UserHit>
           elementId="author-input"
-          placeholder="@username"
+          placeholder="@用户名"
           alwaysAutocomplete={true}
           autocompletionProviders={[this.props.autoCompleteProvider]}
           autocompleteItemFilter={this.getAutocompleteItemFilter(

@@ -17,11 +17,9 @@ import { pathExists } from '../../../ui/lib/path-exists'
 
 const nl = __WIN32__ ? '\r\n' : '\n'
 const InitialReadmeContents =
-  `# Welcome to GitHub Desktop!${nl}${nl}` +
-  `This is your README. READMEs are where you can communicate ` +
-  `what your project is and how to use it.${nl}${nl}` +
-  `Write your name on line 6, save it, and then head ` +
-  `back to GitHub Desktop.${nl}`
+  `# 欢迎使用 GitHub Desktop！${nl}${nl}` +
+  `这里是你的 README 自述文件。自述文件是你向大家介绍你的项目是什么、如何使用的地方。${nl}${nl}` +
+  `在第六行写下你的名字，保存文件，然后回到 GitHub Desktop 吧。${nl}`
 
 async function createAPIRepository(account: Account, name: string) {
   const api = new API(account.endpoint, account.token)
@@ -30,7 +28,7 @@ async function createAPIRepository(account: Account, name: string) {
     return await api.createRepository(
       null,
       name,
-      'GitHub Desktop tutorial repository',
+      'GitHub Desktop 教程仓库',
       true
     )
   } catch (err) {
@@ -47,11 +45,10 @@ async function createAPIRepository(account: Account, name: string) {
           )
         ) {
           throw new Error(
-            'You already have a repository named ' +
-              `"${name}" on your account at ${friendlyEndpointName(
-                account
-              )}.\n\n` +
-              'Please delete the repository and try again.'
+            `您在 ${friendlyEndpointName(
+              account
+            )} 的账号上已经有一个名为 "${name}" 的仓库了。\n\n` +
+              '请删除那个仓库再试一次。'
           )
         }
       }
@@ -68,7 +65,7 @@ async function pushRepo(
   remoteBranchName: string,
   progressCb: (title: string, value: number, description?: string) => void
 ) {
-  const pushTitle = `Pushing repository to ${friendlyEndpointName(account)}`
+  const pushTitle = `推送仓库到 ${friendlyEndpointName(account)}`
   progressCb(pushTitle, 0)
 
   const pushOpts = await executionOptionsWithProgress(
@@ -106,18 +103,17 @@ export async function createTutorialRepository(
   progressCb: (title: string, value: number, description?: string) => void
 ) {
   const endpointName = friendlyEndpointName(account)
-  progressCb(`Creating repository on ${endpointName}`, 0)
+  progressCb(`在 ${endpointName} 上创建仓库`, 0)
 
   if (await pathExists(path)) {
     throw new Error(
-      `The path '${path}' already exists. Please move it ` +
-        'out of the way, or remove it, and then try again.'
+      `文件夹 '${path}' 已经存在。请将它移动到别的位置，或者删除，然后再试一次。`
     )
   }
 
   const repo = await createAPIRepository(account, name)
   const branch = repo.default_branch ?? (await getDefaultBranch())
-  progressCb('Initializing local repository', 0.2)
+  progressCb('初始化本地仓库', 0.2)
 
   await mkdir(path, { recursive: true })
 
@@ -130,7 +126,7 @@ export async function createTutorialRepository(
   await writeFile(Path.join(path, 'README.md'), InitialReadmeContents)
 
   await git(['add', '--', 'README.md'], path, 'tutorial:add')
-  await git(['commit', '-m', 'Initial commit'], path, 'tutorial:commit')
+  await git(['commit', '-m', '初始提交'], path, 'tutorial:commit')
 
   const remote: IRemote = { name: 'origin', url: repo.clone_url }
   await git(
@@ -143,7 +139,7 @@ export async function createTutorialRepository(
     progressCb(title, 0.3 + value * 0.6, description)
   })
 
-  progressCb('Finalizing tutorial repository', 0.9)
+  progressCb('完成教程仓库', 0.9)
 
   return repo
 }
