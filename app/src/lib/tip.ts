@@ -8,5 +8,5 @@ export function getTipSha(tip: Tip) {
   if (tip.kind === TipState.Detached) {
     return tip.currentSha
   }
-  return '(unknown)'
+  return '（未知）'
 }

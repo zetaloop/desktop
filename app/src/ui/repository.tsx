@@ -191,12 +191,12 @@ export class RepositoryView extends React.Component<
     return (
       <TabBar selectedIndex={selectedTab} onTabClicked={this.onTabClicked}>
         <span className="with-indicator" id="changes-tab">
-          <span>Changes</span>
+          <span>文件改动</span>
           {this.renderChangesBadge()}
         </span>
 
         <div className="with-indicator" id="history-tab">
-          <span>History</span>
+          <span>历史提交</span>
         </div>
       </TabBar>
     )

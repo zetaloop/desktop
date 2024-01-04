@@ -476,9 +476,7 @@ export class Dispatcher {
     if (tip.kind === TipState.Valid) {
       currentBranch = tip.branch
     } else {
-      throw new Error(
-        'Tip is not in a valid state, which is required to start the rebase flow'
-      )
+      throw new Error('无法启动重构流程，分支顶端状态无效')
     }
 
     this.initializeMultiCommitOperation(
@@ -774,7 +772,7 @@ export class Dispatcher {
 
     if (currentError) {
       fatalError(
-        `Unhandled error ${currentError}. This shouldn't happen! All errors should be handled, even if it's just by the default handler.`
+        `错误 ${currentError} 未处理。这不可能！所有错误应该都被处理了，即使是通过默认错误处理器。`
       )
     }
   }
@@ -2915,9 +2913,7 @@ export class Dispatcher {
     const { tip } = branchesState
     if (tip.kind !== TipState.Valid) {
       this.endMultiCommitOperation(repository)
-      throw new Error(
-        'Tip is not in a valid state, which is required to start the cherry-pick flow.'
-      )
+      throw new Error('无法启动摘取流程，分支顶端状态无效')
     }
     const sourceBranch = tip.branch
     const { commits } = dragData
@@ -3331,7 +3327,7 @@ export class Dispatcher {
       result,
       commitsToReorder.length,
       tip.branch.name,
-      `${MultiCommitOperationKind.Reorder.toLowerCase()} commit`
+      `${MultiCommitOperationKind.Reorder.toLowerCase()}提交`
     )
   }
 
@@ -3440,7 +3436,7 @@ export class Dispatcher {
       result,
       toSquash.length + 1,
       tip.branch.name,
-      `${MultiCommitOperationKind.Squash.toLowerCase()} commit`
+      `${MultiCommitOperationKind.Squash.toLowerCase()}提交`
     )
   }
 
@@ -3503,7 +3499,7 @@ export class Dispatcher {
         sendNonFatalException(
           'rebaseConflictsWithBranchAlreadyUpToDate',
           new Error(
-            `processMultiCommitOperationRebaseResult was invoked (which means Desktop went into a conflicts-found state) but the branch was already up-to-date, so there couldn't be any conflicts at all`
+            `processMultiCommitOperationRebaseResult 被触发了（这意味着 Desktop 进入了发现冲突的状态），但是分支已是最新，所以不可能有任何冲突`
           )
         )
         break
@@ -3669,7 +3665,7 @@ export class Dispatcher {
         }
         break
       case MultiCommitOperationKind.Merge:
-        throw new Error(`Unexpected multi commit operation kind ${kind}`)
+        throw new Error(`不应该出现的多提交操作类型 ${kind}`)
       default:
         assertNever(kind, `Unsupported multi operation kind ${kind}`)
     }
@@ -3789,9 +3785,7 @@ export class Dispatcher {
     if (tip.kind === TipState.Valid) {
       currentBranch = tip.branch
     } else {
-      throw new Error(
-        'Tip is not in a valid state, which is required to start the merge operation'
-      )
+      throw new Error('无法启动合并操作，分支顶端状态无效')
     }
 
     this.initializeMergeOperation(repository, isSquash, null)
@@ -3834,9 +3828,7 @@ export class Dispatcher {
     if (tip.kind === TipState.Valid) {
       currentBranch = tip.branch
     } else {
-      throw new Error(
-        'Tip is not in a valid state, which is required to initialize the merge operation'
-      )
+      throw new Error('无法初始化合并操作，分支顶端状态无效')
     }
 
     this.initializeMultiCommitOperation(
