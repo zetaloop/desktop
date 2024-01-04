@@ -31,7 +31,7 @@ export class OverwriteStash extends React.Component<
   }
 
   public render() {
-    const title = __DARWIN__ ? 'Overwrite Stash?' : 'Overwrite stash?'
+    const title = __DARWIN__ ? '覆盖暂存区？' : '覆盖暂存区？'
 
     return (
       <Dialog
@@ -47,12 +47,11 @@ export class OverwriteStash extends React.Component<
       >
         <DialogContent>
           <Row id="overwrite-stash-warning-message">
-            Are you sure you want to proceed? This will overwrite your existing
-            stash with your current changes.
+            确定要继续吗？这会把暂存区用当前的改动覆盖掉。
           </Row>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup destructive={true} okButtonText="Overwrite" />
+          <OkCancelButtonGroup destructive={true} okButtonText="覆盖" />
         </DialogFooter>
       </Dialog>
     )

@@ -71,8 +71,8 @@ export class PushPullButtonDropDown extends React.Component<IPushPullButtonDropD
     switch (type) {
       case DropdownItemType.Fetch:
         return {
-          title: `Fetch ${remoteName}`,
-          description: `Fetch the latest changes from ${remoteName}`,
+          title: `获取 ${remoteName}`,
+          description: `获取来自 ${remoteName} 的最新改动`,
           action: this.props.fetch,
           icon: syncClockwise,
         }
@@ -80,17 +80,15 @@ export class PushPullButtonDropDown extends React.Component<IPushPullButtonDropD
         const forcePushWarning = this.props
           .askForConfirmationOnForcePush ? null : (
           <div className="warning">
-            <span className="warning-title">Warning:</span> A force push will
-            rewrite history on the remote. Any collaborators working on this
-            branch will need to reset their own local branch to match the
-            history of the remote.
+            <span className="warning-title">警告：</span>
+            强制推送将会重写远程历史记录。正在使用该分支的人们必须得重置他们的本地分支才能匹配远程历史记录了，这可能会造成一些麻烦。
           </div>
         )
         return {
-          title: `Force push ${remoteName}`,
+          title: `强制推送 ${remoteName}`,
           description: (
             <>
-              Overwrite any changes on {remoteName} with your local changes
+              以本地记录覆盖 {remoteName} 的远程历史记录
               {forcePushWarning}
             </>
           ),
