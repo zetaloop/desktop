@@ -11,11 +11,11 @@ import { IDetachedHead, IUnbornRepository, IValidBranch } from './tip'
  * and as such should be capitalized.
  */
 export const enum MultiCommitOperationKind {
-  Rebase = 'Rebase',
-  CherryPick = 'Cherry-pick',
-  Squash = 'Squash',
-  Merge = 'Merge',
-  Reorder = 'Reorder',
+  Rebase = '重构',
+  CherryPick = '摘取',
+  Squash = '压缩',
+  Merge = '合并',
+  Reorder = '重排',
 }
 
 /** Type guard which narrows a string to a MultiCommitOperationKind */

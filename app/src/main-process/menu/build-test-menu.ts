@@ -11,14 +11,14 @@ export function buildTestMenu() {
 
   if (__WIN32__) {
     testMenuItems.push(separator, {
-      label: 'Command Line Tool',
+      label: '命令行工具',
       submenu: [
         {
-          label: 'Install',
+          label: '安装',
           click: emit('install-windows-cli'),
         },
         {
-          label: 'Uninstall',
+          label: '卸载',
           click: emit('uninstall-windows-cli'),
         },
       ],
@@ -101,77 +101,77 @@ export function buildTestMenu() {
   testMenuItems.push(
     separator,
     {
-      label: 'Crash main process…',
+      label: '主进程爆炸…',
       click() {
         throw new Error('Boomtown!')
       },
     },
     {
-      label: 'Crash renderer process…',
+      label: '渲染进程爆炸…',
       click: emit('boomtown'),
     },
     {
-      label: 'Prune branches',
+      label: '修剪分支',
       click: emit('test-prune-branches'),
     },
     {
-      label: 'Show notification',
+      label: '通知',
       click: emit('test-notification'),
     },
     {
-      label: 'Show popup',
+      label: '弹窗',
       submenu: [
         {
-          label: 'Release notes',
+          label: '更新日志',
           click: emit('test-release-notes-popup'),
         },
         {
-          label: 'Thank you',
+          label: '感谢小卡片',
           click: emit('test-thank-you-popup'),
         },
         {
-          label: 'Show App Error',
+          label: '软件报错',
           click: emit('test-app-error'),
         },
         {
-          label: 'Octicons',
+          label: 'Octicons 图标',
           click: emit('test-icons'),
         },
       ],
     },
     {
-      label: 'Show banner',
+      label: '横幅',
       submenu: [
         {
-          label: 'Update banner',
+          label: '更新',
           click: emit('test-update-banner'),
         },
         {
-          label: `Showcase Update banner`,
+          label: `更新亮点展示`,
           click: emit('test-showcase-update-banner'),
         },
         {
-          label: `${__DARWIN__ ? 'Apple silicon' : 'Arm64'} banner`,
+          label: `${__DARWIN__ ? 'Apple silicon' : 'Arm64'} 更新`,
           click: emit('test-arm64-banner'),
         },
         {
-          label: 'Thank you',
+          label: '感谢小卡片',
           click: emit('test-thank-you-banner'),
         },
         {
-          label: 'Reorder Successful',
+          label: '重排成功',
           click: emit('test-reorder-banner'),
         },
         {
-          label: 'Reorder Undone',
+          label: '重排撤销',
           click: emit('test-undone-banner'),
         },
         {
-          label: 'Cherry Pick Conflicts',
+          label: '摘取冲突',
           click: emit('test-cherry-pick-conflicts-banner'),
         },
         {
-          label: 'Merge Successful',
+          label: '合并成功',
           click: emit('test-merge-successful-banner'),
         },
         {
@@ -185,7 +185,7 @@ export function buildTestMenu() {
       ],
     },
     {
-      label: 'Show Error Dialogs',
+      label: '报错',
       submenu: errorDialogsSubmenu,
     }
   )

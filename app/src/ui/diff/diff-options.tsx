@@ -82,7 +82,7 @@ export class DiffOptions extends React.Component<
   }
 
   public render() {
-    const buttonLabel = `Diff ${__DARWIN__ ? 'Settings' : 'Options'}`
+    const buttonLabel = `差异对比${__DARWIN__ ? '设置' : '设置'}`
     return (
       <div className="diff-options-component" ref={this.diffOptionsRef}>
         <button
@@ -109,7 +109,7 @@ export class DiffOptions extends React.Component<
   }
 
   private renderPopover() {
-    const header = `Diff ${__DARWIN__ ? 'Settings' : 'Options'}`
+    const header = `差异对比${__DARWIN__ ? '设置' : '设置'}`
     return (
       <Popover
         ariaLabelledby="diff-options-popover-header"
@@ -135,11 +135,11 @@ export class DiffOptions extends React.Component<
   private renderShowSideBySide() {
     return (
       <fieldset role="radiogroup">
-        <legend>Diff display</legend>
+        <legend>显示方式</legend>
         <RadioButton
           value="Unified"
           checked={!this.props.showSideBySideDiff}
-          label="Unified"
+          label="同屏"
           onSelected={this.onUnifiedSelected}
         />
         <RadioButton
@@ -147,7 +147,7 @@ export class DiffOptions extends React.Component<
           checked={this.props.showSideBySideDiff}
           label={
             <>
-              <div>Split</div>
+              <div>分屏</div>
             </>
           }
           onSelected={this.onSideBySideSelected}
@@ -159,7 +159,7 @@ export class DiffOptions extends React.Component<
   private renderHideWhitespaceChanges() {
     return (
       <fieldset>
-        <legend>Whitespace</legend>
+        <legend>空白字符</legend>
         <Checkbox
           value={
             this.props.hideWhitespaceChanges
@@ -167,14 +167,11 @@ export class DiffOptions extends React.Component<
               : CheckboxValue.Off
           }
           onChange={this.onHideWhitespaceChangesChanged}
-          label={
-            __DARWIN__ ? 'Hide Whitespace Changes' : 'Hide whitespace changes'
-          }
+          label={__DARWIN__ ? '隐藏空白字符差异' : '隐藏空白字符差异'}
         />
         {this.props.isInteractiveDiff && (
           <p className="secondary-text">
-            Interacting with individual lines or hunks will be disabled while
-            hiding whitespace.
+            如果隐藏空白字符差异，将会禁用单独选中某几行文本的功能。
           </p>
         )}
       </fieldset>
