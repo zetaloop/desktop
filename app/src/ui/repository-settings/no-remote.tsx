@@ -3,7 +3,9 @@ import { DialogContent } from '../dialog'
 import { LinkButton } from '../lib/link-button'
 import { CallToAction } from '../lib/call-to-action'
 
-const HelpURL = 'https://help.github.com/articles/about-remote-repositories/'
+// const HelpURL = 'https://help.github.com/articles/about-remote-repositories/'
+const HelpURL =
+  'https://docs.github.com/zh/get-started/getting-started-with-git/about-remote-repositories'
 
 interface INoRemoteProps {
   /** The function to call when the users chooses to publish. */
@@ -15,12 +17,10 @@ export class NoRemote extends React.Component<INoRemoteProps, {}> {
   public render() {
     return (
       <DialogContent>
-        <CallToAction actionTitle="Publish" onAction={this.props.onPublish}>
+        <CallToAction actionTitle="发布" onAction={this.props.onPublish}>
           <div className="no-remote-publish-message">
-            Publish your repository to GitHub. Need help?{' '}
-            <LinkButton uri={HelpURL}>
-              Learn more about remote repositories.
-            </LinkButton>
+            把仓库发布到 GitHub 吧。是否需要帮助？
+            <LinkButton uri={HelpURL}>点击了解远程仓库</LinkButton>。
           </div>
         </CallToAction>
       </DialogContent>

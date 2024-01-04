@@ -22,9 +22,7 @@ export function getMultiCommitOperationChooseBranchStep(
   if (tip.kind === TipState.Valid) {
     currentBranch = tip.branch
   } else {
-    throw new Error(
-      'Tip is not in a valid state, which is required to start the multi commit operation'
-    )
+    throw new Error('无法启动多提交操作，分支顶端状态无效')
   }
 
   return {

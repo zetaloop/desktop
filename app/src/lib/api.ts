@@ -1862,7 +1862,7 @@ export class API {
     message: string
   ): Promise<CopilotChatCompletionResponse> {
     if (!this.copilotEndpoint) {
-      throw new Error('No Copilot endpoint available')
+      throw new Error('没有可用的 Copilot 接入点')
     }
 
     const response = await this.request(this.copilotEndpoint, 'POST', path, {
@@ -1889,32 +1889,25 @@ export class API {
       const retryAfter = response.headers.get('Retry-After')
       if (retryAfter) {
         throw new CopilotError(
-          `Rate limited, retry after ${retryAfter} seconds.`,
+          `请求过于频繁，请在${retryAfter}秒后再试。`,
           response.status
         )
       } else {
         throw new CopilotError(
-          'Rate limited, try again in a few minutes.',
+          '请求过于频繁，请等几分钟再试。',
           response.status
         )
       }
     } else if (response.status === HttpStatusCode.PaymentRequired) {
-      const errorMsg =
-        (await response.text()) || 'You have reached your quota limit.'
+      const errorMsg = (await response.text()) || '您的额度已用尽。'
 
       throw new CopilotError(errorMsg, response.status)
     } else if (response.status === HttpStatusCode.Unauthorized) {
-      throw new CopilotError(
-        'Unauthorized: error with authentication.',
-        response.status
-      )
+      throw new CopilotError('未经授权：身份认证错误。', response.status)
     } else if (response.status === HttpStatusCode.Forbidden) {
       const body = await response.text()
       if (body.includes('unauthorized: not licensed to use Copilot')) {
-        throw new CopilotError(
-          'Unauthorized: not licensed to use Copilot.',
-          response.status
-        )
+        throw new CopilotError('未经授权：无权使用 Copilot。', response.status)
       } else if (
         body.includes(
           'unauthorized: not authorized to use this Copilot feature',
@@ -1922,35 +1915,26 @@ export class API {
         )
       ) {
         throw new CopilotError(
-          'Unauthorized: not authorized to use this Copilot feature.',
+          '未经授权：未启用此 Copilot 功能。',
           response.status
         )
       } else if (
         body.includes('integration does not have GitHub chat enabled')
       ) {
-        throw new CopilotError(
-          'Integration does not have GitHub chat enabled.',
-          response.status
-        )
+        throw new CopilotError('集成未启用 GitHub 聊天功能。', response.status)
       } else {
-        throw new CopilotError('Unauthorized: unknown.', response.status)
+        throw new CopilotError('未经授权：原因未知。', response.status)
       }
     } else if (response.status === 466) {
-      throw new CopilotError(
-        'Client issue: unsupported API version.',
-        response.status
-      )
+      throw new CopilotError('客户端问题：不支持此 API 版本。', response.status)
     } else if (response.status >= HttpStatusCode.BadRequest) {
-      const internalError = `Internal server error, code: ${
+      const internalError = `服务器内部错误，错误代码：${
         response.status
-      }, request ID: ${response.headers.get('X-Github-Request-Id')}.`
+      }，请求 ID：${response.headers.get('X-Github-Request-Id')}.`
       console.error(
         `Copilot request failed with status ${response.status}: ${internalError}`
       )
-      throw new CopilotError(
-        'Something went wrong. Please, try again later.',
-        response.status
-      )
+      throw new CopilotError('发生了错误，请等待一会儿再试。', response.status)
     }
 
     const text = await response.text()
@@ -1967,7 +1951,7 @@ export class API {
       }
     }
 
-    throw new Error('No data line found in response')
+    throw new Error('请求结果中没有数据行')
   }
 
   /**
@@ -2136,12 +2120,12 @@ export class API {
       const choice = response.choices.at(0)
 
       if (!choice) {
-        throw new Error('No choice found in response')
+        throw new Error('请求结果中没有选项')
       }
 
       const message = choice.message.content
       if (!message) {
-        throw new Error('No message found in response')
+        throw new Error('请求结果中没有消息')
       }
 
       return JSON.parse(message)

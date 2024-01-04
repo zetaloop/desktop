@@ -54,6 +54,18 @@ function packageOSX() {
   const dest = getOSXZipPath()
   rmSync(dest, { recursive: true, force: true })
 
+  // Use a patched Squirrel.framework to allow auto-updates
+  // without requiring code signing
+  const arch = getDistArchitecture()
+  const squirrelUrl = `https://github.com/zetaloop/Squirrel.Mac/releases/latest/download/Squirrel-${arch}.zip`
+  const frameworkPath = `${distPath}/${productName}.app/Contents/Frameworks`
+  const squirrelPath = `${frameworkPath}/Squirrel.framework`
+
+  console.log(`Downloading and replacing Squirrel.framework for ${arch}...`)
+  rmSync(squirrelPath, { recursive: true, force: true })
+  cp.execSync(`curl -L ${squirrelUrl} | ditto -x -k - "${frameworkPath}"`)
+  cp.execSync('sleep 1') // Prevent log interleaving
+
   console.log('Packaging for macOS…')
   cp.execSync(
     `ditto -ck --keepParent "${distPath}/${productName}.app" "${dest}"`
