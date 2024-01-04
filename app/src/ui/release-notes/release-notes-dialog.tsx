@@ -60,9 +60,9 @@ export class ReleaseNotes extends React.Component<IReleaseNotesProps, {}> {
     return (
       <div className="container">
         <div className="column">
-          {this.renderList(release.bugfixes, 'Bugfixes')}
-          {this.renderList(release.enhancements, 'Enhancements')}
-          {this.renderList(release.other, 'Other')}
+          {this.renderList(release.bugfixes, '问题修复')}
+          {this.renderList(release.enhancements, '功能增强')}
+          {this.renderList(release.other, '其他')}
         </div>
       </div>
     )
@@ -72,11 +72,11 @@ export class ReleaseNotes extends React.Component<IReleaseNotesProps, {}> {
     return (
       <div className="container">
         <div className="column">
-          {this.renderList(release.enhancements, 'Enhancements')}
-          {this.renderList(release.other, 'Other')}
+          {this.renderList(release.enhancements, '功能增强')}
+          {this.renderList(release.other, '其他')}
         </div>
         <div className="column">
-          {this.renderList(release.bugfixes, 'Bugfixes')}
+          {this.renderList(release.bugfixes, '问题修复')}
         </div>
       </div>
     )
@@ -101,7 +101,7 @@ export class ReleaseNotes extends React.Component<IReleaseNotesProps, {}> {
 
     return {
       latestVersion: `${oldestRelease.latestVersion} - ${latestRelease.latestVersion}`,
-      datePublished: `${oldestRelease.datePublished} to ${latestRelease.datePublished}`,
+      datePublished: `${oldestRelease.datePublished} 至 ${latestRelease.datePublished}`,
       enhancements: newReleases.flatMap(r => r.enhancements),
       bugfixes: newReleases.flatMap(r => r.bugfixes),
       pretext: newReleases.flatMap(r => r.pretext),
@@ -136,7 +136,7 @@ export class ReleaseNotes extends React.Component<IReleaseNotesProps, {}> {
     if (latestVersion === __APP_VERSION__) {
       return (
         <Button type="submit" onClick={this.onDismissed}>
-          Close
+          关闭
         </Button>
       )
     }
@@ -144,10 +144,8 @@ export class ReleaseNotes extends React.Component<IReleaseNotesProps, {}> {
     return (
       <OkCancelButtonGroup
         destructive={true}
-        okButtonText={
-          __DARWIN__ ? 'Install and Restart' : 'Install and restart'
-        }
-        cancelButtonText="Close"
+        okButtonText={__DARWIN__ ? '安装并重启软件' : '安装并重启软件'}
+        cancelButtonText="关闭"
       />
     )
   }
@@ -169,7 +167,7 @@ export class ReleaseNotes extends React.Component<IReleaseNotesProps, {}> {
 
     const dialogHeader = (
       <>
-        <span className="version">Version {latestVersion}</span>
+        <span className="version">版本 {latestVersion}</span>
         <span className="date">{datePublished}</span>
       </>
     )
@@ -187,7 +185,7 @@ export class ReleaseNotes extends React.Component<IReleaseNotesProps, {}> {
         </DialogContent>
         <DialogFooter>
           <LinkButton onClick={this.showAllReleaseNotes}>
-            View all release notes
+            全部更新日志
           </LinkButton>
           {this.renderButtons()}
         </DialogFooter>

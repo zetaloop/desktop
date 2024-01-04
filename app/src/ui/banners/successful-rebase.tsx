@@ -13,21 +13,21 @@ export function SuccessfulRebase({
   const message =
     baseBranch !== undefined ? (
       <span>
-        {'Successfully rebased '}
+        {'成功将 '}
         <strong>{targetBranch}</strong>
-        {' onto '}
+        {' 重构到 '}
         <strong>{baseBranch}</strong>
       </span>
     ) : (
       <span>
-        {'Successfully rebased '}
+        {'成功重构了 '}
         <strong>{targetBranch}</strong>
       </span>
     )
 
   return (
     <SuccessBanner timeout={5000} onDismissed={onDismissed}>
-      <div className="banner-message">{message}</div>
+      <div className="banner-message">{message}。</div>
     </SuccessBanner>
   )
 }

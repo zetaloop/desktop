@@ -39,7 +39,7 @@ export class Accounts extends React.Component<IAccountsProps, {}> {
           ? this.renderAccount(dotComAccount, SignInType.DotCom)
           : this.renderSignIn(SignInType.DotCom)}
 
-        <h2>GitHub Enterprise</h2>
+        <h2>GitHub 企业版</h2>
         {enterpriseAccount
           ? this.renderAccount(enterpriseAccount, SignInType.Enterprise)
           : this.renderSignIn(SignInType.Enterprise)}
@@ -56,7 +56,7 @@ export class Accounts extends React.Component<IAccountsProps, {}> {
     }
 
     const accountTypeLabel =
-      type === SignInType.DotCom ? 'GitHub.com' : 'GitHub Enterprise'
+      type === SignInType.DotCom ? 'GitHub.com' : 'GitHub 企业版'
 
     // The DotCom account is shown first, so its sign in/out button should be
     // focused initially when the dialog is opened.
@@ -73,7 +73,7 @@ export class Accounts extends React.Component<IAccountsProps, {}> {
           </div>
         </div>
         <Button onClick={this.logout(account)} className={className}>
-          {__DARWIN__ ? 'Sign Out of' : 'Sign out of'} {accountTypeLabel}
+          {__DARWIN__ ? '退出登录' : '退出登录'} {accountTypeLabel}
         </Button>
       </Row>
     )
@@ -88,7 +88,7 @@ export class Accounts extends React.Component<IAccountsProps, {}> {
   }
 
   private renderSignIn(type: SignInType) {
-    const signInTitle = __DARWIN__ ? 'Sign Into' : 'Sign into'
+    const signInTitle = __DARWIN__ ? '登录' : '登录'
     switch (type) {
       case SignInType.DotCom: {
         return (
@@ -99,21 +99,18 @@ export class Accounts extends React.Component<IAccountsProps, {}> {
             // focused initially when the dialog is opened.
             buttonClassName={DialogPreferredFocusClassName}
           >
-            <div>
-              Sign in to your GitHub.com account to access your repositories.
-            </div>
+            <div>登录 GitHub.com 账号来访问您的仓库。</div>
           </CallToAction>
         )
       }
       case SignInType.Enterprise:
         return (
           <CallToAction
-            actionTitle={signInTitle + ' GitHub Enterprise'}
+            actionTitle={signInTitle + ' GitHub 企业版'}
             onAction={this.onEnterpriseSignIn}
           >
             <div>
-              If you are using GitHub Enterprise at work, sign in to it to get
-              access to your repositories.
+              如果您在工作中使用 GitHub 企业版账号，登录账号即可访问工作仓库。
             </div>
           </CallToAction>
         )

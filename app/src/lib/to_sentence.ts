@@ -10,9 +10,9 @@
  *   Based on https://gist.github.com/mudge/1076046 to emulate https://apidock.com/rails/Array/to_sentence
  */
 export function toSentence(array: ReadonlyArray<string>): string {
-  const wordsConnector = ', ',
-    twoWordsConnector = ' and ',
-    lastWordConnector = ', and '
+  const wordsConnector = '，',
+    twoWordsConnector = '，',
+    lastWordConnector = '，'
 
   switch (array.length) {
     case 0:
