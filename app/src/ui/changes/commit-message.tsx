@@ -761,11 +761,11 @@ export class CommitMessage extends React.Component<
   private get toggleCoAuthorsText(): string {
     return this.props.showCoAuthoredBy
       ? __DARWIN__
-        ? 'Remove Co-Authors'
-        : 'Remove co-authors'
+        ? '不添加协作者'
+        : '不添加协作者'
       : __DARWIN__
-      ? 'Add Co-Authors'
-      : 'Add co-authors'
+      ? '添加协作者'
+      : '添加协作者'
   }
 
   private getAddRemoveCoAuthorsMenuItem(): IMenuItem {
@@ -807,12 +807,8 @@ export class CommitMessage extends React.Component<
   }
 
   private getCommitSpellcheckEnabilityMenuItem(isEnabled: boolean): IMenuItem {
-    const enableLabel = __DARWIN__
-      ? 'Enable Commit Spellcheck'
-      : 'Enable commit spellcheck'
-    const disableLabel = __DARWIN__
-      ? 'Disable Commit Spellcheck'
-      : 'Disable commit spellcheck'
+    const enableLabel = __DARWIN__ ? '启用拼写检查' : '启用拼写检查'
+    const disableLabel = __DARWIN__ ? '禁用拼写检查' : '禁用拼写检查'
     return {
       label: isEnabled ? disableLabel : enableLabel,
       action: () => this.props.onCommitSpellcheckEnabledChanged(!isEnabled),
@@ -914,11 +910,9 @@ export class CommitMessage extends React.Component<
     if (commitToAmend !== null) {
       return (
         <CommitWarning icon={CommitWarningIcon.Information}>
-          Your changes will modify your <strong>most recent commit</strong>.{' '}
-          <LinkButton onClick={this.props.onStopAmending}>
-            Stop amending
-          </LinkButton>{' '}
-          to make these changes as a new commit.
+          正在修改<strong>最新的一次提交</strong>。
+          <LinkButton onClick={this.props.onStopAmending}>取消修订</LinkButton>{' '}
+          来创建一个新的提交。
         </CommitWarning>
       )
     } else {
@@ -994,12 +988,11 @@ export class CommitMessage extends React.Component<
     if (showNoWriteAccess) {
       return (
         <CommitWarning icon={CommitWarningIcon.Warning}>
-          You don't have write access to <strong>{repository.name}</strong>.
-          Want to{' '}
+          您没有 <strong>{repository.name}</strong> 的写入权限。是否需要{' '}
           <LinkButton onClick={this.props.onShowCreateForkDialog}>
-            create a fork
+            创建储存库复刻
           </LinkButton>
-          ?
+          ？
         </CommitWarning>
       )
     } else if (showBranchProtected) {
@@ -1013,9 +1006,8 @@ export class CommitMessage extends React.Component<
 
       return (
         <CommitWarning icon={CommitWarningIcon.Warning}>
-          <strong>{branch}</strong> is a protected branch. Want to{' '}
-          <LinkButton onClick={this.onSwitchBranch}>switch branches</LinkButton>
-          ?
+          <strong>{branch}</strong> 分支受保护。是否需要{' '}
+          <LinkButton onClick={this.onSwitchBranch}>切换分支</LinkButton>？
         </CommitWarning>
       )
     } else if (repoRuleWarningToDisplay === 'publish') {
@@ -1025,22 +1017,19 @@ export class CommitMessage extends React.Component<
         <CommitWarning
           icon={canBypass ? CommitWarningIcon.Warning : CommitWarningIcon.Error}
         >
-          The branch name <strong>{branch}</strong> fails{' '}
+          分支名称 <strong>{branch}</strong> 违反{' '}
           <RepoRulesetsForBranchLink
             repository={repository.gitHubRepository}
             branch={branch}
           >
-            one or more rules
-          </RepoRulesetsForBranchLink>{' '}
-          that {canBypass ? 'would' : 'will'} prevent it from being published
-          {canBypass && ', but you can bypass them. Proceed with caution!'}
+            储存库规则
+          </RepoRulesetsForBranchLink>
+          ，分支{canBypass ? '可能' : ''}无法发布
+          {canBypass && '，但是规则允许绕过，请谨慎操作！'}
           {!canBypass && (
             <>
-              . Want to{' '}
-              <LinkButton onClick={this.onSwitchBranch}>
-                switch branches
-              </LinkButton>
-              ?
+              。是否需要{' '}
+              <LinkButton onClick={this.onSwitchBranch}>切换分支</LinkButton>？
             </>
           )}
         </CommitWarning>
@@ -1052,18 +1041,18 @@ export class CommitMessage extends React.Component<
         <CommitWarning
           icon={canBypass ? CommitWarningIcon.Warning : CommitWarningIcon.Error}
         >
+          一些适用于 <strong>{branch}</strong> 分支的{' '}
           <RepoRulesetsForBranchLink
             repository={repository.gitHubRepository}
             branch={branch}
           >
-            One or more rules
+            储存库规则
           </RepoRulesetsForBranchLink>{' '}
-          apply to the branch <strong>{branch}</strong> that require signed
-          commits
-          {canBypass && ', but you can bypass them. Proceed with caution!'}
-          {!canBypass && '.'}{' '}
-          <LinkButton uri="https://docs.github.com/authentication/managing-commit-signature-verification/signing-commits">
-            Learn more about commit signing.
+          要求对提交签名
+          {canBypass && '，但是规则允许绕过，请谨慎操作！'}
+          {!canBypass && '。'}
+          <LinkButton uri="https://docs.github.com/zh/authentication/managing-commit-signature-verification/signing-commits">
+            点击了解如何对提交签名。
           </LinkButton>
         </CommitWarning>
       )
@@ -1074,22 +1063,19 @@ export class CommitMessage extends React.Component<
         <CommitWarning
           icon={canBypass ? CommitWarningIcon.Warning : CommitWarningIcon.Error}
         >
+          一些适用于 <strong>{branch}</strong> 分支的{' '}
           <RepoRulesetsForBranchLink
             repository={repository.gitHubRepository}
             branch={branch}
           >
-            One or more rules
+            储存库规则
           </RepoRulesetsForBranchLink>{' '}
-          apply to the branch <strong>{branch}</strong> that{' '}
-          {canBypass ? 'would' : 'will'} prevent pushing
-          {canBypass && ', but you can bypass them. Proceed with caution!'}
+          {canBypass ? '可能' : ''} 阻止推送
+          {canBypass && '，但是规则允许绕过，请谨慎操作！'}
           {!canBypass && (
             <>
-              . Want to{' '}
-              <LinkButton onClick={this.onSwitchBranch}>
-                switch branches
-              </LinkButton>
-              ?
+              。是否需要{' '}
+              <LinkButton onClick={this.onSwitchBranch}>切换分支</LinkButton>？
             </>
           )}
         </CommitWarning>
@@ -1116,8 +1102,8 @@ export class CommitMessage extends React.Component<
     }
 
     const header = __DARWIN__
-      ? 'Commit Message Rule Failures'
-      : 'Commit message rule failures'
+      ? '提交信息违反储存库规则'
+      : '提交信息违反储存库规则'
     return (
       <Popover
         anchor={this.summaryTextInput}
@@ -1134,7 +1120,7 @@ export class CommitMessage extends React.Component<
           repository={repository.gitHubRepository}
           branch={branch}
           failures={this.state.repoRuleCommitMessageFailures}
-          leadingText="This commit message"
+          leadingText="该提交信息"
         />
       </Popover>
     )
@@ -1157,8 +1143,8 @@ export class CommitMessage extends React.Component<
   private getButtonVerb() {
     const { isCommitting, commitToAmend } = this.props
 
-    const amendVerb = isCommitting ? 'Amending' : 'Amend'
-    const commitVerb = isCommitting ? 'Committing' : 'Commit'
+    const amendVerb = isCommitting ? '正在修订' : '修订'
+    const commitVerb = isCommitting ? '正在提交' : '提交'
     const isAmending = commitToAmend !== null
 
     return isAmending ? amendVerb : commitVerb
@@ -1174,7 +1160,7 @@ export class CommitMessage extends React.Component<
 
     return (
       <>
-        {verb} to <strong>{branch}</strong>
+        {verb}到 <strong>{branch}</strong>
       </>
     )
   }
@@ -1187,7 +1173,7 @@ export class CommitMessage extends React.Component<
       return verb
     }
 
-    return `${verb} to ${branch}`
+    return `${verb}到 ${branch}`
   }
 
   private getButtonText() {
@@ -1210,7 +1196,7 @@ export class CommitMessage extends React.Component<
 
     const isAmending = commitToAmend !== null
     return isAmending
-      ? `${this.getButtonVerb()} last commit`
+      ? `${this.getButtonVerb()}最新提交`
       : this.getCommittingButtonTitle()
   }
 
@@ -1221,11 +1207,11 @@ export class CommitMessage extends React.Component<
 
     const isSummaryBlank = isEmptyOrWhitespace(this.summaryOrPlaceholder)
     if (isSummaryBlank) {
-      return `A commit summary is required to commit`
+      return `请填写摘要`
     } else if (!this.props.anyFilesSelected && this.props.anyFilesAvailable) {
-      return `Select one or more files to commit`
+      return `请选择要提交的文件`
     } else if (this.props.isCommitting) {
-      return `Committing changes…`
+      return `正在提交改动…`
     }
 
     return undefined
@@ -1264,21 +1250,15 @@ export class CommitMessage extends React.Component<
         delay={0}
         tooltip={
           <>
-            <div className="title">
-              Great commit summaries contain fewer than 50 characters
-            </div>
-            <div className="description">
-              Place extra information in the description field.
-            </div>
+            <div className="title">推荐摘要不要超过50字</div>
+            <div className="description">写不下的可以写在描述里。</div>
           </>
         }
-        ariaLiveMessage={
-          'Great commit summaries contain fewer than 50 characters. Place extra information in the description field.'
-        }
+        ariaLiveMessage={'推荐摘要不要超过50字，写不下的可以写在描述里。'}
         direction={TooltipDirection.NORTH}
         className="length-hint"
         tooltipClassName="length-hint-tooltip"
-        ariaLabel="Open Summary Length Info"
+        ariaLabel="显示摘要长度提示"
       >
         <Octicon symbol={octicons.lightBulb} />
       </ToggledtippedContent>
@@ -1298,17 +1278,17 @@ export class CommitMessage extends React.Component<
     let ariaLabelPrefix: string
     let bypassMessage = ''
     if (canBypass) {
-      ariaLabelPrefix = 'Warning'
-      bypassMessage = ', but you can bypass them'
+      ariaLabelPrefix = '警告'
+      bypassMessage = '，但是规则允许绕过'
     } else {
-      ariaLabelPrefix = 'Error'
+      ariaLabelPrefix = '错误'
     }
 
     return (
       <button
         id="commit-message-failure-hint"
         className="commit-message-failure-hint button-component"
-        aria-label={`${ariaLabelPrefix}: Commit message fails repository rules${bypassMessage}. View details.`}
+        aria-label={`${ariaLabelPrefix}：提交信息不符合储存库规则${bypassMessage}。点击阅读详情。`}
         aria-haspopup="dialog"
         aria-expanded={this.state.isRuleFailurePopoverOpen}
         onClick={this.toggleRuleFailurePopover}
@@ -1358,7 +1338,7 @@ export class CommitMessage extends React.Component<
       // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
       <div
         role="group"
-        aria-label="Create commit"
+        aria-label="创建提交"
         className={className}
         onContextMenu={this.onContextMenu}
         onKeyDown={this.onKeyDown}
@@ -1368,7 +1348,7 @@ export class CommitMessage extends React.Component<
 
           <AutocompletingInput
             required={true}
-            screenReaderLabel="Commit summary"
+            screenReaderLabel="提交摘要"
             className={summaryInputClassName}
             placeholder={placeholder}
             value={this.state.summary}
@@ -1395,8 +1375,8 @@ export class CommitMessage extends React.Component<
         >
           <AutocompletingTextArea
             className={descriptionClassName}
-            screenReaderLabel="Commit description"
-            placeholder="Description"
+            screenReaderLabel="提交描述"
+            placeholder="描述"
             value={this.state.description || ''}
             onValueChanged={this.onDescriptionChanged}
             autocompletionProviders={

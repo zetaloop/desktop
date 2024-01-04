@@ -85,7 +85,7 @@ export class Integrations extends React.Component<
   private renderExternalEditor() {
     const options = this.props.availableEditors
     const selectedEditor = this.state.selectedExternalEditor
-    const label = __DARWIN__ ? 'External Editor' : 'External editor'
+    const label = __DARWIN__ ? '编辑器' : '编辑器'
 
     if (options.length === 0) {
       // this is emulating the <Select/> component's UI so the styles are
@@ -97,9 +97,9 @@ export class Integrations extends React.Component<
         <div className="select-component no-options-found">
           <label>{label}</label>
           <span>
-            No editors found.{' '}
+            没有可用的编辑器。
             <LinkButton uri={suggestedExternalEditor.url}>
-              Install {suggestedExternalEditor.name}?
+              装个 {suggestedExternalEditor.name}？
             </LinkButton>
           </span>
         </div>
@@ -125,7 +125,7 @@ export class Integrations extends React.Component<
 
     return (
       <Select
-        label="Shell"
+        label="终端"
         value={this.state.selectedShell}
         onChange={this.onSelectedShellChanged}
       >
@@ -141,7 +141,7 @@ export class Integrations extends React.Component<
   public render() {
     return (
       <DialogContent>
-        <h2>Applications</h2>
+        <h2>默认应用</h2>
         <Row>{this.renderExternalEditor()}</Row>
         <Row>{this.renderSelectedShell()}</Row>
       </DialogContent>

@@ -28,11 +28,11 @@ export class UpstreamAlreadyExists extends React.Component<IUpstreamAlreadyExist
   public render() {
     const name = this.props.repository.name
     const gitHubRepository = forceUnwrap(
-      'A repository must have a GitHub repository to add an upstream remote',
+      '储存库需要存在于 GitHub 上，才能添加上游远程',
       this.props.repository.gitHubRepository
     )
     const parent = forceUnwrap(
-      'A repository must have a parent repository to add an upstream remote',
+      '储存库需要有一个复刻父储存库，才能添加上游远程',
       gitHubRepository.parent
     )
     const parentName = parent.fullName
@@ -40,34 +40,31 @@ export class UpstreamAlreadyExists extends React.Component<IUpstreamAlreadyExist
     const replacementURL = parent.cloneURL
     return (
       <Dialog
-        title={
-          __DARWIN__ ? 'Upstream Already Exists' : 'Upstream already exists'
-        }
+        title={__DARWIN__ ? '上游已存在' : '上游已存在'}
         onDismissed={this.props.onDismissed}
         onSubmit={this.onUpdate}
         type="warning"
       >
         <DialogContent>
           <p>
-            The repository <Ref>{name}</Ref> is a fork of{' '}
-            <Ref>{parentName}</Ref>, but its <Ref>{UpstreamRemoteName}</Ref>{' '}
-            remote points elsewhere.
+            储存库 <Ref>{name}</Ref> 是 <Ref>{parentName}</Ref> 的复刻，但其{' '}
+            <Ref>{UpstreamRemoteName}</Ref> 上游远程却已经指向了其他储存库。
           </p>
           <ul>
             <li>
-              Current: <Ref>{existingURL}</Ref>
+              当前上游: <Ref>{existingURL}</Ref>
             </li>
             <li>
-              Expected: <Ref>{replacementURL}</Ref>
+              复刻来源: <Ref>{replacementURL}</Ref>
             </li>
           </ul>
-          <p>Would you like to update the remote to use the expected URL?</p>
+          <p>您想把该储存库的上游改为复刻来源吗？</p>
         </DialogContent>
         <DialogFooter>
           <OkCancelButtonGroup
             destructive={true}
-            okButtonText="Update"
-            cancelButtonText="Ignore"
+            okButtonText="更新上游"
+            cancelButtonText="忽略"
             onCancelButtonClick={this.onIgnore}
           />
         </DialogFooter>

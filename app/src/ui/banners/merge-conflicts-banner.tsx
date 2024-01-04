@@ -34,10 +34,9 @@ export class MergeConflictsBanner extends React.Component<
         <Octicon className="alert-icon" symbol={octicons.alert} />
         <div className="banner-message">
           <span>
-            Resolve conflicts and commit to merge into{' '}
-            <strong>{this.props.ourBranch}</strong>.
+            解决冲突后才能继续合并到 <strong>{this.props.ourBranch}</strong>。
           </span>
-          <LinkButton onClick={this.openDialog}>View conflicts</LinkButton>
+          <LinkButton onClick={this.openDialog}>查看冲突</LinkButton>
         </div>
       </Banner>
     )
