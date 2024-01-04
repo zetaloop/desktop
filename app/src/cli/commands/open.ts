@@ -6,13 +6,13 @@ import { openDesktop } from '../open-desktop'
 import { parseRemote } from '../../lib/remote-parsing'
 
 export const command: ICommandModule = {
-  command: 'open <path>',
-  aliases: ['<path>'],
-  description: 'Open a git repository in GitHub Desktop',
+  command: 'open <路径>',
+  aliases: ['<路径>'],
+  description: '用 GitHub Desktop 打开一个 git 仓库',
   args: [
     {
-      name: 'path',
-      description: 'The path to the repository to open',
+      name: '路径',
+      description: '仓库文件夹路径',
       type: 'string',
       required: false,
     },
@@ -26,9 +26,9 @@ export const command: ICommandModule = {
     //Check if the pathArg is a remote url
     if (parseRemote(pathArg) != null) {
       console.log(
-        `\nYou cannot open a remote URL in GitHub Desktop\n` +
-          `Use \`${chalk.bold(`git clone ` + pathArg)}\`` +
-          ` instead to initiate the clone`
+        `\n无法直接打开远程地址\n` +
+          `请先使用 \`${chalk.bold(`git clone ` + pathArg)}\`` +
+          ` 来克隆它`
       )
     } else {
       const repositoryPath = Path.resolve(process.cwd(), pathArg)

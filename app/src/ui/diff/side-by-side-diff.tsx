@@ -1409,13 +1409,13 @@ export class SideBySideDiff extends React.Component<
 
     const items: IMenuItem[] = [
       {
-        label: 'Copy',
+        label: '复制',
         // When using role="copy", the enabled attribute is not taken into account.
         role: selectionLength > 0 ? 'copy' : undefined,
         enabled: selectionLength > 0,
       },
       {
-        label: __DARWIN__ ? 'Select All' : 'Select all',
+        label: __DARWIN__ ? '全选' : '全选',
         action: () => this.onSelectAll(),
       },
     ]
@@ -1470,7 +1470,7 @@ export class SideBySideDiff extends React.Component<
 
     return this.diffToRestore === null
       ? {
-          label: __DARWIN__ ? 'Expand Whole File' : 'Expand whole file',
+          label: __DARWIN__ ? '展开整个文件' : '展开整个文件',
           action: this.onExpandWholeFile,
           // If there is only one hunk that can't be expanded, disable this item
           enabled:
@@ -1478,9 +1478,7 @@ export class SideBySideDiff extends React.Component<
             diff.hunks[0].expansionType !== DiffHunkExpansionType.None,
         }
       : {
-          label: __DARWIN__
-            ? 'Collapse Expanded Lines'
-            : 'Collapse expanded lines',
+          label: __DARWIN__ ? '折叠整个文件' : '折叠整个文件',
           action: this.onCollapseExpandedLines,
         }
   }
@@ -1562,19 +1560,19 @@ export class SideBySideDiff extends React.Component<
     let type = ''
 
     if (rangeType === DiffRangeType.Additions) {
-      type = __DARWIN__ ? 'Added' : 'added'
+      type = __DARWIN__ ? '新增' : '新增'
     } else if (rangeType === DiffRangeType.Deletions) {
-      type = __DARWIN__ ? 'Removed' : 'removed'
+      type = __DARWIN__ ? '删除' : '删除'
     } else if (rangeType === DiffRangeType.Mixed) {
-      type = __DARWIN__ ? 'Modified' : 'modified'
+      type = __DARWIN__ ? '修改' : '修改'
     } else {
       assertNever(rangeType, `Invalid range type: ${rangeType}`)
     }
 
-    const plural = numLines > 1 ? 's' : ''
+    const plural = numLines > 1 ? '' : ''
     return __DARWIN__
-      ? `Discard ${type} Line${plural}${suffix}`
-      : `Discard ${type} line${plural}${suffix}`
+      ? `放弃${type}行${plural}${suffix}`
+      : `放弃${type}行${plural}${suffix}`
   }
 
   private onDiscardChanges(startLine: number, endLine: number = startLine) {

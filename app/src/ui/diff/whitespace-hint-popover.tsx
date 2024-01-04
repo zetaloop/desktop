@@ -27,14 +27,12 @@ export class WhitespaceHintPopover extends React.Component<IWhitespaceHintPopove
         appearEffect={PopoverAppearEffect.Shake}
         ariaLabelledby="whitespace-hint-header"
       >
-        <h3 id="whitespace-hint-header">Show whitespace changes?</h3>
-        <p className="byline">
-          Selecting lines is disabled when hiding whitespace changes.
-        </p>
+        <h3 id="whitespace-hint-header">显示空白字符差异？</h3>
+        <p className="byline">隐藏空白字符差异时，无法单独选中某几行文本。</p>
         <footer>
           <OkCancelButtonGroup
-            okButtonText="Yes"
-            cancelButtonText="No"
+            okButtonText="显示"
+            cancelButtonText="取消"
             onCancelButtonClick={this.onDismissed}
             onOkButtonClick={this.onShowWhitespaceChanges}
           />
