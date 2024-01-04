@@ -127,7 +127,7 @@ function createState(
 
 function getCommitSummary(selectedCommits: ReadonlyArray<Commit>) {
   return selectedCommits[0].summary.length === 0
-    ? 'Empty commit message'
+    ? '空白的提交信息'
     : selectedCommits[0].summary
 }
 
@@ -233,12 +233,10 @@ export class ExpandableCommitSummary extends React.Component<
       <Button
         onClick={isExpanded ? this.onCollapse : this.onExpand}
         className="expander"
-        tooltip={isExpanded ? 'Collapse' : 'Expand'}
+        tooltip={isExpanded ? '折叠' : '展开'}
         applyTooltipAriaDescribedBy={false}
         ariaExpanded={isExpanded}
-        ariaLabel={
-          isExpanded ? 'Collapse commit details' : 'Expand commit details'
-        }
+        ariaLabel={isExpanded ? '折叠提交详情' : '展开提交详情'}
         ariaControls="expandable-commit-summary"
       >
         <Octicon symbol={isExpanded ? octicons.fold : octicons.unfold} />
@@ -372,7 +370,7 @@ export class ExpandableCommitSummary extends React.Component<
       return
     }
 
-    const commitsPluralized = excludedCommitsCount > 1 ? 'commits' : 'commit'
+    const commitsPluralized = excludedCommitsCount > 1 ? '提交' : '提交'
 
     return (
       // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
@@ -382,17 +380,18 @@ export class ExpandableCommitSummary extends React.Component<
         onMouseOut={this.onRemoveHighlightOfShas}
       >
         <Octicon symbol={octicons.info} />
+        未包括
         <LinkButton onClick={this.showUnreachableCommits}>
-          {excludedCommitsCount} unreachable {commitsPluralized}
-        </LinkButton>{' '}
-        not included.
+          {excludedCommitsCount}个不可达（无引用）的{commitsPluralized}
+        </LinkButton>
+        。
       </div>
     )
   }
 
   private renderExpandedAuthor(user: IAvatarUser): string | JSX.Element {
     if (!user) {
-      return 'Unknown user'
+      return '未知用户'
     }
 
     if (user.name) {
@@ -460,7 +459,7 @@ export class ExpandableCommitSummary extends React.Component<
       <div className="ecs-meta-item commit-ref">
         <Octicon symbol={octicons.gitCommit} />
         <div className="ref selectable">{isExpanded ? sha : shortSha}</div>
-        <CopyButton ariaLabel="Copy the full SHA" copyContent={sha} />
+        <CopyButton ariaLabel="复制完整 SHA" copyContent={sha} />
       </div>
     )
   }
@@ -485,11 +484,11 @@ export class ExpandableCommitSummary extends React.Component<
       shasInDiff
     )
     const numInDiff = selectedCommits.length - commitsNotInDiff
-    const commitsPluralized = numInDiff > 1 ? 'commits' : 'commit'
+    const commitsPluralized = numInDiff > 1 ? '提交' : '提交'
 
     return (
       <>
-        Showing changes from{' '}
+        显示来自
         {commitsNotInDiff > 0 ? (
           <LinkButton
             className="commits-in-diff"
@@ -497,14 +496,14 @@ export class ExpandableCommitSummary extends React.Component<
             onMouseOut={this.onRemoveHighlightOfShas}
             onClick={this.showReachableCommits}
           >
-            {numInDiff} {commitsPluralized}
+            {numInDiff}个{commitsPluralized}
           </LinkButton>
         ) : (
           <>
-            {' '}
-            {numInDiff} {commitsPluralized}
+            {numInDiff}个{commitsPluralized}
           </>
         )}
+        的改动
       </>
     )
   }
@@ -570,14 +569,10 @@ export class ExpandableCommitSummary extends React.Component<
       <div className="ecs-meta-item lines-added-deleted">
         {isExpanded ? <Octicon symbol={octicons.diff} /> : null}
         <div className="lines-added">
-          {!isExpanded ? <>+{linesAdded}</> : <>{linesAdded} added lines</>}
+          {!isExpanded ? <>+{linesAdded}</> : <>添加{linesAdded}行</>}
         </div>
         <div className="lines-deleted">
-          {!isExpanded ? (
-            <>-{linesDeleted}</>
-          ) : (
-            <>{linesDeleted} removed lines</>
-          )}
+          {!isExpanded ? <>-{linesDeleted}</> : <>删除{linesDeleted}行</>}
         </div>
       </div>
     )
