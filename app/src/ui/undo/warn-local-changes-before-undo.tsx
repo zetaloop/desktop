@@ -38,7 +38,7 @@ export class WarnLocalChangesBeforeUndo extends React.Component<
   }
 
   public render() {
-    const title = __DARWIN__ ? 'Undo Commit' : 'Undo commit'
+    const title = __DARWIN__ ? '撤回提交' : '撤回提交'
 
     return (
       <Dialog
@@ -54,7 +54,7 @@ export class WarnLocalChangesBeforeUndo extends React.Component<
       >
         {this.getWarningDialog()}
         <DialogFooter>
-          <OkCancelButtonGroup destructive={true} okButtonText="Continue" />
+          <OkCancelButtonGroup destructive={true} okButtonText="继续" />
         </DialogFooter>
       </Dialog>
     )
@@ -67,12 +67,11 @@ export class WarnLocalChangesBeforeUndo extends React.Component<
     return (
       <DialogContent>
         <Row id="undo-warning-message">
-          You have changes in progress. Undoing the commit might result in some
-          of these changes being lost. Do you want to continue anyway?
+          当前仍有未提交的改动，撤回提交可能导致这些改动丢失。确定要继续吗？
         </Row>
         <Row>
           <Checkbox
-            label="Do not show this message again"
+            label="不再显示"
             value={
               this.state.confirmUndoCommit
                 ? CheckboxValue.Off
@@ -90,27 +89,21 @@ export class WarnLocalChangesBeforeUndo extends React.Component<
       return (
         <DialogContent>
           <p>{this.getMergeCommitUndoWarningText()}</p>
-          <p>Do you want to continue anyway?</p>
+          <p>确定要继续吗？</p>
         </DialogContent>
       )
     }
     return (
       <DialogContent>
-        <p>
-          You have changes in progress. Undoing the merge commit might result in
-          some of these changes being lost.
-        </p>
+        <p>当前仍有未提交的改动，撤回提交可能导致这些改动丢失。</p>
         <p>{this.getMergeCommitUndoWarningText()}</p>
-        <p>Do you want to continue anyway?</p>
+        <p>确定要继续吗？</p>
       </DialogContent>
     )
   }
 
   private getMergeCommitUndoWarningText() {
-    return `Undoing a merge commit will apply the changes from the merge into
-    your working directory, and committing again will create an entirely new
-    commit. This means you will lose the merge commit and, as a result, commits
-    from the merged branch could disappear from this branch.`
+    return `撤销一个合并提交将会撤销所有合并的内容，把他重新提交回来将会创建一个全新的提交。也就是说，虽然文件会回来，但是它们合并过来的提交记录都会消失。`
   }
 
   private onSubmit = async () => {

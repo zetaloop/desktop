@@ -65,13 +65,9 @@ export class UpdateAvailable extends React.Component<IUpdateAvailableProps> {
     if (this.props.isX64ToARM64ImmediateAutoUpdate) {
       return (
         <span onSubmit={this.updateNow}>
-          An optimized version of GitHub Desktop is available for your{' '}
-          {__DARWIN__ ? 'Apple silicon' : 'Arm64'} machine and will be installed
-          at the next launch or{' '}
-          <LinkButton onClick={this.updateNow}>
-            restart GitHub Desktop
-          </LinkButton>{' '}
-          now.
+          为您 {__DARWIN__ ? 'Apple Silicon' : 'Arm64'} 电脑特别优化的 GitHub
+          Desktop 版本更新已经准备就绪，您也可以{' '}
+          <LinkButton onClick={this.updateNow}>立刻安装</LinkButton>。
         </span>
       )
     }
@@ -79,7 +75,7 @@ export class UpdateAvailable extends React.Component<IUpdateAvailableProps> {
     if (this.props.isUpdateShowcaseVisible) {
       const version =
         this.props.newReleases !== null
-          ? ` with GitHub Desktop ${this.props.newReleases[0].latestVersion}`
+          ? `在 GitHub Desktop ${this.props.newReleases[0].latestVersion} 中，`
           : ''
 
       return (
@@ -89,12 +85,15 @@ export class UpdateAvailable extends React.Component<IUpdateAvailableProps> {
             text={':tada:'}
             emoji={this.props.emoji}
           />
-          Exciting new features have been added{version}. See{' '}
-          <LinkButton onClick={this.showReleaseNotes}>what's new</LinkButton> or{' '}
+          {version}我们添加了很棒的新功能，
+          <LinkButton onClick={this.showReleaseNotes}>
+            查看更新日志
+          </LinkButton>{' '}
+          或者{' '}
           <LinkButton onClick={this.dismissUpdateShowCaseVisibility}>
-            dismiss
+            忽略
           </LinkButton>
-          .
+          。
         </span>
       )
     }
@@ -121,11 +120,11 @@ export class UpdateAvailable extends React.Component<IUpdateAvailableProps> {
 
     return (
       <span onSubmit={this.updateNow}>
-        An updated version of GitHub Desktop is available and will be installed
-        at the next launch. See{' '}
-        <LinkButton onClick={this.showReleaseNotes}>what's new</LinkButton> or{' '}
-        <LinkButton onClick={this.updateNow}>restart GitHub Desktop</LinkButton>
-        .
+        GitHub Desktop 版本更新已准备就绪，
+        <LinkButton onClick={this.showReleaseNotes}>
+          查看更新日志
+        </LinkButton>{' '}
+        或者 <LinkButton onClick={this.updateNow}>立刻安装</LinkButton>。
       </span>
     )
   }
