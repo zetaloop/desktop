@@ -60,7 +60,7 @@ export class OpenPullRequestDialogHeader extends React.Component<IOpenPullReques
   }
 
   public render() {
-    const title = __DARWIN__ ? 'Open a Pull Request' : 'Open a pull request'
+    const title = __DARWIN__ ? '打开拉取请求' : '打开拉取请求'
     const {
       baseBranch,
       currentBranch,
@@ -71,7 +71,7 @@ export class OpenPullRequestDialogHeader extends React.Component<IOpenPullReques
       onBranchChange,
       onDismissed,
     } = this.props
-    const commits = `${commitCount} commit${commitCount > 1 ? 's' : ''}`
+    const commits = `${commitCount}个提交${commitCount > 1 ? '' : ''}`
 
     return (
       <DialogHeader
@@ -81,7 +81,7 @@ export class OpenPullRequestDialogHeader extends React.Component<IOpenPullReques
       >
         <div className="break"></div>
         <div className="base-branch-details">
-          Merge {commits} into{' '}
+          从 <Ref>{currentBranch.name}</Ref> 合并{commits}到{' '}
           <BranchSelect
             repository={this.props.repository}
             branch={baseBranch}
@@ -92,12 +92,11 @@ export class OpenPullRequestDialogHeader extends React.Component<IOpenPullReques
             onChange={onBranchChange}
             noBranchesMessage={
               <>
-                <p>Sorry, I can't find that remote branch.</p>
-                <p>You can only open pull requests against remote branches.</p>
+                <p>很抱歉，找不到此远程分支。</p>
+                <p>您只能对远程分支发起拉取请求。</p>
               </>
             }
-          />{' '}
-          from <Ref>{currentBranch.name}</Ref>.
+          />
         </div>
       </DialogHeader>
     )

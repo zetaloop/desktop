@@ -11,7 +11,7 @@ import {
 } from '../custom-integration'
 
 export enum Shell {
-  Terminal = 'Terminal',
+  Terminal = '终端',
   Hyper = 'Hyper',
   iTerm2 = 'iTerm2',
   PowerShellCore = 'PowerShell Core',

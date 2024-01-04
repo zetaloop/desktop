@@ -65,7 +65,7 @@ export class InstallingUpdate extends React.Component<IInstallingUpdateProps> {
     return (
       <Dialog
         id="installing-update"
-        title={__DARWIN__ ? 'Installing Update…' : 'Installing update…'}
+        title={__DARWIN__ ? '正在安装更新…' : '正在安装更新…'}
         loading={true}
         onSubmit={this.props.onDismissed}
         backdropDismissable={false}
@@ -74,13 +74,12 @@ export class InstallingUpdate extends React.Component<IInstallingUpdateProps> {
       >
         <DialogContent>
           <Row className="updating-message">
-            Do not close GitHub Desktop while the update is in progress. Closing
-            now may break your installation.
+            更新正在安装中，请不要退出 GitHub Desktop，否则软件可能会损坏。
           </Row>
         </DialogContent>
         <DialogFooter>
           <OkCancelButtonGroup
-            okButtonText={__DARWIN__ ? 'Quit Anyway' : 'Quit anyway'}
+            okButtonText={__DARWIN__ ? '就要退出' : '就要退出'}
             onOkButtonClick={this.onQuitAnywayButtonClicked}
             onCancelButtonClick={this.props.onDismissed}
             destructive={true}

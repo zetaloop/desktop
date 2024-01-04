@@ -181,7 +181,7 @@ export class CICheckRunList extends React.PureComponent<
     const checkRunGroupNames = getCheckRunGroupNames(checkRunGroups)
     if (
       checkRunGroupNames.length === 1 &&
-      (checkRunGroupNames[0] === 'Other' || this.props.isCondensedView)
+      (checkRunGroupNames[0] === '其他' || this.props.isCondensedView)
     ) {
       return this.renderListItems(this.props.checkRuns)
     }
