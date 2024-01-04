@@ -21,6 +21,22 @@ function getEditMenuItems(): ReadonlyArray<MenuItem> {
   // the world if we don't have edit menu items.
   const items = menu && menu.submenu ? menu.submenu.items : []
 
+  // 汉化菜单。
+  const labelMap = {
+    undo: '撤销',
+    redo: '重做',
+    cut: '剪切',
+    copy: '复制',
+    paste: '粘贴',
+    delete: '删除',
+    selectall: '全选',
+  }
+  for (const item of items) {
+    if (item.role && item.role in labelMap) {
+      item.label = labelMap[item.role as keyof typeof labelMap]
+    }
+  }
+
   // We don't use styled inputs anywhere at the moment
   // so let's skip this for now and when/if we do we
   // can make it configurable from the callee

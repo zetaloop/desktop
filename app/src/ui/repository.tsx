@@ -195,12 +195,12 @@ export class RepositoryView extends React.Component<
     return (
       <TabBar selectedIndex={selectedTab} onTabClicked={this.onTabClicked}>
         <span className="with-indicator" id="changes-tab">
-          <span>Changes</span>
+          <span>文件改动</span>
           {this.renderChangesBadge()}
         </span>
 
         <div className="with-indicator" id="history-tab">
-          <span>History</span>
+          <span>历史提交</span>
         </div>
       </TabBar>
     )
@@ -364,7 +364,7 @@ export class RepositoryView extends React.Component<
           minimumWidth={this.props.sidebarWidth.min}
           onReset={this.handleSidebarWidthReset}
           onResize={this.handleSidebarResize}
-          description="Repository sidebar"
+          description="仓库侧边栏"
         >
           {this.renderTabs()}
           {this.renderSidebarContents()}
