@@ -106,7 +106,7 @@ export async function checkoutBranch(
   progressCallback?: ProgressCallback,
   allowFileProtocol: boolean = false
 ): Promise<true> {
-  const title = `Checking out branch ${branch.name}`
+  const title = `正在检出分支 ${branch.name}`
   const opts = await getCheckoutOpts(
     repository,
     title,
@@ -115,7 +115,7 @@ export async function checkoutBranch(
     progressCallback
       ? clampProgress(0, CheckoutStepWeight, progressCallback)
       : undefined,
-    `Switching to ${__DARWIN__ ? 'Branch' : 'branch'}`
+    `切换到该${__DARWIN__ ? '分支' : '分支'}`
   )
 
   const baseArgs = getCheckoutArgs(progressCallback)
@@ -167,7 +167,7 @@ export async function checkoutCommit(
   progressCallback?: ProgressCallback,
   allowFileProtocol: boolean = false
 ): Promise<true> {
-  const title = `Checking out ${__DARWIN__ ? 'Commit' : 'commit'}`
+  const title = `正在检出${__DARWIN__ ? '分支' : '分支'}`
   const target = shortenSHA(commit.sha)
   const opts = await getCheckoutOpts(
     repository,
