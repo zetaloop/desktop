@@ -2,7 +2,7 @@ import { MultiCommitOperationKind } from '../../models/multi-commit-operation'
 import { BaseRebase } from './base-rebase'
 
 export abstract class Squash extends BaseRebase {
-  protected conflictDialogOperationPrefix = 'squashing commits on'
+  protected conflictDialogOperationPrefix = '压缩操作'
   protected rebaseKind = MultiCommitOperationKind.Squash
 
   protected onBeginOperation = () => {

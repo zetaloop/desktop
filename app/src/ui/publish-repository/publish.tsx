@@ -129,7 +129,7 @@ export class Publish extends React.Component<IPublishProps, IPublishState> {
     return (
       <Dialog
         id="publish-repository"
-        title={__DARWIN__ ? 'Publish Repository' : 'Publish repository'}
+        title={__DARWIN__ ? '发布仓库' : '发布仓库'}
         onDismissed={this.props.onDismissed}
         onSubmit={this.publishRepository}
         disabled={this.state.publishing}
@@ -140,7 +140,7 @@ export class Publish extends React.Component<IPublishProps, IPublishState> {
           selectedIndex={this.state.currentTab}
         >
           <span id="dotcom-tab">GitHub.com</span>
-          <span id="enterprise-tab">GitHub Enterprise</span>
+          <span id="enterprise-tab">GitHub 企业版</span>
         </TabBar>
 
         {currentTabState.error ? (
@@ -225,14 +225,12 @@ export class Publish extends React.Component<IPublishProps, IPublishState> {
   }
 
   private renderSignInTab(tab: PublishTab) {
-    const signInTitle = __DARWIN__ ? 'Sign In' : 'Sign in'
+    const signInTitle = __DARWIN__ ? '登录' : '登录'
     switch (tab) {
       case PublishTab.DotCom:
         return (
           <CallToAction actionTitle={signInTitle} onAction={this.signInDotCom}>
-            <div>
-              Sign in to your GitHub.com account to access your repositories.
-            </div>
+            <div>登录 GitHub.com 账号来访问您的仓库。</div>
           </CallToAction>
         )
       case PublishTab.Enterprise:
@@ -242,8 +240,8 @@ export class Publish extends React.Component<IPublishProps, IPublishState> {
             onAction={this.signInEnterprise}
           >
             <div>
-              If you have a GitHub Enterprise or AE account at work, sign in to
-              it to get access to your repositories.
+              如果您在工作中使用 GitHub 企业版或 AE
+              版账号，登录账号即可访问工作仓库。
             </div>
           </CallToAction>
         )
@@ -261,9 +259,7 @@ export class Publish extends React.Component<IPublishProps, IPublishState> {
       return (
         <DialogFooter>
           <OkCancelButtonGroup
-            okButtonText={
-              __DARWIN__ ? 'Publish Repository' : 'Publish repository'
-            }
+            okButtonText={__DARWIN__ ? '发布仓库' : '发布仓库'}
             okButtonDisabled={disabled}
           />
         </DialogFooter>
@@ -290,7 +286,7 @@ export class Publish extends React.Component<IPublishProps, IPublishState> {
     const tab = this.state.currentTab
     const account = this.getAccountForTab(tab)
     if (!account) {
-      fatalError(`Tried to publish with no user. That seems impossible!`)
+      fatalError(`在没登录的情况下发布仓库，简直不可置信！`)
     }
 
     const settings = currentTabState.settings

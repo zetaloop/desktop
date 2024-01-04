@@ -86,7 +86,7 @@ export class CommitDragElement extends React.Component<
           <>
             {copyToPlus}
             <span>
-              <span className="copy-to">Copy to</span>
+              <span className="copy-to">复制到</span>
               <span className="branch-name">
                 {currentDropTarget.branchName}
               </span>
@@ -99,7 +99,7 @@ export class CommitDragElement extends React.Component<
         const commitsBeingSquashedCount = this.props.selectedCommits.length + 1
         toolTipContents = (
           <>
-            <span>Squash {commitsBeingSquashedCount} commits</span>
+            <span>压缩这{commitsBeingSquashedCount}个提交</span>
           </>
         )
         break
@@ -107,17 +107,17 @@ export class CommitDragElement extends React.Component<
         if (currentDropTarget.data.type !== DragType.Commit) {
           toolTipContents = (
             <>
-              <span>'Insert here'</span>
+              <span>'插入此处'</span>
             </>
           )
           break
         }
 
         const pluralized =
-          currentDropTarget.data.commits.length === 1 ? 'commit' : 'commits'
+          currentDropTarget.data.commits.length === 1 ? '提交' : '提交'
         toolTipContents = (
           <>
-            <span>{`Move ${pluralized} here`}</span>
+            <span>{`移动${pluralized}到此处`}</span>
           </>
         )
         break

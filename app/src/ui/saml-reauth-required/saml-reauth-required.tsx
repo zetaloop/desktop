@@ -5,7 +5,7 @@ import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
 import { RetryAction } from '../../models/retry-actions'
 import { SignInResult } from '../../lib/stores'
 
-const okButtonText = __DARWIN__ ? 'Continue in Browser' : 'Continue in browser'
+const okButtonText = __DARWIN__ ? '打开浏览器' : '打开浏览器'
 
 interface ISAMLReauthRequiredDialogProps {
   readonly dispatcher: Dispatcher
@@ -37,9 +37,7 @@ export class SAMLReauthRequiredDialog extends React.Component<
   public render() {
     return (
       <Dialog
-        title={
-          __DARWIN__ ? 'Re-authorization Required' : 'Re-authorization required'
-        }
+        title={__DARWIN__ ? '需要重新授权' : '需要重新授权'}
         loading={this.state.loading}
         onDismissed={this.props.onDismissed}
         onSubmit={this.onSignIn}
@@ -47,15 +45,11 @@ export class SAMLReauthRequiredDialog extends React.Component<
       >
         <DialogContent>
           <p>
-            The "{this.props.organizationName}" organization has enabled or
-            enforced SAML SSO. To access this repository, you must sign in again
-            and grant GitHub Desktop permission to access the organization's
-            repositories.
+            "{this.props.organizationName}" 组织已启用或强制执行 SAML
+            SSO。要访问此仓库，您必须重新登录并授予 GitHub Desktop
+            访问该组织仓库的权限。
           </p>
-          <p>
-            Would you like to open a browser to grant GitHub Desktop permission
-            to access the repository?
-          </p>
+          <p>是否打开浏览器授权 GitHub Desktop 访问该仓库？</p>
         </DialogContent>
         <DialogFooter>
           <OkCancelButtonGroup okButtonText={okButtonText} />

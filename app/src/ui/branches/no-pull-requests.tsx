@@ -42,15 +42,15 @@ export class NoPullRequests extends React.Component<INoPullRequestsProps, {}> {
 
   private renderTitle() {
     if (this.props.isSearch) {
-      return <div className="title">Sorry, I can't find that pull request!</div>
+      return <div className="title">抱歉，找不到该拉取请求</div>
     } else if (this.props.isLoadingPullRequests) {
-      return <div className="title">Hang tight</div>
+      return <div className="title">请稍候</div>
     } else {
       return (
         <div>
-          <div className="title">You're all set!</div>
+          <div className="title">一切准备就绪！</div>
           <div className="no-prs">
-            No open pull requests in <Ref>{this.props.repositoryName}</Ref>
+            <Ref>{this.props.repositoryName}</Ref> 没有打开的拉取请求
           </div>
         </div>
       )
@@ -60,30 +60,26 @@ export class NoPullRequests extends React.Component<INoPullRequestsProps, {}> {
   private renderCallToAction() {
     if (this.props.isLoadingPullRequests) {
       return (
-        <div className="call-to-action">
-          Loading pull requests as fast as I can!
-        </div>
+        <div className="call-to-action">正在以最快速度加载拉取请求啦！</div>
       )
     }
 
     if (this.props.isOnDefaultBranch) {
       return (
         <div className="call-to-action">
-          Would you like to{' '}
-          <LinkButton onClick={this.props.onCreateBranch}>
-            create a new branch
-          </LinkButton>{' '}
-          and get going on your next project?
+          您想要{' '}
+          <LinkButton onClick={this.props.onCreateBranch}>新建分支</LinkButton>{' '}
+          开始着手新的项目吗？
         </div>
       )
     } else {
       return (
         <div className="call-to-action">
-          Would you like to{' '}
+          您想要从当前分支{' '}
           <LinkButton onClick={this.props.onCreatePullRequest}>
-            create a pull request
+            创建拉取请求
           </LinkButton>{' '}
-          from the current branch?
+          吗？
         </div>
       )
     }

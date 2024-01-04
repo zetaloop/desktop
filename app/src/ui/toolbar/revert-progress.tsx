@@ -42,12 +42,12 @@ export class RevertProgress extends React.Component<IRevertProgressProps, {}> {
 
   public render() {
     const progress = this.props.progress
-    const title = progress.title || 'Hang on…'
+    const title = progress.title || '请稍候…'
 
     if (!enableResizingToolbarButtons()) {
       return (
         <ToolbarButton
-          title="Reverting…"
+          title="正在逆转…"
           description={title}
           progressValue={progress.value}
           className="revert-progress"
@@ -68,7 +68,7 @@ export class RevertProgress extends React.Component<IRevertProgressProps, {}> {
         minimumWidth={this.props.width.min}
       >
         <ToolbarButton
-          title="Reverting…"
+          title="正在逆转…"
           description={title}
           progressValue={progress.value}
           className="revert-progress"
