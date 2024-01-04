@@ -146,7 +146,8 @@ export function getUpdatesURL() {
 export function shouldMakeDelta() {
   // Only production and beta channels include deltas. Test releases aren't
   // necessarily sequential so deltas wouldn't make sense.
-  return ['production', 'beta'].includes(getChannel())
+  // return ['production', 'beta'].includes(getChannel())
+  return false // Desktop-CN: Prevent building error.
 }
 
 export function getIconFileName(): string {
