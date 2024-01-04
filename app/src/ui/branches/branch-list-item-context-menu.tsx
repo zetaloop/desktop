@@ -23,20 +23,20 @@ export function generateBranchContextMenuItems(
 
   if (onRenameBranch !== undefined) {
     items.push({
-      label: 'Rename…',
+      label: '重命名…',
       action: () => onRenameBranch(name),
       enabled: isLocal,
     })
   }
 
   items.push({
-    label: __DARWIN__ ? 'Copy Branch Name' : 'Copy branch name',
+    label: __DARWIN__ ? '复制名称' : '复制名称',
     action: () => clipboard.writeText(name),
   })
 
   if (onViewPullRequestOnGitHub !== undefined) {
     items.push({
-      label: 'View Pull Request on GitHub',
+      label: '前往 GitHub 查看拉取请求',
       action: () => onViewPullRequestOnGitHub(),
     })
   }
@@ -45,7 +45,7 @@ export function generateBranchContextMenuItems(
 
   if (onDeleteBranch !== undefined) {
     items.push({
-      label: 'Delete…',
+      label: '删除…',
       action: () => onDeleteBranch(name),
     })
   }

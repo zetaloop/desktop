@@ -119,12 +119,12 @@ export class WindowControls extends React.Component<{}, IWindowControlState> {
       return <span />
     }
 
-    const min = this.renderButton('minimize', this.onMinimize, minimizePath)
+    const min = this.renderButton('最小化', this.onMinimize, minimizePath)
     const maximizeOrRestore =
       this.state.windowState === 'maximized'
-        ? this.renderButton('restore', this.onRestore, restorePath)
-        : this.renderButton('maximize', this.onMaximize, maximizePath)
-    const close = this.renderButton('close', this.onClose, closePath)
+        ? this.renderButton('还原', this.onRestore, restorePath)
+        : this.renderButton('最大化', this.onMaximize, maximizePath)
+    const close = this.renderButton('关闭', this.onClose, closePath)
 
     return (
       <div className="window-controls">

@@ -32,7 +32,7 @@ export class DiffSearchInput extends React.Component<
     return (
       <div className="diff-search">
         <TextBox
-          placeholder="Search…"
+          placeholder="查找…"
           displayClearButton={true}
           autoFocus={true}
           onValueChanged={this.onChange}

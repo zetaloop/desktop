@@ -64,7 +64,7 @@ export class FileList extends React.Component<IFileListProps, IFileListState> {
   private getFileAriaLabel = (row: number) => {
     const file = this.props.files[row]
     const { path, status } = file
-    const fileStatus = mapStatus(status)
+    const fileStatus = mapStatus(status, true) // cn
     return `${path} ${fileStatus}`
   }
 
