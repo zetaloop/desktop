@@ -28,7 +28,7 @@ export class GenerateCommitMessageOverrideWarning extends React.Component<IGener
   public render() {
     return (
       <Dialog
-        title="Commit message override"
+        title="覆盖提交消息"
         id="generate-commit-message-override-warning"
         type="warning"
         onDismissed={this.props.onDismissed}
@@ -38,12 +38,11 @@ export class GenerateCommitMessageOverrideWarning extends React.Component<IGener
       >
         <DialogContent>
           <p id="generate-commit-message-override-warning-body">
-            The commit message you have entered will be overridden by the
-            generated commit message.
+            用 AI 生成的提交消息覆盖现有内容。
           </p>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup destructive={true} okButtonText="Override" />
+          <OkCancelButtonGroup destructive={true} okButtonText="确认覆盖" />
         </DialogFooter>
       </Dialog>
     )
