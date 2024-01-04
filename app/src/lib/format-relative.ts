@@ -15,7 +15,7 @@ const getRelativeFormatter = mem(
 )
 
 export function formatRelative(ms: number) {
-  const formatter = getRelativeFormatter('en-US', { numeric: 'auto' })
+  const formatter = getRelativeFormatter('zh-CN', { numeric: 'auto' })
 
   const sign = ms < 0 ? -1 : 1
 
@@ -29,16 +29,34 @@ export function formatRelative(ms: number) {
   const year = Math.round(month / 12)
 
   if (sec < 45) {
-    return formatter.format(sec * sign, 'second')
+    return formatter
+      .format(sec * sign, 'second')
+      .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
+      .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
   } else if (min < 45) {
-    return formatter.format(min * sign, 'minute')
+    return formatter
+      .format(min * sign, 'minute')
+      .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
+      .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
   } else if (hr < 24) {
-    return formatter.format(hr * sign, 'hour')
+    return formatter
+      .format(hr * sign, 'hour')
+      .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
+      .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
   } else if (day < 30) {
-    return formatter.format(day * sign, 'day')
+    return formatter
+      .format(day * sign, 'day')
+      .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
+      .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
   } else if (month < 18) {
-    return formatter.format(month * sign, 'month')
+    return formatter
+      .format(month * sign, 'month')
+      .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
+      .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
   } else {
-    return formatter.format(year * sign, 'year')
+    return formatter
+      .format(year * sign, 'year')
+      .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
+      .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
   }
 }
