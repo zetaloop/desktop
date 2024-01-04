@@ -32,11 +32,11 @@ export class AccessibilitySettingsBanner extends React.Component<IAccessibilityS
       >
         <Octicon symbol={octicons.accessibilityInset} />
         <div className="banner-message">
-          Check out the new{' '}
+          试试新的{' '}
           <LinkButton onClick={this.onOpenAccessibilitySettings}>
-            accessibility settings
-          </LinkButton>{' '}
-          to control the visibility of the link underlines and diff check marks.
+            辅助功能设置
+          </LinkButton>
+          ，它可以控制链接下划线和差异对比勾号了。
         </div>
       </Banner>
     )
