@@ -26,7 +26,7 @@ export class UnknownAuthors extends React.Component<IUnknownAuthorsProps> {
     return (
       <Dialog
         id="unknown-authors"
-        title={__DARWIN__ ? 'Unknown Co-Authors' : 'Unknown co-authors'}
+        title={__DARWIN__ ? '未知协作者' : '未知协作者'}
         onDismissed={this.props.onDismissed}
         onSubmit={this.commit}
         type="warning"
@@ -36,7 +36,7 @@ export class UnknownAuthors extends React.Component<IUnknownAuthorsProps> {
         <DialogFooter>
           <OkCancelButtonGroup
             destructive={true}
-            okButtonText={__DARWIN__ ? 'Commit Anyway' : 'Commit anyway'}
+            okButtonText={__DARWIN__ ? '仍要提交' : '仍要提交'}
           />
         </DialogFooter>
       </Dialog>
@@ -47,16 +47,15 @@ export class UnknownAuthors extends React.Component<IUnknownAuthorsProps> {
     if (this.props.authors.length > MaxAuthorsToList) {
       return (
         <p>
-          {this.props.authors.length} users weren't found and won't be added as
-          co-authors of this commit. Are you sure you want to commit?
+          有{this.props.authors.length}
+          个用户未找到，他们不能被添加为此次提交的协作者。确定要提交吗？
         </p>
       )
     } else {
       return (
         <div>
           <p>
-            These users weren't found and won't be added as co-authors of this
-            commit. Are you sure you want to commit?
+            以下用户未找到，他们不能被添加为此次提交的协作者。确定要提交吗？
           </p>
           <div className="author-list">
             <ul>

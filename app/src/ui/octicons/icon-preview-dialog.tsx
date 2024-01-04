@@ -13,7 +13,7 @@ export class IconPreviewDialog extends React.Component<IIconPreviewDialogProps> 
       <Dialog
         id="octicons-preview-dialog"
         className="octicons-preview-dialog"
-        title="Icon Preview"
+        title="图标预览"
         onDismissed={this.props.onDismissed}
       >
         <DialogContent>
