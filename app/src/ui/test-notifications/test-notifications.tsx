@@ -204,11 +204,11 @@ export class TestNotifications extends React.Component<
       return (
         <>
           {' '}
-          You need to{' '}
+          您需要{' '}
           <LinkButton onClick={this.onGrantNotificationPermission}>
-            grant permission
+            允许
           </LinkButton>{' '}
-          to display these notifications from GitHub Desktop.
+          GitHub Desktop 显示通知。
         </>
       )
     }
@@ -222,36 +222,30 @@ export class TestNotifications extends React.Component<
     if (warnNotificationsDenied) {
       return (
         <>
-          <span className="warning-icon">⚠️</span> GitHub Desktop has no
-          permission to display notifications. Please, enable them in the{' '}
-          <LinkButton uri={notificationSettingsURL}>
-            Notifications Settings
-          </LinkButton>
-          .
+          <span className="warning-icon">⚠️</span> GitHub Desktop
+          没有显示通知的权限。请在{' '}
+          <LinkButton uri={notificationSettingsURL}>系统通知设置</LinkButton>{' '}
+          中设置允许。
         </>
       )
     }
 
-    const verb = suggestConfigureNotifications
-      ? 'properly configured'
-      : 'enabled'
+    const verb = suggestConfigureNotifications ? '正确配置' : '允许'
 
     return (
       <>
-        Make sure notifications are {verb} for GitHub Desktop in the{' '}
-        <LinkButton uri={notificationSettingsURL}>
-          Notifications Settings
-        </LinkButton>
-        .
+        请确保已在{' '}
+        <LinkButton uri={notificationSettingsURL}>系统通知设置</LinkButton> 里为
+        GitHub Desktop {verb}了通知权限。
       </>
     )
   }
 
   private getTypeFriendlyName(type?: TestNotificationType): string {
     const titleMap = new Map<TestNotificationType, string>([
-      [TestNotificationType.PullRequestReview, 'Pull Request Review'],
-      [TestNotificationType.PullRequestComment, 'Pull Request Comment'],
-      [TestNotificationType.ChecksFailed, 'Pull Request Checks Failed'],
+      [TestNotificationType.PullRequestReview, '拉取请求审核'],
+      [TestNotificationType.PullRequestComment, '拉取请求评论'],
+      [TestNotificationType.ChecksFailed, '拉取请求检查未通过'],
     ])
 
     return (
@@ -478,7 +472,7 @@ export class TestNotifications extends React.Component<
     if (this.state.selectedFlow === null) {
       return (
         <div>
-          <p>Select the type of notification to display:</p>
+          <p>请选择要显示的通知类型：</p>
           <div className="notification-type-list">
             {this.renderNotificationType(
               TestNotificationType.PullRequestReview
@@ -520,12 +514,12 @@ export class TestNotifications extends React.Component<
     const { pullRequests, selectedRows } = this.state
 
     if (pullRequests.length === 0) {
-      return <p>No pull requests found</p>
+      return <p>未找到拉取请求</p>
     }
 
     return (
       <div>
-        Pull requests for {this.getTypeFriendlyName()}:
+        {this.getTypeFriendlyName()} 的拉取请求：
         <SectionList
           rowHeight={40}
           rowCount={[pullRequests.length]}
@@ -564,12 +558,12 @@ export class TestNotifications extends React.Component<
     const { reviews, selectedRows } = this.state
 
     if (reviews.length === 0) {
-      return <p>No reviews found</p>
+      return <p>未找到审核</p>
     }
 
     return (
       <div>
-        Reviews:
+        审核：
         <SectionList
           rowHeight={40}
           rowCount={[reviews.length]}
@@ -614,12 +608,12 @@ export class TestNotifications extends React.Component<
     const { comments, selectedRows } = this.state
 
     if (comments.length === 0) {
-      return <p>No comments found</p>
+      return <p>未找到评论</p>
     }
 
     return (
       <div>
-        Comments:
+        评论：
         <SectionList
           rowHeight={40}
           rowCount={[comments.length]}
@@ -675,9 +669,9 @@ export class TestNotifications extends React.Component<
         html_url={review.html_url}
         leftAccessory={this.renderReviewStateIcon(review.state)}
       >
-        {review.body || <i>Review without body</i>}
+        {review.body || <i>审核无内容</i>}
         <br />
-        by <i>{review.user.login}</i>
+        来自 <i>{review.user.login}</i>
       </TestNotificationItemRowContent>
     )
   }
@@ -707,7 +701,7 @@ export class TestNotifications extends React.Component<
       >
         <b>
           #{pullRequest.pullRequestNumber}
-          {pullRequest.draft ? ' (Draft)' : ''}:
+          {pullRequest.draft ? '（草稿）' : ''}:
         </b>{' '}
         {pullRequest.title} <br />
         by <i>{pullRequest.author}</i>
@@ -734,7 +728,7 @@ export class TestNotifications extends React.Component<
     return (
       <Dialog
         id="test-notifications"
-        title="Test Notifications"
+        title="通知测试"
         onSubmit={this.props.onDismissed}
         onDismissed={this.props.onDismissed}
       >
@@ -744,11 +738,11 @@ export class TestNotifications extends React.Component<
         </DialogContent>
         <DialogFooter>
           <OkCancelButtonGroup
-            okButtonText="Close"
+            okButtonText="关闭"
             okButtonDisabled={false}
             cancelButtonDisabled={false}
             cancelButtonVisible={this.state.selectedFlow !== null}
-            cancelButtonText="Back"
+            cancelButtonText="返回"
             onCancelButtonClick={this.onBack}
           />
         </DialogFooter>

@@ -36,7 +36,7 @@ export class ConfirmCheckoutCommitDialog extends React.Component<
   }
 
   public render() {
-    const title = __DARWIN__ ? 'Checkout Commit?' : 'Checkout commit?'
+    const title = __DARWIN__ ? '检出该提交？' : '检出该提交？'
 
     return (
       <Dialog
@@ -52,13 +52,13 @@ export class ConfirmCheckoutCommitDialog extends React.Component<
       >
         <DialogContent>
           <Row id="checking-out-commit-confirmation">
-            Checking out a commit will create a detached HEAD, and you will no
-            longer be on any branch. Are you sure you want to checkout this
-            commit?
+            检出该提交后，代表 "当前跟踪分支" 的 HEAD
+            指针将会直接指向这个提交（即出现了 HEAD
+            指针分离）。这意味着，如果接着提交，后续的改动将不会连接到任何分支上。确定要检出吗？
           </Row>
           <Row>
             <Checkbox
-              label="Do not show this message again"
+              label="不再显示"
               value={
                 this.state.confirmCheckoutCommit
                   ? CheckboxValue.Off
@@ -69,7 +69,7 @@ export class ConfirmCheckoutCommitDialog extends React.Component<
           </Row>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup destructive={true} okButtonText="Checkout" />
+          <OkCancelButtonGroup destructive={true} okButtonText="检出" />
         </DialogFooter>
       </Dialog>
     )

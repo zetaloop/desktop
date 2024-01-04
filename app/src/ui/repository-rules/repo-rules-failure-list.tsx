@@ -30,33 +30,33 @@ export class RepoRulesMetadataFailureList extends React.Component<IRepoRulesMeta
     const totalFails = failures.failed.length + failures.bypassed.length
     let endText: string
     if (failures.status === 'bypass') {
-      endText = `, but you can bypass ${
-        totalFails === 1 ? 'it' : 'them'
-      }. Proceed with caution!`
+      endText = `，其中${
+        totalFails === 1 ? '一条' : '一些'
+      }允许绕过，请谨慎操作！`
     } else {
       endText = '.'
     }
 
-    const rulesText = __DARWIN__ ? 'Rules' : 'rules'
+    const rulesText = __DARWIN__ ? '规则' : '规则'
 
     return (
       <div className="repo-rules-failure-list-component">
         <p>
-          {leadingText} fails {totalFails} rule{totalFails > 1 ? 's' : ''}
-          {endText}{' '}
+          {leadingText}违反了{totalFails}条规则{totalFails > 1 ? '' : ''}
+          {endText}
           <RepoRulesetsForBranchLink repository={repository} branch={branch}>
-            View all rulesets for this branch.
+            查看此分支的所有规则集。
           </RepoRulesetsForBranchLink>
         </p>
         {failures.failed.length > 0 && (
           <div className="repo-rule-list">
-            <strong>Failed {rulesText}:</strong>
+            <strong>违反{rulesText}：</strong>
             {this.renderRuleFailureList(failures.failed)}
           </div>
         )}
         {failures.bypassed.length > 0 && (
           <div className="repo-rule-list">
-            <strong>Bypassed {rulesText}:</strong>
+            <strong>绕过{rulesText}：</strong>
             {this.renderRuleFailureList(failures.bypassed)}
           </div>
         )}
