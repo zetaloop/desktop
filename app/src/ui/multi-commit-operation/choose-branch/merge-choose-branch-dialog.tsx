@@ -88,12 +88,10 @@ export class MergeChooseBranchDialog extends React.Component<
       40
     )
     const squashPrefix =
-      this.props.operation === MultiCommitOperationKind.Squash
-        ? 'Squash and '
-        : null
+      this.props.operation === MultiCommitOperationKind.Squash ? '压缩' : null
     return (
       <>
-        {squashPrefix}Merge into <strong>{truncatedName}</strong>
+        {squashPrefix}合并到 <strong>{truncatedName}</strong>
       </>
     )
   }
@@ -171,7 +169,7 @@ export class MergeChooseBranchDialog extends React.Component<
   }
 
   private renderLoadingMergeMessage() {
-    return <>Checking for ability to merge automatically...</>
+    return <>正在自动检查合并可行性...</>
   }
 
   private renderCleanMergeMessage(
@@ -182,20 +180,18 @@ export class MergeChooseBranchDialog extends React.Component<
     if (commitCount === 0) {
       return (
         <React.Fragment>
-          {`This branch is up to date with `}
+          {`该分支已与 `}
           <strong>{branch.name}</strong>
+          {` 保持同步`}
         </React.Fragment>
       )
     }
 
-    const pluralized = commitCount === 1 ? 'commit' : 'commits'
+    const pluralized = commitCount === 1 ? '个提交' : '个提交'
     return (
       <React.Fragment>
-        This will merge
-        <strong>{` ${commitCount} ${pluralized}`}</strong>
-        {` from `}
-        <strong>{branch.name}</strong>
-        {` into `}
+        从 <strong>{branch.name}</strong> 合并
+        <strong>{`${commitCount}${pluralized}`}</strong>到{' '}
         <strong>{currentBranch.name}</strong>
       </React.Fragment>
     )
@@ -204,7 +200,7 @@ export class MergeChooseBranchDialog extends React.Component<
   private renderInvalidMergeMessage() {
     return (
       <React.Fragment>
-        Unable to merge unrelated histories in this repository
+        无法合并从不相关的历史记录，它们没有任何一条共同的历史提交
       </React.Fragment>
     )
   }
@@ -214,15 +210,12 @@ export class MergeChooseBranchDialog extends React.Component<
     currentBranch: Branch,
     count: number
   ) {
-    const pluralized = count === 1 ? 'file' : 'files'
+    const pluralized = count === 1 ? '文件' : '文件'
     return (
       <React.Fragment>
-        There will be
-        <strong>{` ${count} conflicted ${pluralized}`}</strong>
-        {` when merging `}
-        <strong>{branch.name}</strong>
-        {` into `}
-        <strong>{currentBranch.name}</strong>
+        从 <strong>{branch.name}</strong> 合并到{' '}
+        <strong>{currentBranch.name}</strong> 时有
+        <strong>{`${count}个${pluralized}产生冲突`}</strong>
       </React.Fragment>
     )
   }

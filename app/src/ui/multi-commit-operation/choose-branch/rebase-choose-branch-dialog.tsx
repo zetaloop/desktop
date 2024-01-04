@@ -95,9 +95,9 @@ export class RebaseChooseBranchDialog extends React.Component<
         : false
 
     return selectedBranchIsCurrentBranch
-      ? 'You are not able to rebase this branch onto itself.'
+      ? '无法将该分支重构在自己身上。'
       : !areCommitsToRebase
-      ? 'There are no commits on the current branch to rebase.'
+      ? '当前分支没有提交可以重构。'
       : undefined
   }
 
@@ -108,7 +108,7 @@ export class RebaseChooseBranchDialog extends React.Component<
     )
     return (
       <>
-        Rebase <strong>{truncatedName}</strong>
+        重构 <strong>{truncatedName}</strong>
       </>
     )
   }
@@ -147,11 +147,11 @@ export class RebaseChooseBranchDialog extends React.Component<
   }
 
   private renderLoadingRebaseMessage() {
-    return <>Checking for ability to rebase automatically…</>
+    return <>正在自动检查重构可行性…</>
   }
 
   private renderInvalidRebaseMessage() {
-    return <>Unable to start rebase. Check you have chosen a valid branch.</>
+    return <>无法启动重构，请检查选择的分支是否有效。</>
   }
 
   private renderCleanRebaseMessage(
@@ -162,20 +162,17 @@ export class RebaseChooseBranchDialog extends React.Component<
     if (commitsToRebase <= 0) {
       return (
         <>
-          This branch is up to date with{` `}
-          <strong>{currentBranch.name}</strong>
+          该分支已与 <strong>{currentBranch.name}</strong> 保持同步
         </>
       )
     }
 
-    const pluralized = commitsToRebase === 1 ? 'commit' : 'commits'
+    const pluralized = commitsToRebase === 1 ? '个提交' : '个提交'
     return (
       <>
-        This will update <strong>{currentBranch.name}</strong>
-        {` by applying its `}
-        <strong>{` ${commitsToRebase} ${pluralized}`}</strong>
-        {` on top of `}
-        <strong>{baseBranch.name}</strong>
+        把 <strong>{currentBranch.name}</strong> 所做的{' '}
+        <strong>{`${commitsToRebase}${pluralized}`}</strong> 以{' '}
+        <strong>{baseBranch.name}</strong> 为基础重新构造
       </>
     )
   }
