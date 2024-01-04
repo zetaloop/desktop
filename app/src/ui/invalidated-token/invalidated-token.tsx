@@ -24,19 +24,16 @@ export class InvalidatedToken extends React.Component<IInvalidatedTokenProps> {
       <Dialog
         id="invalidated-token"
         type="warning"
-        title={
-          __DARWIN__ ? 'Invalidated Account Token' : 'Invalidated account token'
-        }
+        title={__DARWIN__ ? '账号登录令牌失效' : '账号登录令牌失效'}
         onSubmit={this.onSubmit}
         onDismissed={this.props.onDismissed}
       >
         <DialogContent>
-          Your account token has been invalidated and you have been signed out
-          from your <Ref>{account.friendlyEndpoint}</Ref> account. Do you want
-          to sign in again?
+          账号登录令牌失效，您已退出 <Ref>{account.friendlyEndpoint}</Ref>{' '}
+          账号。需要重新登录吗？
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup okButtonText="Yes" cancelButtonText="No" />
+          <OkCancelButtonGroup okButtonText="登录" cancelButtonText="取消" />
         </DialogFooter>
       </Dialog>
     )

@@ -54,7 +54,7 @@ export class EnterpriseServerEntry extends React.Component<
     return (
       <Form onSubmit={this.onSubmit}>
         <TextBox
-          label="Enterprise or AE address"
+          label="企业版或 AE 版网址"
           autoFocus={true}
           disabled={disableEntry}
           onValueChanged={this.onServerAddressChanged}
@@ -65,7 +65,7 @@ export class EnterpriseServerEntry extends React.Component<
 
         <div className="actions">
           <Button type="submit" disabled={disableSubmission}>
-            {this.props.loading ? <Loading /> : null} Continue
+            {this.props.loading ? <Loading /> : null} 继续
           </Button>
           {this.props.additionalButtons}
         </div>
