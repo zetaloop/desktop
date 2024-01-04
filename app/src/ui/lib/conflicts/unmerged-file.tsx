@@ -29,7 +29,7 @@ import {
 } from '../../../lib/status'
 import { revealInFileManager } from '../../../lib/app-shell'
 
-const defaultConflictsResolvedMessage = 'No conflicts remaining'
+const defaultConflictsResolvedMessage = '所有冲突都已解决'
 
 /**
  * Renders an unmerged file status and associated buttons for the merge conflicts modal
@@ -156,7 +156,7 @@ const renderResolvedFile: React.FunctionComponent<{
           )}
           ariaDescribedBy={props.path}
         >
-          Undo
+          撤回
         </Button>
       )}
       <div className="green-circle">
@@ -189,7 +189,7 @@ const renderManualConflictedFile: React.FunctionComponent<{
   let conflictTypeString = manualConflictString
 
   if ([entry.us, entry.them].includes(GitStatusEntry.Deleted)) {
-    let targetBranch = 'target branch'
+    let targetBranch = '目标分支'
     if (entry.us === GitStatusEntry.Deleted && ourBranch !== undefined) {
       targetBranch = ourBranch
     }
@@ -197,7 +197,7 @@ const renderManualConflictedFile: React.FunctionComponent<{
     if (entry.them === GitStatusEntry.Deleted && theirBranch !== undefined) {
       targetBranch = theirBranch
     }
-    conflictTypeString = `File does not exist on ${targetBranch}.`
+    conflictTypeString = `文件在${targetBranch}不存在。`
   }
 
   const content = (
@@ -211,7 +211,7 @@ const renderManualConflictedFile: React.FunctionComponent<{
           className="small-button button-group-item resolve-arrow-menu"
           onClick={onDropdownClick}
         >
-          Resolve
+          解决
           <Octicon symbol={octicons.triangleDown} />
         </Button>
       </div>
@@ -251,9 +251,7 @@ const renderConflictedFileWithConflictMarkers: React.FunctionComponent<{
     props.status.conflictMarkerCount
   )
   const message =
-    humanReadableConflicts === 1
-      ? `1 conflict`
-      : `${humanReadableConflicts} conflicts`
+    humanReadableConflicts === 1 ? `1个冲突` : `${humanReadableConflicts}个冲突`
 
   const disabled = props.resolvedExternalEditor === null
   const tooltip = editorButtonTooltip(props.resolvedExternalEditor)
@@ -461,8 +459,8 @@ function calculateConflicts(conflictMarkers: number) {
 }
 
 function editorButtonString(editorName: string | null): string {
-  const defaultEditorString = 'editor'
-  return `Open in ${editorName || defaultEditorString}`
+  const defaultEditorString = '编辑器'
+  return `打开 ${editorName || defaultEditorString}`
 }
 
 function editorButtonTooltip(editorName: string | null): string | undefined {
@@ -472,10 +470,10 @@ function editorButtonTooltip(editorName: string | null): string | undefined {
   }
 
   if (__DARWIN__) {
-    return `No editor configured in Preferences > Advanced`
+    return `在设置 > 高级里未选择编辑器`
   } else {
-    return `No editor configured in Options > Advanced`
+    return `在设置 > 高级里未选择编辑器`
   }
 }
 
-const manualConflictString = 'Manual conflict'
+const manualConflictString = '手动冲突'

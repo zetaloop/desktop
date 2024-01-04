@@ -54,7 +54,7 @@ export async function pull(
   }
 
   if (progressCallback) {
-    const title = `Pulling ${remote.name}`
+    const title = `正在拉取 ${remote.name}`
     const kind = 'pull'
 
     opts = await executionOptionsWithProgress(

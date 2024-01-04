@@ -142,7 +142,7 @@ function createState(
 
 function getCommitSummary(selectedCommits: ReadonlyArray<Commit>) {
   return selectedCommits[0].summary.length === 0
-    ? 'Empty commit message'
+    ? '空白的提交信息'
     : selectedCommits[0].summary
 }
 
@@ -253,7 +253,7 @@ export class CommitSummary extends React.Component<
     return (
       <button onClick={onClick} className="expander">
         <Octicon symbol={icon} />
-        {expanded ? 'Collapse' : 'Expand'}
+        {expanded ? '折叠' : '展开'}
       </button>
     )
   }
@@ -385,7 +385,7 @@ export class CommitSummary extends React.Component<
       return
     }
 
-    const commitsPluralized = excludedCommitsCount > 1 ? 'commits' : 'commit'
+    const commitsPluralized = excludedCommitsCount > 1 ? '提交' : '提交'
 
     return (
       // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
@@ -395,10 +395,11 @@ export class CommitSummary extends React.Component<
         onMouseOut={this.onRemoveHighlightOfShas}
       >
         <Octicon symbol={octicons.info} />
+        未包含
         <LinkButton onClick={this.showUnreachableCommits}>
-          {excludedCommitsCount} unreachable {commitsPluralized}
-        </LinkButton>{' '}
-        not included.
+          {excludedCommitsCount}个不可到达的{commitsPluralized}
+        </LinkButton>
+        。
       </div>
     )
   }
@@ -464,24 +465,24 @@ export class CommitSummary extends React.Component<
       shasInDiff
     )
     const numInDiff = selectedCommits.length - commitsNotInDiff
-    const commitsPluralized = numInDiff > 1 ? 'commits' : 'commit'
+    const commitsPluralized = numInDiff > 1 ? '提交' : '提交'
     return (
       <div className={summaryClassNames}>
-        Showing changes from{' '}
+        显示来自
         {commitsNotInDiff > 0 ? (
           <LinkButton
             onMouseOver={this.onHighlightShasInDiff}
             onMouseOut={this.onRemoveHighlightOfShas}
             onClick={this.showReachableCommits}
           >
-            {numInDiff} {commitsPluralized}
+            {numInDiff}个{commitsPluralized}
           </LinkButton>
         ) : (
           <>
-            {' '}
-            {numInDiff} {commitsPluralized}
+            {numInDiff}个{commitsPluralized}
           </>
         )}
+        的改动
       </div>
     )
   }
@@ -530,8 +531,8 @@ export class CommitSummary extends React.Component<
 
   private renderChangedFilesDescription = () => {
     const fileCount = this.props.changesetData.files.length
-    const filesPlural = fileCount === 1 ? 'file' : 'files'
-    const filesShortDescription = `${fileCount} changed ${filesPlural}`
+    const filesPlural = fileCount === 1 ? '文件' : '文件'
+    const filesShortDescription = `${fileCount}个${filesPlural}有改动`
 
     let filesAdded = 0
     let filesModified = 0
@@ -615,10 +616,10 @@ export class CommitSummary extends React.Component<
       return null
     }
 
-    const linesAddedPlural = linesAdded === 1 ? 'line' : 'lines'
-    const linesDeletedPlural = linesDeleted === 1 ? 'line' : 'lines'
-    const linesAddedTitle = `${linesAdded} ${linesAddedPlural} added`
-    const linesDeletedTitle = `${linesDeleted} ${linesDeletedPlural} deleted`
+    const linesAddedPlural = linesAdded === 1 ? '行' : '行'
+    const linesDeletedPlural = linesDeleted === 1 ? '行' : '行'
+    const linesAddedTitle = `添加${linesAdded}${linesAddedPlural}`
+    const linesDeletedTitle = `删除${linesDeleted}${linesDeletedPlural}`
 
     return (
       <>

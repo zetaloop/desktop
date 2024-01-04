@@ -51,9 +51,7 @@ export class Git extends React.Component<IGitProps> {
   private renderDefaultBranchSetting() {
     return (
       <div className="default-branch-component">
-        <h2 id="default-branch-heading">
-          Default branch name for new repositories
-        </h2>
+        <h2 id="default-branch-heading">新建储存库默认分支名</h2>
 
         <RefNameTextBox
           initialValue={this.props.defaultBranch}
@@ -64,22 +62,22 @@ export class Git extends React.Component<IGitProps> {
         />
 
         <p id="default-branch-description" className="git-settings-description">
-          GitHub's default branch name is <Ref>main</Ref>. You may want to
-          change it due to different workflows, or because your integrations
-          still require the historical default branch name of <Ref>master</Ref>.
+          GitHub 的默认分支名是 <Ref>main</Ref>
+          。您可能因为工作流程不同，或者某些软件依赖以前的默认分支名{' '}
+          <Ref>master</Ref>，而需要修改。
         </p>
 
         <p className="git-settings-description">
-          These preferences will{' '}
+          以上设置将会{' '}
           {this.props.selectedExternalEditor &&
           this.props.globalGitConfigPath ? (
             <LinkButton onClick={this.openGlobalGitConfigInEditor}>
-              edit your global Git config file
+              修改您的全局 Git 配置文件
             </LinkButton>
           ) : (
-            'edit your global Git config file'
+            '修改您的全局 Git 配置文件'
           )}
-          .
+          。
         </p>
       </div>
     )
