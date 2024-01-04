@@ -249,7 +249,7 @@ export class CloneRepository extends React.Component<
     return (
       <Dialog
         className="clone-repository"
-        title={__DARWIN__ ? 'Clone a Repository' : 'Clone a repository'}
+        title={__DARWIN__ ? '克隆在线仓库' : '克隆在线仓库'}
         onSubmit={this.clone}
         onDismissed={this.props.onDismissed}
         loading={this.state.loading}
@@ -259,8 +259,8 @@ export class CloneRepository extends React.Component<
           selectedIndex={this.props.selectedTab}
         >
           <span id="dotcom-tab">GitHub.com</span>
-          <span id="enterprise-tab">GitHub Enterprise</span>
-          <span id="url-tab">URL</span>
+          <span id="enterprise-tab">GitHub 企业版</span>
+          <span id="url-tab">网址</span>
         </TabBar>
 
         {error ? <DialogError>{error.message}</DialogError> : null}
@@ -310,7 +310,7 @@ export class CloneRepository extends React.Component<
 
     return (
       <DialogFooter>
-        <OkCancelButtonGroup okButtonText="Clone" okButtonDisabled={disabled} />
+        <OkCancelButtonGroup okButtonText="克隆" okButtonDisabled={disabled} />
       </DialogFooter>
     )
   }
@@ -486,14 +486,12 @@ export class CloneRepository extends React.Component<
   }
 
   private renderSignIn(tab: CloneRepositoryTab) {
-    const signInTitle = __DARWIN__ ? 'Sign In' : 'Sign in'
+    const signInTitle = __DARWIN__ ? '登录' : '登录'
     switch (tab) {
       case CloneRepositoryTab.DotCom:
         return (
           <CallToAction actionTitle={signInTitle} onAction={this.signInDotCom}>
-            <div>
-              Sign in to your GitHub.com account to access your repositories.
-            </div>
+            <div>登录 GitHub.com 账号来访问您的仓库。</div>
           </CallToAction>
         )
       case CloneRepositoryTab.Enterprise:
@@ -503,8 +501,7 @@ export class CloneRepository extends React.Component<
             onAction={this.signInEnterprise}
           >
             <div>
-              If you are using GitHub Enterprise at work, sign in to it to get
-              access to your repositories.
+              如果您在工作中使用 GitHub 企业版账号，登录账号即可访问工作仓库。
             </div>
           </CallToAction>
         )
@@ -597,8 +594,8 @@ export class CloneRepository extends React.Component<
     const tabState = this.getSelectedTabState()
 
     const path = await showSaveDialog({
-      buttonLabel: 'Select',
-      nameFieldLabel: 'Clone As:',
+      buttonLabel: '选择',
+      nameFieldLabel: '克隆到:',
       showsTagField: false,
       defaultPath: tabState.path ?? '',
       properties: ['createDirectory'],
@@ -653,9 +650,7 @@ export class CloneRepository extends React.Component<
     path: string | null
   ): Promise<null | Error> {
     if (path === null) {
-      return new Error(
-        'Unable to read path on disk. Please check the path and try again.'
-      )
+      return new Error('无法读取该路径，请检查路径并重试。')
     }
 
     try {
@@ -664,16 +659,12 @@ export class CloneRepository extends React.Component<
       if (directoryFiles.length === 0) {
         return null
       } else {
-        return new Error(
-          'This folder contains files. Git can only clone to empty folders.'
-        )
+        return new Error('该文件夹存在文件，Git 需要克隆到空的文件夹里。')
       }
     } catch (error) {
       if (error.code === 'ENOTDIR') {
         // path refers to a file or other file system entry
-        return new Error(
-          'There is already a file with this name. Git can only clone to a folder.'
-        )
+        return new Error('该路径是个文件，Git 只能克隆到文件夹里。')
       }
 
       if (error.code === 'ENOENT') {
@@ -684,9 +675,7 @@ export class CloneRepository extends React.Component<
       log.error(
         'CloneRepository: Path validation failed. Error: ' + error.message
       )
-      return new Error(
-        'Unable to read path on disk. Please check the path and try again.'
-      )
+      return new Error('无法读取该路径，请检查路径并重试。')
     }
   }
 
@@ -742,7 +731,7 @@ export class CloneRepository extends React.Component<
     const { path } = this.getSelectedTabState()
 
     if (path == null) {
-      const error = new Error(`Directory could not be created at this path.`)
+      const error = new Error(`无法在该路径创建文件夹。`)
       this.setState({ loading: false })
       this.setSelectedTabState({ error })
       return
@@ -750,7 +739,7 @@ export class CloneRepository extends React.Component<
 
     if (!cloneInfo) {
       const error = new Error(
-        `We couldn't find that repository. Check that you are logged in, the network is accessible, and the URL or repository alias are spelled correctly.`
+        `找不到该仓库。请检查您是否已登录、网络是否畅通、网址有没有输错。`
       )
       this.setState({ loading: false })
       this.setSelectedTabState({ error })

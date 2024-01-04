@@ -211,7 +211,7 @@ export class NotificationsDebugStore {
     )
 
     if (!checks) {
-      defaultErrorHandler(new Error('Could not get checks for PR'), dispatcher)
+      defaultErrorHandler(new Error('无法获取 PR 的检查结果'), dispatcher)
       return
     }
 
@@ -229,12 +229,11 @@ export class NotificationsDebugStore {
       check => check.conclusion === APICheckConclusion.Failure
     ).length
 
-    const pluralChecks =
-      numberOfFailedChecks === 1 ? 'check was' : 'checks were'
+    const pluralChecks = numberOfFailedChecks === 1 ? '个检查' : '个检查'
 
     const shortSHA = shortenSHA(commitSha)
-    const title = 'Pull Request checks failed'
-    const body = `${pullRequest.title} #${pullRequest.pullRequestNumber} (${shortSHA})\n${numberOfFailedChecks} ${pluralChecks} not successful.`
+    const title = '拉取请求检查未通过'
+    const body = `${pullRequest.title} #${pullRequest.pullRequestNumber} (${shortSHA})\n${numberOfFailedChecks}${pluralChecks}未通过。`
     const onClick = () => {
       dispatcher.onChecksFailedNotification(repository, pullRequest, checks)
     }
