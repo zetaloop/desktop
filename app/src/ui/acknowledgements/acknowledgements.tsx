@@ -84,9 +84,9 @@ export class Acknowledgements extends React.Component<
       if (license.sourceText) {
         licenseText = license.sourceText
       } else if (license.license) {
-        licenseText = `License: ${license.license}`
+        licenseText = `许可证：${license.license}`
       } else {
-        licenseText = 'Unknown license'
+        licenseText = '未知许可证'
       }
 
       const nameHeader = <h2 key={`${key}-header`}>{nameElement}</h2>
@@ -115,21 +115,21 @@ export class Acknowledgements extends React.Component<
     return (
       <Dialog
         id="acknowledgements"
-        title="License and Open Source Notices"
+        title="许可证与开源声明"
         onSubmit={this.props.onDismissed}
         onDismissed={this.props.onDismissed}
       >
         <DialogContent>
           <p>
-            <LinkButton uri={WebsiteURL}>GitHub Desktop</LinkButton> is an open
-            source project published under the MIT License. You can view the
-            source code and contribute to this project on{' '}
-            <LinkButton uri={RepositoryURL}>GitHub</LinkButton>.
+            <LinkButton uri={WebsiteURL}>GitHub Desktop</LinkButton> 是一个以
+            MIT 许可证发布的开源项目。您可以前往{' '}
+            <LinkButton uri={RepositoryURL}>GitHub</LinkButton>{' '}
+            查看源代码和做出贡献。
           </p>
 
           {desktopLicense}
 
-          <p>GitHub Desktop also distributes these libraries:</p>
+          <p>GitHub Desktop 也包含以下库：</p>
 
           {licenses ? this.renderLicenses(licenses) : <Loading />}
         </DialogContent>

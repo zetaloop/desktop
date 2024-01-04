@@ -43,8 +43,8 @@ interface IPushBranchCommitsState {
  */
 function pluralize(numberOfCommits: number, unit: string) {
   return numberOfCommits === 1
-    ? `${numberOfCommits} ${unit}`
-    : `${numberOfCommits} ${unit}s`
+    ? `${numberOfCommits}个${unit}`
+    : `${numberOfCommits}个${unit}`
 }
 
 /**
@@ -100,27 +100,23 @@ export class PushBranchCommits extends React.Component<
     if (renderPublishView(this.props.unPushedCommits)) {
       return (
         <DialogContent>
-          <p id="push-branch-commits-title">
-            Your branch must be published before opening a pull request.
-          </p>
+          <p id="push-branch-commits-title">需要先发布分支才能打开拉取请求。</p>
           <p id="push-branch-commits-message">
-            Would you like to publish <Ref>{this.props.branch.name}</Ref> now
-            and open a pull request?
+            您要立刻发布 <Ref>{this.props.branch.name}</Ref>{' '}
+            分支并打开拉取请求吗？
           </p>
         </DialogContent>
       )
     }
 
-    const localCommits = pluralize(this.props.unPushedCommits, 'local commit')
+    const localCommits = pluralize(this.props.unPushedCommits, '本地提交')
 
     return (
       <DialogContent>
-        <p id="push-branch-commits-title">
-          You have {localCommits} that haven't been pushed to the remote yet.
-        </p>
+        <p id="push-branch-commits-title">您有{localCommits}尚未推送到远程。</p>
         <p id="push-branch-commits-message">
-          Would you like to push your changes to{' '}
-          <Ref>{this.props.branch.name}</Ref> before creating your pull request?
+          在创建拉取请求前需要先把改动推送到 <Ref>{this.props.branch.name}</Ref>{' '}
+          吗？
         </p>
       </DialogContent>
     )
@@ -128,27 +124,25 @@ export class PushBranchCommits extends React.Component<
 
   private renderDialogTitle() {
     if (renderPublishView(this.props.unPushedCommits)) {
-      return __DARWIN__ ? 'Publish Branch?' : 'Publish branch?'
+      return __DARWIN__ ? '发布分支？' : '发布分支？'
     }
 
-    return __DARWIN__ ? `Push Local Changes?` : `Push local changes?`
+    return __DARWIN__ ? `推送本地改动？` : `推送本地改动？`
   }
 
   private renderButtonGroup() {
     if (renderPublishView(this.props.unPushedCommits)) {
       return (
         <OkCancelButtonGroup
-          okButtonText={__DARWIN__ ? 'Publish Branch' : 'Publish branch'}
+          okButtonText={__DARWIN__ ? '发布分支' : '发布分支'}
         />
       )
     }
 
     return (
       <OkCancelButtonGroup
-        okButtonText={__DARWIN__ ? 'Push Commits' : 'Push commits'}
-        cancelButtonText={
-          __DARWIN__ ? 'Create Without Pushing' : 'Create without pushing'
-        }
+        okButtonText={__DARWIN__ ? '推送提交' : '推送提交'}
+        cancelButtonText={__DARWIN__ ? '直接创建' : '直接创建'}
         onCancelButtonClick={this.onCreateWithoutPushButtonClick}
       />
     )

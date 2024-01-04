@@ -39,15 +39,14 @@ export class GenerateCommitMessageDisclaimer extends React.Component<IGenerateCo
       >
         <DialogContent>
           <p id="generate-commit-message-disclaimer-body">
-            Copilot is powered by AI, so mistakes are possible. Review and edit
-            the generated message carefully before use.{' '}
-            <LinkButton uri="https://gh.io/copilot-for-desktop-transparency">
-              Learn more about Copilot in GitHub Desktop.
+            Copilot 基于 AI 技术，它的回答未必正确无误，请核实确认后再使用。
+            <LinkButton uri="https://docs.github.com/zh/copilot/responsible-use-of-github-copilot-features/responsible-use-of-github-copilot-in-github-desktop">
+              点击了解如何在 GitHub Desktop 中规范使用 Copilot。
             </LinkButton>
           </p>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup destructive={true} okButtonText="I understand" />
+          <OkCancelButtonGroup destructive={true} okButtonText="我已知悉" />
         </DialogFooter>
       </Dialog>
     )
