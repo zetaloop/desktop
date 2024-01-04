@@ -138,11 +138,11 @@ export class Prompts extends React.Component<
   private renderSwitchBranchOptionLabel = (key: UncommittedChangesStrategy) => {
     switch (key) {
       case UncommittedChangesStrategy.AskForConfirmation:
-        return 'Ask me where I want the changes to go'
+        return '询问怎么办'
       case UncommittedChangesStrategy.MoveToNewBranch:
-        return 'Always bring my changes to my new branch'
+        return '将改动带去新的分支'
       case UncommittedChangesStrategy.StashOnCurrentBranch:
-        return 'Always stash and leave my changes on the current branch'
+        return '将改动暂存在当前分支'
       default:
         return assertNever(key, `Unknown uncommitted changes strategy: ${key}`)
     }
@@ -161,9 +161,7 @@ export class Prompts extends React.Component<
 
     return (
       <div className="advanced-section">
-        <h2 id="switch-branch-heading">
-          If I have changes and I switch branches...
-        </h2>
+        <h2 id="switch-branch-heading">有未提交的改动时切换分支...</h2>
 
         <RadioGroup<UncommittedChangesStrategy>
           ariaLabelledBy="switch-branch-heading"
@@ -180,12 +178,10 @@ export class Prompts extends React.Component<
     return (
       <DialogContent>
         <div className="advanced-section">
-          <h2 id="show-confirm-dialog-heading">
-            Show a confirmation dialog before...
-          </h2>
+          <h2 id="show-confirm-dialog-heading">显示确认提示...</h2>
           <div role="group" aria-labelledby="show-confirm-dialog-heading">
             <Checkbox
-              label="Removing repositories"
+              label="删除仓库"
               value={
                 this.state.confirmRepositoryRemoval
                   ? CheckboxValue.On
@@ -194,7 +190,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmRepositoryRemovalChanged}
             />
             <Checkbox
-              label="Discarding changes"
+              label="放弃改动"
               value={
                 this.state.confirmDiscardChanges
                   ? CheckboxValue.On
@@ -203,7 +199,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmDiscardChangesChanged}
             />
             <Checkbox
-              label="Discarding changes permanently"
+              label="永久放弃改动"
               value={
                 this.state.confirmDiscardChangesPermanently
                   ? CheckboxValue.On
@@ -212,7 +208,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmDiscardChangesPermanentlyChanged}
             />
             <Checkbox
-              label="Discarding stash"
+              label="放弃暂存区"
               value={
                 this.state.confirmDiscardStash
                   ? CheckboxValue.On
@@ -221,7 +217,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmDiscardStashChanged}
             />
             <Checkbox
-              label="Checking out a commit"
+              label="检出提交"
               value={
                 this.state.confirmCheckoutCommit
                   ? CheckboxValue.On
@@ -230,7 +226,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmCheckoutCommitChanged}
             />
             <Checkbox
-              label="Force pushing"
+              label="强制推送"
               value={
                 this.state.confirmForcePush
                   ? CheckboxValue.On
@@ -239,7 +235,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmForcePushChanged}
             />
             <Checkbox
-              label="Undo commit"
+              label="撤回提交"
               value={
                 this.state.confirmUndoCommit
                   ? CheckboxValue.On
@@ -251,9 +247,9 @@ export class Prompts extends React.Component<
         </div>
         {this.renderSwitchBranchOptions()}
         <div className="advanced-section">
-          <h2>Commit Length</h2>
+          <h2>提交长度</h2>
           <Checkbox
-            label="Show commit length warning"
+            label="显示提交长度警告"
             value={
               this.props.showCommitLengthWarning
                 ? CheckboxValue.On

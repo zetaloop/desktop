@@ -11,21 +11,21 @@ import {
 } from '../custom-integration'
 
 export enum Shell {
-  Gnome = 'GNOME Terminal',
-  GnomeConsole = 'GNOME Console',
-  Mate = 'MATE Terminal',
+  Gnome = 'GNOME 终端',
+  GnomeConsole = 'GNOME 控制台',
+  Mate = 'MATE 终端',
   Tilix = 'Tilix',
   Terminator = 'Terminator',
   Urxvt = 'URxvt',
   Konsole = 'Konsole',
   Xterm = 'XTerm',
   Terminology = 'Terminology',
-  Deepin = 'Deepin Terminal',
-  Elementary = 'Elementary Terminal',
-  XFCE = 'XFCE Terminal',
+  Deepin = '深度终端',
+  Elementary = 'Elementary 终端',
+  XFCE = 'XFCE 终端',
   Alacritty = 'Alacritty',
   Kitty = 'Kitty',
-  LXTerminal = 'LXDE Terminal',
+  LXTerminal = 'LXDE 终端',
   Warp = 'Warp',
 }
 
