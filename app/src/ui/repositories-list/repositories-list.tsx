@@ -160,9 +160,9 @@ export class RepositoriesList extends React.Component<
 
   private getGroupLabel(identifier: RepositoryGroupIdentifier) {
     if (identifier === KnownRepositoryGroup.Enterprise) {
-      return 'Enterprise'
+      return '企业版'
     } else if (identifier === KnownRepositoryGroup.NonGitHub) {
-      return 'Other'
+      return '其他来源'
     } else {
       return identifier
     }
@@ -281,7 +281,7 @@ export class RepositoriesList extends React.Component<
         ariaExpanded={this.state.newRepositoryMenuExpanded}
         onKeyDown={this.onNewRepositoryButtonKeyDown}
       >
-        Add
+        添加
         <Octicon symbol={octicons.triangleDown} />
       </Button>
     )
@@ -299,21 +299,21 @@ export class RepositoriesList extends React.Component<
     return (
       <div className="no-items no-results-found">
         <img src={BlankSlateImage} className="blankslate-image" alt="" />
-        <div className="title">Sorry, I can't find that repository</div>
+        <div className="title">抱歉，找不到该仓库</div>
 
         <div className="protip">
-          ProTip! Press{' '}
+          小技巧！在软件里按{' '}
           <div className="kbd-shortcut">
             <KeyboardShortcut darwinKeys={['⌘', 'O']} keys={['Ctrl', 'O']} />
           </div>{' '}
-          to quickly add a local repository, and{' '}
+          可以添加本地仓库，
           <div className="kbd-shortcut">
             <KeyboardShortcut
               darwinKeys={['⇧', '⌘', 'O']}
               keys={['Ctrl', 'Shift', 'O']}
             />
           </div>{' '}
-          to clone from anywhere within the app
+          可以克隆在线仓库
         </div>
       </div>
     )
@@ -322,17 +322,15 @@ export class RepositoriesList extends React.Component<
   private onNewRepositoryButtonClick = () => {
     const items: IMenuItem[] = [
       {
-        label: __DARWIN__ ? 'Clone Repository…' : 'Clone repository…',
+        label: __DARWIN__ ? '克隆在线仓库…' : '克隆在线仓库…',
         action: this.onCloneRepository,
       },
       {
-        label: __DARWIN__ ? 'Create New Repository…' : 'Create new repository…',
+        label: __DARWIN__ ? '新建仓库…' : '新建仓库…',
         action: this.onCreateNewRepository,
       },
       {
-        label: __DARWIN__
-          ? 'Add Existing Repository…'
-          : 'Add existing repository…',
+        label: __DARWIN__ ? '添加本地仓库…' : '添加本地仓库…',
         action: this.onAddExistingRepository,
       },
     ]
