@@ -2,7 +2,7 @@ import { MultiCommitOperationKind } from '../../models/multi-commit-operation'
 import { BaseRebase } from './base-rebase'
 
 export abstract class Reorder extends BaseRebase {
-  protected conflictDialogOperationPrefix = 'reordering commits on'
+  protected conflictDialogOperationPrefix = '重排操作'
   protected rebaseKind = MultiCommitOperationKind.Reorder
 
   protected onBeginOperation = () => {

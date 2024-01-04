@@ -87,14 +87,14 @@ export class Appearance extends React.Component<
         return (
           <span>
             <img src={lightThemeImage} alt="" />
-            <span className="theme-value-label">Light</span>
+            <span className="theme-value-label">浅色</span>
           </span>
         )
       case ApplicationTheme.Dark:
         return (
           <span>
             <img src={darkThemeImage} alt="" />
-            <span className="theme-value-label">Dark</span>
+            <span className="theme-value-label">深色</span>
           </span>
         )
       case ApplicationTheme.System:
@@ -109,7 +109,7 @@ export class Appearance extends React.Component<
               <img src={lightThemeImage} alt="" />
               <img src={darkThemeImage} alt="" />
             </span>
-            <span className="theme-value-label">System</span>
+            <span className="theme-value-label">跟随系统</span>
           </span>
         )
     }
@@ -119,7 +119,7 @@ export class Appearance extends React.Component<
     const selectedTheme = this.state.selectedTheme
 
     if (selectedTheme == null) {
-      return <Row>Loading system theme</Row>
+      return <Row>正在加载系统主题</Row>
     }
 
     const themes = [
@@ -130,7 +130,7 @@ export class Appearance extends React.Component<
 
     return (
       <div className="appearance-section">
-        <h2 id="theme-heading">Theme</h2>
+        <h2 id="theme-heading">主题</h2>
 
         <RadioGroup<ApplicationTheme>
           ariaLabelledBy="theme-heading"
@@ -149,16 +149,16 @@ export class Appearance extends React.Component<
 
     return (
       <div className="appearance-section">
-        <h2 id="diff-heading">{'Diff'}</h2>
+        <h2 id="diff-heading">{'差异对比'}</h2>
 
         <Select
           value={this.state.selectedTabSize.toString()}
-          label={__DARWIN__ ? 'Tab Size' : 'Tab size'}
+          label={__DARWIN__ ? '制表符宽度' : '制表符宽度'}
           onChange={this.onSelectedTabSizeChanged}
         >
           {availableTabSizes.map(n => (
             <option key={n} value={n}>
-              {n === tabSizeDefault ? `${n} (default)` : n}
+              {n === tabSizeDefault ? `${n}（默认）` : n}
             </option>
           ))}
         </Select>
