@@ -36,7 +36,7 @@ export class SSHKeyPassphrase extends React.Component<
       <Dialog
         id="ssh-key-passphrase"
         type="normal"
-        title="SSH Key Passphrase"
+        title="SSH 私钥口令"
         backdropDismissable={false}
         onSubmit={this.onSubmit}
         onDismissed={this.onCancel}
@@ -44,14 +44,14 @@ export class SSHKeyPassphrase extends React.Component<
         <DialogContent>
           <Row>
             <PasswordTextBox
-              label={`Enter passphrase for key '${this.props.keyPath}':`}
+              label={`输入私钥 '${this.props.keyPath}' 的口令:`}
               value={this.state.passphrase}
               onValueChanged={this.onValueChanged}
             />
           </Row>
           <Row>
             <Checkbox
-              label="Remember passphrase"
+              label="记住口令"
               value={
                 this.state.rememberPassphrase
                   ? CheckboxValue.On

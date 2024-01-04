@@ -24,33 +24,32 @@ export class PullRequestMergeStatus extends React.Component<IPullRequestMergeSta
       case ComputedAction.Loading:
         return (
           <span className="pr-merge-status-loading">
-            <strong>Checking mergeability&hellip;</strong> Don’t worry, you can
-            still create the pull request.
+            <strong>正在检查合并冲突&hellip;</strong>{' '}
+            这不影响您创建这个拉取请求。
           </span>
         )
       case ComputedAction.Invalid:
         return (
           <span className="pr-merge-status-invalid">
-            <strong>Error checking merge status.</strong> Unable to merge
-            unrelated histories in this repository
+            <strong>无法检查合并状态。</strong>该分支的历史记录不相关。
           </span>
         )
       case ComputedAction.Clean:
         return (
           <span className="pr-merge-status-clean">
             <strong>
-              <Octicon symbol={octicons.check} /> Able to merge.
-            </strong>{' '}
-            These branches can be automatically merged.
+              <Octicon symbol={octicons.check} /> 没有冲突。
+            </strong>
+            这些改动可以被自动合并。
           </span>
         )
       case ComputedAction.Conflicts:
         return (
           <span className="pr-merge-status-conflicts">
             <strong>
-              <Octicon symbol={octicons.x} /> Can't automatically merge.
-            </strong>{' '}
-            Don’t worry, you can still create the pull request.
+              <Octicon symbol={octicons.x} /> 存在冲突，无法自动合并。
+            </strong>
+            但您仍然可以创建这个拉取请求。
           </span>
         )
       default:

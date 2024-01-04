@@ -56,7 +56,7 @@ export class TooltippedCommitSHA extends React.Component<
     return (
       <>
         <code>{this.longSHA}</code>
-        <button onClick={this.onCopySHAButtonClick}>Copy</button>
+        <button onClick={this.onCopySHAButtonClick}>复制</button>
       </>
     )
   }

@@ -159,11 +159,11 @@ export class ChangesListFilterOptions extends React.Component<
         onClickOutside={this.closeFilterOptions}
       >
         <div className="filter-popover-header">
-          <h3 id="filter-options-header">Filter Options</h3>
+          <h3 id="filter-options-header">筛选选项</h3>
           <button
             className="close"
             onClick={this.closeFilterOptions}
-            aria-label="Close"
+            aria-label="关闭"
           >
             <Octicon symbol={octicons.x} />
           </button>
@@ -176,7 +176,7 @@ export class ChangesListFilterOptions extends React.Component<
                 : CheckboxValue.Off
             }
             onChange={this.onFilterToIncludedInCommit}
-            label={`Included in commit (${includedFilesCount})`}
+            label={`要提交的（${includedFilesCount}个）`}
           />
           <Checkbox
             value={
@@ -185,7 +185,7 @@ export class ChangesListFilterOptions extends React.Component<
                 : CheckboxValue.Off
             }
             onChange={this.onFilterExcludedFiles}
-            label={`Excluded from commit (${excludedFilesCount})`}
+            label={`不提交的（${excludedFilesCount}个）`}
           />
           <Checkbox
             value={
@@ -194,7 +194,7 @@ export class ChangesListFilterOptions extends React.Component<
                 : CheckboxValue.Off
             }
             onChange={this.onFilterNewFiles}
-            label={`New files (${newFilesCount})`}
+            label={`新增（${newFilesCount}个）`}
           />
           <Checkbox
             value={
@@ -203,7 +203,7 @@ export class ChangesListFilterOptions extends React.Component<
                 : CheckboxValue.Off
             }
             onChange={this.onFilterModifiedFiles}
-            label={`Modified files (${modifiedFilesCount})`}
+            label={`修改（${modifiedFilesCount}个）`}
           />
           <Checkbox
             value={
@@ -212,12 +212,12 @@ export class ChangesListFilterOptions extends React.Component<
                 : CheckboxValue.Off
             }
             onChange={this.onFilterDeletedFiles}
-            label={`Deleted files (${deletedFilesCount})`}
+            label={`删除（${deletedFilesCount}个）`}
           />
         </div>
         {filtersActive && (
           <div className="filter-options-footer">
-            <Button onClick={this.onClearAllFilters}>Clear filters</Button>
+            <Button onClick={this.onClearAllFilters}>清除筛选</Button>
           </div>
         )}
       </Popover>
@@ -233,8 +233,8 @@ export class ChangesListFilterOptions extends React.Component<
       this.props.fileListFilter
     )
     const hasActiveFilters = activeFiltersCount > 0
-    const buttonTextLabel = `Filter Options ${
-      hasActiveFilters ? `(${activeFiltersCount} applied)` : ''
+    const buttonTextLabel = `筛选选项${
+      hasActiveFilters ? `（已启用${activeFiltersCount}项）` : ''
     }`
 
     return (

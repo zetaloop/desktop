@@ -104,7 +104,7 @@ export class AccountsStore extends TypedBaseStore<ReadonlyArray<Account>> {
       if (__DARWIN__ && isKeyChainError(e)) {
         this.emitError(
           new Error(
-            `GitHub Desktop was unable to store the account token in the keychain. Please check you have unlocked access to the 'login' keychain.`
+            `GitHub Desktop 无法将账号令牌存储到钥匙串中，请检查是否已允许我们访问 '登录' 钥匙串。`
           )
         )
       } else {

@@ -16,13 +16,14 @@ export function BranchAlreadyUpToDate({
     theirBranch !== undefined ? (
       <span>
         <strong>{ourBranch}</strong>
-        {' is already up to date with '}
+        {' 已与 '}
         <strong>{theirBranch}</strong>
+        {' 保持同步'}
       </span>
     ) : (
       <span>
         <strong>{ourBranch}</strong>
-        {' is already up to date'}
+        {' 已保持同步'}
       </span>
     )
 
@@ -31,7 +32,7 @@ export function BranchAlreadyUpToDate({
       <div className="green-circle">
         <Octicon className="check-icon" symbol={octicons.check} />
       </div>
-      <div className="banner-message">{message}</div>
+      <div className="banner-message">{message}。</div>
     </Banner>
   )
 }

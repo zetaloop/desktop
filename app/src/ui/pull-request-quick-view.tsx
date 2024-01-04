@@ -165,13 +165,13 @@ export class PullRequestQuickView extends React.Component<
     return (
       <header className="header">
         <Octicon symbol={octicons.listUnordered} />
-        <div className="action-needed">Review requested</div>
+        <div className="action-needed">等待审核</div>
         <Button
           className="button-with-icon"
           onClick={this.onViewOnGitHub}
           role="link"
         >
-          View on GitHub
+          前往 GitHub
           <Octicon symbol={octicons.linkExternal} />
         </Button>
       </header>
@@ -187,7 +187,7 @@ export class PullRequestQuickView extends React.Component<
             isDraft ? octicons.gitPullRequestDraft : octicons.gitPullRequest
           }
         />
-        <span className="state">{isDraft ? 'Draft' : 'Open'}</span>
+        <span className="state">{isDraft ? '草稿' : '开启'}</span>
       </div>
     )
   }
@@ -198,7 +198,7 @@ export class PullRequestQuickView extends React.Component<
     const displayBody =
       body !== undefined && body !== null && body.trim() !== ''
         ? body
-        : '_No description provided._'
+        : '_没有描述。_'
 
     return (
       <div className="pull-request">
@@ -220,7 +220,7 @@ export class PullRequestQuickView extends React.Component<
           onMarkdownLinkClicked={this.onMarkdownLinkClicked}
           onMarkdownParsed={this.onMarkdownParsed}
           underlineLinks={this.props.underlineLinks}
-          ariaLabel="Pull request markdown body"
+          ariaLabel="拉取请求的 markdown 内容"
         />
       </div>
     )

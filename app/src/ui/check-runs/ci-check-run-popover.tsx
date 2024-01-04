@@ -46,13 +46,17 @@ export function getCombinedStatusSummary(
 ): string {
   const conclusions = Object.values(groupBy(statusHolders, 'conclusion')).map(
     g =>
-      `${g.length} ${getCheckRunConclusionAdjective(
+      `${g.length}个${getCheckRunConclusionAdjective(
         g[0].conclusion
       ).toLocaleLowerCase()}`
   )
 
-  const pluralize = statusHolders.length > 1 ? `${description}s` : description
-  return `${toSentence(conclusions)} ${pluralize}`
+  const descriptionCN = description === 'step' ? '步骤' : '检查'
+  const pluralize = statusHolders.length > 1 ? descriptionCN : descriptionCN
+  if (conclusions.length === 0) {
+    return `尚无${pluralize}`
+  }
+  return `在这些${pluralize}中，${toSentence(conclusions)}`
 }
 
 interface ICICheckRunPopoverProps {
@@ -226,8 +230,8 @@ export class CICheckRunPopover extends React.PureComponent<
     return (
       <div className="loading-check-runs">
         <img src={BlankSlateImage} className="blankslate-image" alt="" />
-        <div className="title">Stand By</div>
-        <div className="call-to-action">Check runs incoming!</div>
+        <div className="title">请稍等</div>
+        <div className="call-to-action">正在加载检查数据</div>
       </div>
     )
   }
@@ -262,11 +266,11 @@ export class CICheckRunPopover extends React.PureComponent<
 
     const valueMap = getCheckStatusCountMap(checkRuns)
 
-    const ariaLabel = `Completeness indicator. ${
+    const ariaLabel = `完成度指示图。${
       valueMap.get(APICheckStatus.Completed) ?? 0
-    } completed, ${valueMap.get(APICheckStatus.InProgress) ?? 0} in progress, ${
+    }个已完成，${valueMap.get(APICheckStatus.InProgress) ?? 0}个运行中，${
       valueMap.get(APICheckStatus.Queued) ?? 0
-    } queued.`
+    }个排队中。`
 
     return <Donut ariaLabel={ariaLabel} valueMap={valueMap} />
   }
@@ -279,18 +283,16 @@ export class CICheckRunPopover extends React.PureComponent<
   ): JSX.Element {
     switch (true) {
       case loading:
-        return <>Checks Summary</>
+        return <>检查情况</>
       case somePendingNoFailures:
-        return (
-          <span className="pending">Some checks haven't completed yet</span>
-        )
+        return <span className="pending">检查尚未完成</span>
       case allFailure:
-        return <span className="failure">All checks have failed</span>
+        return <span className="failure">所有检查都未通过</span>
       case allSuccess:
-        return <>All checks have passed</>
+        return <>所有检查都已通过</>
     }
 
-    return <span className="failure">Some checks were not successful</span>
+    return <span className="failure">部分检查未通过</span>
   }
 
   private renderHeader = (): JSX.Element => {
