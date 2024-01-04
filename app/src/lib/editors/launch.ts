@@ -20,10 +20,10 @@ export async function launchExternalEditor(
 ): Promise<void> {
   const editorPath = editor.path
   const exists = await pathExists(editorPath)
-  const label = __DARWIN__ ? 'Settings' : 'Options'
+  const label = __DARWIN__ ? '设置' : '设置'
   if (!exists) {
     throw new ExternalEditorError(
-      `Could not find executable for '${editor.editor}' at path '${editor.path}'.  Please open ${label} and select an available editor.`,
+      `找不到编辑器 '${editor.editor}' 的可执行文件 '${editor.path}'。请打开${label}并选择一个可用的编辑器。`,
       { openPreferences: true }
     )
   }
@@ -49,12 +49,12 @@ export async function launchExternalEditor(
     log.error(`Error while launching ${editor.editor}`, error)
     if (error?.code === 'EACCES') {
       throw new ExternalEditorError(
-        `GitHub Desktop doesn't have the proper permissions to start '${editor.editor}'. Please open ${label} and try another editor.`,
+        `GitHub Desktop 没有启动 '${editor.editor}' 的权限。可以尝试打开${label}换一个编辑器。`,
         { openPreferences: true }
       )
     } else {
       throw new ExternalEditorError(
-        `Something went wrong while trying to start '${editor.editor}'. Please open ${label} and try another editor.`,
+        `启动 '${editor.editor}' 时出现错误。可以尝试打开${label}换一个编辑器。`,
         { openPreferences: true }
       )
     }

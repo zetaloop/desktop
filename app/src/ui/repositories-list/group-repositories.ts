@@ -169,7 +169,7 @@ export function makeRecentRepositoriesGroup(
   }
 
   return {
-    identifier: 'Recent',
+    identifier: '最近',
     items,
   }
 }

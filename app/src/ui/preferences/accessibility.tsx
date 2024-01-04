@@ -22,9 +22,9 @@ export class Accessibility extends React.Component<
     return (
       <DialogContent>
         <div className="advanced-section">
-          <h2>Accessibility</h2>
+          <h2>辅助功能</h2>
           <Checkbox
-            label="Underline links"
+            label="链接添加下划线"
             value={
               this.props.underlineLinks ? CheckboxValue.On : CheckboxValue.Off
             }
@@ -35,13 +35,12 @@ export class Accessibility extends React.Component<
             id="underline-setting-description"
             className="git-settings-description"
           >
-            When enabled, GitHub Desktop will underline links in commit
-            messages, comments, and other text fields. This can help make links
-            easier to distinguish. {this.renderExampleLink()}
+            在提交信息、注释等文本中，为链接添加下划线，更方便找到链接。
+            {this.renderExampleLink()}
           </p>
 
           <Checkbox
-            label="Show check marks in the diff"
+            label="在差异对比中显示勾号"
             value={
               this.props.showDiffCheckMarks
                 ? CheckboxValue.On
@@ -54,9 +53,7 @@ export class Accessibility extends React.Component<
             id="diff-checkmarks-setting-description"
             className="git-settings-description"
           >
-            When enabled, check marks will be displayed along side the line
-            numbers and groups of line numbers in the diff when committing. When
-            disabled, the line number controls will be less prominent.
+            在提交时的差异对比里，选中的行号前加上打勾符号，更加容易区分。
           </p>
         </div>
       </DialogContent>
@@ -71,7 +68,7 @@ export class Accessibility extends React.Component<
 
     return (
       <span className="link-button-component" style={style}>
-        This is an example link
+        效果就像这样
       </span>
     )
   }
