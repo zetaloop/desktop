@@ -60,14 +60,12 @@ export class AuthorHandle extends React.Component<IAuthorHandleProps> {
   private getAriaLabel() {
     const { author } = this.props
     if (isKnownAuthor(author)) {
-      return `${getFullTextForAuthor(
-        author
-      )} press backspace or delete to remove`
+      return `${getFullTextForAuthor(author)} 按退格键或删除键来删除`
     }
 
     const isError = author.state === 'error'
-    const stateAriaLabel = isError ? 'user not found' : 'searching'
-    return `${author.username}, ${stateAriaLabel}, press backspace or delete to remove`
+    const stateAriaLabel = isError ? '未找到该用户' : '正在查找该用户'
+    return `${author.username}，${stateAriaLabel}, 按退格键或删除键来删除`
   }
 
   private getClassName() {
@@ -88,8 +86,8 @@ export class AuthorHandle extends React.Component<IAuthorHandleProps> {
     }
 
     return author.state === 'error'
-      ? `Could not find user with username ${author.username}`
-      : `Searching for @${author.username}`
+      ? `找不到名为 ${author.username} 的用户`
+      : `正在查找 @${author.username}`
   }
 
   private getTabIndex() {
