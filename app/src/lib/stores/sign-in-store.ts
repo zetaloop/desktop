@@ -33,10 +33,10 @@ import { isDotCom, isGHE } from '../endpoint-capabilities'
 import { AccountsStore } from './accounts-store'
 
 function getUnverifiedUserErrorMessage(login: string): string {
-  return `Unable to authenticate. The account ${login} is lacking a verified email address. Please sign in to GitHub.com, confirm your email address in the Emails section under Personal settings, and try again.`
+  return `无法认证。账号 ${login} 没有经过验证的邮箱。请登录 GitHub.com，在个人设置的邮箱选项处确认您的邮箱地址，然后再试一次。`
 }
 
-const EnterpriseTooOldMessage = `The GitHub Enterprise version does not support GitHub Desktop. Talk to your server's administrator about upgrading to the latest version of GitHub Enterprise.`
+const EnterpriseTooOldMessage = `当前 GitHub Enterprise 版本不支持 GitHub Desktop。请询问您的服务器管理员，是否打算升级到最新版的 GitHub Enterprise。`
 
 /**
  * An enumeration of the possible steps that the sign in
@@ -333,7 +333,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
     }
 
     throw new Error(
-      `Unable to authenticate with the GitHub Enterprise instance. Verify that the URL is correct, that your GitHub Enterprise instance is running version ${minimumSupportedEnterpriseVersion} or later, that you have an internet connection and try again.`
+      `无法认证该 GitHub 企业版实例。请检查 URL 是否正确、您的 GitHub 企业版实例是否至少为 ${minimumSupportedEnterpriseVersion} 版本、网络连接是否通畅，然后再试一次。`
     )
   }
 
@@ -434,9 +434,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
 
     if (!currentState || currentState.kind !== SignInStep.Authentication) {
       const stepText = currentState ? currentState.kind : 'null'
-      return fatalError(
-        `Sign in step '${stepText}' not compatible with authentication`
-      )
+      return fatalError(`登录步骤 '${stepText}' 与认证不兼容`)
     }
 
     const endpoint = currentState.endpoint
@@ -488,7 +486,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
       if (response.kind === AuthorizationResponseKind.Error) {
         this.emitError(
           new Error(
-            `The server responded with an error while attempting to authenticate (${response.response.status})\n\n${response.response.statusText}`
+            `认证时，服务器返回了错误 (${response.response.status})\n\n${response.response.statusText}`
           )
         )
         this.setState({ ...currentState, loading: false })
@@ -497,13 +495,13 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
           this.setState({
             ...currentState,
             loading: false,
-            error: new Error('Incorrect email or password.'),
+            error: new Error('邮箱或密码错误。'),
           })
         } else {
           this.setState({
             ...currentState,
             loading: false,
-            error: new Error('Incorrect username or password.'),
+            error: new Error('用户名或密码错误。'),
           })
         }
       } else if (
@@ -520,9 +518,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
         this.setState({
           ...currentState,
           loading: false,
-          error: new Error(
-            'A personal access token cannot be used to login to GitHub Desktop.'
-          ),
+          error: new Error('无法使用个人访问令牌登录 GitHub Desktop。'),
         })
       } else if (response.kind === AuthorizationResponseKind.EnterpriseTooOld) {
         this.setState({
@@ -556,9 +552,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
       currentState?.kind !== SignInStep.ExistingAccountWarning
     ) {
       const stepText = currentState ? currentState.kind : 'null'
-      return fatalError(
-        `Sign in step '${stepText}' not compatible with browser authentication`
-      )
+      return fatalError(`登录步骤 '${stepText}' 与浏览器认证不兼容`)
     }
 
     this.setState({ ...currentState, loading: true })
@@ -645,9 +639,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
       const account = await fetchUser(endpoint, token)
       this.state.oauthState.onAuthCompleted(account)
     } else {
-      this.state.oauthState.onAuthError(
-        new Error('Failed retrieving authenticated user')
-      )
+      this.state.oauthState.onAuthError(new Error('无法获取已认证用户信息'))
     }
   }
 
@@ -692,9 +684,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
       currentState?.kind !== SignInStep.ExistingAccountWarning
     ) {
       const stepText = currentState ? currentState.kind : 'null'
-      return fatalError(
-        `Sign in step '${stepText}' not compatible with endpoint entry`
-      )
+      return fatalError(`登录步骤 '${stepText}' 与接入点入口不兼容`)
     }
 
     /**
@@ -715,11 +705,11 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
       let error = e
       if (e.name === InvalidURLErrorName) {
         error = new Error(
-          `The GitHub Enterprise instance address doesn't appear to be a valid URL. We're expecting something like https://github.example.com.`
+          `该 GitHub 企业版实例地址不是一个有效的 URL。请填入一个类似于 https://github.example.com 的地址。`
         )
       } else if (e.name === InvalidProtocolErrorName) {
         error = new Error(
-          'Unsupported protocol. Only https is supported when authenticating with GitHub Enterprise instances.'
+          '不支持该协议。仅支持通过 https 协议认证 GitHub 企业版实例。'
         )
       }
 
@@ -767,7 +757,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
       // We'll get an ENOTFOUND if the address couldn't be resolved.
       if (e.code === 'ENOTFOUND') {
         error = new Error(
-          'The server could not be found. Please verify that the URL is correct and that you have a stable internet connection.'
+          '找不到服务器。请检查 URL 是否正确，以及您的网络连接是否通畅。'
         )
       }
 
@@ -795,9 +785,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
       currentState.kind !== SignInStep.TwoFactorAuthentication
     ) {
       const stepText = currentState ? currentState.kind : 'null'
-      fatalError(
-        `Sign in step '${stepText}' not compatible with two factor authentication`
-      )
+      fatalError(`登录步骤 '${stepText}' 与双因素认证不兼容`)
     }
 
     this.setState({ ...currentState, loading: true })
@@ -845,13 +833,13 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
           this.setState({
             ...currentState,
             loading: false,
-            error: new Error('Two-factor authentication failed.'),
+            error: new Error('双因素认证失败。'),
           })
           break
         case AuthorizationResponseKind.Error:
           this.emitError(
             new Error(
-              `The server responded with an error (${response.response.status})\n\n${response.response.statusText}`
+              `服务器返回了错误 (${response.response.status})\n\n${response.response.statusText}`
             )
           )
           break
@@ -861,11 +849,7 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
           )
           break
         case AuthorizationResponseKind.PersonalAccessTokenBlocked:
-          this.emitError(
-            new Error(
-              'A personal access token cannot be used to login to GitHub Desktop.'
-            )
-          )
+          this.emitError(new Error('无法使用个人访问令牌登录 GitHub Desktop。'))
           break
         case AuthorizationResponseKind.EnterpriseTooOld:
           this.emitError(new Error(EnterpriseTooOldMessage))

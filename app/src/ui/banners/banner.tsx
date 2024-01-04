@@ -36,7 +36,7 @@ export class Banner extends React.Component<IBannerProps, {}> {
 
     return (
       <div className="close">
-        <button onClick={onDismissed} aria-label="Dismiss this message">
+        <button onClick={onDismissed} aria-label="已阅">
           <Octicon symbol={octicons.x} />
         </button>
       </div>
