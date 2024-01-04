@@ -106,8 +106,8 @@ export function getBundleSizes() {
     mainBundleSize: Fs.statSync(Path.join(outPath, 'main.js')).size,
   }
 }
-export const isPublishable = () =>
-  ['production', 'beta', 'test'].includes(getChannel())
+export const isPublishable = () => false // Desktop-CN: I dont have a key, so never sign.
+// ['production', 'beta', 'test'].includes(getChannel())
 
 export const getChannel = () =>
   process.env.RELEASE_CHANNEL ?? process.env.NODE_ENV ?? 'development'
