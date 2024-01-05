@@ -330,7 +330,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
               {versionText} ({this.props.applicationArchitecture})
             </span>
           </p>
-          <p>{releaseNotesLink}</p>
+          <p className="no-padding">{releaseNotesLink}</p>
           <p className="no-padding">
             <LinkButton onClick={this.props.onShowTermsAndConditions}>
               使用条款
