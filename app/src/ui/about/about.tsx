@@ -261,7 +261,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
     if (isOSNoLongerSupportedByElectron()) {
       return (
         <DialogError>
-          系统版本太低，不再接收更新。{' '}
+          您的系统版本太低，软件将停止更新。{' '}
           <LinkButton uri="https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/overview/supported-operating-systems">
             支持的操作系统
           </LinkButton>
