@@ -29,34 +29,16 @@ export function formatRelative(ms: number) {
   const year = Math.round(month / 12)
 
   if (sec < 45) {
-    return formatter
-      .format(sec * sign, 'second')
-      .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
-      .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
+    return formatter.format(sec * sign, 'second')
   } else if (min < 45) {
-    return formatter
-      .format(min * sign, 'minute')
-      .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
-      .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
+    return formatter.format(min * sign, 'minute')
   } else if (hr < 24) {
-    return formatter
-      .format(hr * sign, 'hour')
-      .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
-      .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
+    return formatter.format(hr * sign, 'hour')
   } else if (day < 30) {
-    return formatter
-      .format(day * sign, 'day')
-      .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
-      .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
+    return formatter.format(day * sign, 'day')
   } else if (month < 18) {
-    return formatter
-      .format(month * sign, 'month')
-      .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
-      .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
+    return formatter.format(month * sign, 'month')
   } else {
-    return formatter
-      .format(year * sign, 'year')
-      .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
-      .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
+    return formatter.format(year * sign, 'year')
   }
 }

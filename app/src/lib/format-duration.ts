@@ -55,7 +55,7 @@ export const formatLongPreciseDuration = (ms: number) => {
   }
 
   return parts
-    .join(' ')
+    .join('')
     .replace(/hour/g, '小时')
     .replace(/minute/g, '分钟')
     .replace(/second/g, '秒')

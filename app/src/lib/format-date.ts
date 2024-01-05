@@ -18,7 +18,4 @@ const getDateFormatter = mem(Intl.DateTimeFormat, {
 export const formatDate = (date: Date, options: Intl.DateTimeFormatOptions) =>
   isNaN(date.valueOf())
     ? '无效日期'
-    : getDateFormatter('zh-CN', options)
-        .format(date)
-        .replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2')
-        .replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2')
+    : getDateFormatter('zh-CN', options).format(date)
