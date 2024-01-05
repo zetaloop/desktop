@@ -21,8 +21,8 @@ export class SuccessfulCherryPick extends React.Component<
     return (
       <SuccessBanner timeout={15000} onDismissed={onDismissed} onUndo={onUndo}>
         <span>
-          成功摘取了{countCherryPicked}个{pluralized}到
-          <strong>{targetBranchName}</strong>。
+          成功摘取了{countCherryPicked}个{pluralized}到{' '}
+          <strong>{targetBranchName}</strong> 。
         </span>
       </SuccessBanner>
     )
