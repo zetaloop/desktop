@@ -647,7 +647,7 @@ export class CreateRepository extends React.Component<
               onClick={this.showFilePicker}
               disabled={readOnlyPath || loadingDefaultDir}
             >
-              Choose…
+              选择…
             </Button>
           </Row>
 
