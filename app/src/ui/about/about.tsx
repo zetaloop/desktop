@@ -324,13 +324,13 @@ export class About extends React.Component<IAboutProps, IAboutState> {
               height="64"
             />
           </Row>
-          <h2>{name} 中文</h2>
+          <h2>{name}</h2>
           <p className="no-padding">
             <span className="selectable-text">
               {versionText} ({this.props.applicationArchitecture})
-            </span>{' '}
-            {releaseNotesLink}
+            </span>
           </p>
+          <p>{releaseNotesLink}</p>
           <p className="no-padding">
             <LinkButton onClick={this.props.onShowTermsAndConditions}>
               使用条款
