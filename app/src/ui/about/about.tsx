@@ -209,14 +209,14 @@ export class About extends React.Component<IAboutProps, IAboutState> {
 
     return (
       <p className="update-status">
-        已是最新版本（检查于
-        <RelativeTime date={lastCheckedDate} />）
+        已是最新版本 (检查于
+        <RelativeTime date={lastCheckedDate} />)
       </p>
     )
   }
 
   private renderUpdateReady() {
-    return <p className="update-status">更新下载完成，可以开始安装了。</p>
+    return <p className="update-status">更新已准备就绪</p>
   }
 
   private renderUpdateDetails() {
@@ -225,7 +225,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
     }
 
     if (__RELEASE_CHANNEL__ === 'development') {
-      return <p>开发版本不接收更新。</p>
+      return <p>开发版本不接收更新</p>
     }
 
     const updateState = this.state.updateState
@@ -288,7 +288,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
 
     return (
       <div>
-        <p className="no-padding">想试试最新功能吗？</p>
+        <p className="no-padding">想试试最新功能吗?</p>
         <p className="no-padding">
           安装{' '}
           <LinkButton uri="https://desktop.github.com/beta">
