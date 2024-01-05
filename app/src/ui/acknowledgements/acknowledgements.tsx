@@ -115,7 +115,7 @@ export class Acknowledgements extends React.Component<
     return (
       <Dialog
         id="acknowledgements"
-        title="开源许可"
+        title="许可证与开源声明"
         onSubmit={this.props.onDismissed}
         onDismissed={this.props.onDismissed}
       >
