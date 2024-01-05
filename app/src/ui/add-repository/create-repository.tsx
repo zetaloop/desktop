@@ -39,11 +39,11 @@ import { InputError } from '../lib/input-description/input-error'
 import { InputWarning } from '../lib/input-description/input-warning'
 
 /** The sentinel value used to indicate no gitignore should be used. */
-const NoGitIgnoreValue = 'None'
+const NoGitIgnoreValue = '无'
 
 /** The sentinel value used to indicate no license should be used. */
 const NoLicenseValue: ILicense = {
-  name: 'None',
+  name: '无',
   featured: false,
   body: '',
   hidden: false,
@@ -470,7 +470,7 @@ export class CreateRepository extends React.Component<
     return (
       <Row>
         <Select
-          label={__DARWIN__ ? 'Git Ignore' : 'Git ignore'}
+          label={__DARWIN__ ? 'Git 忽略规则' : 'Git 忽略规则'}
           value={this.state.gitIgnore}
           onChange={this.onGitIgnoreChange}
         >
@@ -495,7 +495,7 @@ export class CreateRepository extends React.Component<
     return (
       <Row>
         <Select
-          label="License"
+          label="许可证"
           value={this.state.license}
           onChange={this.onLicenseChange}
         >
@@ -523,12 +523,7 @@ export class CreateRepository extends React.Component<
       return null
     }
 
-    return (
-      <DialogError>
-        Directory could not be created at this path. You may not have
-        permissions to create a directory here.
-      </DialogError>
-    )
+    return <DialogError>无法在该路径创建文件夹，没有创建权限。</DialogError>
   }
 
   private renderGitRepositoryError() {
@@ -544,14 +539,14 @@ export class CreateRepository extends React.Component<
           id="existing-repository-path-error"
           trackedUserInput={this.state.path + this.state.name}
           ariaLiveMessage={
-            'This directory appears to be a Git repository. Would you like to add this repository instead?'
+            '该文件夹已经是 Git 储存库。是否需要直接添加这个储存库？'
           }
         >
-          This directory appears to be a Git repository. Would you like to{' '}
+          该文件夹已经是 Git 储存库。是否需要直接{' '}
           <LinkButton onClick={this.onAddRepositoryClicked}>
-            add this repository
+            添加这个储存库
           </LinkButton>{' '}
-          instead?
+          ？
         </InputError>
       </Row>
     )
@@ -574,11 +569,10 @@ export class CreateRepository extends React.Component<
         <InputWarning
           id="readme-overwrite-warning"
           trackedUserInput={this.state.createWithReadme}
-          ariaLiveMessage="This directory contains a README.md file already. Checking
-          this box will result in the existing file being overwritten."
+          ariaLiveMessage="该文件夹已经有一个 README.md 文件，如果再选择添加的话，现有的文件会被覆盖。"
         >
-          This directory contains a <Ref>README.md</Ref> file already. Checking
-          this box will result in the existing file being overwritten.
+          该文件夹已经有一个 <Ref>README.md</Ref>{' '}
+          文件，如果再选择添加的话，现有的文件会被覆盖。
         </InputWarning>
       </Row>
     )
@@ -612,9 +606,7 @@ export class CreateRepository extends React.Component<
     return (
       <Dialog
         id="create-repository"
-        title={
-          __DARWIN__ ? 'Create a New Repository' : 'Create a new repository'
-        }
+        title={__DARWIN__ ? '创建储存库' : '创建储存库'}
         loading={this.state.creating}
         onSubmit={this.createRepository}
         onDismissed={this.props.onDismissed}
@@ -625,8 +617,8 @@ export class CreateRepository extends React.Component<
           <Row>
             <TextBox
               value={this.state.name}
-              label="Name"
-              placeholder="repository name"
+              label="名称"
+              placeholder="储存库的名字"
               onValueChanged={this.onNameChanged}
               ariaDescribedBy="existing-repository-path-error repo-sanitized-name-warning"
             />
@@ -637,7 +629,7 @@ export class CreateRepository extends React.Component<
           <Row>
             <TextBox
               value={this.state.description}
-              label="Description"
+              label="介绍"
               onValueChanged={this.onDescriptionChanged}
             />
           </Row>
@@ -645,8 +637,8 @@ export class CreateRepository extends React.Component<
           <Row>
             <TextBox
               value={this.state.path ?? ''}
-              label={__DARWIN__ ? 'Local Path' : 'Local path'}
-              placeholder="repository path"
+              label={__DARWIN__ ? '文件夹路径' : '文件夹路径'}
+              placeholder="储存库的位置"
               onValueChanged={this.onPathChanged}
               disabled={readOnlyPath || loadingDefaultDir}
               ariaDescribedBy="existing-repository-path-error"
@@ -663,7 +655,7 @@ export class CreateRepository extends React.Component<
 
           <Row>
             <Checkbox
-              label="Initialize this repository with a README"
+              label="添加 README 自述文件"
               value={
                 this.state.createWithReadme
                   ? CheckboxValue.On
@@ -681,9 +673,7 @@ export class CreateRepository extends React.Component<
 
         <DialogFooter>
           <OkCancelButtonGroup
-            okButtonText={
-              __DARWIN__ ? 'Create Repository' : 'Create repository'
-            }
+            okButtonText={__DARWIN__ ? '创建' : '创建'}
             okButtonDisabled={disabled || loadingDefaultDir}
           />
         </DialogFooter>
