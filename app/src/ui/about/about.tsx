@@ -273,7 +273,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
       return (
         <DialogError>
           无法确定上次检查更新的时间，当前版本可能过旧。请手动检查更新。如果问题依旧，请联系
-          GitHub 客服。
+          GitHub 支持。
         </DialogError>
       )
     }
