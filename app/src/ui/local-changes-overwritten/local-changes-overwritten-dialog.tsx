@@ -49,13 +49,11 @@ export class LocalChangesOverwrittenDialog extends React.Component<
 
   public render() {
     const overwrittenText =
-      this.props.files.length > 0
-        ? ' The following files would be overwritten:'
-        : null
+      this.props.files.length > 0 ? '以下文件将会被覆盖：' : null
 
     return (
       <Dialog
-        title="Error"
+        title="错误"
         id="local-changes-overwritten"
         loading={this.state.stashing}
         disabled={this.state.stashing}
@@ -68,8 +66,8 @@ export class LocalChangesOverwrittenDialog extends React.Component<
         <DialogContent>
           <div id="local-changes-error-description">
             <p>
-              Unable to {this.getRetryActionName()} when changes are present on
-              your branch.{overwrittenText}
+              无法{this.getRetryActionName()}，因为当前分支有改动还没提交。
+              {overwrittenText}
             </p>
             {this.renderFiles()}
             {this.renderStashText()}
@@ -104,7 +102,7 @@ export class LocalChangesOverwrittenDialog extends React.Component<
       return null
     }
 
-    return <p>You can stash your changes now and recover them afterwards.</p>
+    return <p>您可以先把改动暂存，之后再恢复。</p>
   }
 
   private renderFooter() {
@@ -115,13 +113,9 @@ export class LocalChangesOverwrittenDialog extends React.Component<
     return (
       <DialogFooter>
         <OkCancelButtonGroup
-          okButtonText={
-            __DARWIN__
-              ? 'Stash Changes and Continue'
-              : 'Stash changes and continue'
-          }
-          okButtonTitle="This will create a stash with your current changes. You can recover them by restoring the stash afterwards."
-          cancelButtonText="Close"
+          okButtonText={__DARWIN__ ? '暂存并继续' : '暂存并继续'}
+          okButtonTitle="把当前未提交的改动保存到一个暂存区，您可稍后恢复这些改动。"
+          cancelButtonText="关闭"
         />
       </DialogFooter>
     )
@@ -161,28 +155,28 @@ export class LocalChangesOverwrittenDialog extends React.Component<
   private getRetryActionName() {
     switch (this.props.retryAction.type) {
       case RetryActionType.Checkout:
-        return 'checkout'
+        return '检出'
       case RetryActionType.Pull:
-        return 'pull'
+        return '拉取'
       case RetryActionType.Merge:
-        return 'merge'
+        return '合并'
       case RetryActionType.Rebase:
-        return 'rebase'
+        return '重构'
       case RetryActionType.Clone:
-        return 'clone'
+        return '克隆'
       case RetryActionType.Fetch:
-        return 'fetch'
+        return '获取'
       case RetryActionType.Push:
-        return 'push'
+        return '推送'
       case RetryActionType.CherryPick:
       case RetryActionType.CreateBranchForCherryPick:
-        return 'cherry-pick'
+        return '摘取'
       case RetryActionType.Squash:
-        return 'squash'
+        return '压缩'
       case RetryActionType.Reorder:
-        return 'reorder'
+        return '重排'
       case RetryActionType.DiscardChanges:
-        return 'discard changes'
+        return '放弃改动'
       default:
         assertNever(
           this.props.retryAction,
