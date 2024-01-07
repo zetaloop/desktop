@@ -103,10 +103,10 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
 
   private getTitle(error: Error) {
     if (isCloneError(error)) {
-      return 'Clone failed'
+      return '克隆失败'
     }
 
-    return 'Error'
+    return '错误'
   }
 
   private renderContentAfterErrorMessage(error: Error) {
@@ -182,7 +182,7 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
     return (
       <DialogFooter>
         <OkCancelButtonGroup
-          okButtonText={__DARWIN__ ? 'Retry Clone' : 'Retry clone'}
+          okButtonText={__DARWIN__ ? '重试' : '重试'}
           onOkButtonClick={this.onRetryAction}
           onCancelButtonClick={this.onCloseButtonClick}
         />
@@ -194,9 +194,9 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
     return (
       <DialogFooter>
         <OkCancelButtonGroup
-          okButtonText="Close"
+          okButtonText="关闭"
           onOkButtonClick={this.onCloseButtonClick}
-          cancelButtonText={__DARWIN__ ? 'Open Preferences' : 'Open options'}
+          cancelButtonText={__DARWIN__ ? '打开设置' : '打开设置'}
           onCancelButtonClick={this.showPreferencesDialog}
         />
       </DialogFooter>
