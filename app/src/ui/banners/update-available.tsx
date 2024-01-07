@@ -53,7 +53,7 @@ export class UpdateAvailable extends React.Component<
       return (
         <span onSubmit={this.updateNow}>
           为您 {__DARWIN__ ? 'Apple Silicon' : 'Arm64'} 电脑特别优化的 GitHub
-          Desktop 版本已经准备就绪，您也可以{' '}
+          Desktop 版本更新已经准备就绪，您也可以{' '}
           <LinkButton onClick={this.updateNow}>立刻安装</LinkButton>。
         </span>
       )
@@ -72,7 +72,7 @@ export class UpdateAvailable extends React.Component<
             text={':tada:'}
             emoji={this.props.emoji}
           />
-          {version}我们添加了很棒的新功能。
+          {version}我们添加了很棒的新功能，
           <LinkButton onClick={this.showReleaseNotes}>
             查看更新日志
           </LinkButton>{' '}

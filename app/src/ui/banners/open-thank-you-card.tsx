@@ -21,7 +21,7 @@ export class OpenThankYouCard extends React.Component<
     return (
       <Banner id="open-thank-you-card" onDismissed={this.props.onDismissed}>
         <span onSubmit={this.props.onOpenCard}>
-          GitHub Desktop 开发团队希望感谢你的贡献。
+          GitHub Desktop 开发团队希望感谢你的贡献！
           <LinkButton onClick={this.props.onOpenCard}>
             打开小卡片
           </LinkButton>{' '}

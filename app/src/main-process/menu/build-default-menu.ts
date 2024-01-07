@@ -392,8 +392,8 @@ export function buildDefaultMenu({
     separator,
     {
       label: __DARWIN__
-        ? `同步 ${contributionTargetDefaultBranch}`
-        : `同步 ${contributionTargetDefaultBranch}(&U)`,
+        ? `同步上游 ${contributionTargetDefaultBranch}`
+        : `同步上游 ${contributionTargetDefaultBranch}(&U)`,
       id: 'update-branch-with-contribution-target-branch',
       accelerator: 'CmdOrCtrl+Shift+U',
       click: emit('update-branch-with-contribution-target-branch'),
