@@ -53,11 +53,8 @@ export class UpdateAvailable extends React.Component<
       return (
         <span onSubmit={this.updateNow}>
           为您 {__DARWIN__ ? 'Apple Silicon' : 'Arm64'} 电脑特别优化的 GitHub
-          Desktop 版本已经准备好在下次打开时安装，或者您也可以{' '}
-          <LinkButton onClick={this.updateNow}>
-            立刻重启 GitHub Desktop
-          </LinkButton>
-          。
+          Desktop 版本已经准备就绪，您也可以{' '}
+          <LinkButton onClick={this.updateNow}>立刻安装</LinkButton>。
         </span>
       )
     }
@@ -90,15 +87,11 @@ export class UpdateAvailable extends React.Component<
 
     return (
       <span onSubmit={this.updateNow}>
-        GitHub Desktop 版本更新已经准备好在下次打开时安装。
+        GitHub Desktop 版本更新已准备就绪，
         <LinkButton onClick={this.showReleaseNotes}>
           查看更新日志
         </LinkButton>{' '}
-        或者{' '}
-        <LinkButton onClick={this.updateNow}>
-          立刻重启 GitHub Desktop
-        </LinkButton>
-        。
+        或者 <LinkButton onClick={this.updateNow}>立刻安装</LinkButton>。
       </span>
     )
   }
