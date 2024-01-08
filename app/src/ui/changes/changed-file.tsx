@@ -56,13 +56,14 @@ export class ChangedFile extends React.Component<IChangedFileProps, {}> {
 
     const includedText =
       this.props.include === true
-        ? 'included'
+        ? '包含'
         : this.props.include === undefined
-        ? 'partially included'
-        : 'not included'
+        ? '部分包含'
+        : '不包含'
 
     const pathScreenReaderMessage = `${path} ${mapStatus(
-      status
+      status,
+      true
     )} ${includedText}`
 
     return (
@@ -94,7 +95,7 @@ export class ChangedFile extends React.Component<IChangedFileProps, {}> {
         <TooltippedContent
           ancestorFocused={focused}
           openOnFocus={true}
-          tooltip={fileStatus}
+          tooltip={mapStatus(status, true)} // cn
           direction={TooltipDirection.EAST}
         >
           <Octicon
