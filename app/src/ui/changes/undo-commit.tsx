@@ -27,16 +27,15 @@ export class UndoCommit extends React.Component<IUndoCommitProps, {}> {
   public render() {
     const disabled =
       this.props.isPushPullFetchInProgress || this.props.isCommitting
-    const title = disabled
-      ? 'Undo is disabled while the repository is being updated'
-      : undefined
+    const title = disabled ? '储存库更新时不可以撤回' : undefined
 
     const authorDate = this.props.commit.author.date
     return (
-      <div id="undo-commit" role="group" aria-label="Undo commit">
+      <div id="undo-commit" role="group" aria-label="撤回提交">
         <div className="commit-info">
           <div className="ago">
-            Committed <RelativeTime date={authorDate} />
+            提交于
+            <RelativeTime date={authorDate} />
           </div>
           <RichText
             emoji={this.props.emoji}
@@ -52,7 +51,7 @@ export class UndoCommit extends React.Component<IUndoCommitProps, {}> {
             onClick={this.props.onUndo}
             tooltip={title}
           >
-            Undo
+            撤回
           </Button>
         </div>
       </div>
