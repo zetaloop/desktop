@@ -163,35 +163,35 @@ export function buildDefaultMenu({
   })
 
   template.push({
-    label: __DARWIN__ ? '查看' : '视图',
+    label: __DARWIN__ ? '查看' : '查看',
     submenu: [
       {
-        label: __DARWIN__ ? '显示文件改动' : '文件改动',
+        label: __DARWIN__ ? '文件改动' : '文件改动',
         id: 'show-changes',
         accelerator: 'CmdOrCtrl+1',
         click: emit('show-changes'),
       },
       {
-        label: __DARWIN__ ? '显示提交历史' : '提交历史',
+        label: __DARWIN__ ? '提交历史' : '提交历史',
         id: 'show-history',
         accelerator: 'CmdOrCtrl+2',
         click: emit('show-history'),
       },
       {
-        label: __DARWIN__ ? '显示储存库列表' : '储存库列表',
+        label: __DARWIN__ ? '储存库列表' : '储存库列表',
         id: 'show-repository-list',
         accelerator: 'CmdOrCtrl+T',
         click: emit('choose-repository'),
       },
       {
-        label: __DARWIN__ ? '显示分支列表' : '分支列表',
+        label: __DARWIN__ ? '分支列表' : '分支列表',
         id: 'show-branches-list',
         accelerator: 'CmdOrCtrl+B',
         click: emit('show-branches'),
       },
       separator,
       {
-        label: __DARWIN__ ? '转到摘要' : '摘要',
+        label: __DARWIN__ ? '摘要' : '摘要',
         id: 'go-to-commit-message',
         accelerator: 'CmdOrCtrl+G',
         click: emit('go-to-commit-message'),
