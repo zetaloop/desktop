@@ -165,7 +165,7 @@ export class LocalChangesOverwrittenDialog extends React.Component<
       case RetryActionType.Clone:
         return '克隆'
       case RetryActionType.Fetch:
-        return '获取'
+        return '更新'
       case RetryActionType.Push:
         return '推送'
       case RetryActionType.CherryPick:
