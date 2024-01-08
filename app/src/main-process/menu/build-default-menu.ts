@@ -321,19 +321,19 @@ export function buildDefaultMenu({
       },
       {
         label: __DARWIN__
-          ? '打开访达'
+          ? '打开文件夹'
           : __WIN32__
           ? '打开文件夹(&X)'
-          : '打开目录',
+          : '打开文件夹',
         id: 'open-working-directory',
         accelerator: 'CmdOrCtrl+Shift+F',
         click: emit('open-working-directory'),
       },
       {
         label: __DARWIN__
-          ? `打开 ${selectedExternalEditor ?? '外部编辑器'}` // 去除中文间多余空格
+          ? `打开 ${selectedExternalEditor ?? '默认编辑器'}` // 去除中文间多余空格
               .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
-          : `打开 ${selectedExternalEditor ?? '外部编辑器'}(&O)` // 去除中文间多余空格
+          : `打开 ${selectedExternalEditor ?? '默认编辑器'}(&O)` // 去除中文间多余空格
               .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2'),
         id: 'open-external-editor',
         accelerator: 'CmdOrCtrl+Shift+A',
