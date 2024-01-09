@@ -191,8 +191,8 @@ export abstract class BaseMultiCommitOperation extends React.Component<IMultiCom
         const operation = __DARWIN__
           ? operationDetail.kind
           : operationDetail.kind.toLowerCase()
-        const submit = `Continue ${operation}`
-        const abort = `Abort ${operation}`
+        const submit = `继续${operation}`
+        const abort = `停止${operation}`
 
         return (
           <ConflictsDialog
