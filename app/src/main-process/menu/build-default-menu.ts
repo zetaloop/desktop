@@ -292,7 +292,7 @@ export function buildDefaultMenu({
       },
       {
         id: 'fetch',
-        label: __DARWIN__ ? '更新' : '更新',
+        label: __DARWIN__ ? '获取更新' : '获取更新',
         accelerator: 'CmdOrCtrl+Shift+T',
         click: emit('fetch'),
       },
