@@ -35,11 +35,9 @@ interface ISignInState {
   readonly otpToken: string
 }
 
-const SignInWithBrowserTitle = __DARWIN__
-  ? 'Sign in Using Your Browser'
-  : 'Sign in using your browser'
+const SignInWithBrowserTitle = __DARWIN__ ? '通过浏览器登录' : '通过浏览器登录'
 
-const DefaultTitle = 'Sign in'
+const DefaultTitle = '登录'
 
 export class SignIn extends React.Component<ISignInProps, ISignInState> {
   private readonly dialogRef = React.createRef<Dialog>()
@@ -147,24 +145,22 @@ export class SignIn extends React.Component<ISignInProps, ISignInState> {
     switch (state.kind) {
       case SignInStep.EndpointEntry:
         disableSubmit = this.state.endpoint.length === 0
-        primaryButtonText = 'Continue'
+        primaryButtonText = '继续'
         break
       case SignInStep.TwoFactorAuthentication:
         // ensure user has entered non-whitespace characters
         const codeProvided = /\S+/.test(this.state.otpToken)
         disableSubmit = !codeProvided
-        primaryButtonText = 'Sign in'
+        primaryButtonText = '登录'
         break
       case SignInStep.Authentication:
         if (!state.supportsBasicAuth) {
-          primaryButtonText = __DARWIN__
-            ? 'Continue With Browser'
-            : 'Continue with browser'
+          primaryButtonText = __DARWIN__ ? '在浏览器上继续' : '在浏览器上继续'
         } else {
           const validUserName = this.state.username.length > 0
           const validPassword = this.state.password.length > 0
           disableSubmit = !validUserName || !validPassword
-          primaryButtonText = 'Sign in'
+          primaryButtonText = '登录'
         }
         break
       default:
@@ -187,7 +183,7 @@ export class SignIn extends React.Component<ISignInProps, ISignInState> {
       <DialogContent>
         <Row>
           <TextBox
-            label="Enterprise address"
+            label="企业版网址"
             value={this.state.endpoint}
             onValueChanged={this.onEndpointChanged}
             placeholder="https://github.example.com"
@@ -202,24 +198,17 @@ export class SignIn extends React.Component<ISignInProps, ISignInState> {
       if (state.endpoint === getDotComAPIEndpoint()) {
         return (
           <DialogContent>
+            <p>为了保证账户安全，GitHub 现要求您通过浏览器登录。</p>
             <p>
-              To improve the security of your account, GitHub now requires you
-              to sign in through your browser.
-            </p>
-            <p>
-              Your browser will redirect you back to GitHub Desktop once you've
-              signed in. If your browser asks for your permission to launch
-              GitHub Desktop please allow it to.
+              验证完成后，浏览器会跳转回到 GitHub
+              Desktop。如果浏览器询问是否允许打开 GitHub Desktop，请选择允许。
             </p>
           </DialogContent>
         )
       } else {
         return (
           <DialogContent>
-            <p>
-              Your GitHub Enterprise instance requires you to sign in with your
-              browser.
-            </p>
+            <p>您的 GitHub 企业版实例要求通过浏览器登录。</p>
           </DialogContent>
         )
       }
@@ -236,23 +225,23 @@ export class SignIn extends React.Component<ISignInProps, ISignInState> {
             disabled={disableSubmit}
             role="link"
           >
-            Sign in using your browser
+            通过浏览器登录
             <Octicon symbol={octicons.linkExternal} />
           </Button>
         </Row>
 
-        <HorizontalRule title="or" />
+        <HorizontalRule title="或" />
 
         <Row>
           <TextBox
-            label="Username or email address"
+            label="用户名或邮箱"
             value={this.state.username}
             onValueChanged={this.onUsernameChanged}
           />
         </Row>
         <Row>
           <PasswordTextBox
-            label="Password"
+            label="密码"
             value={this.state.password}
             onValueChanged={this.onPasswordChanged}
           />
@@ -262,7 +251,7 @@ export class SignIn extends React.Component<ISignInProps, ISignInState> {
             className="forgot-password-link-sign-in"
             uri={state.forgotPasswordUrl}
           >
-            Forgot password?
+            忘记密码?
           </LinkButton>
         </Row>
       </DialogContent>
@@ -277,7 +266,7 @@ export class SignIn extends React.Component<ISignInProps, ISignInState> {
         <p>{getWelcomeMessage(state.type)}</p>
         <Row>
           <TextBox
-            label="Authentication code"
+            label="验证码"
             value={this.state.otpToken}
             onValueChanged={this.onOTPTokenChanged}
             autoFocus={true}
