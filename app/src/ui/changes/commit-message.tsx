@@ -1251,10 +1251,10 @@ export class CommitMessage extends React.Component<
         tooltip={
           <>
             <div className="title">推荐摘要不要超过50字</div>
-            <div className="description">更多信息可以写在描述里。</div>
+            <div className="description">写不下的可以写在描述里。</div>
           </>
         }
-        ariaLiveMessage={'推荐摘要不要超过50字，更多信息可以写在描述里。'}
+        ariaLiveMessage={'推荐摘要不要超过50字，写不下的可以写在描述里。'}
         direction={TooltipDirection.NORTH}
         className="length-hint"
         tooltipClassName="length-hint-tooltip"
