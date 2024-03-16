@@ -140,7 +140,7 @@ export class AddExistingRepository extends React.Component<
     }
 
     const msg =
-      '该文件夹是一个裸仓库，也就是只有版本控制记录，而没有具体的文件。目前不支持裸仓库。'
+      '该文件夹是一个裸储存库，也就是只有版本控制记录，而没有具体的文件。目前不支持裸储存库。'
 
     return { screenReaderMessage: msg, displayedMessage: msg }
   }
