@@ -248,11 +248,11 @@ export class Preferences extends React.Component<
           >
             <span>
               <Octicon className="icon" symbol={octicons.home} />
-              Accounts
+              账号
             </span>
             <span>
               <Octicon className="icon" symbol={octicons.person} />
-              Integrations
+              集成
             </span>
             <span>
               <Octicon className="icon" symbol={octicons.gitCommit} />
@@ -260,24 +260,24 @@ export class Preferences extends React.Component<
             </span>
             <span>
               <Octicon className="icon" symbol={octicons.paintbrush} />
-              Appearance
+              外观
             </span>
             <span>
               <Octicon className="icon" symbol={octicons.bell} />
-              Notifications
+              通知
             </span>
             <span>
               <Octicon className="icon" symbol={octicons.question} />
-              Prompts
+              提示
             </span>
             <span>
               <Octicon className="icon" symbol={octicons.gear} />
-              Advanced
+              高级
             </span>
             {enableLinkUnderlines() && (
               <span>
                 <Octicon className="icon" symbol={octicons.accessibility} />
-                Accessibility
+                辅助
               </span>
             )}
           </TabBar>
