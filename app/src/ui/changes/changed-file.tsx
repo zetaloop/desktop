@@ -61,10 +61,10 @@ export class ChangedFile extends React.Component<IChangedFileProps, {}> {
         ? '部分包含'
         : '不包含'
 
-    const pathScreenReaderMessage = `${path} ${mapStatus(
+    const pathScreenReaderMessage = `${includedText} ${mapStatus(
       status,
       true
-    )} ${includedText}`
+    )}的 ${path}`
 
     return (
       <div className="file">

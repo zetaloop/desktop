@@ -39,13 +39,13 @@ export function mapStatus(status: AppFileStatus, cn: boolean = false): string {
             ? '冲突'
             : 'Conflicted'
           : cn
-          ? '解决'
+          ? '已解决冲突'
           : 'Resolved'
       }
 
       return cn ? '冲突' : 'Conflicted'
     case AppFileStatusKind.Copied:
-      return cn ? '副本' : 'Copied'
+      return cn ? '复制' : 'Copied'
     default:
       return assertNever(status, `Unknown file status ${status}`)
   }
