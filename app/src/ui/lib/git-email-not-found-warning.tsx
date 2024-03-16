@@ -42,7 +42,7 @@ export class GitEmailNotFoundWarning extends React.Component<IGitEmailNotFoundWa
       <>
         {indicatorIcon}
         {this.buildScreenReaderMessage(isAttributableEmail)}
-        {learnMore}。
+        {learnMore}
       </>
     )
   }
