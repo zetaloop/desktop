@@ -96,9 +96,9 @@ export class BranchSelect extends React.Component<
 
     return (
       <PopoverDropdown
-        contentTitle="Choose a base branch"
+        contentTitle="选择基准分支"
         buttonContent={selectedBranch?.name ?? ''}
-        label="base:"
+        label="基准:"
         ref={this.popoverRef}
       >
         <BranchList
