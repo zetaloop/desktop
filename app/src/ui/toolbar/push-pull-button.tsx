@@ -500,7 +500,7 @@ export class PushPullButton extends React.Component<
       <ToolbarButton
         {...this.defaultButtonProps()}
         title="发布分支"
-        description="无法发布未初始化的 HEAD"
+        description="无法发布未初始化的 HEAD 指针"
         icon={octicons.upload}
         disabled={true}
       />
@@ -508,7 +508,9 @@ export class PushPullButton extends React.Component<
   }
 
   private detachedHeadButton(rebaseInProgress: boolean) {
-    const description = rebaseInProgress ? '正在重构' : '无法发布游离的 HEAD'
+    const description = rebaseInProgress
+      ? '正在重构'
+      : '无法发布游离的 HEAD 指针'
 
     return (
       <ToolbarButton

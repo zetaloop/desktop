@@ -53,7 +53,7 @@ export class ConfirmCheckoutCommitDialog extends React.Component<
         <DialogContent>
           <Row id="checking-out-commit-confirmation">
             检出某个提交将会创建一个游离的 HEAD
-            头指针，不属于任何分支。确定要检出该提交吗？
+            指针，不属于任何分支。确定要检出该提交吗？
           </Row>
           <Row>
             <Checkbox

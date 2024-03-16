@@ -148,7 +148,7 @@ export class BranchDropdown extends React.Component<IBranchDropdownProps> {
       )
     } else if (tip.kind === TipState.Detached) {
       title = `位于 ${tip.currentSha.substring(0, 7)}`
-      tooltip = '当前位于游离的头指针'
+      tooltip = '当前位于游离的 HEAD 指针'
       icon = octicons.gitCommit
       description = '游离 HEAD'
     } else if (tip.kind === TipState.Valid) {
