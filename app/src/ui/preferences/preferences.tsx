@@ -235,7 +235,7 @@ export class Preferences extends React.Component<
     return (
       <Dialog
         id="preferences"
-        title={__DARWIN__ ? 'Settings' : 'Options'}
+        title={__DARWIN__ ? '设置' : '设置'}
         onDismissed={this.onCancel}
         onSubmit={this.onSave}
       >
@@ -566,7 +566,7 @@ export class Preferences extends React.Component<
     return (
       <DialogFooter>
         <OkCancelButtonGroup
-          okButtonText="Save"
+          okButtonText="保存"
           okButtonDisabled={hasDisabledError}
         />
       </DialogFooter>
