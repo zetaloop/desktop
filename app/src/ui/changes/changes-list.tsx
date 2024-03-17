@@ -586,8 +586,8 @@ export class ChangesList extends React.Component<
 
         items.push({
           label: __DARWIN__
-            ? 'Ignore Folder (Add to .gitignore)'
-            : 'Ignore folder (add to .gitignore)',
+            ? '忽略文件夹 (.gitignore)'
+            : '忽略文件夹 (.gitignore)',
           submenu,
           enabled,
         })
@@ -736,15 +736,15 @@ export class ChangesList extends React.Component<
     switch (firstFile.status.kind) {
       case AppFileStatusKind.New:
       case AppFileStatusKind.Untracked:
-        return `Create ${fileName}`
+        return `创建 ${fileName}`
       case AppFileStatusKind.Deleted:
-        return `Delete ${fileName}`
+        return `删除 ${fileName}`
       default:
         // TODO:
         // this doesn't feel like a great message for AppFileStatus.Copied or
         // AppFileStatus.Renamed but without more insight (and whether this
         // affects other parts of the flow) we can just default to this for now
-        return `Update ${fileName}`
+        return `更新 ${fileName}`
     }
   }
 
