@@ -118,10 +118,10 @@ export async function checkoutBranch(
   const opts = await getCheckoutOpts(
     repository,
     account,
-    `Checking out branch ${branch.name}`,
+    `正在检出分支 ${branch.name}`,
     branch.name,
     progressCallback,
-    `Switching to ${__DARWIN__ ? 'Branch' : 'branch'}`
+    `切换到该${__DARWIN__ ? '分支' : '分支'}`
   )
 
   const baseArgs = getCheckoutArgs(progressCallback)
@@ -155,7 +155,7 @@ export async function checkoutCommit(
   commit: CommitOneLine,
   progressCallback?: ProgressCallback
 ): Promise<true> {
-  const title = `Checking out ${__DARWIN__ ? 'Commit' : 'commit'}`
+  const title = `正在检出${__DARWIN__ ? '分支' : '分支'}`
   const opts = await getCheckoutOpts(
     repository,
     account,
