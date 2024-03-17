@@ -586,8 +586,8 @@ export class ChangesList extends React.Component<
 
         items.push({
           label: __DARWIN__
-            ? '忽略文件夹 (.gitignore)'
-            : '忽略文件夹 (.gitignore)',
+            ? '忽略文件夹（.gitignore）'
+            : '忽略文件夹（.gitignore）',
           submenu,
           enabled,
         })
