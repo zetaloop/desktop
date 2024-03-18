@@ -1152,7 +1152,7 @@ export class TextDiff extends React.Component<ITextDiffProps, ITextDiffState> {
         'hunk-expander',
         'hunk-expand-whole-handle'
       )
-      hunkExpandWholeHandle.title = '全部展开'
+      hunkExpandWholeHandle.title = '中间展开'
       hunkExpandWholeHandle.addEventListener(
         'click',
         this.onHunkExpandWholeHandleMouseDown.bind(this, hunks, hunk)
@@ -1287,7 +1287,7 @@ export class TextDiff extends React.Component<ITextDiffProps, ITextDiffState> {
     )[0]
     if (hunkExpandWholeHandle !== undefined) {
       if (classNameInfo['expandable-short'] === true) {
-        hunkExpandWholeHandle.setAttribute('title', '全部展开')
+        hunkExpandWholeHandle.setAttribute('title', '中间展开')
       } else if (classNameInfo['expandable-both'] !== true) {
         if (classNameInfo['expandable-down']) {
           hunkExpandWholeHandle.setAttribute('title', '向下展开')

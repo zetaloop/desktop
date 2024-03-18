@@ -488,7 +488,7 @@ export class SideBySideDiffRow extends React.Component<
       case DiffHunkExpansionType.Short:
         return {
           icon: octicons.fold,
-          title: '全部展开',
+          title: '中间展开',
           handler: this.onExpandHunk(hunkIndex, expansionType),
         }
     }
