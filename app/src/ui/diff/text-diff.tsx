@@ -117,13 +117,13 @@ function createNoNewlineIndicatorWidget() {
   const titleElem = document.createElementNS(xmlns, 'title')
   titleElem.setAttribute('id', titleId)
   titleElem.setAttribute('lang', 'en')
-  titleElem.textContent = 'No newline at end of file'
+  titleElem.textContent = '文件末尾没有换行'
   svgElem.appendChild(titleElem)
 
   const pathElem = document.createElementNS(xmlns, 'path')
   pathElem.setAttribute('role', 'presentation')
   pathElem.setAttribute('d', p[0])
-  pathElem.textContent = 'No newline at end of file'
+  pathElem.textContent = '文件末尾没有换行'
   svgElem.appendChild(pathElem)
 
   widget.appendChild(svgElem)
@@ -219,7 +219,7 @@ function showSearch(cm: Editor) {
   const searchField = dialog.querySelector('.CodeMirror-search-field')
 
   if (searchField instanceof HTMLInputElement) {
-    searchField.placeholder = 'Search'
+    searchField.placeholder = '搜索'
     searchField.style.removeProperty('width')
   }
 }
@@ -689,7 +689,7 @@ export class TextDiff extends React.Component<ITextDiffProps, ITextDiffState> {
 
     return this.diffToRestore === null
       ? {
-          label: __DARWIN__ ? 'Expand Whole File' : 'Expand whole file',
+          label: __DARWIN__ ? '展开整个文件' : '展开整个文件',
           action: this.onExpandWholeFile,
           // If there is only one hunk that can't be expanded, disable this item
           enabled:
@@ -697,9 +697,7 @@ export class TextDiff extends React.Component<ITextDiffProps, ITextDiffState> {
             diff.hunks[0].expansionType !== DiffHunkExpansionType.None,
         }
       : {
-          label: __DARWIN__
-            ? 'Collapse Expanded Lines'
-            : 'Collapse expanded lines',
+          label: __DARWIN__ ? '折叠整个文件' : '折叠整个文件',
           action: this.onCollapseExpandedLines,
         }
   }
@@ -831,19 +829,19 @@ export class TextDiff extends React.Component<ITextDiffProps, ITextDiffState> {
     let type = ''
 
     if (rangeType === DiffRangeType.Additions) {
-      type = __DARWIN__ ? 'Added' : 'added'
+      type = __DARWIN__ ? '新增' : '新增'
     } else if (rangeType === DiffRangeType.Deletions) {
-      type = __DARWIN__ ? 'Removed' : 'removed'
+      type = __DARWIN__ ? '删除' : '删除'
     } else if (rangeType === DiffRangeType.Mixed) {
-      type = __DARWIN__ ? 'Modified' : 'modified'
+      type = __DARWIN__ ? '修改' : '修改'
     } else {
       assertNever(rangeType, `Invalid range type: ${rangeType}`)
     }
 
-    const plural = numLines > 1 ? 's' : ''
+    const plural = numLines > 1 ? '' : ''
     return __DARWIN__
-      ? `Discard ${type} Line${plural}${suffix}`
-      : `Discard ${type} line${plural}${suffix}`
+      ? `放弃${type}行${plural}${suffix}`
+      : `放弃${type}行${plural}${suffix}`
   }
 
   private onCopy = (editor: Editor, event: Event) => {
@@ -1122,7 +1120,7 @@ export class TextDiff extends React.Component<ITextDiffProps, ITextDiffState> {
     if (this.canExpandDiff()) {
       const hunkExpandUpHandle = document.createElement('button')
       hunkExpandUpHandle.classList.add('hunk-expander', 'hunk-expand-up-handle')
-      hunkExpandUpHandle.title = 'Expand Up'
+      hunkExpandUpHandle.title = '向上展开'
       hunkExpandUpHandle.addEventListener(
         'click',
         this.onHunkExpandHalfHandleMouseDown.bind(this, hunks, hunk, 'up')
@@ -1138,7 +1136,7 @@ export class TextDiff extends React.Component<ITextDiffProps, ITextDiffState> {
         'hunk-expander',
         'hunk-expand-down-handle'
       )
-      hunkExpandDownHandle.title = 'Expand Down'
+      hunkExpandDownHandle.title = '向下展开'
       hunkExpandDownHandle.addEventListener(
         'click',
         this.onHunkExpandHalfHandleMouseDown.bind(this, hunks, hunk, 'down')
@@ -1154,7 +1152,7 @@ export class TextDiff extends React.Component<ITextDiffProps, ITextDiffState> {
         'hunk-expander',
         'hunk-expand-whole-handle'
       )
-      hunkExpandWholeHandle.title = 'Expand whole'
+      hunkExpandWholeHandle.title = '全部展开'
       hunkExpandWholeHandle.addEventListener(
         'click',
         this.onHunkExpandWholeHandleMouseDown.bind(this, hunks, hunk)
@@ -1289,12 +1287,12 @@ export class TextDiff extends React.Component<ITextDiffProps, ITextDiffState> {
     )[0]
     if (hunkExpandWholeHandle !== undefined) {
       if (classNameInfo['expandable-short'] === true) {
-        hunkExpandWholeHandle.setAttribute('title', 'Expand All')
+        hunkExpandWholeHandle.setAttribute('title', '全部展开')
       } else if (classNameInfo['expandable-both'] !== true) {
         if (classNameInfo['expandable-down']) {
-          hunkExpandWholeHandle.setAttribute('title', 'Expand Down')
+          hunkExpandWholeHandle.setAttribute('title', '向下展开')
         } else {
-          hunkExpandWholeHandle.setAttribute('title', 'Expand Up')
+          hunkExpandWholeHandle.setAttribute('title', '向上展开')
         }
       }
     }
