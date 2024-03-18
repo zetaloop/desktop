@@ -171,7 +171,7 @@ export class RebaseChooseBranchDialog extends React.Component<
     return (
       <>
         把 <strong>{currentBranch.name}</strong> 所做的
-        <strong>{` ${commitsToRebase} ${pluralized}`}</strong> 以{' '}
+        <strong>{`${commitsToRebase}${pluralized}`}</strong> 以{' '}
         <strong>{baseBranch.name}</strong> 为基础重新构造
       </>
     )

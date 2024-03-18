@@ -233,7 +233,7 @@ export class NotificationsDebugStore {
 
     const shortSHA = shortenSHA(commitSha)
     const title = '拉取请求检查失败'
-    const body = `${pullRequest.title} #${pullRequest.pullRequestNumber} (${shortSHA})\n${numberOfFailedChecks} ${pluralChecks}不成功。`
+    const body = `${pullRequest.title} #${pullRequest.pullRequestNumber} (${shortSHA})\n${numberOfFailedChecks}${pluralChecks}不成功。`
     const onClick = () => {
       dispatcher.onChecksFailedNotification(repository, pullRequest, checks)
     }

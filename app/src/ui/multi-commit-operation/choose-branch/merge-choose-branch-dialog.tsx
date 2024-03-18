@@ -187,7 +187,7 @@ export class MergeChooseBranchDialog extends React.Component<
     return (
       <React.Fragment>
         从 <strong>{branch.name}</strong> 合并
-        <strong>{` ${commitCount} ${pluralized}`}</strong>到{' '}
+        <strong>{`${commitCount}${pluralized}`}</strong>到{' '}
         <strong>{currentBranch.name}</strong>
       </React.Fragment>
     )
@@ -210,8 +210,8 @@ export class MergeChooseBranchDialog extends React.Component<
     return (
       <React.Fragment>
         从 <strong>{branch.name}</strong> 合并到{' '}
-        <strong>{currentBranch.name}</strong> 时有{' '}
-        <strong>{` ${count} 个${pluralized}产生冲突`}</strong>
+        <strong>{currentBranch.name}</strong> 时有
+        <strong>{`${count}个${pluralized}产生冲突`}</strong>
       </React.Fragment>
     )
   }

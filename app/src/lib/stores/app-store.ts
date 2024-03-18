@@ -6038,9 +6038,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
       .map(path => `- ${path}`)
       .join('\n')}${
       invalidPaths.length > MaxInvalidFoldersToDisplay
-        ? `\n\n（还有另外 ${
+        ? `\n\n（还有另外${
             invalidPaths.length - MaxInvalidFoldersToDisplay
-          } 个）`
+          }个）`
         : ''
     }`
   }

@@ -102,7 +102,8 @@ export class PullRequestChecksFailed extends React.Component<
         <Octicon symbol={octicons.xCircleFill} />
         <div className="title-container">
           <div className="summary">
-            在您的拉取请求中有 {failedChecks.length} {pluralChecks}失败了
+            在您的拉取请求中有{failedChecks.length}
+            {pluralChecks}失败了
           </div>
           <span className="pr-title">
             <span className="pr-title">{pullRequest.title}</span>{' '}
