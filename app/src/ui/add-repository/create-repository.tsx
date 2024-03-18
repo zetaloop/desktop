@@ -387,9 +387,7 @@ export class CreateRepository extends React.Component<
     const status = await getStatus(repository)
     if (status === null) {
       this.props.dispatcher.postError(
-        new Error(
-          `Unable to create the new repository because there are too many new files in this directory`
-        )
+        new Error(`无法创建储存库，因为该目录中新文件过多`)
       )
 
       return
@@ -399,7 +397,7 @@ export class CreateRepository extends React.Component<
       const wd = status.workingDirectory
       const files = wd.files
       if (files.length > 0) {
-        await createCommit(repository, 'Initial commit', files)
+        await createCommit(repository, '初始提交', files)
       }
     } catch (e) {
       log.error(`createRepository: initial commit failed at ${fullPath}`, e)
@@ -443,11 +441,11 @@ export class CreateRepository extends React.Component<
       <InputWarning
         id="repo-sanitized-name-warning"
         trackedUserInput={this.state.name}
-        ariaLiveMessage={`Will be created as ${sanitizedName}. Spaces and invalid characters have been replaced by hyphens.`}
+        ariaLiveMessage={`储存库将会命名为 ${sanitizedName}，空格与无效字符会被替换为横线。`}
       >
-        <p>Will be created as {sanitizedName}</p>
+        <p>储存库将会命名为 {sanitizedName}</p>
         <span className="sr-only">
-          Spaces and invalid characters have been replaced by hyphens.
+          空格与无效字符会被替换为横线。
         </span>
       </InputWarning>
     )
