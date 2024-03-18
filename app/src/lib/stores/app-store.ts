@@ -5469,7 +5469,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       if (match === null) {
         this.emitError(
           new ExternalEditorError(
-            `未找到合适的编辑器。在电脑上装一个 ${suggestedExternalEditor.name} 并重启 GitHub Desktop 再试一次吧。`,
+            `未找到合适的编辑器。在电脑上安装 ${suggestedExternalEditor.name} 并重启 GitHub Desktop 再试一次吧。`,
             { suggestDefaultEditor: true }
           )
         )
