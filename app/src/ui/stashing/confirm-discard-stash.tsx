@@ -36,7 +36,7 @@ export class ConfirmDiscardStashDialog extends React.Component<
   }
 
   public render() {
-    const title = __DARWIN__ ? '放弃暂存区?' : '放弃暂存区?'
+    const title = __DARWIN__ ? '放弃暂存区？' : '放弃暂存区？'
 
     return (
       <Dialog

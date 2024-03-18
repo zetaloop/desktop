@@ -31,7 +31,7 @@ export class OverwriteStash extends React.Component<
   }
 
   public render() {
-    const title = __DARWIN__ ? '覆盖暂存区?' : '覆盖暂存区?'
+    const title = __DARWIN__ ? '覆盖暂存区？' : '覆盖暂存区？'
 
     return (
       <Dialog
