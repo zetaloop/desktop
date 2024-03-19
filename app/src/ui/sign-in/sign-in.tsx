@@ -155,7 +155,7 @@ export class SignIn extends React.Component<ISignInProps, ISignInState> {
         break
       case SignInStep.Authentication:
         if (!state.supportsBasicAuth) {
-          primaryButtonText = __DARWIN__ ? '在浏览器上继续' : '在浏览器上继续'
+          primaryButtonText = __DARWIN__ ? '打开浏览器' : '打开浏览器'
         } else {
           const validUserName = this.state.username.length > 0
           const validPassword = this.state.password.length > 0
