@@ -52,7 +52,7 @@ export class ConfirmDiscardStashDialog extends React.Component<
       >
         <DialogContent>
           <Row id="discard-stash-warning-message">
-            确定要丢弃这些暂存的改动吗？
+            确定要放弃这些暂存的改动吗？
           </Row>
           <Row>
             <Checkbox
@@ -67,7 +67,7 @@ export class ConfirmDiscardStashDialog extends React.Component<
           </Row>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup destructive={true} okButtonText="丢弃" />
+          <OkCancelButtonGroup destructive={true} okButtonText="确定放弃" />
         </DialogFooter>
       </Dialog>
     )
