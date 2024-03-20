@@ -204,7 +204,7 @@ export abstract class BaseMultiCommitOperation extends React.Component<IMultiCom
             ourBranch={ourBranch}
             theirBranch={theirBranch}
             manualResolutions={manualResolutions}
-            headerTitle={`Resolve conflicts before ${operationDetail.kind}`}
+            headerTitle={`进行${operationDetail.kind}前请先解决冲突`}
             submitButton={submit}
             abortButton={abort}
             onSubmit={this.onContinueAfterConflicts}
