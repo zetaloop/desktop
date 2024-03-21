@@ -1,5 +1,6 @@
 > [!WARNING]
-> ### 汉化还没做完
+> ### 汉化尚未完工，预览版请前往 [Actions 工作流](https://github.com/zetaloop/Desktop-CN/actions) 下载，不定时更新
+> ### 翻译内容全部完成后，将会跟随官方 Beta 版持续发布
 # GitHub Desktop 中文版
 
 [GitHub Desktop](https://desktop.github.com/) 是一个开源的 GitHub 客户端，基于 [Electron](https://www.electronjs.org/) 技术，使用 [React](https://reactjs.org/) 框架，以 [TypeScript](https://www.typescriptlang.org) 编写。
@@ -12,96 +13,81 @@
   <img
     width="1072"
     src="https://user-images.githubusercontent.com/634063/202742985-bb3b3b94-8aca-404a-8d8a-fd6a6f030672.png"
-    alt="A screenshot of the GitHub Desktop application showing changes being viewed and committed with two attributed co-authors"
+    alt="GitHub Desktop 软件截图，其中显示了两位协作者正在查看和准备提交一些改动"
   />
 </picture>
 
-## Where can I get it?
+## 安装
 
-Download the official installer for your operating system:
+下载对应系统的官方安装包：
 
  - [macOS](https://central.github.com/deployments/desktop/desktop/latest/darwin)
- - [macOS (Apple silicon)](https://central.github.com/deployments/desktop/desktop/latest/darwin-arm64)
+ - [macOS (Apple Silicon)](https://central.github.com/deployments/desktop/desktop/latest/darwin-arm64)
  - [Windows](https://central.github.com/deployments/desktop/desktop/latest/win32)
- - [Windows machine-wide install](https://central.github.com/deployments/desktop/desktop/latest/win32?format=msi)
+ - [Windows 为所有用户安装](https://central.github.com/deployments/desktop/desktop/latest/win32?format=msi)
 
-Linux is not officially supported; however, you can find installers created for Linux from a fork of GitHub Desktop in the [Community Releases](https://github.com/desktop/desktop#community-releases) section.
+暂未支持 Linux 系统，但是有第三方维护的分支可供使用，见 [社区发布版](https://github.com/zetaloop/Desktop-CN#社区发布版) 一节。
 
-### Beta Channel
+### Beta 测试版
 
-Want to test out new features and get fixes before everyone else? Install the
-beta channel to get access to early builds of Desktop:
+想要更早体验到新功能和问题修复吗？安装 Beta 测试版即可提前体验开发中的早期版本：
 
  - [macOS](https://central.github.com/deployments/desktop/desktop/latest/darwin?env=beta)
- - [macOS (Apple silicon)](https://central.github.com/deployments/desktop/desktop/latest/darwin-arm64?env=beta)
+ - [macOS (Apple Silicon)](https://central.github.com/deployments/desktop/desktop/latest/darwin-arm64?env=beta)
  - [Windows](https://central.github.com/deployments/desktop/desktop/latest/win32?env=beta)
  - [Windows (ARM64)](https://central.github.com/deployments/desktop/desktop/latest/win32-arm64?env=beta)
 
-The release notes for the latest beta versions are available [here](https://desktop.github.com/release-notes/?env=beta).
+查看 [测试版更新日志](https://desktop.github.com/release-notes/?env=beta)。
 
-### Community Releases
+### 社区发布版
 
-There are several community-supported package managers that can be used to
-install GitHub Desktop:
- - Windows users can install using [winget](https://docs.microsoft.com/en-us/windows/package-manager/winget/) `c:\> winget install github-desktop` or [Chocolatey](https://chocolatey.org/) `c:\> choco install github-desktop`
- - macOS users can install using [Homebrew](https://brew.sh/) package manager:
-      `$ brew install --cask github`
+一些社区维护的包管理器可用于安装 GitHub Desktop：
+ - Windows 用户可以用 [winget](https://docs.microsoft.com/en-us/windows/package-manager/winget/) `c:\> winget install github-desktop` 或者 [Chocolatey](https://chocolatey.org/) `c:\> choco install github-desktop`
+ - macOS 用户可以用 [Homebrew](https://brew.sh/) `$ brew install --cask github`
 
-Installers for various Linux distributions can be found on the
-[`shiftkey/desktop`](https://github.com/shiftkey/desktop) fork.
+各 Linux 发行版的安装包可在 [`shiftkey/desktop`](https://github.com/shiftkey/desktop) 分支中下载。
 
-## Is GitHub Desktop right for me? What are the primary areas of focus?
+## GitHub Desktop 适合我吗？这款软件的开发重心是什么？
 
-[This document](https://github.com/desktop/desktop/blob/development/docs/process/what-is-desktop.md) describes the focus of GitHub Desktop and who the product is most useful for.
+[阅读我们的设计理念](https://github.com/zetaloop/Desktop-CN/blob/development/docs/process/what-is-desktop.md)，了解 GitHub Desktop 软件的开发重心和目标用户。
 
-## I have a problem with GitHub Desktop
+## 使用时遇到问题
 
-Note: The [GitHub Desktop Code of Conduct](https://github.com/desktop/desktop/blob/development/CODE_OF_CONDUCT.md) applies in all interactions relating to the GitHub Desktop project.
+> [!NOTE]
+> 这里是指 GitHub Desktop 原版软件的程序问题，如果有翻译问题请直接联系 Zetaloop。
 
-First, please search the [open issues](https://github.com/desktop/desktop/issues?q=is%3Aopen)
-and [closed issues](https://github.com/desktop/desktop/issues?q=is%3Aclosed)
-to see if your issue hasn't already been reported (it may also be fixed).
+注意：参与此项目时需要遵守 [GitHub Desktop 行为准则](https://github.com/desktop/desktop/blob/development/CODE_OF_CONDUCT.md)。
 
-There is also a list of [known issues](https://github.com/desktop/desktop/blob/development/docs/known-issues.md)
-that are being tracked against Desktop, and some of these issues have workarounds.
+首先，请在 [打开的议题](https://github.com/desktop/desktop/issues?q=is%3Aopen) 和 [关闭的议题](https://github.com/desktop/desktop/issues?q=is%3Aclosed) 中搜索，看看你的问题是否已经有人反馈过，或者刚修复。
 
-If you can't find an issue that matches what you're seeing, open a [new issue](https://github.com/desktop/desktop/issues/new/choose),
-choose the right template and provide us with enough information to investigate
-further.
+也可在 [已知问题列表](https://github.com/desktop/desktop/blob/development/docs/known-issues.md) 中查看我们正在跟踪的问题，它可能已经有解决方法了。
 
-## The issue I reported isn't fixed yet. What can I do?
+如果没有找到和你一样的问题，请 [创建议题](https://github.com/desktop/desktop/issues/new/choose)，选择合适的模板，并提供足够的信息以便我们进一步调查。
 
-If nobody has responded to your issue in a few days, you're welcome to respond to it with a friendly ping in the issue. Please do not respond more than a second time if nobody has responded. The GitHub Desktop maintainers are constrained in time and resources, and diagnosing individual configurations can be difficult and time consuming. While we'll try to at least get you pointed in the right direction, we can't guarantee we'll be able to dig too deeply into any one person's issue.
+## 我反馈的问题一直没修复，我该怎么办？
 
-## How can I contribute to GitHub Desktop?
+如果议题发出之后几天没人回复，你可以在议题中友好地 “@” 提醒一下维护者，但是不要超过两次。维护者们时间与资源有限，而分析一个问题可能又困难又耗时。我们会尽力为你指明方向，但无法保证能够深入研究每一个问题。
 
-The [CONTRIBUTING.md](./.github/CONTRIBUTING.md) document will help you get setup and
-familiar with the source. The [documentation](docs/) folder also contains more
-resources relevant to the project.
+## 如何为 GitHub Desktop 做出贡献？
 
-If you're looking for something to work on, check out the [help wanted](https://github.com/desktop/desktop/issues?q=is%3Aissue+is%3Aopen+label%3A%22help%20wanted%22) label.
+阅读 [`CONTRIBUTING.md`](./.github/CONTRIBUTING.md) 来了解如何配置并熟悉项目代码。[文档](docs/) 文件夹里还有更多相关文档可供参考。
 
-## Building Desktop
+如果你在寻找任务，可以查看带有 [help wanted（请求帮助）](https://github.com/desktop/desktop/issues?q=is%3Aissue+is%3Aopen+label%3A%22help%20wanted%22) 标签的议题。
 
-To setup your development environment for building Desktop, check out: [`setup.md`](./docs/contributing/setup.md).
+## 编译 Desktop
 
-## More Resources
+阅读 [`setup.md`](./docs/contributing/setup.md) 来了解如何配置 Desktop 的开发环境。
 
-See [desktop.github.com](https://desktop.github.com) for more product-oriented
-information about GitHub Desktop.
+## 更多资源
 
-See our [getting started documentation](https://docs.github.com/en/desktop/overview/getting-started-with-github-desktop) for more information on how to set up, authenticate, and configure GitHub Desktop.
+访问 [desktop.github.com](https://desktop.github.com) 官网获取更多关于 GitHub Desktop 的产品信息。
 
-## License
+查看 [入门文档](https://docs.github.com/zh-cn/desktop/overview/getting-started-with-github-desktop) 了解如何安装、登录和配置 GitHub Desktop。
 
-**[MIT](LICENSE)**
+## 许可证
 
-The MIT license grant is not for GitHub's trademarks, which include the logo
-designs. GitHub reserves all trademark and copyright rights in and to all
-GitHub trademarks. GitHub's logos include, for instance, the stylized
-Invertocat designs that include "logo" in the file title in the following
-folder: [logos](app/static/logos).
+**[MIT 许可证](LICENSE)**
 
-GitHub® and its stylized versions and the Invertocat mark are GitHub's
-Trademarks or registered Trademarks. When using GitHub's logos, be sure to
-follow the GitHub [logo guidelines](https://github.com/logos).
+MIT 许可证所授予的权利不适用于 GitHub 的商标，包括但不限于标志设计。GitHub 对其所有商标拥有完整的商标权和著作权保护。GitHub 的标志包含，例如，在 [logos](app/static/logos) 文件夹中的，文件名含有 "logo" 的 Invertocat（章鱼猫剪影）风格化设计图。
+
+GitHub® 及其风格化变体，以及 Invertocat 标志，均为 GitHub 的商标或已注册商标。使用 GitHub 的标志时，请务必遵守 GitHub 的 [标志使用指南](https://github.com/logos)。
