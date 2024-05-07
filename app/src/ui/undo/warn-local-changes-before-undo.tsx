@@ -95,9 +95,7 @@ export class WarnLocalChangesBeforeUndo extends React.Component<
     }
     return (
       <DialogContent>
-        <p>
-          当前仍有未提交的改动，撤回提交可能导致这些改动丢失。
-        </p>
+        <p>当前仍有未提交的改动，撤回提交可能导致这些改动丢失。</p>
         <p>{this.getMergeCommitUndoWarningText()}</p>
         <p>确定要继续吗？</p>
       </DialogContent>

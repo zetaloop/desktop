@@ -90,9 +90,7 @@ export class Start extends React.Component<IStartProps, {}> {
           </p>
           <p>
             GitHub Desktop 会发送使用情况数据来帮助优化产品和调整功能。{' '}
-            <LinkButton uri={SamplesURL}>
-            了解使用情况数据
-            </LinkButton>。
+            <LinkButton uri={SamplesURL}>了解使用情况数据</LinkButton>。
           </p>
         </div>
       </section>
