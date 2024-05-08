@@ -6818,7 +6818,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   ) {
     // This shouldn't happen... but in case throw error.
     const lastCommit = forceUnwrap(
-      '无法初始化摘选过程，未提供提交。',
+      '无法初始化摘取过程，未提供提交。',
       commits.at(-1)
     )
 

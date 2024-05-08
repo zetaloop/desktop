@@ -742,7 +742,7 @@ export class CommitList extends React.Component<
     const windowTagsLabel = commit.tags.length > 1 ? '复制标签' : '复制标签'
     items.push(
       {
-        label: __DARWIN__ ? '摘选提交…' : '摘选提交…',
+        label: __DARWIN__ ? '摘取提交…' : '摘取提交…',
         action: () => this.props.onCherryPick?.(this.selectedCommits),
         enabled: this.canCherryPick(),
       },
@@ -830,7 +830,7 @@ export class CommitList extends React.Component<
 
     return [
       {
-        label: __DARWIN__ ? `摘选${count}个提交…` : `摘选${count}个提交…`,
+        label: __DARWIN__ ? `摘取${count}个提交…` : `摘取${count}个提交…`,
         action: () => this.props.onCherryPick?.(this.selectedCommits),
         enabled: this.canCherryPick(),
       },
