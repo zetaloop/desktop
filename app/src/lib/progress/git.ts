@@ -304,4 +304,5 @@ export function parse(line: string): IGitProgressInfo | null {
   }
 
   return { title, value, percent, total, done, text: line }
+  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtest
 }
