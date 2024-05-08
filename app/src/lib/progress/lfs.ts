@@ -51,9 +51,10 @@ export class GitLFSProgressParser {
 
   /** Parse the progress line. */
   public parse(line: string): IGitProgress | IGitOutput {
+    //! TODO: LFS message translation <- 我还没用过 LFS，到时候试试再说
     const matches = line.match(LFSProgressLineRe)
     if (!matches || matches.length !== 7) {
-      return { kind: 'context', percent: 0, text: line }
+      return { kind: 'context', percent: 0, text: line, text_: line }
     }
 
     const direction = matches[1]
@@ -67,7 +68,7 @@ export class GitLFSProgressParser {
       isNaN(fileTransferred) ||
       isNaN(fileSize)
     ) {
-      return { kind: 'context', percent: 0, text: line }
+      return { kind: 'context', percent: 0, text: line, text_: line }
     }
 
     this.files.set(fileName, {
@@ -103,7 +104,8 @@ export class GitLFSProgressParser {
       total: totalEstimated,
       percent: 0,
       done: false,
-      text: `${verb} ${fileName} (共${fileCount}个，已完成${finishedFiles}个，${transferProgress})`,
+      text: `${verb} ${fileName} (总共${fileCount}个，已完成${finishedFiles}个，${transferProgress})`,
+      text_: line,
     }
 
     return {

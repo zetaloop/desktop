@@ -64,7 +64,7 @@ export async function fetch(
         // about ref updates. We don't need to bring those into the progress
         // stream so we'll just punt on anything we don't know about for now.
         if (progress.kind === 'context') {
-          if (!progress.text.startsWith('remote: Counting objects')) {
+          if (!progress.text_.startsWith('remote: Counting objects')) {
             return
           }
         }

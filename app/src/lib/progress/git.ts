@@ -57,6 +57,7 @@ export interface IGitOutput {
   readonly kind: 'context'
   readonly percent: number
   readonly text: string
+  readonly text_: string
 }
 
 /**
@@ -135,6 +136,7 @@ export interface IGitProgressInfo {
    * for presenting the actual output from Git to the user.
    */
   readonly text: string
+  readonly text_: string
 }
 
 /**
@@ -196,7 +198,12 @@ export class GitProgressParser {
     const progress = parse(line)
 
     if (!progress) {
-      return { kind: 'context', text: line, percent: this.lastPercent }
+      return {
+        kind: 'context',
+        text: translateLn(line),
+        text_: line,
+        percent: this.lastPercent,
+      }
     }
 
     let percent = 0
@@ -218,7 +225,12 @@ export class GitProgressParser {
       }
     }
 
-    return { kind: 'context', text: line, percent: this.lastPercent }
+    return {
+      kind: 'context',
+      text: translateLn(line),
+      text_: line,
+      percent: this.lastPercent,
+    }
   }
 }
 
@@ -303,5 +315,54 @@ export function parse(line: string): IGitProgressInfo | null {
     }
   }
 
-  return { title, value, percent, total, done, text: line }
+  return {
+    title,
+    value,
+    percent,
+    total,
+    done,
+    text: translateLn(line),
+    text_: line,
+  }
+}
+
+function translateLn(line: string): string {
+  // Translate Git message to Chinese
+  // Ref: git/git/po/zh_CN.po, and realworld test
+  line = line.replace('remote: ', '远程端：')
+  line = line.replace('Enumerating objects', '正在枚举对象')
+  line = line.replace('Counting objects', '正在计算对象数量')
+  line = line.replace('Compressing objects', '正在压缩对象')
+  line = line.replace('Writing objects', '正在发送对象')
+  line = line.replace('Receiving objects', '正在接收对象')
+  line = line.replace('Indexing objects', '正在索引对象')
+  line = line.replace('Resolving deltas', '正在分析差异')
+  line = line.replace('Checking out files', '正在检出文件')
+  line = line.replace(', done.', ', 完成.')
+  line = line.replace(
+    /, completed with (\d+) local object[s]?/,
+    ', 完成$1个本地对象'
+  )
+  line = line.replace('(forced update)', '(强制更新)')
+  // #: builtin/pack-objects.c
+  // #, c-format
+  // msgid ""
+  // "Total %<PRIu32> (delta %<PRIu32>), reused %<PRIu32> (delta %<PRIu32>), pack-"
+  // "reused %<PRIu32> (from %<PRIuMAX>)"
+  // msgstr ""
+  // "总共 %<PRIu32>（差异 %<PRIu32>），复用 %<PRIu32>（差异 %<PRIu32>），包复用 "
+  // "%<PRIu32>（来自  %<PRIuMAX> 个包）"
+  if (
+    line.includes('Total') &&
+    line.includes('reused') &&
+    line.includes('pack-reused')
+  ) {
+    line = line.replace(/Total (\d+)/, '总共$1个')
+    line = line.replace(/delta (\d+)/, '差异$1个')
+    line = line.replace(/reused (\d+)/, '复用$1个')
+    line = line.replace(/delta (\d+)/, '差异$1个')
+    line = line.replace(/pack-reused (\d+)/, '包复用$1个')
+    line = line.replace(/from (\d+)/, '来自$1个包')
+  }
+  return line
 }
