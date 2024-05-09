@@ -105,15 +105,15 @@ export function getUnmergedStatusEntryDescription(
   entry: UnmergedStatusEntry,
   branch?: string
 ): string {
-  const suffix = branch ? ` from ${branch}` : ''
+  const suffix = branch ? `依 ${branch} ` : ''
 
   switch (entry) {
     case GitStatusEntry.Added:
-      return `Using the added file${suffix}`
+      return `使用${suffix}添加的版本`
     case GitStatusEntry.UpdatedButUnmerged:
-      return `Using the modified file${suffix}`
+      return `使用${suffix}修改的版本`
     case GitStatusEntry.Deleted:
-      return `Using the deleted file${suffix}`
+      return `使用${suffix}删除的版本`
     default:
       return assertNever(entry, 'Unknown status entry to format')
   }
@@ -126,16 +126,16 @@ export function getLabelForManualResolutionOption(
   entry: UnmergedStatusEntry,
   branch?: string
 ): string {
-  const suffix = branch ? ` from ${branch}` : ''
+  const suffix = branch ? `从 ${branch}` : ''
 
   switch (entry) {
     case GitStatusEntry.Added:
-      return `Use the added file${suffix}`
+      return `使用${suffix}添加的版本`
     case GitStatusEntry.UpdatedButUnmerged:
-      return `Use the modified file${suffix}`
+      return `使用${suffix}修改的版本`
     case GitStatusEntry.Deleted:
-      const deleteSuffix = branch ? ` on ${branch}` : ''
-      return `Do not include this file${deleteSuffix}`
+      const deleteSuffix = branch ? `依据 ${branch} ` : ''
+      return `${deleteSuffix}删除该文件`
     default:
       return assertNever(entry, 'Unknown status entry to format')
   }
