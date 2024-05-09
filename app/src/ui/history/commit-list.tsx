@@ -704,7 +704,7 @@ export class CommitList extends React.Component<
 
     items.push(
       {
-        label: __DARWIN__ ? '新建提交来撤回' : '新建提交来撤回',
+        label: __DARWIN__ ? '创建逆转提交' : '创建逆转提交',
         action: () => {
           if (this.props.onRevertCommit) {
             this.props.onRevertCommit(commit)
