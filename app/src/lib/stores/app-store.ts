@@ -4874,7 +4874,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     ) {
       return this._showPopup({
         type: PopupType.WarnForcePush,
-        operation: 'Amend',
+        operation: '修订',
         onBegin: () => {
           this._startAmendingRepository(repository, commit, isLocalCommit, true)
         },
