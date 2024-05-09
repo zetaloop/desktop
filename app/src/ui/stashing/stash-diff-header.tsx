@@ -53,7 +53,7 @@ export class StashDiffHeader extends React.Component<
           />
           <div className="explanatory-text" id="restore-description">
             <span className="text">
-              选择<strong>恢复</strong>即可将改动还原至改动列表。
+              点击 <strong>恢复</strong> 即可取回这些改动。
             </span>
           </div>
         </div>
