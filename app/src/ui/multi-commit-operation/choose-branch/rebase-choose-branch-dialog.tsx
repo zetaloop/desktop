@@ -170,7 +170,7 @@ export class RebaseChooseBranchDialog extends React.Component<
     const pluralized = commitsToRebase === 1 ? '个提交' : '个提交'
     return (
       <>
-        把 <strong>{currentBranch.name}</strong> 所做的
+        把 <strong>{currentBranch.name}</strong> 所做的{' '}
         <strong>{`${commitsToRebase}${pluralized}`}</strong> 以{' '}
         <strong>{baseBranch.name}</strong> 为基础重新构造
       </>
