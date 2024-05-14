@@ -59,7 +59,7 @@ export class StashAndSwitchBranch extends React.Component<
     return (
       <Dialog
         id="stash-changes"
-        title={__DARWIN__ ? 'Switch Branch' : 'Switch branch'}
+        title={__DARWIN__ ? '切换分支' : '切换分支'}
         onSubmit={this.onSubmit}
         onDismissed={this.props.onDismissed}
         loading={isStashingChanges}
@@ -70,9 +70,7 @@ export class StashAndSwitchBranch extends React.Component<
           {this.renderStashOverwriteWarning()}
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup
-            okButtonText={__DARWIN__ ? 'Switch Branch' : 'Switch branch'}
-          />
+          <OkCancelButtonGroup okButtonText={__DARWIN__ ? '继续' : '继续'} />
         </DialogFooter>
       </Dialog>
     )
@@ -88,8 +86,8 @@ export class StashAndSwitchBranch extends React.Component<
 
     return (
       <Row>
-        <Octicon symbol={octicons.alert} /> Your current stash will be
-        overwritten by creating a new stash
+        <Octicon symbol={octicons.alert} />{' '}
+        当前暂存区已经存了一些改动，如果还要暂存，之前暂存的改动会被覆盖
       </Row>
     )
   }
@@ -98,14 +96,13 @@ export class StashAndSwitchBranch extends React.Component<
     const { branchToCheckout } = this.props
     const items = [
       {
-        title: `Leave my changes on ${this.state.currentBranchName}`,
-        description:
-          'Your in-progress work will be stashed on this branch for you to return to later',
+        title: `把改动留在 ${this.state.currentBranchName} 分支`,
+        description: '这些改动将会保存在当前分支的暂存区，等你回来',
         key: StashAction.StashOnCurrentBranch,
       },
       {
-        title: `Bring my changes to ${branchToCheckout.name}`,
-        description: 'Your in-progress work will follow you to the new branch',
+        title: `把改动带到 ${branchToCheckout.name} 分支`,
+        description: '这些改动将会转移到新的分支，在那里继续',
         key: StashAction.MoveToNewBranch,
       },
     ]
@@ -113,7 +110,7 @@ export class StashAndSwitchBranch extends React.Component<
     return (
       <Row>
         <VerticalSegmentedControl
-          label="You have changes on this branch. What would you like to do with them?"
+          label="当前分支仍有未提交的改动，如何处置？"
           items={items}
           selectedKey={this.state.selectedStashAction}
           onSelectionChanged={this.onSelectionChanged}
