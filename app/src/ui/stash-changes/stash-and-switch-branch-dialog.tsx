@@ -70,7 +70,9 @@ export class StashAndSwitchBranch extends React.Component<
           {this.renderStashOverwriteWarning()}
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup okButtonText={__DARWIN__ ? '继续' : '继续'} />
+          <OkCancelButtonGroup
+            okButtonText={__DARWIN__ ? '切换分支' : '切换分支'}
+          />
         </DialogFooter>
       </Dialog>
     )
