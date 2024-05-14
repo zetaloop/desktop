@@ -1,5 +1,5 @@
 > [!WARNING]
-> ### 汉化尚未完工，预览版请前往 [Actions 工作流](https://github.com/zetaloop/Desktop-CN/actions) 下载，不定时更新
+> ### 汉化尚未完工，预览版请前往 [Actions 工作流](https://github.com/zetaloop/Desktop/actions) 下载，不定时更新
 > ### 翻译内容全部完成后，将会跟随官方 Beta 版持续发布
 # GitHub Desktop 中文版
 
@@ -26,7 +26,7 @@
  - [Windows](https://central.github.com/deployments/desktop/desktop/latest/win32)
  - [Windows 为所有用户安装](https://central.github.com/deployments/desktop/desktop/latest/win32?format=msi)
 
-暂未支持 Linux 系统，但是有第三方维护的分支可供使用，见 [社区发布版](https://github.com/zetaloop/Desktop-CN#社区发布版) 一节。
+暂未支持 Linux 系统，但是有第三方维护的分支可供使用，见 [社区发布版](https://github.com/zetaloop/Desktop#社区发布版) 一节。
 
 ### Beta 测试版
 
@@ -52,7 +52,7 @@
 
 ## GitHub Desktop 适合我吗？这款软件的开发重心是什么？
 
-[阅读我们的设计理念](https://github.com/zetaloop/Desktop-CN/blob/development/docs/process/what-is-desktop.md)，了解 GitHub Desktop 软件的开发重心和目标用户。
+[阅读我们的设计理念](https://github.com/zetaloop/Desktop/blob/development/docs/process/what-is-desktop.md)，了解 GitHub Desktop 软件的开发重心和目标用户。
 
 ## 使用时遇到问题
 
