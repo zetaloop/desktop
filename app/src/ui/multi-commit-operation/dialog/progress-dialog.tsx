@@ -31,7 +31,7 @@ export class ProgressDialog extends React.Component<IProgressDialogProps> {
       <Dialog
         dismissDisabled={true}
         id="multi-commit-progress"
-        title={`${operation} in progress`}
+        title={`正在${operation}`}
       >
         <DialogContent>
           <div>
@@ -43,7 +43,7 @@ export class ProgressDialog extends React.Component<IProgressDialogProps> {
               </div>
               <div className="summary">
                 <div className="message">
-                  Commit {position} of {totalCommitCount}
+                  第{position}个提交，共{totalCommitCount}个
                 </div>
                 <div className="detail">
                   <RichText emoji={emoji} text={currentCommitSummary || ''} />
