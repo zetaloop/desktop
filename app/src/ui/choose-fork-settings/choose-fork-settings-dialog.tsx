@@ -83,7 +83,7 @@ export class ChooseForkSettings extends React.Component<
         <DialogContent>
           <Row>
             <VerticalSegmentedControl
-              label="在当前分支改动之后，您想拿他们怎么办？"
+              label="当前分支改动之后，如何处置？"
               items={items}
               selectedKey={this.state.forkContributionTarget}
               onSelectionChanged={this.onSelectionChanged}
