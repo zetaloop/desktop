@@ -205,5 +205,5 @@ export function getRefCheckSummary(check: ICombinedRefCheck): string {
     0
   )
 
-  return `${successCount}/${check.checks.length} checks OK`
+  return `检查完成 ${successCount}/${check.checks.length}`
 }
