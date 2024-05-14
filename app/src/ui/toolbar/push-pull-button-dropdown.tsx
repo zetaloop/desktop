@@ -88,7 +88,7 @@ export class PushPullButtonDropDown extends React.Component<IPushPullButtonDropD
           title: `强制推送 ${remoteName}`,
           description: (
             <>
-              以本地改动覆盖 {remoteName} 的任何改动
+              以本地记录覆盖 {remoteName} 的远程历史记录
               {forcePushWarning}
             </>
           ),
