@@ -10,13 +10,14 @@ interface ICloneArgs extends mriArgv {
 }
 
 export const command: ICommandModule = {
-  command: 'clone <url|slug>',
-  description: 'Clone a repository',
+  command: 'clone <网址|标识符>',
+  description: '克隆一个储存库',
   args: [
     {
-      name: 'url|slug',
+      name: '网址|标识符',
       required: true,
-      description: 'The URL or the GitHub owner/name alias to clone',
+      description:
+        '储存库的 URL 地址，或者 GitHub "用户/储存库名" 格式的标识符',
       type: 'string',
     },
   ],
@@ -24,12 +25,12 @@ export const command: ICommandModule = {
     branch: {
       type: 'string',
       aliases: ['b'],
-      description: 'The branch to checkout after cloning',
+      description: '克隆完成后要检出的分支',
     },
   },
   handler({ _: [cloneUrl], branch }: ICloneArgs) {
     if (!cloneUrl) {
-      throw new CommandError('Clone URL must be specified')
+      throw new CommandError('必须指定克隆地址')
     }
     try {
       const _ = new URL(cloneUrl)
