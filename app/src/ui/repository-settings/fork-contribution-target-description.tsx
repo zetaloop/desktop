@@ -18,23 +18,20 @@ export function ForkSettingsDescription(props: IForkSettingsDescription) {
   return (
     <ul className="fork-settings-description">
       <li>
-        拉取请求列表里显示的是针对 <strong>{targetRepository.fullName}</strong>{' '}
-        的拉取请求。
+        显示 <strong>{targetRepository.fullName}</strong> 的拉取请求。
       </li>
       <li>
-        议题将会创建在 <strong>{targetRepository.fullName}</strong> 里。
+        为 <strong>{targetRepository.fullName}</strong> 创建议题。
       </li>
       <li>
-        "打开 GitHub" 将会打开的是 <strong>{targetRepository.fullName}</strong>{' '}
+        "打开 GitHub" 将会打开 <strong>{targetRepository.fullName}</strong>{' '}
         的地址。
       </li>
       <li>
-        新建分支将会基于 <strong>{targetRepository.fullName}</strong>{' '}
-        的默认分支。
+        基于 <strong>{targetRepository.fullName}</strong> 的默认分支来新建分支。
       </li>
       <li>
-        用户和议题的自动补全将会来自{' '}
-        <strong>{targetRepository.fullName}</strong> 的信息。
+        使用 <strong>{targetRepository.fullName}</strong> 的用户和议题信息。
       </li>
     </ul>
   )
