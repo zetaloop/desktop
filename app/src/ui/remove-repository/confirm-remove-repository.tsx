@@ -78,7 +78,7 @@ export class ConfirmRemoveRepository extends React.Component<
 
           <div>
             <Checkbox
-              label={'同时将文件夹移到' + TrashNameLabel}
+              label={'将文件夹移到' + TrashNameLabel}
               value={
                 this.state.deleteRepoFromDisk
                   ? CheckboxValue.On
