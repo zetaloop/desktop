@@ -105,7 +105,7 @@ export class RepositorySettings extends React.Component<
         `RepositorySettings: unable to read root .gitignore file for ${this.props.repository.path}`,
         e
       )
-      this.setState({ errors: [`Could not read root .gitignore: ${e}`] })
+      this.setState({ errors: [`无法读取根 .gitignore: ${e}`] })
     }
 
     const localCommitterName = await getConfigValue(
@@ -170,7 +170,7 @@ export class RepositorySettings extends React.Component<
     return (
       <Dialog
         id="repository-settings"
-        title={__DARWIN__ ? 'Repository Settings' : 'Repository settings'}
+        title={__DARWIN__ ? '储存库设置' : '储存库设置'}
         onDismissed={this.props.onDismissed}
         onSubmit={this.onSubmit}
         disabled={this.state.disabled}
@@ -185,20 +185,20 @@ export class RepositorySettings extends React.Component<
           >
             <span>
               <Octicon className="icon" symbol={octicons.server} />
-              Remote
+              远程
             </span>
             <span>
               <Octicon className="icon" symbol={octicons.file} />
-              {__DARWIN__ ? 'Ignored Files' : 'Ignored files'}
+              {__DARWIN__ ? '忽略文件' : '忽略文件'}
             </span>
             <span>
               <Octicon className="icon" symbol={octicons.gitCommit} />
-              {__DARWIN__ ? 'Git Config' : 'Git config'}
+              {__DARWIN__ ? 'Git 配置文件' : 'Git 配置文件'}
             </span>
             {showForkSettings && (
               <span>
                 <Octicon className="icon" symbol={octicons.repoForked} />
-                {__DARWIN__ ? 'Fork Behavior' : 'Fork behavior'}
+                {__DARWIN__ ? '复刻行为' : '复刻行为'}
               </span>
             )}
           </TabBar>
@@ -207,7 +207,7 @@ export class RepositorySettings extends React.Component<
         </div>
         <DialogFooter>
           <OkCancelButtonGroup
-            okButtonText="Save"
+            okButtonText="保存"
             okButtonDisabled={this.state.saveDisabled}
           />
         </DialogFooter>
@@ -286,7 +286,9 @@ export class RepositorySettings extends React.Component<
   }
 
   private onShowGitIgnoreExamples = () => {
-    this.props.dispatcher.openInBrowser('https://git-scm.com/docs/gitignore')
+    this.props.dispatcher.openInBrowser(
+      'https://git-scm.com/docs/gitignore/zh_HANS-CN'
+    )
   }
 
   private onSubmit = async () => {
@@ -308,7 +310,7 @@ export class RepositorySettings extends React.Component<
             `RepositorySettings: unable to set remote URL at ${this.props.repository.path}`,
             e
           )
-          errors.push(`Failed setting the remote URL: ${e}`)
+          errors.push(`无法设置远程地址: ${e}`)
         }
       }
     }
@@ -324,7 +326,7 @@ export class RepositorySettings extends React.Component<
           `RepositorySettings: unable to save gitignore at ${this.props.repository.path}`,
           e
         )
-        errors.push(`Failed saving the .gitignore file: ${e}`)
+        errors.push(`无法保存 .gitignore 文件: ${e}`)
       }
     }
 
