@@ -40,9 +40,8 @@ export class CloneGenericRepository extends React.Component<
             autoFocus={true}
             label={
               <div className="clone-url-textbox-label">
-                <p>储存库网址或 GitHub 标识符</p>
                 <p>
-                  （GitHub 标识符是 <Ref>用户名/储存库名</Ref>）
+                  储存库网址或 GitHub 标识符（<Ref>用户名/储存库名</Ref>）
                 </p>
               </div>
             }
@@ -52,7 +51,7 @@ export class CloneGenericRepository extends React.Component<
         <Row>
           <TextBox
             value={this.props.path}
-            label={__DARWIN__ ? '本地保存路径' : '本地保存路径'}
+            label={__DARWIN__ ? '本地保存文件夹' : '本地保存文件夹'}
             placeholder="储存库保存的位置"
             onValueChanged={this.props.onPathChanged}
           />
