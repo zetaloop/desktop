@@ -126,7 +126,7 @@ export function getLabelForManualResolutionOption(
   entry: UnmergedStatusEntry,
   branch?: string
 ): string {
-  const suffix = branch ? `从 ${branch}` : ''
+  const suffix = branch ? `依 ${branch} ` : ''
 
   switch (entry) {
     case GitStatusEntry.Added:
