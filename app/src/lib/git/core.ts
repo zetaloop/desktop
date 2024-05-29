@@ -363,7 +363,7 @@ export function getDescriptionForError(
     case DugiteError.DefaultBranchDeletionFailed:
       return `此分支是储存库的默认分支，不可以删除。`
     case DugiteError.RevertConflicts:
-      return '请先合并和提交更改，然后才能完成逆转提交。'
+      return '请先合并和提交改动，然后才能完成逆转提交。'
     case DugiteError.EmptyRebasePatch:
       return '没有可应用的改动。'
     case DugiteError.NoMatchingRemoteBranch:
@@ -395,7 +395,7 @@ export function getDescriptionForError(
     case DugiteError.ProtectedBranchForcePush:
       return '该分支受保护，不允许强制推送。'
     case DugiteError.ProtectedBranchRequiresReview:
-      return '该分支受保护，任何更改都需要审查批准，你需要为此创建拉取请求。'
+      return '该分支受保护，任何更改都需要审核批准，你需要为此创建拉取请求。'
     case DugiteError.PushWithFileSizeExceedingLimit:
       return '推送包含了大小超过 100MB 的文件，超过 GitHub 文件大小限制，请从历史记录中删除过大的文件后重试。'
     case DugiteError.HexBranchNameRejected:

@@ -242,7 +242,7 @@ export class TutorialPanel extends React.Component<
             onSummaryClick={this.onStepSummaryClick}
           >
             <p className="description">
-              拉取请求，就是给某个项目提出的一份改进提案。给别人的储存库发起一个拉取请求，然后他们就能在审查后决定是否接受你的改进。这里的教程演示储存库是私有的，发起的拉取请求不会公开。
+              拉取请求，就是给某个项目提出的一份改进提案。给别人的储存库发起一个拉取请求，然后他们就能在审核后决定是否接受你的改进。这里的教程演示储存库是私有的，发起的拉取请求不会公开。
             </p>
             <div className="action">
               <Button onClick={this.openPullRequest} role="link">
