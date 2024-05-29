@@ -521,7 +521,7 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.findText()
       case 'show-app-error':
         return this.props.dispatcher.postError(
-          new Error('Test Error - to use default error handler' + uuid())
+          new Error('错误测试 - 使用默认的错误处理方式' + uuid())
         )
       case 'increase-active-resizable-width':
         return this.resizeActiveResizable('increase-active-resizable-width')
@@ -1597,9 +1597,7 @@ export class App extends React.Component<IAppProps, IAppState> {
       // Should not be possible... but if it does we want to know about it.
       sendNonFatalException(
         'PopupNoId',
-        new Error(
-          `Attempted to open a popup of type '${popup.type}' without an Id`
-        )
+        new Error(`尝试打开一个类型为 '${popup.type}' 的缺少 ID 的弹窗`)
       )
       return null
     }
@@ -2522,9 +2520,7 @@ export class App extends React.Component<IAppProps, IAppState> {
           // This shouldn't happen..
           sendNonFatalException(
             'FailedToStartPullRequest',
-            new Error(
-              'Failed to start pull request because pull request state was null'
-            )
+            new Error('无法开启拉取请求，拉取请求状态为空')
           )
           return null
         }
@@ -3526,9 +3522,7 @@ export class App extends React.Component<IAppProps, IAppState> {
     if (tip.kind === TipState.Valid) {
       currentBranch = tip.branch
     } else {
-      throw new Error(
-        'Tip is not in a valid state, which is required to start the cherry-pick flow'
-      )
+      throw new Error('无法启动摘取流程，分支顶端状态无效')
     }
 
     this.props.dispatcher.initializeMultiCommitOperation(
