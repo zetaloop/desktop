@@ -3647,5 +3647,5 @@ export class App extends React.Component<IAppProps, IAppState> {
 }
 
 function NoRepositorySelected() {
-  return <div className="panel blankslate">No repository selected</div>
+  return <div className="panel blankslate">未选择储存库</div>
 }
