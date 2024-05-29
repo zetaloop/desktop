@@ -301,7 +301,7 @@ export class CreateBranch extends React.Component<
       return this.props.headerText
     }
 
-    return __DARWIN__ ? 'Create a Branch' : 'Create a branch'
+    return __DARWIN__ ? '创建分支' : '创建分支'
   }
 
   private getOkButtonText = (): string => {
@@ -309,7 +309,7 @@ export class CreateBranch extends React.Component<
       return this.props.okButtonText
     }
 
-    return __DARWIN__ ? 'Create Branch' : 'Create branch'
+    return __DARWIN__ ? '创建分支' : '创建分支'
   }
 
   private onBranchNameChange = (name: string) => {
@@ -324,7 +324,7 @@ export class CreateBranch extends React.Component<
 
     const currentError = alreadyExists
       ? {
-          error: new Error(`A branch named ${branchName} already exists.`),
+          error: new Error(`已存在同名分支 ${branchName}。`),
           isWarning: false,
         }
       : null
