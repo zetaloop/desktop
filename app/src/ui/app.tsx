@@ -1564,7 +1564,7 @@ export class App extends React.Component<IAppProps, IAppState> {
   ) => {
     showCertificateTrustDialog(
       certificate,
-      '无法安全地连接到服务器，因为其证书不可信任。可能有攻击者试图窃取您的数据。\n\n如需忽略风险继续连接，请选择“总是信任”该证书，然后重试。'
+      '无法安全地连接到服务器，因为其证书不可信任。可能有攻击者试图窃取您的数据。\n\n如需忽略风险继续连接，请选择 "总是信任" 该证书，然后重试。'
     )
   }
 
