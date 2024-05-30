@@ -290,7 +290,7 @@ export class PullRequestList extends React.Component<
   private renderListHeader = () => {
     return (
       <div className="filter-list-group-header">
-        Pull requests in {this.getRepositoryName()}
+        {this.getRepositoryName()} 的拉取请求
       </div>
     )
   }
@@ -329,7 +329,7 @@ export class PullRequestList extends React.Component<
 
 function getSubtitle(pr: PullRequest) {
   const timeAgo = formatRelative(pr.created.getTime() - Date.now())
-  return `#${pr.pullRequestNumber} 由 ${pr.author} 开启于 ${timeAgo}`
+  return `#${pr.pullRequestNumber} 由 ${pr.author} 开启于${timeAgo}`
 }
 
 function createListItems(
