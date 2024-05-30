@@ -1,6 +1,7 @@
 > [!WARNING]
-> ### 汉化尚未完工，预览版请前往 [Actions 工作流](https://github.com/zetaloop/Desktop/actions) 下载，不定时更新
-> ### 翻译内容全部完成后，将会跟随官方 Beta 版持续发布
+> ### 汉化接近完工，可前往 [发布版](https://github.com/zetaloop/Desktop/releases) 下载尝鲜，不定时更新
+> ### 注意，目前汉化将会被软件自动更新覆盖，以后会有专属更新服务器
+> <i>何时正式发布？<br>1. 有足够的测试表明汉化无缺漏。<br>2. 等我弄完服务器。</i>
 # GitHub Desktop 中文版
 
 [GitHub Desktop](https://desktop.github.com/) 是一个开源的 GitHub 客户端，基于 [Electron](https://www.electronjs.org/) 技术，使用 [React](https://reactjs.org/) 框架，以 [TypeScript](https://www.typescriptlang.org) 编写。
