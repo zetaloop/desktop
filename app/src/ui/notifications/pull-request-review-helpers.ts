@@ -13,7 +13,7 @@ export function getVerbForPullRequestReview(
     case 'APPROVED':
       return '通过'
     case 'CHANGES_REQUESTED':
-      return '请求更改'
+      return '要求您修改'
     case 'COMMENTED':
       return '审核'
   }

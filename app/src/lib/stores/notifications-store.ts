@@ -265,7 +265,7 @@ export class NotificationsStore {
     }
 
     const reviewVerb = getVerbForPullRequestReview(review)
-    const title = `@${review.user.login} ${reviewVerb}{'' if reviewVerb === '请求更改' else '了'}您的拉取请求`
+    const title = `@${review.user.login} ${reviewVerb}{'' if reviewVerb === '要求您修改' else '了'}您的拉取请求`
     const body = `${pullRequest.title} #${
       pullRequest.pullRequestNumber
     }\n${truncateWithEllipsis(review.body, 50)}`
@@ -395,8 +395,8 @@ export class NotificationsStore {
     const pluralChecks = numberOfFailedChecks === 1 ? '个检查' : '个检查'
 
     const shortSHA = shortenSHA(commitSHA)
-    const title = '拉取请求检查失败'
-    const body = `${pullRequest.title} #${pullRequest.pullRequestNumber} (${shortSHA})\n${numberOfFailedChecks}${pluralChecks}不成功。`
+    const title = '拉取请求检查未通过'
+    const body = `${pullRequest.title} #${pullRequest.pullRequestNumber} (${shortSHA})\n${numberOfFailedChecks}${pluralChecks}未通过。`
     const onClick = () => {
       this.statsStore.increment('checksFailedNotificationClicked')
 

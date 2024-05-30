@@ -179,15 +179,15 @@ export class CICheckRunRerunDialog extends React.Component<
     const verb = this.state.nonRerunnable.length !== 1 ? '' : ''
     const warningPrefix =
       this.state.rerunnable.length === 0
-        ? `已经没有${this.props.failedOnly ? '失败的' : ''}检查可以重新运行了`
-        : `已经没有${verb} ${this.state.nonRerunnable.length} ${
-            this.props.failedOnly ? '失败的' : ''
-          }${pluralize}可以重新运行了`
+        ? `已经没有${this.props.failedOnly ? '未通过的' : ''}检查可以重新运行了`
+        : `有${verb} ${this.state.nonRerunnable.length}个${
+            this.props.failedOnly ? '未通过的' : ''
+          }${pluralize}无法重新运行`
     return (
       <div className="non-re-run-info warning-helper-text">
         <Octicon symbol={octicons.alert} />
 
-        {`${warningPrefix}。如果一个检查已经是超过一个月前、相关的检查和其依赖项还没完成，或者设为不允许重启，那么它就不能被重新运行了。`}
+        {`${warningPrefix}。如果一个检查已经过去超过一个月、相关的检查和依赖项还没完成，或者设为不允许重启，那么它就不能被重新运行了。`}
       </div>
     )
   }
@@ -203,7 +203,7 @@ export class CICheckRunRerunDialog extends React.Component<
     }
 
     if (showDescriptor && failedOnly) {
-      descriptor = __DARWIN__ ? '失败的' : '失败的'
+      descriptor = __DARWIN__ ? '未通过的' : '未通过的'
     }
 
     return `重新运行${descriptor}${c}检查${s}`
