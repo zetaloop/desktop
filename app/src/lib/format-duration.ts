@@ -5,10 +5,10 @@ type TimeUnitDescriptor = {
 }
 
 const units: TimeUnitDescriptor[] = [
-  { shortUnit: 'd', longUnit: 'day', ms: 86400000 },
-  { shortUnit: 'h', longUnit: 'hour', ms: 3600000 },
-  { shortUnit: 'm', longUnit: 'minute', ms: 60000 },
-  { shortUnit: 's', longUnit: 'second', ms: 1000 },
+  { shortUnit: '天', longUnit: '天', ms: 86400000 },
+  { shortUnit: '小时', longUnit: '小时', ms: 3600000 },
+  { shortUnit: '分钟', longUnit: '分钟', ms: 60000 },
+  { shortUnit: '秒', longUnit: '秒', ms: 1000 },
 ]
 
 /**
@@ -24,14 +24,14 @@ export const formatPreciseDuration = (ms: number) => {
   ms = Math.abs(ms)
 
   for (const unit of units) {
-    if (parts.length > 0 || ms >= unit.ms || unit.shortUnit === 's') {
+    if (parts.length > 0 || ms >= unit.ms || unit.shortUnit === '秒') {
       const qty = Math.floor(ms / unit.ms)
       ms -= qty * unit.ms
       parts.push(`${qty}${unit.shortUnit}`)
     }
   }
 
-  return parts.join(' ')
+  return parts.join('')
 }
 
 /**
@@ -47,16 +47,12 @@ export const formatLongPreciseDuration = (ms: number) => {
   ms = Math.abs(ms)
 
   for (const unit of units) {
-    if (parts.length > 0 || ms >= unit.ms || unit.shortUnit === 's') {
+    if (parts.length > 0 || ms >= unit.ms || unit.shortUnit === '秒') {
       const qty = Math.floor(ms / unit.ms)
       ms -= qty * unit.ms
       parts.push(`${qty} ${unit.longUnit}`)
     }
   }
 
-  return parts
-    .join('')
-    .replace(/hour/g, '小时')
-    .replace(/minute/g, '分钟')
-    .replace(/second/g, '秒')
+  return parts.join('')
 }
