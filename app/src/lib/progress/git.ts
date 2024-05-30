@@ -340,6 +340,8 @@ function translateLn(line: string): string {
   line = line.replace('Resolving deltas', '正在分析差异')
   line = line.replace('Checking out files', '正在检出文件')
   line = line.replace('Updating files', '正在更新文件')
+  line = line.replace('Submodule', '子模块')
+  line = line.replace('registered for path', '已注册至路径')
   line = line.replace(', done.', ', 完成.')
   line = line.replace(
     /, completed with (\d+) local object[s]?/,
