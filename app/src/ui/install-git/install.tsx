@@ -54,7 +54,7 @@ export class InstallGit extends React.Component<IInstallGitProps, {}> {
             此电脑上没有安装 Git，这样的话您就没法在
             {__DARWIN__ ? '终端' : '终端'}里运行 Git 命令了。
           </p>
-          <p>我们这儿有一份安装指南可以帮助您配置 Git 环境。</p>
+          <p>我们有一份安装指南可以帮助您配置 Git 环境。</p>
         </DialogContent>
         <DialogFooter>
           <OkCancelButtonGroup
