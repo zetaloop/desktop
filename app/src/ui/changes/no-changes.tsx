@@ -461,7 +461,7 @@ export class NoChanges extends React.Component<
 
     const discoverabilityContent = (
       <>
-        Always available in the toolbar for local repositories or{' '}
+        大大的工具栏按钮，或者{' '}
         {this.renderDiscoverabilityKeyboardShortcut(menuItem)}
       </>
     )
@@ -521,7 +521,7 @@ export class NoChanges extends React.Component<
         menuItemId={itemId}
         description={description}
         discoverabilityContent={discoverabilityContent}
-        buttonText="Publish branch"
+        buttonText="发布分支"
         type="primary"
         disabled={!menuItem.enabled}
         onClick={this.onPublishBranchClicked}
