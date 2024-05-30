@@ -10,7 +10,7 @@ interface ITermsAndConditionsProps {
 const contact = 'https://github.com/contact'
 const logos = 'https://github.com/logos'
 const privacyStatement =
-  'https://help.github.com/articles/github-privacy-statement/'
+  'https://docs.github.com/zh/site-policy/privacy-policies/github-general-privacy-statement'
 const license = 'https://creativecommons.org/licenses/by/4.0/'
 
 export class TermsAndConditions extends React.Component<
