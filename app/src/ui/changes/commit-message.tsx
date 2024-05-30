@@ -1288,7 +1288,7 @@ export class CommitMessage extends React.Component<
       <button
         id="commit-message-failure-hint"
         className="commit-message-failure-hint button-component"
-        aria-label={`${ariaLabelPrefix}：提交信息不符合储存库规则${bypassMessage}。点击阅读详情。`}
+        aria-label={`${ariaLabelPrefix}：提交信息违反储存库规则${bypassMessage}。点击阅读详情。`}
         aria-haspopup="dialog"
         aria-expanded={this.state.isRuleFailurePopoverOpen}
         onClick={this.toggleRuleFailurePopover}
