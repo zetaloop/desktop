@@ -330,6 +330,7 @@ function translateLn(line: string): string {
   // Translate Git message to Chinese
   // Ref: git/git/po/zh_CN.po, and realworld test
   line = line.replace('remote: ', '远程端：')
+  line = line.replace('Cloning into', '正在克隆到')
   line = line.replace('Enumerating objects', '正在枚举对象')
   line = line.replace('Counting objects', '正在计算对象数量')
   line = line.replace('Compressing objects', '正在压缩对象')
@@ -338,6 +339,7 @@ function translateLn(line: string): string {
   line = line.replace('Indexing objects', '正在索引对象')
   line = line.replace('Resolving deltas', '正在分析差异')
   line = line.replace('Checking out files', '正在检出文件')
+  line = line.replace('Updating files', '正在更新文件')
   line = line.replace(', done.', ', 完成.')
   line = line.replace(
     /, completed with (\d+) local object[s]?/,
