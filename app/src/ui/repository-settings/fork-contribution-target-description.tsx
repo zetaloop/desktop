@@ -21,11 +21,10 @@ export function ForkSettingsDescription(props: IForkSettingsDescription) {
         显示 <strong>{targetRepository.fullName}</strong> 的拉取请求。
       </li>
       <li>
-        为 <strong>{targetRepository.fullName}</strong> 创建议题。
+        创建 <strong>{targetRepository.fullName}</strong> 的议题。
       </li>
       <li>
-        "打开 GitHub" 将会打开 <strong>{targetRepository.fullName}</strong>{' '}
-        的地址。
+        打开 <strong>{targetRepository.fullName}</strong> 的 GitHub 地址。
       </li>
       <li>
         基于 <strong>{targetRepository.fullName}</strong> 的默认分支来新建分支。
