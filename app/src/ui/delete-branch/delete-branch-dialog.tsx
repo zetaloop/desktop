@@ -51,7 +51,7 @@ export class DeleteBranch extends React.Component<
         <DialogContent>
           <div id="delete-branch-confirmation-message">
             <p>
-              确定要删除 <Ref>{this.props.branch.name}</Ref> 分支吗？
+              确定要删除分支 <Ref>{this.props.branch.name}</Ref> 吗？
             </p>
             <p>该操作不可逆。</p>
 
