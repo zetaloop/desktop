@@ -67,7 +67,7 @@ export class CommitConflictsWarning extends React.Component<
         type={'warning'}
       >
         <DialogContent>
-          <p>若继续提交，您将会把以下有冲突的文件提交进储存库：</p>
+          <p>若继续提交，您将会把以下有冲突的文件提交进仓库：</p>
           {this.renderFiles(this.props.files)}
           <p>确定要提交这些有冲突的文件吗？</p>
         </DialogContent>

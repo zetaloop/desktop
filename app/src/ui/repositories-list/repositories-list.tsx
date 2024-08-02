@@ -290,21 +290,21 @@ export class RepositoriesList extends React.Component<
     return (
       <div className="no-items no-results-found">
         <img src={BlankSlateImage} className="blankslate-image" alt="" />
-        <div className="title">抱歉，找不到该储存库</div>
+        <div className="title">抱歉，找不到该仓库</div>
 
         <div className="protip">
           小技巧！在软件里按{' '}
           <div className="kbd-shortcut">
             <KeyboardShortcut darwinKeys={['⌘', 'O']} keys={['Ctrl', 'O']} />
           </div>{' '}
-          可以添加本地储存库，
+          可以添加本地仓库，
           <div className="kbd-shortcut">
             <KeyboardShortcut
               darwinKeys={['⇧', '⌘', 'O']}
               keys={['Ctrl', 'Shift', 'O']}
             />
           </div>{' '}
-          可以克隆在线储存库
+          可以克隆在线仓库
         </div>
       </div>
     )
@@ -313,15 +313,15 @@ export class RepositoriesList extends React.Component<
   private onNewRepositoryButtonClick = () => {
     const items: IMenuItem[] = [
       {
-        label: __DARWIN__ ? '克隆在线储存库…' : '克隆在线储存库…',
+        label: __DARWIN__ ? '克隆在线仓库…' : '克隆在线仓库…',
         action: this.onCloneRepository,
       },
       {
-        label: __DARWIN__ ? '新建储存库…' : '新建储存库…',
+        label: __DARWIN__ ? '新建仓库…' : '新建仓库…',
         action: this.onCreateNewRepository,
       },
       {
-        label: __DARWIN__ ? '添加本地储存库…' : '添加本地储存库…',
+        label: __DARWIN__ ? '添加本地仓库…' : '添加本地仓库…',
         action: this.onAddExistingRepository,
       },
     ]

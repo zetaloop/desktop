@@ -100,7 +100,7 @@ export class Accounts extends React.Component<IAccountsProps, {}> {
             // focused initially when the dialog is opened.
             buttonClassName={DialogPreferredFocusClassName}
           >
-            <div>登录 GitHub.com 账号来访问您的储存库。</div>
+            <div>登录 GitHub.com 账号来访问您的仓库。</div>
           </CallToAction>
         )
       }
@@ -112,7 +112,7 @@ export class Accounts extends React.Component<IAccountsProps, {}> {
           >
             <div>
               如果您在工作中使用 GitHub 企业版或 AE
-              版账号，登录也可访问工作储存库。
+              版账号，登录也可访问工作仓库。
             </div>
           </CallToAction>
         )

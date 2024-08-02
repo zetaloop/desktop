@@ -321,9 +321,9 @@ export class ChangesList extends React.Component<
       isCommitting || rebaseConflictState !== null || isUncommittableSubmodule
 
     const checkboxTooltip = isUncommittableSubmodule
-      ? '子模块内的改动需要先提交到子模块，才能一起提交到储存库。子模块内的改动尚未提交。'
+      ? '子模块内的改动需要先提交到子模块，才能一起提交到仓库。子模块内的改动尚未提交。'
       : isPartiallyCommittableSubmodule
-      ? '子模块内的改动需要先提交到子模块，才能一起提交到储存库。子模块内还有一些改动尚未提交。'
+      ? '子模块内的改动需要先提交到子模块，才能一起提交到仓库。子模块内还有一些改动尚未提交。'
       : undefined
 
     return (

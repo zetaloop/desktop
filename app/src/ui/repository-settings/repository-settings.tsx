@@ -170,7 +170,7 @@ export class RepositorySettings extends React.Component<
     return (
       <Dialog
         id="repository-settings"
-        title={__DARWIN__ ? '储存库设置' : '储存库设置'}
+        title={__DARWIN__ ? '仓库设置' : '仓库设置'}
         onDismissed={this.props.onDismissed}
         onSubmit={this.onSubmit}
         disabled={this.state.disabled}

@@ -78,17 +78,17 @@ export class TutorialDone extends React.Component<ITutorialDoneProps, {}> {
               image={TelescopeOcticon}
             />
             <SuggestedAction
-              title="创建新的储存库"
+              title="创建新的仓库"
               description="开启一个全新的项目"
-              buttonText={__DARWIN__ ? '新建储存库' : '新建储存库'}
+              buttonText={__DARWIN__ ? '新建仓库' : '新建仓库'}
               onClick={this.onCreateNewRepository}
               type="normal"
               image={PlusOcticon}
             />
             <SuggestedAction
-              title="添加本地储存库"
+              title="添加本地仓库"
               description="在 GitHub Desktop 上继续现有的工作"
-              buttonText={__DARWIN__ ? '添加储存库' : '添加储存库'}
+              buttonText={__DARWIN__ ? '添加仓库' : '添加仓库'}
               onClick={this.onAddExistingRepository}
               type="normal"
               image={FileDirectoryOcticon}

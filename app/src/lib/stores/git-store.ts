@@ -662,7 +662,7 @@ export class GitStore extends BaseStore {
     )
 
     if (status == null) {
-      throw new Error(`无法撤回提交，储存库工作目录中的文件过多。`)
+      throw new Error(`无法撤回提交，仓库工作目录中的文件过多。`)
     }
 
     const paths = status.workingDirectory.files
@@ -1315,7 +1315,7 @@ export class GitStore extends BaseStore {
       return
     }
 
-    const url = forceUnwrap('父储存库已全部加载', parent.cloneURL)
+    const url = forceUnwrap('父仓库已全部加载', parent.cloneURL)
 
     this._upstreamRemote =
       (await this.performFailableOperation(() =>
@@ -1620,14 +1620,14 @@ export class GitStore extends BaseStore {
    */
   public async updateExistingUpstreamRemote(): Promise<void> {
     const gitHubRepository = forceUnwrap(
-      '要更新上游远程，当前储存库必须是一个 GitHub 储存库',
+      '要更新上游远程，当前仓库必须是一个 GitHub 仓库',
       this.repository.gitHubRepository
     )
     const parent = forceUnwrap(
-      '要更新上游远程，当前储存库必须有父储存库',
+      '要更新上游远程，当前仓库必须有父仓库',
       gitHubRepository.parent
     )
-    const url = forceUnwrap('父储存库总是加载完全的', parent.cloneURL)
+    const url = forceUnwrap('父仓库总是加载完全的', parent.cloneURL)
 
     await this.performFailableOperation(() =>
       setRemoteURL(this.repository, UpstreamRemoteName, url)

@@ -11,13 +11,13 @@ interface ICloneArgs extends mriArgv {
 
 export const command: ICommandModule = {
   command: 'clone <网址|标识符>',
-  description: '克隆一个储存库',
+  description: '克隆一个仓库',
   args: [
     {
       name: '网址|标识符',
       required: true,
       description:
-        '储存库的 URL 地址，或者 GitHub "用户/储存库名" 格式的标识符',
+        '仓库的 URL 地址，或者 GitHub "用户/仓库名" 格式的标识符',
       type: 'string',
     },
   ],

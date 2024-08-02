@@ -95,20 +95,20 @@ export function buildDefaultMenu({
     label: __DARWIN__ ? '文件' : '文件',
     submenu: [
       {
-        label: __DARWIN__ ? '新建储存库…' : '新建储存库…',
+        label: __DARWIN__ ? '新建仓库…' : '新建仓库…',
         id: 'new-repository',
         click: emit('create-repository'),
         accelerator: 'CmdOrCtrl+N',
       },
       separator,
       {
-        label: __DARWIN__ ? '添加本地储存库…' : '添加本地储存库…',
+        label: __DARWIN__ ? '添加本地仓库…' : '添加本地仓库…',
         id: 'add-local-repository',
         accelerator: 'CmdOrCtrl+O',
         click: emit('add-local-repository'),
       },
       {
-        label: __DARWIN__ ? '克隆在线储存库…' : '克隆在线储存库…',
+        label: __DARWIN__ ? '克隆在线仓库…' : '克隆在线仓库…',
         id: 'clone-repository',
         accelerator: 'CmdOrCtrl+Shift+O',
         click: emit('clone-repository'),
@@ -178,7 +178,7 @@ export function buildDefaultMenu({
         click: emit('show-history'),
       },
       {
-        label: __DARWIN__ ? '储存库列表' : '储存库列表',
+        label: __DARWIN__ ? '仓库列表' : '仓库列表',
         id: 'show-repository-list',
         accelerator: 'CmdOrCtrl+T',
         click: emit('choose-repository'),
@@ -275,7 +275,7 @@ export function buildDefaultMenu({
   const pushEventType = isForcePushForCurrentRepository ? 'force-push' : 'push'
 
   template.push({
-    label: __DARWIN__ ? '储存库' : '储存库',
+    label: __DARWIN__ ? '仓库' : '仓库',
     id: 'repository',
     submenu: [
       {
@@ -348,7 +348,7 @@ export function buildDefaultMenu({
       },
       separator,
       {
-        label: __DARWIN__ ? '储存库设置…' : '储存库设置…',
+        label: __DARWIN__ ? '仓库设置…' : '仓库设置…',
         id: 'show-repository-settings',
         click: emit('show-repository-settings'),
       },

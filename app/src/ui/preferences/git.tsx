@@ -51,7 +51,7 @@ export class Git extends React.Component<IGitProps> {
   private renderDefaultBranchSetting() {
     return (
       <div className="default-branch-component">
-        <h2 id="default-branch-heading">新建储存库默认分支名</h2>
+        <h2 id="default-branch-heading">新建仓库默认分支名</h2>
 
         <RefNameTextBox
           initialValue={this.props.defaultBranch}

@@ -94,7 +94,7 @@ export class Appearance extends React.Component<
         return (
           <span>
             <img src={darkThemeImage} alt="" />
-            <span className="theme-value-label">暗色</span>
+            <span className="theme-value-label">深色</span>
           </span>
         )
       case ApplicationTheme.System:
@@ -149,7 +149,7 @@ export class Appearance extends React.Component<
 
     return (
       <div className="appearance-section">
-        <h2 id="diff-heading">{'Diff'}</h2>
+        <h2 id="diff-heading">{'差异'}</h2>
 
         <Select
           value={this.state.selectedTabSize.toString()}
@@ -158,7 +158,7 @@ export class Appearance extends React.Component<
         >
           {availableTabSizes.map(n => (
             <option key={n} value={n}>
-              {n === tabSizeDefault ? `${n} (default)` : n}
+              {n === tabSizeDefault ? `${n} (默认)` : n}
             </option>
           ))}
         </Select>

@@ -387,7 +387,7 @@ export class CreateRepository extends React.Component<
     const status = await getStatus(repository)
     if (status === null) {
       this.props.dispatcher.postError(
-        new Error(`无法创建储存库，因为该目录中新文件过多`)
+        new Error(`无法创建仓库，因为该目录中新文件过多`)
       )
 
       return
@@ -441,9 +441,9 @@ export class CreateRepository extends React.Component<
       <InputWarning
         id="repo-sanitized-name-warning"
         trackedUserInput={this.state.name}
-        ariaLiveMessage={`储存库将会命名为 ${sanitizedName}，空格与无效字符会被替换为横线。`}
+        ariaLiveMessage={`仓库将会命名为 ${sanitizedName}，空格与无效字符会被替换为横线。`}
       >
-        <p>储存库将会命名为 {sanitizedName}</p>
+        <p>仓库将会命名为 {sanitizedName}</p>
         <span className="sr-only">空格与无效字符会被替换为横线。</span>
       </InputWarning>
     )
@@ -535,12 +535,12 @@ export class CreateRepository extends React.Component<
           id="existing-repository-path-error"
           trackedUserInput={this.state.path + this.state.name}
           ariaLiveMessage={
-            '该文件夹已经是 Git 储存库。是否需要直接添加这个储存库？'
+            '该文件夹已经是 Git 仓库。是否需要直接添加这个仓库？'
           }
         >
-          该文件夹已经是 Git 储存库。是否需要直接{' '}
+          该文件夹已经是 Git 仓库。是否需要直接{' '}
           <LinkButton onClick={this.onAddRepositoryClicked}>
-            添加这个储存库
+            添加这个仓库
           </LinkButton>{' '}
           ？
         </InputError>
@@ -602,7 +602,7 @@ export class CreateRepository extends React.Component<
     return (
       <Dialog
         id="create-repository"
-        title={__DARWIN__ ? '创建储存库' : '创建储存库'}
+        title={__DARWIN__ ? '创建仓库' : '创建仓库'}
         loading={this.state.creating}
         onSubmit={this.createRepository}
         onDismissed={this.props.onDismissed}
@@ -614,7 +614,7 @@ export class CreateRepository extends React.Component<
             <TextBox
               value={this.state.name}
               label="名称"
-              placeholder="储存库的名字"
+              placeholder="仓库的名字"
               onValueChanged={this.onNameChanged}
               ariaDescribedBy="existing-repository-path-error repo-sanitized-name-warning"
             />
@@ -634,7 +634,7 @@ export class CreateRepository extends React.Component<
             <TextBox
               value={this.state.path ?? ''}
               label={__DARWIN__ ? '文件夹路径' : '文件夹路径'}
-              placeholder="储存库的位置"
+              placeholder="仓库的位置"
               onValueChanged={this.onPathChanged}
               disabled={readOnlyPath || loadingDefaultDir}
               ariaDescribedBy="existing-repository-path-error"

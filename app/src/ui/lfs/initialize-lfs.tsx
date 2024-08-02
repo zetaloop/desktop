@@ -61,18 +61,18 @@ export class InitializeLFS extends React.Component<IInitializeLFSProps, {}> {
     if (this.props.repositories.length > MaxRepositoriesToList) {
       return (
         <p>
-          这{this.props.repositories.length}个储存库使用了{' '}
+          这{this.props.repositories.length}个仓库使用了{' '}
           <LinkButton uri={LFSURL}>Git LFS</LinkButton>{' '}
-          大文件储存服务。要贡献给这些储存库，需要先初始化 Git
+          大文件储存服务。要贡献给这些仓库，需要先初始化 Git
           LFS，是否现在执行？
         </p>
       )
     } else {
       const plural = this.props.repositories.length !== 1
       const pluralizedRepositories = plural
-        ? '这些储存库使用了'
-        : '该储存库使用了'
-      const pluralizedUse = plural ? '这些储存库' : '它'
+        ? '这些仓库使用了'
+        : '该仓库使用了'
+      const pluralizedUse = plural ? '这些仓库' : '它'
       return (
         <div>
           <p>

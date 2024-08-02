@@ -485,8 +485,8 @@ export class PushPullButton extends React.Component<
     return (
       <ToolbarButton
         {...this.defaultButtonProps()}
-        title="发布储存库"
-        description="将储存库发布到 GitHub"
+        title="发布仓库"
+        description="将仓库发布到 GitHub"
         className="push-pull-button"
         icon={octicons.upload}
         style={ToolbarButtonStyle.Subtitle}

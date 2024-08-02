@@ -990,7 +990,7 @@ export class CommitMessage extends React.Component<
         <CommitWarning icon={CommitWarningIcon.Warning}>
           您没有 <strong>{repository.name}</strong> 的写入权限。是否需要{' '}
           <LinkButton onClick={this.props.onShowCreateForkDialog}>
-            创建储存库复刻
+            创建仓库复刻
           </LinkButton>
           ？
         </CommitWarning>
@@ -1022,7 +1022,7 @@ export class CommitMessage extends React.Component<
             repository={repository.gitHubRepository}
             branch={branch}
           >
-            储存库规则
+            仓库规则
           </RepoRulesetsForBranchLink>
           ，分支{canBypass ? '可能' : ''}无法发布
           {canBypass && '，但是规则允许绕过，请谨慎操作！'}
@@ -1046,7 +1046,7 @@ export class CommitMessage extends React.Component<
             repository={repository.gitHubRepository}
             branch={branch}
           >
-            储存库规则
+            仓库规则
           </RepoRulesetsForBranchLink>{' '}
           要求对提交签名
           {canBypass && '，但是规则允许绕过，请谨慎操作！'}
@@ -1068,7 +1068,7 @@ export class CommitMessage extends React.Component<
             repository={repository.gitHubRepository}
             branch={branch}
           >
-            储存库规则
+            仓库规则
           </RepoRulesetsForBranchLink>{' '}
           {canBypass ? '可能' : ''} 阻止推送
           {canBypass && '，但是规则允许绕过，请谨慎操作！'}
@@ -1102,8 +1102,8 @@ export class CommitMessage extends React.Component<
     }
 
     const header = __DARWIN__
-      ? '提交信息违反储存库规则'
-      : '提交信息违反储存库规则'
+      ? '提交信息违反仓库规则'
+      : '提交信息违反仓库规则'
     return (
       <Popover
         anchor={this.summaryTextInput}
@@ -1288,7 +1288,7 @@ export class CommitMessage extends React.Component<
       <button
         id="commit-message-failure-hint"
         className="commit-message-failure-hint button-component"
-        aria-label={`${ariaLabelPrefix}：提交信息违反储存库规则${bypassMessage}。点击阅读详情。`}
+        aria-label={`${ariaLabelPrefix}：提交信息违反仓库规则${bypassMessage}。点击阅读详情。`}
         aria-haspopup="dialog"
         aria-expanded={this.state.isRuleFailurePopoverOpen}
         onClick={this.toggleRuleFailurePopover}

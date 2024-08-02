@@ -62,7 +62,7 @@ export class Notifications extends React.Component<
             onChange={this.onNotificationsEnabledChanged}
           />
           <p className="git-settings-description">
-            在当前储存库发生重要事件时显示通知。
+            在当前仓库发生重要事件时显示通知。
             {this.renderNotificationHint()}
           </p>
         </div>

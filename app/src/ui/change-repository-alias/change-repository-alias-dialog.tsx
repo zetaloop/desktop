@@ -33,14 +33,14 @@ export class ChangeRepositoryAlias extends React.Component<
     return (
       <Dialog
         id="change-repository-alias"
-        title={__DARWIN__ ? `${verb}储存库别名` : `${verb}储存库别名`}
+        title={__DARWIN__ ? `${verb}仓库别名` : `${verb}仓库别名`}
         ariaDescribedBy="change-repository-alias-description"
         onDismissed={this.props.onDismissed}
         onSubmit={this.changeAlias}
       >
         <DialogContent>
           <p id="change-repository-alias-description">
-            选择储存库 "{nameOf(repository)}" 新的别名。
+            选择仓库 "{nameOf(repository)}" 新的别名。
           </p>
           <p>
             <TextBox
@@ -51,7 +51,7 @@ export class ChangeRepositoryAlias extends React.Component<
           </p>
           {repository.gitHubRepository !== null && (
             <p className="description">
-              这不会影响到 GitHub 上原储存库的名字。
+              这不会影响到 GitHub 上原仓库的名字。
             </p>
           )}
         </DialogContent>

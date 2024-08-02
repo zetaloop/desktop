@@ -231,9 +231,9 @@ export class CommitMessageAvatar extends React.Component<
     const { isGitConfigLocal } = this.state
 
     const location = isGitConfigLocal ? '本地' : '全局'
-    const locationDesc = isGitConfigLocal ? '为您的储存库' : ''
+    const locationDesc = isGitConfigLocal ? '为您的仓库' : ''
     const settingsName = __DARWIN__ ? '设置' : '设置'
-    const settings = isGitConfigLocal ? '储存库设置' : ` Git ${settingsName}`
+    const settings = isGitConfigLocal ? '仓库设置' : ` Git ${settingsName}`
     const buttonText = __DARWIN__ ? '打开 Git 设置' : '打开 Git 设置'
 
     return (
@@ -248,9 +248,9 @@ export class CommitMessageAvatar extends React.Component<
           <p className="secondary-text">
             您也可以在{' '}
             <LinkButton onClick={this.onRepositorySettingsClick}>
-              储存库设置
+              仓库设置
             </LinkButton>{' '}
-            中单独设置在该储存库中使用的邮箱。
+            中单独设置在该仓库中使用的邮箱。
           </p>
         )}
         <Row className="button-row">
@@ -295,9 +295,9 @@ export class CommitMessageAvatar extends React.Component<
           <div className="secondary-text">
             您也可以在{' '}
             <LinkButton onClick={this.onRepositorySettingsClick}>
-              储存库设置
+              仓库设置
             </LinkButton>{' '}
-            中单独设置在该储存库中使用的邮箱。
+            中单独设置在该仓库中使用的邮箱。
           </div>
         </Row>
         <Row className="button-row">

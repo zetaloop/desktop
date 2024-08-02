@@ -129,7 +129,7 @@ export class Publish extends React.Component<IPublishProps, IPublishState> {
     return (
       <Dialog
         id="publish-repository"
-        title={__DARWIN__ ? '发布储存库' : '发布储存库'}
+        title={__DARWIN__ ? '发布仓库' : '发布仓库'}
         onDismissed={this.props.onDismissed}
         onSubmit={this.publishRepository}
         disabled={this.state.publishing}
@@ -230,7 +230,7 @@ export class Publish extends React.Component<IPublishProps, IPublishState> {
       case PublishTab.DotCom:
         return (
           <CallToAction actionTitle={signInTitle} onAction={this.signInDotCom}>
-            <div>登录 GitHub.com 账号来访问您的储存库。</div>
+            <div>登录 GitHub.com 账号来访问您的仓库。</div>
           </CallToAction>
         )
       case PublishTab.Enterprise:
@@ -241,7 +241,7 @@ export class Publish extends React.Component<IPublishProps, IPublishState> {
           >
             <div>
               如果您在工作中使用 GitHub 企业版或 AE
-              版账号，登录也可访问工作储存库。
+              版账号，登录也可访问工作仓库。
             </div>
           </CallToAction>
         )
@@ -259,7 +259,7 @@ export class Publish extends React.Component<IPublishProps, IPublishState> {
       return (
         <DialogFooter>
           <OkCancelButtonGroup
-            okButtonText={__DARWIN__ ? '发布储存库' : '发布储存库'}
+            okButtonText={__DARWIN__ ? '发布仓库' : '发布仓库'}
             okButtonDisabled={disabled}
           />
         </DialogFooter>
@@ -286,7 +286,7 @@ export class Publish extends React.Component<IPublishProps, IPublishState> {
     const tab = this.state.currentTab
     const account = this.getAccountForTab(tab)
     if (!account) {
-      fatalError(`在没登录的情况下发布储存库，简直不可置信！`)
+      fatalError(`在没登录的情况下发布仓库，简直不可置信！`)
     }
 
     const settings = currentTabState.settings

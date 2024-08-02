@@ -38,7 +38,7 @@ export class GitConfig extends React.Component<IGitConfigProps> {
       case GitConfigLocation.Global:
         return '用户的全局 Git 配置文件'
       case GitConfigLocation.Local:
-        return '储存库的本地 Git 配置文件'
+        return '仓库的本地 Git 配置文件'
       default:
         return assertNever(key, `Unknown git config location: ${key}`)
     }
@@ -59,7 +59,7 @@ export class GitConfig extends React.Component<IGitConfigProps> {
     return (
       <DialogContent>
         <div className="advanced-section">
-          <h2 id="git-config-heading">该储存库使用</h2>
+          <h2 id="git-config-heading">该仓库使用</h2>
           <Row>
             <RadioGroup<GitConfigLocation>
               ariaLabelledBy="git-config-heading"

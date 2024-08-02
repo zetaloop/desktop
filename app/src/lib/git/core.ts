@@ -328,11 +328,11 @@ export function getDescriptionForError(
 
 - 您尚未登录您的账户：见 ${menuHint}
 - 您可能需要退出并重新登录来刷新登录令牌。
-- 您没有该储存库的访问权限。
-- 该储存库在 GitHub 上已经被存档，请检查储存库设置来确定您是否仍有权推送提交。
+- 您没有该仓库的访问权限。
+- 该仓库在 GitHub 上已经被存档，请检查仓库设置来确定您是否仍有权推送提交。
 - 使用 SSH 认证时，您的私钥不正确，请检查登录密钥是否已添加到 ssh-agent 并与您的账户相关联。
-- 使用 SSH 认证时，对方公钥不匹配，请检查您的储存库托管服务是否通过了主机密钥验证。
-- 使用账号密码认证时，您可能需要把个人访问令牌作为密码来输入，具体请查阅您的储存库托管服务的文档。`
+- 使用 SSH 认证时，对方公钥不匹配，请检查您的仓库托管服务是否通过了主机密钥验证。
+- 使用账号密码认证时，您可能需要把个人访问令牌作为密码来输入，具体请查阅您的仓库托管服务的文档。`
   }
 
   switch (error) {
@@ -355,13 +355,13 @@ export function getDescriptionForError(
       return '合并出现冲突，请先解决冲突并提交。'
     case DugiteError.HTTPSRepositoryNotFound:
     case DugiteError.SSHRepositoryNotFound:
-      return '储存库不存在，可能您没有访问权限，或者它已经被删除或重命名了。'
+      return '仓库不存在，可能您没有访问权限，或者它已经被删除或重命名了。'
     case DugiteError.PushNotFastForward:
-      return '在您上次拉取过后，储存库有更新，您在推送前需要先拉取更新。'
+      return '在您上次拉取过后，仓库有更新，您在推送前需要先拉取更新。'
     case DugiteError.BranchDeletionFailed:
       return '无法删除分支，它可能已经被删掉了。'
     case DugiteError.DefaultBranchDeletionFailed:
-      return `此分支是储存库的默认分支，不可以删除。`
+      return `此分支是仓库的默认分支，不可以删除。`
     case DugiteError.RevertConflicts:
       return '请先合并和提交改动，然后才能完成逆转提交。'
     case DugiteError.EmptyRebasePatch:
@@ -385,13 +385,13 @@ export function getDescriptionForError(
     case DugiteError.NonFastForwardMergeIntoEmptyHead:
       return '该合并不是快进合并，无法在空分支上执行。'
     case DugiteError.PatchDoesNotApply:
-      return '该改动与储存库中的文件冲突。'
+      return '该改动与仓库中的文件冲突。'
     case DugiteError.BranchAlreadyExists:
       return '同名分支已存在。'
     case DugiteError.BadRevision:
       return '无效修订。'
     case DugiteError.NotAGitRepository:
-      return '这不是 Git 储存库。'
+      return '这不是 Git 仓库。'
     case DugiteError.ProtectedBranchForcePush:
       return '该分支受保护，不允许强制推送。'
     case DugiteError.ProtectedBranchRequiresReview:
@@ -419,11 +419,11 @@ export function getDescriptionForError(
     case DugiteError.PathDoesNotExist:
       return '该路径不存在。'
     case DugiteError.InvalidObjectName:
-      return 'Git 储存库中找不到该对象。'
+      return 'Git 仓库中找不到该对象。'
     case DugiteError.OutsideRepository:
-      return '该路径在储存库中无效。'
+      return '该路径在仓库中无效。'
     case DugiteError.LockFileAlreadyExists:
-      return '储存库中已存在锁文件，该操作被阻止。'
+      return '仓库中已存在锁文件，该操作被阻止。'
     case DugiteError.NoMergeToAbort:
       return '当前没有合并操作，不需要停止。'
     case DugiteError.NoExistingRemoteBranch:

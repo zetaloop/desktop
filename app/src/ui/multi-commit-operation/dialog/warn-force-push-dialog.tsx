@@ -60,7 +60,7 @@ export class WarnForcePushDialog extends React.Component<
           </p>
           <p id="warn-force-push-confirmation-message">
             在{operation.toLowerCase()}
-            之后，需要强制推送才能更新远程分支。强制推送会改变远程储存库的历史记录轨迹，可能给其他使用该分支的人带来麻烦。
+            之后，需要强制推送才能更新远程分支。强制推送会改变远程仓库的历史记录轨迹，可能给其他使用该分支的人带来麻烦。
           </p>
           <div>
             <Checkbox
