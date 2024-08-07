@@ -1,4 +1,4 @@
-name: CI
+name: 打包
 
 on:
   push:
