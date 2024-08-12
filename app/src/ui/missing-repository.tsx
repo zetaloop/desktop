@@ -113,17 +113,15 @@ export class MissingRepository extends React.Component<
         <UiView id="missing-repository-view">
           <div className="title-container">
             <div className="title">
-              {this.props.repository.name} is potentially unsafe
+              {this.props.repository.name}可能不安全
             </div>
             <div className="details">
               <p>
-                The Git repository at <Ref>{unsafePath}</Ref> appears to be
-                owned by another user on your machine. Adding untrusted
-                repositories may automatically execute files in the repository.
+                位于 <Ref>{unsafePath}</Ref> 的 Git 仓库似乎是由您机器上的
+                另一个用户拥有。添加不受信任的仓库可能会自动执行该仓库中的文件。
               </p>
               <p>
-                If you trust the owner of the directory you can add an exception
-                for this directory in order to continue.
+                如果您信任该目录的所有者，可以为该目录添加一个例外，以便继续操作。
               </p>
             </div>
           </div>
@@ -140,7 +138,7 @@ export class MissingRepository extends React.Component<
           <div className="details">
             最后保存于 {' '}
             <span className="path">{this.props.repository.path}</span>.{' '}
-            <LinkButton onClick={this.checkAgain}>重新&nbsp;检查。</LinkButton>
+            <LinkButton onClick={this.checkAgain}>重新检查。</LinkButton>
           </div>
         </div>
 
