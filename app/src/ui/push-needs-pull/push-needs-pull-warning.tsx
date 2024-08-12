@@ -31,7 +31,7 @@ export class PushNeedsPullWarning extends React.Component<
     return (
       <Dialog
         title={
-          __DARWIN__ ? 'Newer Commits on Remote' : 'Newer commits on remote'
+          __DARWIN__ ? '远程更新提交' : '远程更新提交'
         }
         dismissDisabled={this.state.isLoading}
         disabled={this.state.isLoading}
@@ -42,15 +42,13 @@ export class PushNeedsPullWarning extends React.Component<
       >
         <DialogContent>
           <p>
-            Desktop is unable to push commits to this branch because there are
-            commits on the remote that are not present on your local branch.
-            Fetch these new commits before pushing in order to reconcile them
-            with your local commits.
+            Desktop 无法将提交推送到这个分支，因为远程分支上有一些提交不在您的本地分支上。
+            在推送之前，请先获取这些新提交，以便与您的本地提交进行协调。
           </p>
         </DialogContent>
         <DialogFooter>
           <OkCancelButtonGroup
-            okButtonText="Fetch"
+            okButtonText="获取更新"
             okButtonDisabled={this.state.isLoading}
           />
         </DialogFooter>
