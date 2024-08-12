@@ -3,7 +3,7 @@ name: 打包
 on:
   push:
     branches:
-      - development
+      - l10n-test
   pull_request:
   workflow_call:
     inputs:
