@@ -525,7 +525,7 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.findText()
       case 'show-app-error':
         return this.props.dispatcher.postError(
-          new Error('错误测试 - 使用默认的错误处理方式' + uuid())
+          new Error('错误测试 - 使用默认的错误处理方式 ' + uuid())
         )
       case 'increase-active-resizable-width':
         return this.resizeActiveResizable('increase-active-resizable-width')
