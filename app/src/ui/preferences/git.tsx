@@ -63,8 +63,8 @@ export class Git extends React.Component<IGitProps> {
 
         <p id="default-branch-description" className="git-settings-description">
           GitHub 的默认分支名是 <Ref>main</Ref>
-          。您可能因为工作流程不同，或者某些软件依赖以前的默认分支名{' '}
-          <Ref>master</Ref>，而需要修改。
+          。如果您的开发规范有特殊要求，或某些工具仍依赖旧的默认分支名{' '}
+          <Ref>master</Ref>，可以在此设定所需名称。
         </p>
 
         <p className="git-settings-description">
