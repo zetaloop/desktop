@@ -80,7 +80,8 @@ export class DiffContentsWarning extends React.Component<IDiffContentsWarningPro
         const { lineEndingsChange } = item
         return (
           <>
-            换行符从 '{lineEndingsChange.from}' 变为 '{lineEndingsChange.to}
+            根据 Git 配置，该文件的换行符将从 '{lineEndingsChange.from}' 转换为
+            '{lineEndingsChange.to}
             '。
           </>
         )
