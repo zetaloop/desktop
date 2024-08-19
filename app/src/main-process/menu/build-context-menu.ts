@@ -29,7 +29,7 @@ function getEditMenuItems(): ReadonlyArray<MenuItem> {
     copy: '复制',
     paste: '粘贴',
     delete: '删除',
-    selectAll: '全选',
+    selectall: '全选',
   }
   for (const item of items) {
     if (item.role && item.role in labelMap) {
