@@ -188,9 +188,7 @@ export class Integrations extends React.Component<
         ))}
         {enableCustomIntegration() && (
           <option key={CustomIntegrationValue} value={CustomIntegrationValue}>
-            {__DARWIN__
-              ? 'Configure Custom Editor…'
-              : 'Configure custom editor…'}
+            {__DARWIN__ ? '配置自定义编辑器…' : '配置自定义编辑器…'}
           </option>
         )}
       </Select>
@@ -207,9 +205,9 @@ export class Integrations extends React.Component<
       <Row>
         <div className="no-options-found">
           <span>
-            No editors found.{' '}
+            没有可用的编辑器。{' '}
             <LinkButton uri={suggestedExternalEditor.url}>
-              Install {suggestedExternalEditor.name}?
+              装个 {suggestedExternalEditor.name}？
             </LinkButton>
           </span>
         </div>
@@ -272,7 +270,7 @@ export class Integrations extends React.Component<
         ))}
         {enableCustomIntegration() && (
           <option key={CustomIntegrationValue} value={CustomIntegrationValue}>
-            {__DARWIN__ ? 'Configure Custom Shell…' : 'Configure custom shell…'}
+            {__DARWIN__ ? '配置自定义终端…' : '配置自定义终端…'}
           </option>
         )}
       </Select>
