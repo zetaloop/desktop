@@ -124,13 +124,13 @@ export class Advanced extends React.Component<
           />
         </div>
         {(this.state.canUseWindowsSSH || enableExternalCredentialHelper()) && (
-          <h2>Network and credentials</h2>
+          <h2>网络与认证</h2>
         )}
         {this.renderSSHSettings()}
         {enableExternalCredentialHelper() && (
           <div className="advanced-section">
             <Checkbox
-              label={'Use Git Credential Manager'}
+              label={'使用 Git 凭据管理器'}
               value={
                 this.state.useExternalCredentialHelper
                   ? CheckboxValue.On
@@ -144,12 +144,10 @@ export class Advanced extends React.Component<
               className="git-settings-description"
             >
               <p>
-                Use{' '}
-                <LinkButton uri="https://gh.io/gcm">
-                  Git Credential Manager{' '}
-                </LinkButton>{' '}
-                for private repositories outside of GitHub.com. This feature is
-                experimental and subject to change.
+                使用{' '}
+                <LinkButton uri="https://gh.io/gcm">Git 凭据管理器</LinkButton>{' '}
+                来访问 GitHub.com
+                之外的私有仓库。这是一个实验性功能，未来可能会调整。
               </p>
             </div>
           </div>
