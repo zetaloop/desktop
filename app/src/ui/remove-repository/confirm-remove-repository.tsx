@@ -65,11 +65,9 @@ export class ConfirmRemoveRepository extends React.Component<
         onSubmit={this.onSubmit}
       >
         <DialogContent>
-          <p>
-            确定要从 GitHub Desktop 删除仓库 "{this.props.repository.name}" 吗？
-          </p>
+          <p>确定要删除仓库 "{this.props.repository.name}" 吗？</p>
           <div className="description">
-            <p>该仓库将从 GitHub Desktop 内删除：</p>
+            <p>该仓库将从 GitHub Desktop 的仓库列表中删除：</p>
             <p>
               <Ref>{this.props.repository.path}</Ref>
             </p>
