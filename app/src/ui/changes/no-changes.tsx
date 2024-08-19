@@ -221,7 +221,7 @@ export class NoChanges extends React.Component<
 
     return (
       <>
-        在{parentMenusText}菜单里，或者{' '}
+        在{parentMenusText}菜单里，或者按{' '}
         {this.renderDiscoverabilityKeyboardShortcut(menuItem)}
       </>
     )
@@ -328,7 +328,8 @@ export class NoChanges extends React.Component<
         在{' '}
         <LinkButton onClick={this.openIntegrationPreferences}>
           {__DARWIN__ ? '设置' : '设置'}
-        </LinkButton>
+        </LinkButton>{' '}
+        里选择要用的编辑器。
       </>
     )
 
@@ -461,7 +462,7 @@ export class NoChanges extends React.Component<
 
     const discoverabilityContent = (
       <>
-        大大的工具栏按钮，或者{' '}
+        请使用上方的工具栏按钮，或者按{' '}
         {this.renderDiscoverabilityKeyboardShortcut(menuItem)}
       </>
     )
@@ -509,7 +510,7 @@ export class NoChanges extends React.Component<
 
     const discoverabilityContent = (
       <>
-        大大的工具栏按钮，或者{' '}
+        请使用上方的工具栏按钮，或者按{' '}
         {this.renderDiscoverabilityKeyboardShortcut(menuItem)}
       </>
     )
@@ -557,7 +558,7 @@ export class NoChanges extends React.Component<
 
     const discoverabilityContent = (
       <>
-        大大的工具栏按钮，或者{' '}
+        请使用上方的工具栏按钮，或者按{' '}
         {this.renderDiscoverabilityKeyboardShortcut(menuItem)}
       </>
     )
@@ -623,7 +624,7 @@ export class NoChanges extends React.Component<
 
     const discoverabilityContent = (
       <>
-        大大的工具栏按钮，或者{' '}
+        请使用上方的工具栏按钮，或者按{' '}
         {this.renderDiscoverabilityKeyboardShortcut(menuItem)}
       </>
     )
@@ -694,7 +695,7 @@ export class NoChanges extends React.Component<
       description: (
         <>
           当前分支（<Ref>{tip.branch.name}</Ref>）已经发布到
-          GitHub。在提出更改前，请先预览该请求将会带来的变化。
+          GitHub。你可以在提出更改前，预览此拉取请求将会带来的变化。
         </>
       ),
       id: PullRequestSuggestedNextAction.PreviewPullRequest,
@@ -757,7 +758,7 @@ export class NoChanges extends React.Component<
           <div className="interstitial-header">
             <div className="text">
               <h1>无本地改动</h1>
-              <p>仓库目前没有待提交的改动，以下是一些建议可供下一步参考。</p>
+              <p>仓库中没有待提交的改动，以下是一些接下来可以尝试的建议。</p>
             </div>
             <img src={PaperStackImage} className="blankslate-image" alt="" />
           </div>
