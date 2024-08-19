@@ -84,13 +84,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # os: [macos-13-xl-arm64, windows-2019]
-        # arch: [x64, arm64]
-        os: [windows-2019]
-        arch: [x64]
+        os: [macos-13, windows-2019]
+        arch: [x64, arm64]
         include:
-          # - os: macos-13-xl-arm64
-          #   friendlyName: macOS
+          - os: macos-13
+            friendlyName: macOS
           - os: windows-2019
             friendlyName: Windows
     timeout-minutes: 60
@@ -164,6 +162,6 @@ jobs:
             dist/GitHub Desktop-${{matrix.arch}}.zip
             dist/GitHubDesktop-*.nupkg
             dist/GitHubDesktopSetup-${{matrix.arch}}.exe
-            # dist/GitHubDesktopSetup-${{matrix.arch}}.msi
+            dist/GitHubDesktopSetup-${{matrix.arch}}.msi
             dist/bundle-size.json
           if-no-files-found: error
