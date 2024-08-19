@@ -121,7 +121,7 @@ export class PullRequestReview extends React.Component<
       />
     )
 
-    const openInBrowserText = __DARWIN__ ? '在浏览器中打开' : '在浏览器中打开'
+    const openInBrowserText = __DARWIN__ ? '打开浏览器' : '打开浏览器'
 
     return (
       <Row>
