@@ -197,7 +197,8 @@ const renderManualConflictedFile: React.FunctionComponent<{
     if (entry.them === GitStatusEntry.Deleted && theirBranch !== undefined) {
       targetBranch = theirBranch
     }
-    conflictTypeString = `文件在${targetBranch}不存在。`
+    conflictTypeString = `文件在 ${targetBranch} 不存在。` // 去除中文间多余空格
+      .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
   }
 
   const content = (
