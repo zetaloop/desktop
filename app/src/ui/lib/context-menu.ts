@@ -15,7 +15,7 @@ export const DefaultEditorLabel = __DARWIN__
   ? '打开默认编辑器'
   : '打开默认编辑器'
 
-export const DefaultShellLabel = __DARWIN__ ? 'Open in Shell' : 'Open in shell'
+export const DefaultShellLabel = __DARWIN__ ? '打开终端' : '打开终端'
 
 export const RevealInFileManagerLabel = __DARWIN__
   ? '打开文件位置'
