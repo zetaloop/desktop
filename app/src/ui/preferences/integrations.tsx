@@ -205,7 +205,7 @@ export class Integrations extends React.Component<
       <Row>
         <div className="no-options-found">
           <span>
-            没有可用的编辑器。{' '}
+            没有可用的编辑器。
             <LinkButton uri={suggestedExternalEditor.url}>
               装个 {suggestedExternalEditor.name}？
             </LinkButton>

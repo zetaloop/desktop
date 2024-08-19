@@ -541,7 +541,7 @@ export class CreateRepository extends React.Component<
           该文件夹已经是 Git 仓库。是否需要直接{' '}
           <LinkButton onClick={this.onAddRepositoryClicked}>
             添加这个仓库
-          </LinkButton>{' '}
+          </LinkButton>
           ？
         </InputError>
       </Row>
