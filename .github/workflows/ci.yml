@@ -163,6 +163,6 @@ jobs:
             dist/GitHub Desktop-${{matrix.arch}}.zip
             dist/GitHubDesktop-*.nupkg
             dist/GitHubDesktopSetup-${{matrix.arch}}.exe
-            # dist/GitHubDesktopSetup-${{matrix.arch}}.msi
+            dist/GitHubDesktopSetup-${{matrix.arch}}.msi
             dist/bundle-size.json
           if-no-files-found: error
