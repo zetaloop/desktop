@@ -164,16 +164,16 @@ export class AddExistingRepository extends React.Component<
     const displayedMessage = (
       <>
         <p>
-          该
+          这个
           {repositoryUnsafePath !== convertedPath && (
             <>
               位于 <Ref>{repositoryUnsafePath}</Ref> 的
             </>
           )}
-          仓库属于电脑上的另一位用户。添加不受信任的仓库可能会自动执行其中的文件。
+          仓库属于您电脑上的其他用户。添加一个不安全的仓库可能会让其中的未知文件被自动运行。
         </p>
         <p>
-          如果您信任这位用户，可以{' '}
+          如果您确定该仓库是安全的，可以{' '}
           <LinkButton onClick={this.onTrustDirectory}>
             把文件夹添加到信任列表
           </LinkButton>
@@ -182,8 +182,8 @@ export class AddExistingRepository extends React.Component<
       </>
     )
 
-    const screenReaderMessage = `该仓库属于电脑上的另一位用户。添加不受信任的仓库可能会自动执行其中的文件。
-      如果您信任这位用户，可以把文件夹添加到信任列表，以便继续操作。`
+    const screenReaderMessage = `该仓库属于您电脑上的其他用户。添加一个不安全的仓库可能会让其中的未知文件被自动运行。
+      如果您确定该仓库是安全的，可以把文件夹添加到信任列表，以便继续操作。`
 
     return { screenReaderMessage, displayedMessage }
   }
