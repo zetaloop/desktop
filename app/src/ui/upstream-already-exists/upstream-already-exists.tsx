@@ -28,11 +28,11 @@ export class UpstreamAlreadyExists extends React.Component<IUpstreamAlreadyExist
   public render() {
     const name = this.props.repository.name
     const gitHubRepository = forceUnwrap(
-      '储存库需要存在于 GitHub 上，才能添加上游远程',
+      '仓库需要存在于 GitHub 上，才能添加上游远程',
       this.props.repository.gitHubRepository
     )
     const parent = forceUnwrap(
-      '储存库需要有一个复刻父储存库，才能添加上游远程',
+      '仓库需要有一个复刻父仓库，才能添加上游远程',
       gitHubRepository.parent
     )
     const parentName = parent.fullName
@@ -47,8 +47,8 @@ export class UpstreamAlreadyExists extends React.Component<IUpstreamAlreadyExist
       >
         <DialogContent>
           <p>
-            储存库 <Ref>{name}</Ref> 是 <Ref>{parentName}</Ref> 的复刻，但其{' '}
-            <Ref>{UpstreamRemoteName}</Ref> 上游远程却已经指向了其他储存库。
+            仓库 <Ref>{name}</Ref> 是 <Ref>{parentName}</Ref> 的复刻，但其{' '}
+            <Ref>{UpstreamRemoteName}</Ref> 上游远程却已经指向了其他仓库。
           </p>
           <ul>
             <li>
@@ -58,7 +58,7 @@ export class UpstreamAlreadyExists extends React.Component<IUpstreamAlreadyExist
               复刻来源: <Ref>{replacementURL}</Ref>
             </li>
           </ul>
-          <p>您想把该储存库的上游改为复刻来源吗？</p>
+          <p>您想把该仓库的上游改为复刻来源吗？</p>
         </DialogContent>
         <DialogFooter>
           <OkCancelButtonGroup

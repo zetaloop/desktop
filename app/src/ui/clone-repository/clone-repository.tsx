@@ -249,7 +249,7 @@ export class CloneRepository extends React.Component<
     return (
       <Dialog
         className="clone-repository"
-        title={__DARWIN__ ? '克隆在线储存库' : '克隆在线储存库'}
+        title={__DARWIN__ ? '克隆在线仓库' : '克隆在线仓库'}
         onSubmit={this.clone}
         onDismissed={this.props.onDismissed}
         loading={this.state.loading}
@@ -491,7 +491,7 @@ export class CloneRepository extends React.Component<
       case CloneRepositoryTab.DotCom:
         return (
           <CallToAction actionTitle={signInTitle} onAction={this.signInDotCom}>
-            <div>登录 GitHub.com 账号来访问您的储存库。</div>
+            <div>登录 GitHub.com 账号来访问您的仓库。</div>
           </CallToAction>
         )
       case CloneRepositoryTab.Enterprise:
@@ -502,7 +502,7 @@ export class CloneRepository extends React.Component<
           >
             <div>
               如果您在工作中使用 GitHub 企业版或 AE
-              版账号，登录也可访问工作储存库。
+              版账号，登录也可访问工作仓库。
             </div>
           </CallToAction>
         )
@@ -736,7 +736,7 @@ export class CloneRepository extends React.Component<
 
     if (!cloneInfo) {
       const error = new Error(
-        `找不到该储存库。请检查您是否已登录、网络是否畅通、网址有没有输错。`
+        `找不到该仓库。请检查您是否已登录、网络是否畅通、网址有没有输错。`
       )
       this.setState({ loading: false })
       this.setSelectedTabState({ error })

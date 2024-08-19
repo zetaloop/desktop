@@ -140,7 +140,7 @@ export class AddExistingRepository extends React.Component<
     }
 
     const msg =
-      '该文件夹是一个裸储存库，也就是只有版本控制记录，而没有具体的文件。目前不支持裸储存库。'
+      '该文件夹是一个裸仓库，也就是只有版本控制记录，而没有具体的文件。目前不支持裸仓库。'
 
     return { screenReaderMessage: msg, displayedMessage: msg }
   }
@@ -170,7 +170,7 @@ export class AddExistingRepository extends React.Component<
               位于 <Ref>{repositoryUnsafePath}</Ref> 的
             </>
           )}
-          储存库属于电脑上的另一位用户。添加不受信任的储存库可能会自动执行其中的文件。
+          仓库属于电脑上的另一位用户。添加不受信任的仓库可能会自动执行其中的文件。
         </p>
         <p>
           如果您信任这位用户，可以{' '}
@@ -182,7 +182,7 @@ export class AddExistingRepository extends React.Component<
       </>
     )
 
-    const screenReaderMessage = `该储存库属于电脑上的另一位用户。添加不受信任的储存库可能会自动执行其中的文件。
+    const screenReaderMessage = `该仓库属于电脑上的另一位用户。添加不受信任的仓库可能会自动执行其中的文件。
       如果您信任这位用户，可以把文件夹添加到信任列表，以便继续操作。`
 
     return { screenReaderMessage, displayedMessage }
@@ -195,11 +195,11 @@ export class AddExistingRepository extends React.Component<
 
     const displayedMessage = (
       <>
-        <p>该文件夹不是 Git 储存库。</p>
+        <p>该文件夹不是 Git 仓库。</p>
         <p>
           是否需要在这里{' '}
           <LinkButton onClick={this.onCreateRepositoryClicked}>
-            创建储存库
+            创建仓库
           </LinkButton>{' '}
           ？
         </p>
@@ -207,7 +207,7 @@ export class AddExistingRepository extends React.Component<
     )
 
     const screenReaderMessage =
-      '该文件夹不是 Git 储存库。是否需要在这里创建储存库？'
+      '该文件夹不是 Git 仓库。是否需要在这里创建仓库？'
 
     return { screenReaderMessage, displayedMessage }
   }
@@ -244,7 +244,7 @@ export class AddExistingRepository extends React.Component<
     return (
       <Dialog
         id="add-existing-repository"
-        title={__DARWIN__ ? '添加本地储存库' : '添加本地储存库'}
+        title={__DARWIN__ ? '添加本地仓库' : '添加本地仓库'}
         onSubmit={this.addRepository}
         onDismissed={this.props.onDismissed}
         loading={this.state.isTrustingRepository}
@@ -254,7 +254,7 @@ export class AddExistingRepository extends React.Component<
             <TextBox
               value={this.state.path}
               label={__DARWIN__ ? '文件夹路径' : '文件夹路径'}
-              placeholder="储存库的位置"
+              placeholder="仓库的位置"
               onValueChanged={this.onPathChanged}
               ariaDescribedBy="add-existing-repository-path-error"
             />

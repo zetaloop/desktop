@@ -164,7 +164,7 @@ export class TutorialPanel extends React.Component<
             onSummaryClick={this.onStepSummaryClick}
           >
             <p className="description">
-              {`有了不同分支，您就可以同时处理一个储存库里各个功能的开发。要新建一个分支，请点击窗口顶部 "分支" 菜单栏，然后选择 "${
+              {`有了不同分支，您就可以同时处理一个仓库里各个功能的开发。要新建一个分支，请点击窗口顶部 "分支" 菜单栏，然后选择 "${
                 __DARWIN__ ? '新建分支' : '新建分支'
               }"。`}
             </p>
@@ -184,7 +184,7 @@ export class TutorialPanel extends React.Component<
             onSummaryClick={this.onStepSummaryClick}
           >
             <p className="description">
-              在编辑器里打开该储存库，编辑
+              在编辑器里打开该仓库，编辑
               {` `}
               <Ref>README.md</Ref>
               {` `}
@@ -224,9 +224,9 @@ export class TutorialPanel extends React.Component<
             onSummaryClick={this.onStepSummaryClick}
           >
             <p className="description">
-              将储存库发布到 GitHub 将会触发一次 "推送"，也就是上传您的提交到
+              将仓库发布到 GitHub 将会触发一次 "推送"，也就是上传您的提交到
               GitHub 上的对应分支，来更新 GitHub
-              那边的进度。点击上方大按钮来发布储存库。
+              那边的进度。点击上方大按钮来发布仓库。
             </p>
             <div className="action">
               <KeyboardShortcut darwinKeys={['⌘', 'P']} keys={['Ctrl', 'P']} />
@@ -242,7 +242,7 @@ export class TutorialPanel extends React.Component<
             onSummaryClick={this.onStepSummaryClick}
           >
             <p className="description">
-              拉取请求，就是给某个项目提出的一份改进提案。给别人的储存库发起一个拉取请求，然后他们就能在审核后决定是否接受你的改进。这里的教程演示储存库是私有的，发起的拉取请求不会公开。
+              拉取请求，就是给某个项目提出的一份改进提案。给别人的仓库发起一个拉取请求，然后他们就能在审核后决定是否接受你的改进。这里的教程演示仓库是私有的，发起的拉取请求不会公开。
             </p>
             <div className="action">
               <Button onClick={this.openPullRequest} role="link">

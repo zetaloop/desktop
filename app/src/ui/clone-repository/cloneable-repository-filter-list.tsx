@@ -185,7 +185,7 @@ export class CloneableRepositoryFilterList extends React.PureComponent<ICloneabl
         renderNoItems={this.renderNoItems}
         renderPostFilter={this.renderPostFilter}
         onItemClick={this.props.onItemClicked ? this.onItemClick : undefined}
-        placeholderText={'搜索您的储存库'}
+        placeholderText={'搜索您的仓库'}
         getGroupAriaLabel={this.getGroupAriaLabelGetter(groups)}
       />
     )
@@ -219,7 +219,7 @@ export class CloneableRepositoryFilterList extends React.PureComponent<ICloneabl
   }
 
   private getYourRepositoriesLabel = () => {
-    return __DARWIN__ ? '您的储存库' : '您的储存库'
+    return __DARWIN__ ? '您的仓库' : '您的仓库'
   }
 
   private renderGroupHeader = (identifier: string) => {
@@ -255,7 +255,7 @@ export class CloneableRepositoryFilterList extends React.PureComponent<ICloneabl
   }
 
   private renderPostFilter = () => {
-    const tooltip = '刷新储存库列表'
+    const tooltip = '刷新仓库列表'
 
     return (
       <Button
@@ -281,7 +281,7 @@ export class CloneableRepositoryFilterList extends React.PureComponent<ICloneabl
 
     if (loading && (repositories === null || repositories.length === 0)) {
       return (
-        <div className="no-items loading">{`正在从 ${endpointName} 加载储存库…`}</div>
+        <div className="no-items loading">{`正在从 ${endpointName} 加载仓库…`}</div>
       )
     }
 
@@ -289,7 +289,7 @@ export class CloneableRepositoryFilterList extends React.PureComponent<ICloneabl
       return (
         <div className="no-items no-results-found">
           <div>
-            抱歉，找不到符合 <Ref>{this.props.filterText}</Ref> 的储存库
+            抱歉，找不到符合 <Ref>{this.props.filterText}</Ref> 的仓库
           </div>
         </div>
       )
@@ -299,7 +299,7 @@ export class CloneableRepositoryFilterList extends React.PureComponent<ICloneabl
       <div className="no-items empty-repository-list">
         <div>
           {endpointName} 的账号 <Ref>{this.props.account.login}</Ref>{' '}
-          中没有储存库。如果您刚创建了一个，请点击{' '}
+          中没有仓库。如果您刚创建了一个，请点击{' '}
           <LinkButton onClick={this.refreshRepositories}>刷新列表</LinkButton>。
         </div>
       </div>

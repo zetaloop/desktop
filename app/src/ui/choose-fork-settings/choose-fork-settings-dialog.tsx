@@ -55,7 +55,7 @@ export class ChooseForkSettings extends React.Component<
             <strong>
               {this.props.repository.gitHubRepository.parent.fullName}
             </strong>{' '}
-            储存库
+            仓库
           </>
         ),
         key: ForkContributionTarget.Parent,
@@ -66,7 +66,7 @@ export class ChooseForkSettings extends React.Component<
           <>
             默认将会贡献到{' '}
             <strong>{this.props.repository.gitHubRepository.fullName}</strong>{' '}
-            储存库
+            仓库
           </>
         ),
         key: ForkContributionTarget.Self,
@@ -76,7 +76,7 @@ export class ChooseForkSettings extends React.Component<
     return (
       <Dialog
         id="fork-settings"
-        title="您计划如何使用该储存库复刻？"
+        title="您计划如何使用该仓库复刻？"
         onSubmit={this.onSubmit}
         onDismissed={this.props.onDismissed}
       >

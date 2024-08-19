@@ -181,7 +181,7 @@ export class Prompts extends React.Component<
           <h2 id="show-confirm-dialog-heading">显示确认提示...</h2>
           <div role="group" aria-labelledby="show-confirm-dialog-heading">
             <Checkbox
-              label="删除储存库"
+              label="删除仓库"
               value={
                 this.state.confirmRepositoryRemoval
                   ? CheckboxValue.On

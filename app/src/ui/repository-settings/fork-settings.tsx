@@ -35,7 +35,7 @@ export class ForkSettings extends React.Component<IForkSettingsProps, {}> {
 
     return (
       <DialogContent>
-        <h2 id="fork-usage-heading">将该复刻储存库用作…</h2>
+        <h2 id="fork-usage-heading">将该复刻仓库用作…</h2>
 
         <RadioGroup<ForkContributionTarget>
           ariaLabelledBy="fork-usage-heading"

@@ -436,7 +436,7 @@ export class CreateBranch extends React.Component<
     if (cannotBypass) {
       this.setState({
         currentError: {
-          error: new Error(`分支名称 '${branchName}' 违反储存库规则。`),
+          error: new Error(`分支名称 '${branchName}' 违反仓库规则。`),
           isWarning: false,
         },
       })
@@ -444,7 +444,7 @@ export class CreateBranch extends React.Component<
       this.setState({
         currentError: {
           error: new Error(
-            `分支名称 '${branchName}' 违反储存库规则，但是规则允许绕过，请谨慎操作！`
+            `分支名称 '${branchName}' 违反仓库规则，但是规则允许绕过，请谨慎操作！`
           ),
           isWarning: true,
         },
@@ -541,7 +541,7 @@ export class CreateBranch extends React.Component<
           <Ref>{currentBranchName}</Ref> 分支。
           {defaultBranch?.name === currentBranchName && (
             <>
-              <Ref>{currentBranchName}</Ref> 是储存库的 {defaultBranchLink}。
+              <Ref>{currentBranchName}</Ref> 是仓库的 {defaultBranchLink}。
             </>
           )}
         </div>
@@ -550,7 +550,7 @@ export class CreateBranch extends React.Component<
       const items = [
         {
           title: defaultBranch.name,
-          description: '储存库默认分支。开始制作一些新的东西。',
+          description: '仓库默认分支。开始制作一些新的东西。',
           key: StartPoint.DefaultBranch,
         },
         {
@@ -626,7 +626,7 @@ export class CreateBranch extends React.Component<
     if (isRepositoryWithForkedGitHubRepository(this.props.repository)) {
       return (
         <div className="secondary-text">
-          默认起始分支由储存库的{' '}
+          默认起始分支由仓库的{' '}
           <LinkButton onClick={this.onForkSettingsClick}>
             复刻行为设置
           </LinkButton>{' '}
@@ -642,7 +642,7 @@ export class CreateBranch extends React.Component<
     if (isRepositoryWithForkedGitHubRepository(this.props.repository)) {
       return (
         <span>
-          根据储存库的{' '}
+          根据仓库的{' '}
           <LinkButton onClick={this.onForkSettingsClick}>
             复刻行为设置
           </LinkButton>

@@ -85,9 +85,7 @@ export class PullRequestChecksFailed extends React.Component<
     let okButtonTitle = __DARWIN__ ? '转到拉取请求' : '转到拉取请求'
 
     if (this.props.shouldChangeRepository) {
-      okButtonTitle = __DARWIN__
-        ? '转到储存库和拉取请求'
-        : '转到储存库和拉取请求'
+      okButtonTitle = __DARWIN__ ? '转到仓库和拉取请求' : '转到仓库和拉取请求'
     }
 
     const { pullRequest } = this.props

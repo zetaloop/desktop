@@ -28,7 +28,7 @@ export class UndoCommit extends React.Component<IUndoCommitProps, {}> {
   public render() {
     const disabled =
       this.props.isPushPullFetchInProgress || this.props.isCommitting
-    const title = disabled ? '储存库更新时不可以撤回' : undefined
+    const title = disabled ? '仓库更新时不可以撤回' : undefined
 
     const authorDate = this.props.commit.author.date
     return (

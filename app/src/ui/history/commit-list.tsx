@@ -347,7 +347,7 @@ export class CommitList extends React.Component<
     numUnpushedTags: number
   ) {
     if (isLocalCommit) {
-      return '该提交尚未推送到远程储存库'
+      return '该提交尚未推送到远程仓库'
     }
 
     if (numUnpushedTags > 0) {

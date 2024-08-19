@@ -70,7 +70,7 @@ export class DeleteBranch extends React.Component<
       return (
         <div>
           <p id="delete-branch-confirmation-message-remote">
-            <strong>该分支也存在于远程储存库，一并删除吗？</strong>
+            <strong>该分支也存在于远程仓库，一并删除吗？</strong>
           </p>
           <Checkbox
             label="删除远程分支"

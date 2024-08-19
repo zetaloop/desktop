@@ -57,7 +57,7 @@ export class ConfirmRemoveRepository extends React.Component<
         id="confirm-remove-repository"
         key="remove-repository-confirmation"
         type="warning"
-        title={__DARWIN__ ? '删除储存库' : '删除储存库'}
+        title={__DARWIN__ ? '删除仓库' : '删除仓库'}
         dismissDisabled={isRemovingRepository}
         loading={isRemovingRepository}
         disabled={isRemovingRepository}
@@ -66,11 +66,10 @@ export class ConfirmRemoveRepository extends React.Component<
       >
         <DialogContent>
           <p>
-            确定要从 GitHub Desktop 删除储存库 "{this.props.repository.name}"
-            吗？
+            确定要从 GitHub Desktop 删除仓库 "{this.props.repository.name}" 吗？
           </p>
           <div className="description">
-            <p>该储存库将从 GitHub Desktop 内删除：</p>
+            <p>该仓库将从 GitHub Desktop 内删除：</p>
             <p>
               <Ref>{this.props.repository.path}</Ref>
             </p>

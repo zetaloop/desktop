@@ -98,9 +98,7 @@ export class PullRequestComment extends React.Component<
     let okButtonTitle: undefined | string = undefined
 
     if (shouldChangeRepository) {
-      okButtonTitle = __DARWIN__
-        ? '转到储存库和拉取请求'
-        : '转到储存库和拉取请求'
+      okButtonTitle = __DARWIN__ ? '转到仓库和拉取请求' : '转到仓库和拉取请求'
     } else if (shouldCheckoutBranch) {
       okButtonTitle = __DARWIN__ ? '转到拉取请求' : '转到拉取请求'
     }

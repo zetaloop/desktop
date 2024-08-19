@@ -267,7 +267,7 @@ export class NoChanges extends React.Component<
 
     return this.renderMenuBackedAction(
       'open-working-directory',
-      `在${fileManager}中查看储存库文件`,
+      `在${fileManager}中查看仓库文件`,
       undefined,
       this.onShowInFileManagerClicked
     )
@@ -285,7 +285,7 @@ export class NoChanges extends React.Component<
 
     return this.renderMenuBackedAction(
       'view-repository-on-github',
-      `在浏览器中打开储存库的 GitHub 主页`,
+      `在浏览器中打开仓库的 GitHub 主页`,
       undefined,
       this.onViewOnGitHubClicked
     )
@@ -321,7 +321,7 @@ export class NoChanges extends React.Component<
       return null
     }
 
-    const title = `在代码编辑器中打开储存库`
+    const title = `在代码编辑器中打开仓库`
 
     const description = (
       <>
@@ -469,10 +469,10 @@ export class NoChanges extends React.Component<
     return (
       <MenuBackedSuggestedAction
         key="publish-repository-action"
-        title="将储存库发布到 GitHub"
-        description="该储存库当前储存在电脑上由您独享。如果发布到 GitHub 上，您就可以分享您的代码，与他人合作开发。"
+        title="将仓库发布到 GitHub"
+        description="该仓库当前储存在电脑上由您独享。如果发布到 GitHub 上，您就可以分享您的代码，与他人合作开发。"
         discoverabilityContent={discoverabilityContent}
-        buttonText="发布储存库"
+        buttonText="发布仓库"
         menuItemId={itemId}
         type="primary"
         disabled={!menuItem.enabled}
@@ -757,7 +757,7 @@ export class NoChanges extends React.Component<
           <div className="interstitial-header">
             <div className="text">
               <h1>无本地改动</h1>
-              <p>储存库目前没有待提交的改动，以下是一些建议可供下一步参考。</p>
+              <p>仓库目前没有待提交的改动，以下是一些建议可供下一步参考。</p>
             </div>
             <img src={PaperStackImage} className="blankslate-image" alt="" />
           </div>

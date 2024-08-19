@@ -28,7 +28,7 @@ async function createAPIRepository(account: Account, name: string) {
     return await api.createRepository(
       null,
       name,
-      'GitHub Desktop 教程储存库',
+      'GitHub Desktop 教程仓库',
       true
     )
   } catch (err) {
@@ -47,8 +47,8 @@ async function createAPIRepository(account: Account, name: string) {
           throw new Error(
             `您在 ${friendlyEndpointName(
               account
-            )} 的账号上已经有一个名为 "${name}" 的储存库了。\n\n` +
-              '请删除那个储存库再试一次。'
+            )} 的账号上已经有一个名为 "${name}" 的仓库了。\n\n` +
+              '请删除那个仓库再试一次。'
           )
         }
       }
@@ -65,7 +65,7 @@ async function pushRepo(
   remoteBranchName: string,
   progressCb: (title: string, value: number, description?: string) => void
 ) {
-  const pushTitle = `推送储存库到 ${friendlyEndpointName(account)}`
+  const pushTitle = `推送仓库到 ${friendlyEndpointName(account)}`
   progressCb(pushTitle, 0)
 
   const pushOpts = await executionOptionsWithProgress(
@@ -103,7 +103,7 @@ export async function createTutorialRepository(
   progressCb: (title: string, value: number, description?: string) => void
 ) {
   const endpointName = friendlyEndpointName(account)
-  progressCb(`在 ${endpointName} 上创建储存库`, 0)
+  progressCb(`在 ${endpointName} 上创建仓库`, 0)
 
   if (await pathExists(path)) {
     throw new Error(
@@ -113,7 +113,7 @@ export async function createTutorialRepository(
 
   const repo = await createAPIRepository(account, name)
   const branch = repo.default_branch ?? (await getDefaultBranch())
-  progressCb('初始化本地储存库', 0.2)
+  progressCb('初始化本地仓库', 0.2)
 
   await mkdir(path, { recursive: true })
 
@@ -139,7 +139,7 @@ export async function createTutorialRepository(
     progressCb(title, 0.3 + value * 0.6, description)
   })
 
-  progressCb('完成教程储存库', 0.9)
+  progressCb('完成教程仓库', 0.9)
 
   return repo
 }

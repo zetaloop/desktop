@@ -8,11 +8,11 @@ import { parseRemote } from '../../lib/remote-parsing'
 export const command: ICommandModule = {
   command: 'open <路径>',
   aliases: ['<路径>'],
-  description: '用 GitHub Desktop 打开一个 git 储存库',
+  description: '用 GitHub Desktop 打开一个 git 仓库',
   args: [
     {
       name: '路径',
-      description: '储存库文件夹路径',
+      description: '仓库文件夹路径',
       type: 'string',
       required: false,
     },

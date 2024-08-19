@@ -84,7 +84,7 @@ export class SubmoduleDiff extends React.Component<ISubmoduleDiffProps> {
     return this.renderSubmoduleDiffItem(
       { octicon: octicons.info, className: 'info-icon' },
       <>
-        该子模块基于储存库{' '}
+        该子模块基于仓库{' '}
         <LinkButton
           uri={`https://${repoIdentifier.hostname}/${repoIdentifier.owner}/${repoIdentifier.name}`}
         >
@@ -101,7 +101,7 @@ export class SubmoduleDiff extends React.Component<ISubmoduleDiffProps> {
     const { oldSHA, newSHA } = diff
 
     const verb = readOnly ? '' : ''
-    const suffix = readOnly ? '。' : '，该改动可以提交到父储存库。'
+    const suffix = readOnly ? '。' : '，该改动可以提交到父仓库。'
 
     if (oldSHA !== null && newSHA !== null) {
       return this.renderSubmoduleDiffItem(
@@ -163,7 +163,7 @@ export class SubmoduleDiff extends React.Component<ISubmoduleDiffProps> {
       { octicon: octicons.fileDiff, className: 'untracked-icon' },
       <>
         子模块有{changes}
-        。这些改动需要先在子储存库中提交，然后才可以保存到当前的父储存库中。
+        。这些改动需要先在子仓库中提交，然后才可以保存到当前的父仓库中。
       </>
     )
   }
@@ -191,9 +191,9 @@ export class SubmoduleDiff extends React.Component<ISubmoduleDiffProps> {
     return (
       <span>
         <SuggestedAction
-          title="在 Github Desktop 中打开子储存库"
-          description="您可以直接打开子模块的储存库，像往常一样进行修改和提交。"
-          buttonText={__DARWIN__ ? '打开子储存库' : '打开子储存库'}
+          title="在 Github Desktop 中打开子仓库"
+          description="您可以直接打开子模块的仓库，像往常一样进行修改和提交。"
+          buttonText={__DARWIN__ ? '打开子仓库' : '打开子仓库'}
           type="primary"
           onClick={this.onOpenSubmoduleClick}
         />

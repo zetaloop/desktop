@@ -90,7 +90,7 @@ export class Advanced extends React.Component<
         <div className="advanced-section">
           <h2>后台更新</h2>
           <Checkbox
-            label="在储存库列表中显示状态图标"
+            label="在仓库列表中显示状态图标"
             value={
               this.props.repositoryIndicatorsEnabled
                 ? CheckboxValue.On
@@ -104,10 +104,10 @@ export class Advanced extends React.Component<
             className="git-settings-description"
           >
             <p>
-              这些小图标显示了储存库是否有本地和远程的改动，它需要定期获取更新所有储存库。
+              这些小图标显示了仓库是否有本地和远程的改动，它需要定期获取更新所有仓库。
             </p>
             <p>
-              关闭后，就只会定期更新当前选中的储存库。如果您有很多储存库，关掉它可以提升性能。
+              关闭后，就只会定期更新当前选中的仓库。如果您有很多仓库，关掉它可以提升性能。
             </p>
           </div>
         </div>

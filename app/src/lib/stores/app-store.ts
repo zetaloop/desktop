@@ -4041,7 +4041,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   ) {
     this.updateCheckoutProgress(repository, {
       kind: 'checkout',
-      title: `正在刷新${__DARWIN__ ? '储存库' : '储存库'}`,
+      title: `正在刷新${__DARWIN__ ? '仓库' : '仓库'}`,
       description: '正在检出',
       value: 1,
       target: commitish,
@@ -4386,7 +4386,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       branchesState.recentBranches.find(x => x.name !== branchToDelete.name)
 
     if (branchToCheckout === undefined) {
-      throw new Error(`不可能删除储存库里唯一存在的分支。`)
+      throw new Error(`不可能删除仓库里唯一存在的分支。`)
     }
 
     return branchToCheckout
@@ -4436,7 +4436,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       }
 
       if (tip.kind === TipState.Detached) {
-        throw new Error('当前储存库处于游离 HEAD 指针状态。')
+        throw new Error('当前仓库处于游离 HEAD 指针状态。')
       }
 
       if (tip.kind === TipState.Valid) {
@@ -4510,7 +4510,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
           sendNonFatalException(
             'remoteNameMismatch',
             new Error(
-              '分支关联的远程储存库名称与当前尝试操作的远程储存库名称不匹配'
+              '分支关联的远程仓库名称与当前尝试操作的远程仓库名称不匹配'
             )
           )
         }
@@ -4542,9 +4542,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
               })
             })
 
-            const refreshTitle = __DARWIN__
-              ? '正在刷新储存库'
-              : '正在刷新储存库'
+            const refreshTitle = __DARWIN__ ? '正在刷新仓库' : '正在刷新仓库'
             const refreshStartProgress = pushWeight + fetchWeight
 
             this.updatePushPullFetchProgress(repository, {
@@ -4650,7 +4648,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       const remote = gitStore.currentRemote
 
       if (!remote) {
-        throw new Error('该储存库没有远程储存库。')
+        throw new Error('该仓库没有远程仓库。')
       }
 
       const state = this.repositoryStateCache.get(repository)
@@ -4661,7 +4659,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       }
 
       if (tip.kind === TipState.Detached) {
-        throw new Error('当前储存库处于游离 HEAD 指针状态。')
+        throw new Error('当前仓库处于游离 HEAD 指针状态。')
       }
 
       if (tip.kind === TipState.Valid) {
@@ -4745,7 +4743,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
           }
 
           const refreshStartProgress = pullWeight + fetchWeight
-          const refreshTitle = __DARWIN__ ? '正在刷新储存库' : '正在刷新储存库'
+          const refreshTitle = __DARWIN__ ? '正在刷新仓库' : '正在刷新仓库'
 
           this.updatePushPullFetchProgress(repository, {
             kind: 'generic',
@@ -5109,7 +5107,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
           )
         }
 
-        const refreshTitle = __DARWIN__ ? '正在刷新储存库' : '正在刷新储存库'
+        const refreshTitle = __DARWIN__ ? '正在刷新仓库' : '正在刷新仓库'
 
         this.updatePushPullFetchProgress(repository, {
           kind: 'generic',
@@ -5951,7 +5949,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       )
       this.tutorialAssessor.onNewTutorialRepository()
     } else {
-      const error = new Error(`${path} 不是 Git 储存库。`)
+      const error = new Error(`${path} 不是 Git 仓库。`)
       this.emitError(error)
     }
   }
@@ -6042,7 +6040,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
           this.emitError(
             new Error(
-              `无法将储存库文件夹放到${TrashNameLabel}。\n\n通常这是因为储存库文件被其他软件打开和占用了。`
+              `无法将仓库文件夹放到${TrashNameLabel}。\n\n通常这是因为仓库文件被其他软件打开和占用了。`
             )
           )
           return
@@ -6091,10 +6089,10 @@ export class AppStore extends TypedBaseStore<IAppState> {
     invalidPaths: ReadonlyArray<string>
   ): string {
     if (invalidPaths.length === 1) {
-      return `${invalidPaths} 不是一个 Git 储存库。`
+      return `${invalidPaths} 不是一个 Git 仓库。`
     }
 
-    return `以下路径不是 Git 储存库：\n\n${invalidPaths
+    return `以下路径不是 Git 仓库：\n\n${invalidPaths
       .slice(0, MaxInvalidFoldersToDisplay)
       .map(path => `- ${path}`)
       .join('\n')}${
@@ -6516,7 +6514,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       this.emitError(
         new Error(
           `在远程端 '${remote.name}' 中找不到分支 '${headRefName}'。` +
-            `通常可能是因为 PR 作者从他们的复刻储存库里删掉了该分支。`
+            `通常可能是因为 PR 作者从他们的复刻仓库里删掉了该分支。`
         )
       )
       return
@@ -6850,7 +6848,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       if (err instanceof GitError) {
         this.emitError(err)
       } else {
-        this.emitError(new Error(`无法创建教程储存库。\n\n${err.message}`))
+        this.emitError(new Error(`无法创建教程仓库。\n\n${err.message}`))
       }
     } finally {
       this._closePopup(PopupType.CreateTutorialRepository)
