@@ -563,7 +563,7 @@ export function buildDefaultMenu({
             click: emit('show-app-error'),
           },
           {
-            label: 'Octicons',
+            label: 'Octicons 图标',
             click: emit('show-icon-test-dialog'),
           },
         ],
@@ -578,14 +578,14 @@ export function buildDefaultMenu({
   if (__RELEASE_CHANNEL__ === 'development' || __RELEASE_CHANNEL__ === 'test') {
     if (__WIN32__) {
       helpItems.push(separator, {
-        label: 'Command Line Tool',
+        label: '命令行工具',
         submenu: [
           {
-            label: 'Install',
+            label: '安装',
             click: emit('install-windows-cli'),
           },
           {
-            label: 'Uninstall',
+            label: '卸载',
             click: emit('uninstall-windows-cli'),
           },
         ],
@@ -617,19 +617,19 @@ export function buildDefaultMenu({
             click: emit('show-thank-you-banner'),
           },
           {
-            label: 'Reorder Successful',
+            label: '重排成功',
             click: emit('show-test-reorder-banner'),
           },
           {
-            label: 'Reorder Undone',
+            label: '重排撤销',
             click: emit('show-test-undone-banner'),
           },
           {
-            label: 'Cherry Pick Conflicts',
+            label: '摘取冲突',
             click: emit('show-test-cherry-pick-conflicts-banner'),
           },
           {
-            label: 'Merge Successful',
+            label: '合并成功',
             click: emit('show-test-merge-successful-banner'),
           },
         ],
