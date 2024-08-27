@@ -461,7 +461,8 @@ function calculateConflicts(conflictMarkers: number) {
 
 function editorButtonString(editorName: string | null): string {
   const defaultEditorString = '编辑器'
-  return `打开 ${editorName || defaultEditorString}`
+  return `打开 ${editorName || defaultEditorString}` // 去除中文间多余空格
+    .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
 }
 
 function editorButtonTooltip(editorName: string | null): string | undefined {

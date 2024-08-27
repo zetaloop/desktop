@@ -30,10 +30,12 @@ export const generateRepositoryListContextMenu = (
   const github =
     repository instanceof Repository && repository.gitHubRepository != null
   const openInExternalEditor = config.externalEditorLabel
-    ? `打开 ${config.externalEditorLabel}`
+    ? `打开 ${config.externalEditorLabel}` // 去除中文间多余空格
+        .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
     : DefaultEditorLabel
   const openInShell = config.shellLabel
-    ? `打开 ${config.shellLabel}`
+    ? `打开 ${config.shellLabel}` // 去除中文间多余空格
+        .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
     : DefaultShellLabel
 
   const items: ReadonlyArray<IMenuItem> = [

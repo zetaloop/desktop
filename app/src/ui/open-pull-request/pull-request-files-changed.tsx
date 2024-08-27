@@ -177,7 +177,8 @@ export class PullRequestFilesChanged extends React.Component<
     const isSafeExtension = isSafeFileExtension(extension)
     const openInExternalEditor =
       externalEditorLabel !== undefined
-        ? `打开 ${externalEditorLabel}`
+        ? `打开 ${externalEditorLabel}` // 去除中文间多余空格
+            .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
         : DefaultEditorLabel
 
     const items: IMenuItem[] = [
