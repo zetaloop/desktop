@@ -153,7 +153,7 @@ export class Appearance extends React.Component<
 
         <Select
           value={this.state.selectedTabSize.toString()}
-          label={__DARWIN__ ? '缩进宽度' : '缩进宽度'}
+          label={__DARWIN__ ? '制表符宽度' : '制表符宽度'}
           onChange={this.onSelectedTabSizeChanged}
         >
           {availableTabSizes.map(n => (
