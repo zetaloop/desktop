@@ -139,8 +139,15 @@ export function getUpdatesURL() {
   // original URL without architecture in it (which will still work for
   // compatibility reasons) in case anything goes wrong until we have everything
   // sorted out.
-  const architecturePath = getDistArchitecture() === 'arm64' ? 'arm64/' : ''
-  return `http://localhost:8080/api/deployments/desktop/desktop/${architecturePath}latest?version=${version}&env=${getChannel()}`
+  //const architecturePath = getDistArchitecture() === 'arm64' ? 'arm64/' : ''
+  //return `https://central.github.com/api/deployments/desktop/desktop/${architecturePath}latest?version=${version}&env=${getChannel()}`
+  if (process.platform === 'win32') {
+    return `http://localhost:8080/Desktop-metadata/win32-${getDistArchitecture()}-${getChannel()}-latest.txt`
+  } else if (process.platform === 'darwin') {
+    return `http://localhost:8080/Desktop-metadata/darwin-${getDistArchitecture()}-${getChannel()}-latest.json`
+  } else {
+    throw new Error(`No updates available for platform: ${process.platform}`)
+  }
 }
 
 export function shouldMakeDelta() {
