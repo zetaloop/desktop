@@ -1,5 +1,5 @@
 > [!TIP]
-> This is the community Chinese localization version of GitHub Desktop, please visit [desktop/desktop](https://github.com/desktop/desktop)。<br>
+> This is the community Chinese localized version of GitHub Desktop, please visit [desktop/desktop](https://github.com/desktop/desktop).<br>
 > 这是 GitHub Desktop 的社区汉化版，原版请访问 [desktop/desktop](https://github.com/desktop/desktop)。
 
 # GitHub Desktop 中文版
