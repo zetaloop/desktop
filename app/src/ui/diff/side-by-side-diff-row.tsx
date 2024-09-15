@@ -459,10 +459,7 @@ export class SideBySideDiffRow extends React.Component<
 
           {syntaxHighlightLine(data.content, data.tokens)}
           {data.noNewLineIndicator && (
-            <Octicon
-              symbol={narrowNoNewlineSymbol}
-              title="No newline at end of file"
-            />
+            <Octicon symbol={narrowNoNewlineSymbol} title="文件末尾没有空行" />
           )}
         </div>
       </div>
