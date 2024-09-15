@@ -1619,7 +1619,7 @@ export class SideBySideDiff extends React.Component<
     const { searchResults } = this.state
 
     if (searchQuery?.trim() === '') {
-      this.resetSearch(true, 'No results')
+      this.resetSearch(true, '找不到')
     } else if (searchQuery === this.state.searchQuery && searchResults) {
       this.continueSearch(searchResults, direction)
     } else {
@@ -1636,9 +1636,9 @@ export class SideBySideDiff extends React.Component<
     )
 
     if (searchResults === undefined || searchResults.length === 0) {
-      this.resetSearch(true, `No results for "${searchQuery}"`)
+      this.resetSearch(true, `找不到 "${searchQuery}"`)
     } else {
-      const ariaLiveMessage = `Result 1 of ${searchResults.length} for "${searchQuery}"`
+      const ariaLiveMessage = `查找 "${searchQuery}" 结果${searchResults.length}个中的第1个`
 
       this.scrollToSearchResult(0)
 
@@ -1667,9 +1667,9 @@ export class SideBySideDiff extends React.Component<
       (selectedSearchResult + delta + searchResults.length) %
       searchResults.length
 
-    const ariaLiveMessage = `Result ${selectedSearchResult + 1} of ${
+    const ariaLiveMessage = `查找 "${searchQuery}" 结果${
       searchResults.length
-    } for "${searchQuery}"`
+    }个中的第${selectedSearchResult + 1}个`
 
     this.scrollToSearchResult(selectedSearchResult)
 
