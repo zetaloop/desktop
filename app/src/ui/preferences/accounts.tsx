@@ -112,7 +112,7 @@ export class Accounts extends React.Component<IAccountsProps, {}> {
           >
             <div>
               如果您在工作中使用 GitHub 企业版或 AE
-              版账号，登录也可访问工作仓库。
+              版账号，登录账号即可访问工作仓库。
             </div>
           </CallToAction>
         )
