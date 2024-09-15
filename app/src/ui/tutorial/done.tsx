@@ -63,7 +63,7 @@ export class TutorialDone extends React.Component<ITutorialDoneProps, {}> {
               <h1 ref={this.header}>完成啦！</h1>
               <p>
                 你已经学会 GitHub Desktop
-                的基本用法了！以下是一些建议可供下一步参考。
+                的基本用法了！以下是一些接下来可以尝试的建议。
               </p>
             </div>
             <img src={ClappingHandsImage} className="image" alt="拍手" />
@@ -71,7 +71,7 @@ export class TutorialDone extends React.Component<ITutorialDoneProps, {}> {
           <SuggestedActionGroup>
             <SuggestedAction
               title="探索 GitHub 上的项目"
-              description="对你感兴趣的项目做出贡献吧"
+              description="为你感兴趣的项目做出贡献吧"
               buttonText={__DARWIN__ ? '打开浏览器' : '打开浏览器'}
               onClick={this.openDotcomExplore}
               type="normal"
