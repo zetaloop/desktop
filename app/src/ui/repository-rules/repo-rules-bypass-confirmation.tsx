@@ -27,30 +27,26 @@ export class RepoRulesBypassConfirmation extends React.Component<
     return (
       <Dialog
         id="repo-rules-bypass-confirmation"
-        title={
-          __DARWIN__ ? 'Bypass Repository Rules' : 'Bypass repository rules'
-        }
+        title={__DARWIN__ ? '绕过仓库规则' : '绕过仓库规则'}
         onSubmit={this.submit}
         onDismissed={this.props.onDismissed}
         type="warning"
       >
         <DialogContent>
-          This commit will bypass{' '}
+          本次提交将绕过{' '}
           <RepoRulesetsForBranchLink
             repository={this.props.repository}
             branch={this.props.branch}
           >
-            one or more repository rules
+            若干仓库规则
           </RepoRulesetsForBranchLink>
-          . Are you sure you want to continue?
+          。确定要继续吗？
         </DialogContent>
 
         <DialogFooter>
           <OkCancelButtonGroup
             destructive={true}
-            okButtonText={
-              __DARWIN__ ? 'Bypass Rules and Commit' : 'Bypass rules and commit'
-            }
+            okButtonText={__DARWIN__ ? '绕过仓库规则' : '绕过仓库规则'}
           />
         </DialogFooter>
       </Dialog>
