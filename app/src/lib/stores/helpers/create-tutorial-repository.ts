@@ -65,7 +65,7 @@ async function pushRepo(
   remoteBranchName: string,
   progressCb: (title: string, value: number, description?: string) => void
 ) {
-  const pushTitle = `推送仓库到 ${friendlyEndpointName(account)}`
+  const pushTitle = `将仓库推送到 ${friendlyEndpointName(account)}`
   progressCb(pushTitle, 0)
 
   const pushOpts = await executionOptionsWithProgress(

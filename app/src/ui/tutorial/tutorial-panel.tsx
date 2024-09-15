@@ -109,7 +109,7 @@ export class TutorialPanel extends React.Component<
     return (
       <div className="tutorial-panel-component panel">
         <div className="titleArea">
-          <h3>让我们开始吧</h3>
+          <h3>快速上手</h3>
           <img src={TutorialPanelImage} alt="一个勾选了几项的任务列表图像" />
         </div>
         <ol>
@@ -166,7 +166,7 @@ export class TutorialPanel extends React.Component<
             <p className="description">
               {`有了不同分支，您就可以同时处理一个仓库里各个功能的开发。要新建一个分支，请点击窗口顶部 "分支" 菜单栏，然后选择 "${
                 __DARWIN__ ? '新建分支' : '新建分支'
-              }"。`}
+              }"，准备好添加一个新功能。`}
             </p>
             <div className="action">
               <KeyboardShortcut
@@ -216,7 +216,7 @@ export class TutorialPanel extends React.Component<
             </p>
           </TutorialStepInstructions>
           <TutorialStepInstructions
-            summaryText="发布到 GitHub"
+            summaryText="发布分支"
             isComplete={this.isStepComplete}
             isNextStepTodo={this.isStepNextTodo}
             sectionId={TutorialStep.PushBranch}
@@ -224,16 +224,16 @@ export class TutorialPanel extends React.Component<
             onSummaryClick={this.onStepSummaryClick}
           >
             <p className="description">
-              将仓库发布到 GitHub 将会触发一次 "推送"，也就是上传您的提交到
+              将新分支发布到 GitHub 将会进行一次 "推送"，也就是上传您的提交到
               GitHub 上的对应分支，来更新 GitHub
-              那边的进度。点击上方大按钮来发布仓库。
+              那边的进度。点击上方大按钮来发布分支。
             </p>
             <div className="action">
               <KeyboardShortcut darwinKeys={['⌘', 'P']} keys={['Ctrl', 'P']} />
             </div>
           </TutorialStepInstructions>
           <TutorialStepInstructions
-            summaryText="Open a pull request"
+            summaryText="打开拉取请求"
             isComplete={this.isStepComplete}
             isNextStepTodo={this.isStepNextTodo}
             sectionId={TutorialStep.OpenPullRequest}
@@ -242,7 +242,10 @@ export class TutorialPanel extends React.Component<
             onSummaryClick={this.onStepSummaryClick}
           >
             <p className="description">
-              拉取请求，就是给某个项目提出的一份改进提案。给别人的仓库发起一个拉取请求，然后他们就能在审核后决定是否接受你的改进。这里的教程演示仓库是私有的，发起的拉取请求不会公开。
+              拉取请求，就是给某个项目提出的一份改进提案。要是给别人的仓库发起拉取请求，他们就能审核并决定是否接受您的改进。
+              <br />
+              接下去您可以在 GitHub
+              上继续操作，打开拉取请求，合并刚才的改动。教程演示仓库是私有的，这个拉取请求也不会公开。
             </p>
             <div className="action">
               <Button onClick={this.openPullRequest} role="link">
@@ -276,4 +279,4 @@ export class TutorialPanel extends React.Component<
 
 const SkipLinkButton: React.FunctionComponent<{
   onClick: () => void
-}> = props => <LinkButton onClick={props.onClick}>Skip</LinkButton>
+}> = props => <LinkButton onClick={props.onClick}>跳过</LinkButton>
