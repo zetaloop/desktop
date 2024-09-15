@@ -13,7 +13,7 @@ import { PasswordTextBox } from './password-text-box'
 
 /** Text to let the user know their browser will send them back to GH Desktop */
 export const BrowserRedirectMessage =
-  "Your browser will redirect you back to GitHub Desktop once you've signed in. If your browser asks for your permission to launch GitHub Desktop please allow it to."
+  '登录完成后，浏览器会跳转回到 GitHub Desktop。如果浏览器询问是否允许打开 GitHub Desktop，请选择允许。'
 
 interface IAuthenticationFormProps {
   /**
@@ -104,7 +104,7 @@ export class AuthenticationForm extends React.Component<
     return (
       <>
         <TextBox
-          label="Username or email address"
+          label="用户名或邮箱"
           disabled={disabled}
           required={true}
           displayInvalidState={false}
@@ -113,7 +113,7 @@ export class AuthenticationForm extends React.Component<
         />
 
         <PasswordTextBox
-          label="Password"
+          label="密码"
           disabled={disabled}
           required={true}
           displayInvalidState={false}
@@ -137,7 +137,7 @@ export class AuthenticationForm extends React.Component<
       <div className="actions">
         {this.props.supportsBasicAuth ? (
           <Button type="submit" disabled={signInDisabled}>
-            {this.props.loading ? <Loading /> : null} Sign in
+            {this.props.loading ? <Loading /> : null} 登录
           </Button>
         ) : null}
 
@@ -148,7 +148,7 @@ export class AuthenticationForm extends React.Component<
             className="forgot-password-link"
             uri={this.props.forgotPasswordUrl}
           >
-            Forgot password?
+            忘记密码？
           </LinkButton>
         ) : null}
       </div>
@@ -169,7 +169,7 @@ export class AuthenticationForm extends React.Component<
     ) : (
       <>
         {this.renderSignInWithBrowserButton()}
-        <HorizontalRule title="or" />
+        <HorizontalRule title="或者" />
         {this.renderUsernamePassword()}
       </>
     )
@@ -198,7 +198,7 @@ export class AuthenticationForm extends React.Component<
         autoFocus={true}
         role="link"
       >
-        Sign in using your browser
+        通过浏览器登录
         <Octicon symbol={octicons.linkExternal} />
       </Button>
     )
@@ -237,16 +237,11 @@ function getEndpointRequiresWebFlowMessage(endpoint: string): JSX.Element {
   if (endpoint === getDotComAPIEndpoint()) {
     return (
       <>
-        <p>GitHub now requires you to sign in with your browser.</p>
+        <p>现在必须通过浏览器登录 GitHub。</p>
         <p>{BrowserRedirectMessage}</p>
       </>
     )
   } else {
-    return (
-      <p>
-        Your GitHub Enterprise instance requires you to sign in with your
-        browser.
-      </p>
-    )
+    return <p>您的 GitHub 企业版实例要求通过浏览器登录。</p>
   }
 }
