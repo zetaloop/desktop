@@ -249,7 +249,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
         <p className="no-padding">想试试最新功能吗?</p>
         <p className="no-padding">
           安装{' '}
-          <LinkButton uri="https://desktop.github.com/beta">
+          <LinkButton uri="https://github.com/zetaloop/desktop/releases">
             Beta 内测版
           </LinkButton>
         </p>
