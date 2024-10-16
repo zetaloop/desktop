@@ -27,10 +27,6 @@ type SpawnOptions = IGitSpawnOptions & {
  * @param path The path to execute the command from.
  * @param name The name of the operation - for tracing purposes.
  * @param successExitCodes An optional array of exit codes that indicate success.
- * @param stdOutMaxLength  An optional maximum number of bytes to read from stdout.
- *                         If the process writes more than this number of bytes it
- *                         will be killed silently and the truncated output is
- *                         returned.
  */
 export const spawnGit = (
   args: string[],
@@ -68,8 +64,7 @@ export async function spawnAndComplete(
   args: string[],
   path: string,
   name: string,
-  successExitCodes?: Set<number>,
-  stdOutMaxLength?: number
+  successExitCodes?: Set<number>
 ): Promise<ProcessOutput> {
   return new Promise<ProcessOutput>(async (resolve, reject) => {
     const process = await spawnGit(args, path, name)
@@ -87,48 +82,16 @@ export async function spawnAndComplete(
       }
     })
 
-    let totalStdoutLength = 0
-    let killSignalSent = false
-
     const stdoutChunks = new Array<Buffer>()
-
-    // If Node.js encounters a synchronous runtime error while spawning
-    // `stdout` will be undefined and the error will be emitted asynchronously
-    if (process.stdout) {
-      process.stdout.on('data', (chunk: Buffer) => {
-        if (!stdOutMaxLength || totalStdoutLength < stdOutMaxLength) {
-          stdoutChunks.push(chunk)
-          totalStdoutLength += chunk.length
-        }
-
-        if (
-          stdOutMaxLength &&
-          totalStdoutLength >= stdOutMaxLength &&
-          !killSignalSent
-        ) {
-          process.kill()
-          killSignalSent = true
-        }
-      })
-    }
-
     const stderrChunks = new Array<Buffer>()
 
-    // See comment above about stdout and asynchronous errors.
-    if (process.stderr) {
-      process.stderr.on('data', (chunk: Buffer) => {
-        stderrChunks.push(chunk)
-      })
-    }
+    // If Node.js encounters a synchronous runtime error while spawning stdout
+    // and stderr will be undefined and the error will be emitted asynchronously
+    process.stdout?.on('data', (chunk: Buffer) => stdoutChunks.push(chunk))
+    process.stderr?.on('data', (chunk: Buffer) => stderrChunks.push(chunk))
 
     process.on('close', (code, signal) => {
-      const stdout = Buffer.concat(
-        stdoutChunks,
-        stdOutMaxLength
-          ? Math.min(stdOutMaxLength, totalStdoutLength)
-          : totalStdoutLength
-      )
-
+      const stdout = Buffer.concat(stdoutChunks)
       const stderr = Buffer.concat(stderrChunks)
 
       // mimic the experience of GitProcess.exec for handling known codes when
