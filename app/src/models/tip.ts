@@ -4,7 +4,7 @@ import { assertNever } from '../lib/fatal-error'
 export enum TipState {
   Unknown = '未知',
   Unborn = '未初始化',
-  Detached = '游离',
+  Detached = '分离',
   Valid = '有效',
 }
 
