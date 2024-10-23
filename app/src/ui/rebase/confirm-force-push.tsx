@@ -45,7 +45,7 @@ export class ConfirmForcePush extends React.Component<
         <DialogContent>
           <p>
             强制推送将会重写 <Ref>{this.props.upstreamBranch}</Ref>{' '}
-            的历史记录。任何正在使用该分支的合作者都将不得不重置本地分支来匹配远程历史记录。
+            的历史记录。正在使用该分支的人们必须得重置他们的本地分支才能匹配远程历史记录了，这可能会造成一些麻烦。
           </p>
           <div>
             <Checkbox
