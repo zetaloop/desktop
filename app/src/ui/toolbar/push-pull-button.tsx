@@ -553,7 +553,7 @@ export class PushPullButton extends React.Component<
   private detachedHeadButton(rebaseInProgress: boolean) {
     const description = rebaseInProgress
       ? '正在重构'
-      : '无法发布游离的 HEAD 指针'
+      : '无法发布分离的 HEAD 指针'
 
     return (
       <ToolbarButton
