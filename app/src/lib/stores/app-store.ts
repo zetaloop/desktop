@@ -4477,7 +4477,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     }
 
     if (tip.kind === TipState.Detached) {
-      throw new Error('当前仓库处于游离 HEAD 指针状态。')
+      throw new Error('当前仓库 HEAD 指针分离。')
     }
 
     if (tip.kind === TipState.Valid) {
@@ -4723,7 +4723,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       }
 
       if (tip.kind === TipState.Detached) {
-        throw new Error('当前仓库处于游离 HEAD 指针状态。')
+        throw new Error('当前仓库 HEAD 指针分离。')
       }
 
       if (tip.kind === TipState.Valid) {
