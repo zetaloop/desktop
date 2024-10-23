@@ -180,8 +180,7 @@ export class CreateBranch extends React.Component<
     } else if (tip.kind === TipState.Detached) {
       return (
         <p>
-          当前未检出任何特定分支，HEAD
-          指针为游离状态，新的分支将会基于当前检出的 '
+          当前未跟踪任何分支，HEAD 指针分离，新的分支将会基于当前检出的 '
           {tip.currentSha.substring(0, 7)}' 提交。
         </p>
       )
