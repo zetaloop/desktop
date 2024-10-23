@@ -758,7 +758,7 @@ export class NoChanges extends React.Component<
           <div className="interstitial-header">
             <div className="text">
               <h1>无本地改动</h1>
-              <p>仓库中没有待提交的改动，以下是一些接下来可以尝试的建议。</p>
+              <p>仓库中没有待提交的改动，以下是一些后续操作的建议。</p>
             </div>
             <img src={PaperStackImage} className="blankslate-image" alt="" />
           </div>
