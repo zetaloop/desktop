@@ -63,7 +63,7 @@ export class TutorialDone extends React.Component<ITutorialDoneProps, {}> {
               <h1 ref={this.header}>完成啦！</h1>
               <p>
                 你已经学会 GitHub Desktop
-                的基本用法了！以下是一些接下来可以尝试的建议。
+                的基本用法了！以下是一些后续可以尝试的建议。
               </p>
             </div>
             <img src={ClappingHandsImage} className="image" alt="拍手" />
