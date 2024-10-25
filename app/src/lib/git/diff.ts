@@ -35,6 +35,7 @@ import { getConfigValue } from './config'
 import { getMergeBase } from './merge'
 import { IStatusEntry } from '../status-parser'
 import { createLogParser } from './git-delimiter-parser'
+import { enableImagePreviewsForDDSFiles } from '../feature-flag'
 
 /**
  * V8 has a limit on the size of string it can create (~256MB), and unless we want to
@@ -97,8 +98,11 @@ const imageFileExtensions = new Set([
   '.webp',
   '.bmp',
   '.avif',
-  '.dds',
 ])
+
+if (enableImagePreviewsForDDSFiles()) {
+  imageFileExtensions.add('.dds')
+}
 
 /**
  * Render the difference between a file in the given commit and its parent

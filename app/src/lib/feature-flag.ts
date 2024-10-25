@@ -81,6 +81,11 @@ export function enablePullRequestQuickView(): boolean {
   return enableDevelopmentFeatures()
 }
 
+/** Should we support image previews for dds files? */
+export function enableImagePreviewsForDDSFiles(): boolean {
+  return enableBetaFeatures()
+}
+
 export const enableCustomIntegration = () => true
 
 export const enableResizingToolbarButtons = enableBetaFeatures
