@@ -153,8 +153,9 @@ export async function git(
       'data',
       data => (combinedOutput = data)
     )
-    process.stdout?.pipe(ts)
-    process.stderr?.pipe(ts)
+    process.stdout?.pipe(ts, { end: false })
+    process.stderr?.pipe(ts, { end: false })
+    process.on('close', () => ts.end())
     options?.processCallback?.(process)
   }
 
