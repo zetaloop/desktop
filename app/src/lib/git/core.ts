@@ -11,12 +11,10 @@ import { assertNever } from '../fatal-error'
 import * as GitPerf from '../../ui/lib/git-perf'
 import * as Path from 'path'
 import { isErrnoException } from '../errno-exception'
-import { ChildProcess } from 'child_process'
-import { Readable } from 'stream'
-import split2 from 'split2'
 import { getFileFromExceedsError } from '../helpers/regex'
 import { merge } from '../merge'
 import { withTrampolineEnv } from '../trampoline/trampoline-environment'
+import { createTailStream } from './create-tail-stream'
 
 const coerceToString = (value: string | Buffer) =>
   Buffer.isBuffer(value) ? value.toString('utf8') : value
@@ -144,25 +142,20 @@ export async function git(
     expectedErrors: new Set(),
   }
 
+  const opts = { ...defaultOptions, ...options }
+
   let combinedOutput = ''
-  const opts = {
-    ...defaultOptions,
-    ...options,
-  }
 
-  opts.processCallback = (process: ChildProcess) => {
+  // Keep at most 256kb of combined stderr and stdout output. This is used
+  // to provide more context in error messages.
+  opts.processCallback = process => {
+    const ts = createTailStream(256 * 1024, { encoding: 'utf8' }).on(
+      'data',
+      data => (combinedOutput = data)
+    )
+    process.stdout?.pipe(ts)
+    process.stderr?.pipe(ts)
     options?.processCallback?.(process)
-
-    const combineOutput = (readable: Readable | null) => {
-      if (readable) {
-        readable.pipe(split2()).on('data', (line: string) => {
-          combinedOutput += line + '\n'
-        })
-      }
-    }
-
-    combineOutput(process.stderr)
-    combineOutput(process.stdout)
   }
 
   return withTrampolineEnv(
