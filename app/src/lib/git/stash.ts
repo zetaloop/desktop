@@ -51,7 +51,7 @@ export async function getStashes(repository: Repository): Promise<StashResult> {
   })
 
   const result = await git(
-    ['log', '-g', ...formatArgs, 'refs/stash'],
+    ['log', '-g', ...formatArgs, 'refs/stash', '--'],
     repository.path,
     'getStashEntries',
     { successExitCodes: new Set([0, 128]) }
