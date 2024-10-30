@@ -27,15 +27,7 @@ import { getBinaryPaths } from './diff'
 import { getRebaseInternalState } from './rebase'
 import { RebaseInternalState } from '../../models/rebase'
 import { isCherryPickHeadFound } from './cherry-pick'
-import { coerceToString, git } from '.'
-
-/**
- * V8 has a limit on the size of string it can create (~256MB), and unless we want to
- * trigger an unhandled exception we need to do the encoding conversion by hand.
- *
- * As we may be executing status often, we should keep this to a reasonable threshold.
- */
-const MaxStatusBufferSize = 20e6 // 20MB in decimal
+import { git } from '.'
 
 /** The encapsulation of the result from 'git status' */
 export interface IStatusResult {
@@ -214,14 +206,7 @@ export async function getStatus(
     return null
   }
 
-  if (stdout.length > MaxStatusBufferSize) {
-    log.error(
-      `'git status' emitted ${stdout.length} bytes, which is beyond the supported threshold of ${MaxStatusBufferSize} bytes`
-    )
-    return null
-  }
-
-  const parsed = parsePorcelainStatus(coerceToString(stdout))
+  const parsed = parsePorcelainStatus(stdout)
   const headers = parsed.filter(isStatusHeader)
   const entries = parsed.filter(isStatusEntry)
 
