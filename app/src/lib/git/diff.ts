@@ -132,13 +132,11 @@ export async function getCommitDiff(
     args.push(file.status.oldPath)
   }
 
-  const { output } = await spawnAndComplete(
-    args,
-    repository.path,
-    'getCommitDiff'
-  )
+  const { stdout } = await git(args, repository.path, 'getCommitDiff', {
+    encoding: 'buffer',
+  })
 
-  return buildDiff(output, repository, file, commitish)
+  return buildDiff(stdout, repository, file, commitish)
 }
 
 /**
