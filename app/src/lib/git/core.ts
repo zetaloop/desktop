@@ -224,14 +224,9 @@ export async function git(
         `\`git ${args.join(' ')}\` exited with an unexpected code: ${exitCode}.`
       )
 
-      if (result.stdout) {
-        errorMessage.push('stdout:')
-        errorMessage.push(coerceToString(result.stdout))
-      }
-
-      if (result.stderr) {
-        errorMessage.push('stderr:')
-        errorMessage.push(coerceToString(result.stderr))
+      if (combinedOutput.length > 0) {
+        // Leave even less of the combined output in the log
+        errorMessage.push(combinedOutput.slice(10240))
       }
 
       if (gitError !== null) {
@@ -243,8 +238,9 @@ export async function git(
       log.error(errorMessage.join('\n'))
 
       if (gitError === DugiteError.PushWithFileSizeExceedingLimit) {
-        const result = getFileFromExceedsError(errorMessage.join())
-        const files = result.join('\n')
+        const files = getFileFromExceedsError(
+          coerceToString(result.stderr)
+        ).join('\n')
 
         if (files !== '') {
           gitResult.gitErrorDescription += '\n\nFile causing error:\n\n' + files
