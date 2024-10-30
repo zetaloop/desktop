@@ -379,15 +379,15 @@ export async function getWorkingDirectoryDiff(
     args.push('HEAD', '--', file.path)
   }
 
-  const { output, error } = await spawnAndComplete(
+  const { stdout, stderr } = await git(
     args,
     repository.path,
     'getWorkingDirectoryDiff',
-    successExitCodes
+    { successExitCodes, encoding: 'buffer' }
   )
-  const lineEndingsChange = parseLineEndingsWarning(error)
+  const lineEndingsChange = parseLineEndingsWarning(stderr)
 
-  return buildDiff(output, repository, file, 'HEAD', lineEndingsChange)
+  return buildDiff(stdout, repository, file, 'HEAD', lineEndingsChange)
 }
 
 async function getImageDiff(
