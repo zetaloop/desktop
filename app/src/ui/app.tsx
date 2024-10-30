@@ -181,6 +181,7 @@ import { getBoolean, getNumber } from '../lib/local-storage'
 import { IconPreviewDialog } from './octicons/icon-preview-dialog'
 import { accessibilityBannerDismissed } from './banners/accessibilty-settings-banner'
 import { isCertificateErrorSuppressedFor } from '../lib/suppress-certificate-error'
+import { webUtils } from 'electron'
 
 const MinuteInMilliseconds = 1000 * 60
 const HourInMilliseconds = MinuteInMilliseconds * 60
@@ -1342,7 +1343,7 @@ export class App extends React.Component<IAppProps, IAppState> {
   }
 
   private async handleDragAndDrop(fileList: FileList) {
-    const paths = [...fileList].map(x => x.path)
+    const paths = Array.from(fileList, webUtils.getPathForFile)
     const { dispatcher } = this.props
 
     // If they're bulk adding repositories then just blindly try to add them.
