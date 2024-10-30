@@ -21,8 +21,6 @@ import {
   ILargeTextDiff,
 } from '../../models/diff'
 
-import { spawnAndComplete } from './spawn'
-
 import { DiffParser } from '../diff-parser'
 import { getOldPathOrDefault } from '../get-old-path'
 import { readFile } from 'fs/promises'
@@ -734,13 +732,13 @@ export async function getBinaryPaths(
  * Git have detected as binary files
  */
 async function getDetectedBinaryFiles(repository: Repository, ref: string) {
-  const { output } = await spawnAndComplete(
+  const { stdout } = await git(
     ['diff', '--numstat', '-z', ref],
     repository.path,
     'getBinaryPaths'
   )
 
-  return Array.from(output.toString().matchAll(binaryListRegex), m => m[1])
+  return Array.from(stdout.matchAll(binaryListRegex), m => m[1])
 }
 
 const binaryListRegex = /-\t-\t(?:\0.+\0)?([^\0]*)/gi
