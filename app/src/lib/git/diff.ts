@@ -170,10 +170,10 @@ export async function getBranchMergeBaseDiff(
   }
 
   const result = await git(args, repository.path, 'getBranchMergeBaseDiff', {
-    maxBuffer: Infinity,
+    encoding: 'buffer',
   })
 
-  return buildDiff(Buffer.from(result.stdout), repository, file, latestCommit)
+  return buildDiff(result.stdout, repository, file, latestCommit)
 }
 
 /**
@@ -213,7 +213,7 @@ export async function getCommitRangeDiff(
   }
 
   const result = await git(args, repository.path, 'getCommitsDiff', {
-    maxBuffer: Infinity,
+    encoding: 'buffer',
     expectedErrors: new Set([GitError.BadRevision]),
   })
 
@@ -230,7 +230,7 @@ export async function getCommitRangeDiff(
     )
   }
 
-  return buildDiff(Buffer.from(result.stdout), repository, file, latestCommit)
+  return buildDiff(result.stdout, repository, file, latestCommit)
 }
 
 /**
