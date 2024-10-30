@@ -1,6 +1,6 @@
 import { ChildProcess } from 'child_process'
 
-import { git } from './core'
+import { coerceToBuffer, git, isMaxBufferExceededError } from './core'
 
 import { Repository } from '../../models/repository'
 import { GitError } from 'dugite'
@@ -90,19 +90,15 @@ export async function getPartialBlobContentsCatchPathNotInRef(
 ): Promise<Buffer | null> {
   const args = ['show', `${commitish}:${path}`]
 
-  const result = await git(
-    args,
-    repository.path,
-    'getPartialBlobContentsCatchPathNotInRef',
-    {
-      maxBuffer: length,
-      expectedErrors: new Set([GitError.PathExistsButNotInRef]),
-    }
-  )
-
-  if (result.gitError === GitError.PathExistsButNotInRef) {
-    return null
-  }
-
-  return Buffer.from(result.combinedOutput)
+  return git(args, repository.path, 'getPartialBlobContentsCatchPathNotInRef', {
+    maxBuffer: length,
+    expectedErrors: new Set([GitError.PathExistsButNotInRef]),
+    encoding: 'buffer',
+  })
+    .then(r =>
+      r.gitError === GitError.PathExistsButNotInRef ? null : r.stdout
+    )
+    .catch(e =>
+      isMaxBufferExceededError(e) ? coerceToBuffer(e.stdout) : Promise.reject(e)
+    )
 }

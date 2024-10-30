@@ -5,6 +5,7 @@ import {
   IGitResult as DugiteResult,
   IGitExecutionOptions as DugiteExecutionOptions,
   parseBadConfigValueErrorInfo,
+  ExecError,
 } from 'dugite'
 
 import { assertNever } from '../fatal-error'
@@ -22,6 +23,20 @@ export const coerceToString = (
   value: string | Buffer,
   encoding: BufferEncoding = 'utf8'
 ) => (Buffer.isBuffer(value) ? value.toString(encoding) : value)
+
+export const coerceToBuffer = (
+  value: string | Buffer,
+  encoding: BufferEncoding = 'utf8'
+) => (Buffer.isBuffer(value) ? value : Buffer.from(value, encoding))
+
+export const isMaxBufferExceededError = (
+  error: unknown
+): error is ExecError & { code: 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER' } => {
+  return (
+    error instanceof ExecError &&
+    error.code === 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER'
+  )
+}
 
 /**
  * An extension of the execution options in dugite that
