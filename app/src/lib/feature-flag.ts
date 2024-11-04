@@ -88,5 +88,5 @@ export function enableImagePreviewsForDDSFiles(): boolean {
 
 export const enableCustomIntegration = () => true
 
-export const enableResizingToolbarButtons = enableBetaFeatures
+export const enableResizingToolbarButtons = () => true
 export const enableGitConfigParameters = enableBetaFeatures
