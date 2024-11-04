@@ -49,14 +49,11 @@ export class DeleteRemoteBranch extends React.Component<
             </p>
             <p>该操作不可逆。</p>
 
-            <p>
-              This branch does not exist locally. Deleting it may impact others
-              collaborating on this branch.
-            </p>
+            <p>请注意该分支并不在本地，删除该远程分支可能会妨碍他人使用。</p>
           </div>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup destructive={true} okButtonText="Delete" />
+          <OkCancelButtonGroup destructive={true} okButtonText="删除" />
         </DialogFooter>
       </Dialog>
     )
