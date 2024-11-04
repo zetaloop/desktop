@@ -303,14 +303,15 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
         },
       })
       shell.openExternal(getOAuthAuthorizationURL(endpoint, csrfToken))
-      log.info('[SignInStore] account resolved')
     })
       .then(account => {
         if (!this.state || this.state.kind !== SignInStep.Authentication) {
           // Looks like the sign in flow has been aborted
+          log.warn('[SignInStore] account resolved but session has changed')
           return
         }
 
+        log.info('[SignInStore] account resolved')
         this.emitAuthenticate(account)
         this.setState({
           kind: SignInStep.Success,
