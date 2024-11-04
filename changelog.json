@@ -1,7 +1,6 @@
 {
   "releases": {
     "3.4.9": [
-      "[Fixed] Fix drag and drop by addressing breaking Electron change - #19473",
       "[Fixed] App no longer crash for first time users going through the welcome flow and attempting to sign in more than once - #19442",
       "[Fixed] Files configured to use the binary merge driver are now treated as binary files when resolving conflicts - #9846",
       "[Fixed] Fix UI glitch rendering tooltips - #19342",
