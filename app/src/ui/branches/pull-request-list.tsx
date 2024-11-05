@@ -156,6 +156,7 @@ export class PullRequestList extends React.Component<
           filterText={this.state.filterText}
           onFilterTextChanged={this.onFilterTextChanged}
           invalidationProps={this.props.pullRequests}
+          onItemContextMenu={this.onPullRequestItemContextMenu}
           onItemClick={this.onItemClick}
           onSelectionChanged={this.onSelectionChanged}
           renderGroupHeader={this.renderListHeader}
@@ -197,7 +198,6 @@ export class PullRequestList extends React.Component<
         dispatcher={this.props.dispatcher}
         repository={pr.base.gitHubRepository}
         onDropOntoPullRequest={this.onDropOntoPullRequest}
-        onContextMenu={this.onPullRequestItemContextMenu}
         onMouseEnter={this.onMouseEnterPullRequest}
         onMouseLeave={this.onMouseLeavePullRequest}
       />
@@ -205,11 +205,12 @@ export class PullRequestList extends React.Component<
   }
 
   private onPullRequestItemContextMenu = (
+    item: IPullRequestListItem,
     event: React.MouseEvent<HTMLDivElement>
   ): void => {
     event.preventDefault()
 
-    const { selectedPullRequest: pr } = this.props
+    const pr = item.pullRequest
     const onViewPullRequestOnGitHub =
       pr !== null ? this.OnViewPullRequestOnGitHub : undefined
 

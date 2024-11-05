@@ -49,13 +49,6 @@ export interface IPullRequestListItemProps {
   /** When a drag element has landed on a pull request */
   readonly onDropOntoPullRequest: (prNumber: number) => void
 
-  /**
-   * A callback which is invoked when the button's context menu
-   * is activated. The source event is passed along and can be
-   * used to prevent the default action or stop the event from bubbling.
-   */
-  readonly onContextMenu?: (event: React.MouseEvent<HTMLDivElement>) => void
-
   /** When mouse enters a PR */
   readonly onMouseEnter: (prNumber: number, prListItemTop: number) => void
 
@@ -88,10 +81,6 @@ export class PullRequestListItem extends React.Component<
     const subtitle = `#${this.props.number} opened ${timeAgo} by ${this.props.author}`
 
     return this.props.draft ? `${subtitle} • Draft` : subtitle
-  }
-
-  private onContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
-    this.props.onContextMenu?.(event)
   }
 
   private onMouseEnter = (e: React.MouseEvent) => {
@@ -141,7 +130,6 @@ export class PullRequestListItem extends React.Component<
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
         className={className}
-        onContextMenu={this.onContextMenu}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
         onMouseUp={this.onMouseUp}
