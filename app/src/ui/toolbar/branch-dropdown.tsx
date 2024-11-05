@@ -307,7 +307,9 @@ export class BranchDropdown extends React.Component<IBranchDropdownProps> {
     const items = generateBranchContextMenuItems({
       name: tip.branch.name,
       isLocal: tip.branch.type === BranchType.Local,
+      pr: this.props.currentPullRequest,
       onRenameBranch: this.onRenameBranch,
+      onViewPullRequestOnGitHub: this.onViewPullRequestOnGithub,
       onDeleteBranch: this.onDeleteBranch,
     })
 
@@ -332,6 +334,16 @@ export class BranchDropdown extends React.Component<IBranchDropdownProps> {
       repository: this.props.repository,
       branch,
     })
+  }
+
+  private onViewPullRequestOnGithub = () => {
+    const pr = this.props.currentPullRequest
+
+    if (pr === null) {
+      return
+    }
+
+    this.props.dispatcher.showPullRequestByPR(pr)
   }
 
   private onDeleteBranch = async (branchName: string) => {

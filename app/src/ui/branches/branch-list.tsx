@@ -250,6 +250,7 @@ export class BranchList extends React.Component<
     const items = generateBranchContextMenuItems({
       name,
       isLocal,
+      pr: null,
       onRenameBranch,
       onDeleteBranch,
     })
