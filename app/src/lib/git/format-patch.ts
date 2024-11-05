@@ -1,6 +1,6 @@
 import { revRange } from './rev-list'
 import { Repository } from '../../models/repository'
-import { spawnAndComplete } from './spawn'
+import { git } from '.'
 
 /**
  * Generate a patch representing the changes associated with a range of commits
@@ -10,16 +10,8 @@ import { spawnAndComplete } from './spawn'
  * @param head ending commit in rage
  * @returns patch generated
  */
-export async function formatPatch(
-  repository: Repository,
-  base: string,
-  head: string
-): Promise<string> {
+export function formatPatch({ path }: Repository, base: string, head: string) {
   const range = revRange(base, head)
-  const { output } = await spawnAndComplete(
-    ['format-patch', '--unified=1', '--minimal', '--stdout', range],
-    repository.path,
-    'formatPatch'
-  )
-  return output.toString('utf8')
+  const args = ['format-patch', '--unified=1', '--minimal', '--stdout', range]
+  return git(args, path, 'formatPatch').then(x => x.stdout)
 }
