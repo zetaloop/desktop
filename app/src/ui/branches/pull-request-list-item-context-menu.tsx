@@ -1,13 +1,13 @@
 import { IMenuItem } from '../../lib/menu-item'
 import { PullRequest } from '../../models/pull-request'
 
-interface IBranchContextMenuConfig {
+interface IPullRequestContextMenuConfig {
   pr: PullRequest | null
   onViewPullRequestOnGitHub?: () => void
 }
 
 export function generatePullRequestContextMenuItems(
-  config: IBranchContextMenuConfig
+  config: IPullRequestContextMenuConfig
 ): IMenuItem[] {
   const { pr, onViewPullRequestOnGitHub } = config
   const items = new Array<IMenuItem>()
