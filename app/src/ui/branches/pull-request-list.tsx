@@ -209,9 +209,12 @@ export class PullRequestList extends React.Component<
   ): void => {
     event.preventDefault()
 
+    const { selectedPullRequest: pr } = this.props
+    const onViewPullRequestOnGitHub =
+      pr !== null ? this.OnViewPullRequestOnGitHub : undefined
+
     const items = generatePullRequestContextMenuItems({
-      pr: this.props.selectedPullRequest,
-      onViewPullRequestOnGitHub: this.OnViewPullRequestOnGitHub,
+      onViewPullRequestOnGitHub,
     })
 
     showContextualMenu(items)

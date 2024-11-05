@@ -1,11 +1,9 @@
 import { IMenuItem } from '../../lib/menu-item'
 import { clipboard } from 'electron'
-import { PullRequest } from '../../models/pull-request'
 
 interface IBranchContextMenuConfig {
   name: string
   isLocal: boolean
-  pr: PullRequest | null
   onRenameBranch?: (branchName: string) => void
   onViewPullRequestOnGitHub?: () => void
   onDeleteBranch?: (branchName: string) => void
@@ -17,7 +15,6 @@ export function generateBranchContextMenuItems(
   const {
     name,
     isLocal,
-    pr,
     onRenameBranch,
     onViewPullRequestOnGitHub,
     onDeleteBranch,
@@ -37,7 +34,7 @@ export function generateBranchContextMenuItems(
     action: () => clipboard.writeText(name),
   })
 
-  if (onViewPullRequestOnGitHub !== undefined && pr !== null) {
+  if (onViewPullRequestOnGitHub !== undefined) {
     items.push({
       label: 'View Pull Request on GitHub',
       action: () => onViewPullRequestOnGitHub(),
