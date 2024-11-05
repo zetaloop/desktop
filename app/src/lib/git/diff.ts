@@ -21,8 +21,6 @@ import {
   ILargeTextDiff,
 } from '../../models/diff'
 
-import { spawnAndComplete } from './spawn'
-
 import { DiffParser } from '../diff-parser'
 import { getOldPathOrDefault } from '../get-old-path'
 import { readFile } from 'fs/promises'
@@ -132,13 +130,11 @@ export async function getCommitDiff(
     args.push(file.status.oldPath)
   }
 
-  const { output } = await spawnAndComplete(
-    args,
-    repository.path,
-    'getCommitDiff'
-  )
+  const { stdout } = await git(args, repository.path, 'getCommitDiff', {
+    encoding: 'buffer',
+  })
 
-  return buildDiff(output, repository, file, commitish)
+  return buildDiff(stdout, repository, file, commitish)
 }
 
 /**
@@ -381,15 +377,15 @@ export async function getWorkingDirectoryDiff(
     args.push('HEAD', '--', file.path)
   }
 
-  const { output, error } = await spawnAndComplete(
+  const { stdout, stderr } = await git(
     args,
     repository.path,
     'getWorkingDirectoryDiff',
-    successExitCodes
+    { successExitCodes, encoding: 'buffer' }
   )
-  const lineEndingsChange = parseLineEndingsWarning(error)
+  const lineEndingsChange = parseLineEndingsWarning(stderr)
 
-  return buildDiff(output, repository, file, 'HEAD', lineEndingsChange)
+  return buildDiff(stdout, repository, file, 'HEAD', lineEndingsChange)
 }
 
 async function getImageDiff(
@@ -736,13 +732,13 @@ export async function getBinaryPaths(
  * Git have detected as binary files
  */
 async function getDetectedBinaryFiles(repository: Repository, ref: string) {
-  const { output } = await spawnAndComplete(
+  const { stdout } = await git(
     ['diff', '--numstat', '-z', ref],
     repository.path,
     'getBinaryPaths'
   )
 
-  return Array.from(output.toString().matchAll(binaryListRegex), m => m[1])
+  return Array.from(stdout.matchAll(binaryListRegex), m => m[1])
 }
 
 const binaryListRegex = /-\t-\t(?:\0.+\0)?([^\0]*)/gi

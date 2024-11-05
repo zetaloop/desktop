@@ -113,8 +113,7 @@ export async function withTrampolineEnv<T>(
 
     // The code below assumes a few things in order to manage SSH key passphrases
     // correctly:
-    // 1. `withTrampolineEnv` is only used in the functions `git` (core.ts) and
-    //    `spawnAndComplete` (spawn.ts)
+    // 1. `withTrampolineEnv` is only used in the functions `git` (core.ts)
     // 2. Those two functions always thrown an error when something went wrong,
     //    and just return a result when everything went fine.
     //
