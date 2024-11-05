@@ -241,6 +241,11 @@ export class BranchList extends React.Component<
     event.preventDefault()
 
     const { onRenameBranch, onDeleteBranch } = this.props
+
+    if (onRenameBranch === undefined && onDeleteBranch === undefined) {
+      return
+    }
+
     const { type, name } = item.branch
     const isLocal = type === BranchType.Local
 
