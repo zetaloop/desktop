@@ -22,6 +22,8 @@ import { dragAndDropManager } from '../../lib/drag-and-drop-manager'
 import { formatRelative } from '../../lib/format-relative'
 import { AriaLiveContainer } from '../accessibility/aria-live-container'
 import { SectionFilterList } from '../lib/section-filter-list'
+import { generatePullRequestContextMenuItems } from './pull-request-list-item-context-menu'
+import { showContextualMenu } from '../../lib/menu-item'
 
 interface IPullRequestListItem extends IFilterListItem {
   readonly id: string
@@ -195,10 +197,30 @@ export class PullRequestList extends React.Component<
         dispatcher={this.props.dispatcher}
         repository={pr.base.gitHubRepository}
         onDropOntoPullRequest={this.onDropOntoPullRequest}
+        onContextMenu={this.onPullRequestItemContextMenu}
         onMouseEnter={this.onMouseEnterPullRequest}
         onMouseLeave={this.onMouseLeavePullRequest}
       />
     )
+  }
+
+  private onPullRequestItemContextMenu = (
+    event: React.MouseEvent<HTMLDivElement>
+  ): void => {
+    event.preventDefault()
+
+    const items = generatePullRequestContextMenuItems({
+      pr: this.props.selectedPullRequest,
+      onViewPullRequestOnGitHub: this.OnViewPullRequestOnGitHub,
+    })
+
+    showContextualMenu(items)
+  }
+
+  private OnViewPullRequestOnGitHub = () => {
+    if (this.props.selectedPullRequest !== null) {
+      this.props.dispatcher.showPullRequestByPR(this.props.selectedPullRequest)
+    }
   }
 
   private onMouseEnterPullRequest = (
