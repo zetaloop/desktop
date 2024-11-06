@@ -1,5 +1,17 @@
 {
   "releases": {
+    "3.4.9-beta1": [
+      "[Added] Add support for DDS image files - #5337. Thanks @mkafrin!",
+      "[Fixed] Fix drag and drop by addressing breaking Electron change - #19473",
+      "[Fixed] App no longer crash for first time users going through the welcome flow and attempting to sign in more than once - #19442",
+      "[Improved] Insert unicode emoji - #19376"
+    ],
+    "3.4.8": [
+      "[Fixed] App no longer crash for first time users going through the welcome flow and attempting to sign in more than once"
+    ],
+    "3.4.7": [
+      "[Improved] Support entering GitHub.com as a GitHub Enterprise endpoint - #19342"
+    ],
     "3.4.7-beta2": [
       "[Fixed] Fix misaligned resizable toolbar buttons - #19330. Thanks @jpedroso!",
       "[Fixed] Files configured to use the binary merge driver are now treated as binary files when resolving conflicts - #9846",

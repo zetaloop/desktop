@@ -78,6 +78,7 @@ jobs:
           - os: windows-2019
             friendlyName: Windows
     timeout-minutes: 60
+    environment: ${{ inputs.environment }}
     env:
       RELEASE_CHANNEL: ${{ inputs.environment }}
     steps:
