@@ -493,8 +493,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.showCloneRepo()
       case 'show-about':
         return this.showAbout()
-      case 'boomtown':
-        return this.boomtown()
       case 'go-to-commit-message':
         return this.goToCommitMessage()
       case 'open-pull-request':
@@ -781,12 +779,6 @@ export class App extends React.Component<IAppProps, IAppState> {
     } else {
       document.dispatchEvent(event)
     }
-  }
-
-  private boomtown() {
-    setImmediate(() => {
-      throw new Error('Boomtown!')
-    })
   }
 
   private async goToCommitMessage() {

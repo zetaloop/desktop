@@ -53,7 +53,9 @@ export function showTestUI(
 }
 
 function boomtown() {
-  throw new Error('Function not implemented.')
+  setImmediate(() => {
+    throw new Error('Boomtown!')
+  })
 }
 
 function showFakeReleaseNotesPopup() {
