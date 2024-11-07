@@ -509,8 +509,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.openCurrentRepositoryInExternalEditor()
       case 'select-all':
         return this.selectAll()
-      case 'test-thank-you-popup':
-        return this.showFakeThankYouPopup()
       case 'show-stashed-changes':
         return this.showStashedChanges()
       case 'hide-stashed-changes':
@@ -521,14 +519,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.resizeActiveResizable('increase-active-resizable-width')
       case 'decrease-active-resizable-width':
         return this.resizeActiveResizable('decrease-active-resizable-width')
-      case 'test-update-banner':
-        return this.showFakeUpdateBanner({})
-      case 'test-showcase-update-banner':
-        return this.showFakeUpdateBanner({ isShowcase: true })
-      case 'test-thank-you-banner':
-        return this.showFakeThankYouBanner()
-      case 'test-undone-banner':
-        return this.showFakeUndoneBanner()
       case 'boomtown':
       case 'test-app-error':
       case 'test-arm64-banner':
@@ -548,70 +538,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         return showTestUI(name, this.getRepository(), this.props.dispatcher)
       default:
         return assertNever(name, `Unknown menu event name: ${name}`)
-    }
-  }
-
-  private showFakeUpdateBanner(options: {
-    isArm64?: boolean
-    isShowcase?: boolean
-  }) {
-    updateStore.setIsx64ToARM64ImmediateAutoUpdate(options.isArm64 === true)
-
-    if (options.isShowcase) {
-      this.props.dispatcher.setUpdateShowCaseVisibility(true)
-      return
-    }
-
-    this.props.dispatcher.setUpdateBannerVisibility(true)
-  }
-
-  private showFakeThankYouBanner() {
-    const userContributions: ReadonlyArray<ReleaseNote> = [
-      {
-        kind: 'fixed',
-        message: 'A totally awesome fix that fixes something - #123. Thanks!',
-      },
-      {
-        kind: 'added',
-        message:
-          'You can now do this new thing that was added here - #456. Thanks!',
-      },
-    ]
-
-    const banner: Banner = {
-      type: BannerType.OpenThankYouCard,
-      // Grab emoji's by reference because we could still be loading emoji's
-      emoji: this.state.emoji,
-      onOpenCard: () => this.openThankYouCard(userContributions, getVersion()),
-      onThrowCardAway: () => {
-        console.log('Thrown away :(....')
-      },
-    }
-    this.setBanner(banner)
-  }
-
-  private showFakeThankYouPopup() {
-    if (__DEV__) {
-      this.props.dispatcher.showPopup({
-        type: PopupType.ThankYou,
-        userContributions: [
-          {
-            kind: 'new',
-            message: '[New] Added fake thank you dialog',
-          },
-        ],
-        friendlyName: 'kind contributor',
-        latestVersion: '3.0.0',
-      })
-    }
-  }
-
-  private async showFakeUndoneBanner() {
-    if (__DEV__) {
-      this.props.dispatcher.setBanner({
-        type: BannerType.ReorderUndone,
-        commitsCount: 1,
-      })
     }
   }
 

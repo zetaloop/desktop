@@ -13,10 +13,13 @@ import {
 } from '../../../lib/editors/shared'
 import { updateStore } from '../update-store'
 import { enableTestMenuItems } from '../../../lib/feature-flag'
-import { BannerType } from '../../../models/banner'
+import { Banner, BannerType } from '../../../models/banner'
 import { PopupType } from '../../../models/popup'
 import { CloningRepository } from '../../../models/cloning-repository'
 import { generateDevReleaseSummary } from '../../../lib/release-notes'
+import { ReleaseNote } from '../../../models/release-notes'
+import { getVersion } from '../app-proxy'
+import { Emoji } from '../../../lib/emoji'
 
 export function showTestUI(
   name: TestMenuEvent,
@@ -50,22 +53,16 @@ export function showTestUI(
       return showFakeReleaseNotesPopup(dispatcher)
     case 'test-reorder-banner':
       return showFakeReorderBanner(dispatcher)
-
     case 'test-showcase-update-banner':
       return showFakeUpdateBanner(dispatcher, { isShowcase: true })
-
     case 'test-thank-you-banner':
-      return showFakeThankYouBanner()
-
+      return showFakeThankYouBanner(dispatcher)
     case 'test-thank-you-popup':
-      return showFakeThankYouPopup()
-
+      return showFakeThankYouPopup(dispatcher)
     case 'test-undone-banner':
-      return showFakeUndoneBanner()
-
+      return showFakeUndoneBanner(dispatcher)
     case 'test-update-banner':
       return showFakeUpdateBanner(dispatcher, {})
-
     default:
       return assertNever(name, `Unknown menu event name: ${name}`)
   }
@@ -175,14 +172,54 @@ function showFakeReorderBanner(dispatcher: Dispatcher) {
   })
 }
 
-function showFakeThankYouBanner() {
-  throw new Error('Function not implemented.')
+function showFakeThankYouBanner(dispatcher: Dispatcher) {
+  const userContributions: ReadonlyArray<ReleaseNote> = [
+    {
+      kind: 'fixed',
+      message: 'A totally awesome fix that fixes something - #123. Thanks!',
+    },
+    {
+      kind: 'added',
+      message:
+        'You can now do this new thing that was added here - #456. Thanks!',
+    },
+  ]
+
+  const banner: Banner = {
+    type: BannerType.OpenThankYouCard,
+    // Grab emoji's by reference because we could still be loading emoji's
+    emoji: new Map<string, Emoji>(),
+    onOpenCard: () =>
+      dispatcher.showPopup({
+        type: PopupType.ThankYou,
+        userContributions,
+        friendlyName: 'Test User',
+        latestVersion: getVersion(),
+      }),
+    onThrowCardAway: () => {
+      console.log('Thrown away :(....')
+    },
+  }
+  dispatcher.setBanner(banner)
 }
 
-function showFakeThankYouPopup() {
-  throw new Error('Function not implemented.')
+function showFakeThankYouPopup(dispatcher: Dispatcher) {
+  dispatcher.showPopup({
+    type: PopupType.ThankYou,
+    userContributions: [
+      {
+        kind: 'new',
+        message: '[New] Added fake thank you dialog',
+      },
+    ],
+    friendlyName: 'kind contributor',
+    latestVersion: '3.0.0',
+  })
 }
 
-function showFakeUndoneBanner() {
-  throw new Error('Function not implemented.')
+function showFakeUndoneBanner(dispatcher: Dispatcher) {
+  dispatcher.setBanner({
+    type: BannerType.ReorderUndone,
+    commitsCount: 1,
+  })
 }
