@@ -28,6 +28,16 @@ function enableBetaFeatures(): boolean {
   return enableDevelopmentFeatures() || __RELEASE_CHANNEL__ === 'beta'
 }
 
+/**
+ * Should the app show menu items that are used for testing various parts of the
+ * UI
+ *
+ * For our own testing purposes, this will likely remain enabled. But, sometimes
+ * we may want to create a test release for a user to test a fix in which case
+ * they should not need access to the test menu items.
+ */
+export const enableTestMenuItems = () => __RELEASE_CHANNEL__ === 'test' && true
+
 /** Should git pass `--recurse-submodules` when performing operations? */
 export function enableRecurseSubmodulesFlag(): boolean {
   return true

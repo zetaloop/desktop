@@ -182,6 +182,7 @@ import { IconPreviewDialog } from './octicons/icon-preview-dialog'
 import { accessibilityBannerDismissed } from './banners/accessibilty-settings-banner'
 import { isCertificateErrorSuppressedFor } from '../lib/suppress-certificate-error'
 import { webUtils } from 'electron'
+import { showTestUI } from './lib/test-ui-components/test-ui-components'
 
 const MinuteInMilliseconds = 1000 * 60
 const HourInMilliseconds = MinuteInMilliseconds * 60
@@ -419,7 +420,7 @@ export class App extends React.Component<IAppProps, IAppState> {
 
   private onMenuEvent(name: MenuEvent): any {
     // Don't react to menu events when an error dialog is shown.
-    if (name !== 'show-app-error' && this.state.errorCount > 1) {
+    if (name !== 'test-app-error' && this.state.errorCount > 1) {
       return
     }
 
@@ -510,21 +511,21 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.openCurrentRepositoryInExternalEditor()
       case 'select-all':
         return this.selectAll()
-      case 'show-release-notes-popup':
+      case 'test-release-notes-popup':
         return this.showFakeReleaseNotesPopup()
-      case 'show-thank-you-popup':
+      case 'test-thank-you-popup':
         return this.showFakeThankYouPopup()
       case 'show-stashed-changes':
         return this.showStashedChanges()
       case 'hide-stashed-changes':
         return this.hideStashedChanges()
-      case 'test-show-notification':
+      case 'test-notification':
         return this.testShowNotification()
       case 'test-prune-branches':
         return this.testPruneBranches()
       case 'find-text':
         return this.findText()
-      case 'show-app-error':
+      case 'test-app-error':
         return this.props.dispatcher.postError(
           new Error('Test Error - to use default error handler' + uuid())
         )
@@ -532,24 +533,37 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.resizeActiveResizable('increase-active-resizable-width')
       case 'decrease-active-resizable-width':
         return this.resizeActiveResizable('decrease-active-resizable-width')
-      case 'show-update-banner':
+      case 'test-update-banner':
         return this.showFakeUpdateBanner({})
-      case 'show-arm64-banner':
+      case 'test-arm64-banner':
         return this.showFakeUpdateBanner({ isArm64: true })
-      case 'show-showcase-update-banner':
+      case 'test-showcase-update-banner':
         return this.showFakeUpdateBanner({ isShowcase: true })
-      case 'show-thank-you-banner':
+      case 'test-thank-you-banner':
         return this.showFakeThankYouBanner()
-      case 'show-test-reorder-banner':
+      case 'test-reorder-banner':
         return this.showFakeReorderBanner()
-      case 'show-test-undone-banner':
+      case 'test-undone-banner':
         return this.showFakeUndoneBanner()
-      case 'show-test-cherry-pick-conflicts-banner':
+      case 'test-cherry-pick-conflicts-banner':
         return this.showFakeCherryPickConflictBanner()
-      case 'show-test-merge-successful-banner':
+      case 'test-merge-successful-banner':
         return this.showFakeMergeSuccessfulBanner()
-      case 'show-icon-test-dialog':
+      case 'test-icons':
         return this.showIconTestDialog()
+      case 'test-thank-you-popup':
+      case 'test-no-external-editor':
+      case 'test-update-banner':
+      case 'test-thank-you-banner':
+      case 'test-arm64-banner':
+      case 'test-showcase-update-banner':
+      case 'test-reorder-banner':
+      case 'test-undone-banner':
+      case 'test-cherry-pick-conflicts-banner':
+      case 'test-merge-successful-banner':
+      case 'test-no-external-editor':
+      case 'test-icons':
+        return showTestUI(name, this.getRepository(), this.props.dispatcher)
       default:
         return assertNever(name, `Unknown menu event name: ${name}`)
     }
