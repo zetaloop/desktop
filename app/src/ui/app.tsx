@@ -533,7 +533,12 @@ export class App extends React.Component<IAppProps, IAppState> {
       case 'test-thank-you-popup':
       case 'test-undone-banner':
       case 'test-update-banner':
-        return showTestUI(name, this.getRepository(), this.props.dispatcher)
+        return showTestUI(
+          name,
+          this.getRepository(),
+          this.props.dispatcher,
+          this.state.emoji
+        )
       default:
         return assertNever(name, `Unknown menu event name: ${name}`)
     }
