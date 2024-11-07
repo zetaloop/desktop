@@ -12,6 +12,7 @@ import { updateStore } from '../update-store'
 import { enableTestMenuItems } from '../../../lib/feature-flag'
 import { BannerType } from '../../../models/banner'
 import { CloningRepository } from '../../../models/cloning-repository'
+import { PopupType } from '../../../models/popup'
 
 export function showTestUI(
   name: TestMenuEvent,
@@ -31,6 +32,8 @@ export function showTestUI(
       return showFakeUpdateBanner(dispatcher, { isArm64: true })
     case 'test-cherry-pick-conflicts-banner':
       return showFakeCherryPickConflictBanner(dispatcher)
+    case 'test-icons':
+      return showIconTestDialog(dispatcher)
 
     case 'test-release-notes-popup':
       return showFakeReleaseNotesPopup()
@@ -55,8 +58,7 @@ export function showTestUI(
 
     case 'test-merge-successful-banner':
       return showFakeMergeSuccessfulBanner()
-    case 'test-icons':
-      return showIconTestDialog()
+
     case 'test-no-external-editor':
       return showTestNoExternalEditor(repository, dispatcher)
     default:
@@ -129,8 +131,10 @@ function showFakeMergeSuccessfulBanner() {
   throw new Error('Function not implemented.')
 }
 
-function showIconTestDialog() {
-  throw new Error('Function not implemented.')
+function showIconTestDialog(dispatcher: Dispatcher) {
+  dispatcher.showPopup({
+    type: PopupType.TestIcons,
+  })
 }
 
 function showTestNoExternalEditor(

@@ -539,8 +539,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.showFakeUndoneBanner()
       case 'test-merge-successful-banner':
         return this.showFakeMergeSuccessfulBanner()
-      case 'test-icons':
-        return this.showIconTestDialog()
       case 'test-thank-you-popup':
       case 'test-no-external-editor':
       case 'test-update-banner':
@@ -657,14 +655,6 @@ export class App extends React.Component<IAppProps, IAppState> {
       this.props.dispatcher.setBanner({
         type: BannerType.SuccessfulMerge,
         ourBranch: 'fake-branch',
-      })
-    }
-  }
-
-  private async showIconTestDialog() {
-    if (__DEV__) {
-      this.props.dispatcher.showPopup({
-        type: PopupType.TestIcons,
       })
     }
   }
