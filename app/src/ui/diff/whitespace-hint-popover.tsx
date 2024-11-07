@@ -25,7 +25,8 @@ export class WhitespaceHintPopover extends React.Component<IWhitespaceHintPopove
         onMousedownOutside={this.onDismissed}
         className={'whitespace-hint'}
         appearEffect={PopoverAppearEffect.Shake}
-        ariaLabelledby="whitespace-hint-header whitespace-hint-message"
+        ariaLabelledby="whitespace-hint-header"
+        ariaDescribedBy="whitespace-hint-message"
       >
         <h3 id="whitespace-hint-header">Show whitespace changes?</h3>
         <p id="whitespace-hint-message" className="byline">

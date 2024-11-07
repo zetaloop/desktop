@@ -76,6 +76,7 @@ interface IPopoverProps {
   readonly style?: React.CSSProperties
   readonly appearEffect?: PopoverAppearEffect
   readonly ariaLabelledby?: string
+  readonly ariaDescribedBy?: string
   readonly trapFocus?: boolean // Default: true
   readonly decoration?: PopoverDecoration // Default: none
 
@@ -248,7 +249,7 @@ export class Popover extends React.Component<IPopoverProps, IPopoverState> {
        * hopefully, macOs will be fixed in a future release. The issue is known for
        * macOS versions 13.0 to the current version of 13.5 as of 2023-07-31. */
       return {
-        'aria-describedby': this.props.ariaLabelledby,
+        'aria-describedby': `${this.props.ariaLabelledby} ${this.props.ariaDescribedBy}`,
       }
     }
 
@@ -263,6 +264,7 @@ export class Popover extends React.Component<IPopoverProps, IPopoverState> {
     // correct semantics
     return {
       'aria-labelledby': this.props.ariaLabelledby,
+      'aria-describedby': this.props.ariaDescribedBy,
     }
   }
 
