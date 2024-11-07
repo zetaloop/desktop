@@ -6,7 +6,6 @@ import {
 } from '../../../models/repository'
 import { Dispatcher } from '../../dispatcher'
 import { assertNever } from '../../../lib/fatal-error'
-import { Emitter } from 'event-kit'
 import {
   ExternalEditorError,
   suggestedExternalEditor,
@@ -44,7 +43,7 @@ export function showTestUI(
     case 'test-merge-successful-banner':
       return showFakeMergeSuccessfulBanner(dispatcher)
     case 'test-no-external-editor':
-      return showTestNoExternalEditor()
+      return showTestNoExternalEditor(dispatcher)
     case 'test-notification':
       return testShowNotification(repository, dispatcher)
     case 'test-prune-branches':
@@ -118,10 +117,8 @@ function showFakeMergeSuccessfulBanner(dispatcher: Dispatcher) {
   })
 }
 
-function showTestNoExternalEditor() {
-  const emitter = new Emitter()
-  emitter.emit(
-    'did-error',
+function showTestNoExternalEditor(dispatcher: Dispatcher) {
+  dispatcher.postError(
     new ExternalEditorError(
       `No suitable editors installed for GitHub Desktop to launch. Install ${suggestedExternalEditor.name} for your platform and restart GitHub Desktop to try again.`,
       { suggestDefaultEditor: true }
