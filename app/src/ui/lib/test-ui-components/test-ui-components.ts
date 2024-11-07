@@ -43,26 +43,29 @@ export function showTestUI(
       return showTestNoExternalEditor()
     case 'test-notification':
       return testShowNotification(repository, dispatcher)
-
-    case 'test-release-notes-popup':
-      return showFakeReleaseNotesPopup()
-    case 'test-thank-you-popup':
-      return showFakeThankYouPopup()
-
     case 'test-prune-branches':
       return testPruneBranches()
 
-    case 'test-update-banner':
-      return showFakeUpdateBanner(dispatcher)
+    case 'test-release-notes-popup':
+      return showFakeReleaseNotesPopup()
 
-    case 'test-showcase-update-banner':
-      return showFakeUpdateBanner(dispatcher)
-    case 'test-thank-you-banner':
-      return showFakeThankYouBanner()
     case 'test-reorder-banner':
       return showFakeReorderBanner()
+
+    case 'test-showcase-update-banner':
+      return showFakeUpdateBanner(dispatcher, { isShowcase: true })
+
+    case 'test-thank-you-banner':
+      return showFakeThankYouBanner()
+
+    case 'test-thank-you-popup':
+      return showFakeThankYouPopup()
+
     case 'test-undone-banner':
-      return showFakeUpdateBanner(dispatcher)
+      return showFakeUndoneBanner()
+
+    case 'test-update-banner':
+      return showFakeUpdateBanner(dispatcher, {})
 
     default:
       return assertNever(name, `Unknown menu event name: ${name}`)
@@ -149,15 +152,15 @@ function testShowNotification(
   })
 }
 
+function testPruneBranches() {
+  throw new Error('Function not implemented.')
+}
+
 function showFakeReleaseNotesPopup() {
   throw new Error('Function not implemented.')
 }
 
-function showFakeThankYouPopup() {
-  throw new Error('Function not implemented.')
-}
-
-function testPruneBranches() {
+function showFakeReorderBanner() {
   throw new Error('Function not implemented.')
 }
 
@@ -165,6 +168,10 @@ function showFakeThankYouBanner() {
   throw new Error('Function not implemented.')
 }
 
-function showFakeReorderBanner() {
+function showFakeThankYouPopup() {
+  throw new Error('Function not implemented.')
+}
+
+function showFakeUndoneBanner() {
   throw new Error('Function not implemented.')
 }
