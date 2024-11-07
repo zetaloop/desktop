@@ -579,6 +579,14 @@ export function buildDefaultMenu({
         click: emit('boomtown'),
       },
       {
+        label: 'Prune branches',
+        click: emit('test-prune-branches'),
+      },
+      {
+        label: 'Show notification',
+        click: emit('test-notification'),
+      },
+      {
         label: 'Show popup',
         submenu: [
           {
@@ -598,14 +606,6 @@ export function buildDefaultMenu({
             click: emit('test-icons'),
           },
         ],
-      },
-      {
-        label: 'Prune branches',
-        click: emit('test-prune-branches'),
-      },
-      {
-        label: 'Show notification',
-        click: emit('test-notification'),
       },
       {
         label: 'Show banner',
