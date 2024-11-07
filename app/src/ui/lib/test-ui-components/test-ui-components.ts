@@ -33,207 +33,201 @@ export function showTestUI(
     case 'boomtown':
       return boomtown()
     case 'test-app-error':
-      return testAppError(dispatcher)
+      return testAppError()
     case 'test-arm64-banner':
-      return showFakeUpdateBanner(dispatcher, { isArm64: true })
+      return showFakeUpdateBanner({ isArm64: true })
     case 'test-cherry-pick-conflicts-banner':
-      return showFakeCherryPickConflictBanner(dispatcher)
+      return showFakeCherryPickConflictBanner()
     case 'test-icons':
-      return showIconTestDialog(dispatcher)
+      return showIconTestDialog()
     case 'test-merge-successful-banner':
-      return showFakeMergeSuccessfulBanner(dispatcher)
+      return showFakeMergeSuccessfulBanner()
     case 'test-no-external-editor':
-      return showTestNoExternalEditor(dispatcher)
+      return showTestNoExternalEditor()
     case 'test-notification':
-      return testShowNotification(repository, dispatcher)
+      return testShowNotification()
     case 'test-prune-branches':
-      return testPruneBranches(dispatcher)
+      return testPruneBranches()
     case 'test-release-notes-popup':
-      return showFakeReleaseNotesPopup(dispatcher)
+      return showFakeReleaseNotesPopup()
     case 'test-reorder-banner':
-      return showFakeReorderBanner(dispatcher)
+      return showFakeReorderBanner()
     case 'test-showcase-update-banner':
-      return showFakeUpdateBanner(dispatcher, { isShowcase: true })
+      return showFakeUpdateBanner({ isShowcase: true })
     case 'test-thank-you-banner':
-      return showFakeThankYouBanner(dispatcher)
+      return showFakeThankYouBanner()
     case 'test-thank-you-popup':
-      return showFakeThankYouPopup(dispatcher)
+      return showFakeThankYouPopup()
     case 'test-undone-banner':
-      return showFakeUndoneBanner(dispatcher)
+      return showFakeUndoneBanner()
     case 'test-update-banner':
-      return showFakeUpdateBanner(dispatcher, {})
+      return showFakeUpdateBanner({})
     default:
       return assertNever(name, `Unknown menu event name: ${name}`)
   }
-}
 
-function boomtown() {
-  setImmediate(() => {
-    throw new Error('Boomtown!')
-  })
-}
+  function boomtown() {
+    setImmediate(() => {
+      throw new Error('Boomtown!')
+    })
+  }
 
-function testAppError(dispatcher: Dispatcher) {
-  return dispatcher.postError(
-    new Error('Test Error - to use default error handler' + uuid())
-  )
-}
+  function testAppError() {
+    return dispatcher.postError(
+      new Error('Test Error - to use default error handler' + uuid())
+    )
+  }
 
-function showFakeUpdateBanner(
-  dispatcher: Dispatcher,
-  options: {
+  function showFakeUpdateBanner(options: {
     isArm64?: boolean
     isShowcase?: boolean
+  }) {
+    updateStore.setIsx64ToARM64ImmediateAutoUpdate(options.isArm64 === true)
+
+    if (options.isShowcase) {
+      dispatcher.setUpdateShowCaseVisibility(true)
+      return
+    }
+
+    dispatcher.setUpdateBannerVisibility(true)
   }
-) {
-  updateStore.setIsx64ToARM64ImmediateAutoUpdate(options.isArm64 === true)
 
-  if (options.isShowcase) {
-    dispatcher.setUpdateShowCaseVisibility(true)
-    return
+  function showFakeCherryPickConflictBanner() {
+    dispatcher.setBanner({
+      type: BannerType.CherryPickConflictsFound,
+      targetBranchName: 'fake-branch',
+      onOpenConflictsDialog: () => {},
+    })
   }
 
-  dispatcher.setUpdateBannerVisibility(true)
-}
+  function showIconTestDialog() {
+    dispatcher.showPopup({
+      type: PopupType.TestIcons,
+    })
+  }
 
-function showFakeCherryPickConflictBanner(dispatcher: Dispatcher) {
-  dispatcher.setBanner({
-    type: BannerType.CherryPickConflictsFound,
-    targetBranchName: 'fake-branch',
-    onOpenConflictsDialog: () => {},
-  })
-}
+  function showFakeMergeSuccessfulBanner() {
+    dispatcher.setBanner({
+      type: BannerType.SuccessfulMerge,
+      ourBranch: 'fake-branch',
+    })
+  }
 
-function showIconTestDialog(dispatcher: Dispatcher) {
-  dispatcher.showPopup({
-    type: PopupType.TestIcons,
-  })
-}
-
-function showFakeMergeSuccessfulBanner(dispatcher: Dispatcher) {
-  dispatcher.setBanner({
-    type: BannerType.SuccessfulMerge,
-    ourBranch: 'fake-branch',
-  })
-}
-
-function showTestNoExternalEditor(dispatcher: Dispatcher) {
-  dispatcher.postError(
-    new ExternalEditorError(
-      `No suitable editors installed for GitHub Desktop to launch. Install ${suggestedExternalEditor.name} for your platform and restart GitHub Desktop to try again.`,
-      { suggestDefaultEditor: true }
+  function showTestNoExternalEditor() {
+    dispatcher.postError(
+      new ExternalEditorError(
+        `No suitable editors installed for GitHub Desktop to launch. Install ${suggestedExternalEditor.name} for your platform and restart GitHub Desktop to try again.`,
+        { suggestDefaultEditor: true }
+      )
     )
-  )
-}
-
-function testShowNotification(
-  repository: Repository | CloningRepository | null,
-  dispatcher: Dispatcher
-) {
-  // if current repository is not repository with github repository, return
-  if (
-    repository == null ||
-    repository instanceof CloningRepository ||
-    !isRepositoryWithGitHubRepository(repository)
-  ) {
-    return
   }
 
-  dispatcher.showPopup({
-    type: PopupType.TestNotifications,
-    repository,
-  })
-}
+  function testShowNotification() {
+    // if current repository is not repository with github repository, return
+    if (
+      repository == null ||
+      repository instanceof CloningRepository ||
+      !isRepositoryWithGitHubRepository(repository)
+    ) {
+      return
+    }
 
-function testPruneBranches(dispatcher: Dispatcher) {
-  dispatcher.testPruneBranches()
-}
-
-async function showFakeReleaseNotesPopup(dispatcher: Dispatcher) {
-  dispatcher.showPopup({
-    type: PopupType.ReleaseNotes,
-    newReleases: await generateDevReleaseSummary(),
-  })
-}
-
-function showFakeReorderBanner(dispatcher: Dispatcher) {
-  dispatcher.setBanner({
-    type: BannerType.SuccessfulReorder,
-    count: 1,
-    onUndo: () => {
-      dispatcher.setBanner({
-        type: BannerType.ReorderUndone,
-        commitsCount: 1,
-      })
-    },
-  })
-}
-
-function showFakeThankYouBanner(dispatcher: Dispatcher) {
-  const userContributions: ReadonlyArray<ReleaseNote> = [
-    {
-      kind: 'fixed',
-      message: 'A totally awesome fix that fixes something - #123. Thanks!',
-    },
-    {
-      kind: 'added',
-      message:
-        'You can now do this new thing that was added here - #456. Thanks!',
-    },
-  ]
-
-  const banner: Banner = {
-    type: BannerType.OpenThankYouCard,
-    // Grab emoji's by reference because we could still be loading emoji's
-    emoji: new Map<string, Emoji>([
-      [
-        ':tada:',
-        {
-          emoji: '🎉',
-          url: '',
-          aliases: ['tada'],
-        },
-      ],
-      [
-        ':sob:',
-        {
-          emoji: '😭',
-          url: '',
-          aliases: ['sob'],
-        },
-      ],
-    ]),
-    onOpenCard: () =>
-      dispatcher.showPopup({
-        type: PopupType.ThankYou,
-        userContributions,
-        friendlyName: 'Test User',
-        latestVersion: getVersion(),
-      }),
-    onThrowCardAway: () => {
-      console.log('Thrown away :(....')
-    },
+    dispatcher.showPopup({
+      type: PopupType.TestNotifications,
+      repository,
+    })
   }
-  dispatcher.setBanner(banner)
-}
 
-function showFakeThankYouPopup(dispatcher: Dispatcher) {
-  dispatcher.showPopup({
-    type: PopupType.ThankYou,
-    userContributions: [
-      {
-        kind: 'new',
-        message: '[New] Added fake thank you dialog',
+  function testPruneBranches() {
+    dispatcher.testPruneBranches()
+  }
+
+  async function showFakeReleaseNotesPopup() {
+    dispatcher.showPopup({
+      type: PopupType.ReleaseNotes,
+      newReleases: await generateDevReleaseSummary(),
+    })
+  }
+
+  function showFakeReorderBanner() {
+    dispatcher.setBanner({
+      type: BannerType.SuccessfulReorder,
+      count: 1,
+      onUndo: () => {
+        dispatcher.setBanner({
+          type: BannerType.ReorderUndone,
+          commitsCount: 1,
+        })
       },
-    ],
-    friendlyName: 'kind contributor',
-    latestVersion: '3.0.0',
-  })
-}
+    })
+  }
 
-function showFakeUndoneBanner(dispatcher: Dispatcher) {
-  dispatcher.setBanner({
-    type: BannerType.ReorderUndone,
-    commitsCount: 1,
-  })
+  function showFakeThankYouBanner() {
+    const userContributions: ReadonlyArray<ReleaseNote> = [
+      {
+        kind: 'fixed',
+        message: 'A totally awesome fix that fixes something - #123. Thanks!',
+      },
+      {
+        kind: 'added',
+        message:
+          'You can now do this new thing that was added here - #456. Thanks!',
+      },
+    ]
+
+    const banner: Banner = {
+      type: BannerType.OpenThankYouCard,
+      // Grab emoji's by reference because we could still be loading emoji's
+      emoji: new Map<string, Emoji>([
+        [
+          ':tada:',
+          {
+            emoji: '🎉',
+            url: '',
+            aliases: ['tada'],
+          },
+        ],
+        [
+          ':sob:',
+          {
+            emoji: '😭',
+            url: '',
+            aliases: ['sob'],
+          },
+        ],
+      ]),
+      onOpenCard: () =>
+        dispatcher.showPopup({
+          type: PopupType.ThankYou,
+          userContributions,
+          friendlyName: 'Test User',
+          latestVersion: getVersion(),
+        }),
+      onThrowCardAway: () => {
+        console.log('Thrown away :(....')
+      },
+    }
+    dispatcher.setBanner(banner)
+  }
+
+  function showFakeThankYouPopup() {
+    dispatcher.showPopup({
+      type: PopupType.ThankYou,
+      userContributions: [
+        {
+          kind: 'new',
+          message: '[New] Added fake thank you dialog',
+        },
+      ],
+      friendlyName: 'kind contributor',
+      latestVersion: '3.0.0',
+    })
+  }
+
+  function showFakeUndoneBanner() {
+    dispatcher.setBanner({
+      type: BannerType.ReorderUndone,
+      commitsCount: 1,
+    })
+  }
 }
