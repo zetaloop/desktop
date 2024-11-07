@@ -72,6 +72,12 @@ function boomtown() {
   })
 }
 
+function testAppError(dispatcher: Dispatcher) {
+  return dispatcher.postError(
+    new Error('Test Error - to use default error handler' + uuid())
+  )
+}
+
 function showFakeUpdateBanner(
   dispatcher: Dispatcher,
   options: {
@@ -89,10 +95,18 @@ function showFakeUpdateBanner(
   dispatcher.setUpdateBannerVisibility(true)
 }
 
-function testAppError(dispatcher: Dispatcher) {
-  return dispatcher.postError(
-    new Error('Test Error - to use default error handler' + uuid())
-  )
+function showFakeCherryPickConflictBanner(dispatcher: Dispatcher) {
+  dispatcher.setBanner({
+    type: BannerType.CherryPickConflictsFound,
+    targetBranchName: 'fake-branch',
+    onOpenConflictsDialog: () => {},
+  })
+}
+
+function showIconTestDialog(dispatcher: Dispatcher) {
+  dispatcher.showPopup({
+    type: PopupType.TestIcons,
+  })
 }
 
 function showFakeReleaseNotesPopup() {
@@ -119,22 +133,8 @@ function showFakeReorderBanner() {
   throw new Error('Function not implemented.')
 }
 
-function showFakeCherryPickConflictBanner(dispatcher: Dispatcher) {
-  dispatcher.setBanner({
-    type: BannerType.CherryPickConflictsFound,
-    targetBranchName: 'fake-branch',
-    onOpenConflictsDialog: () => {},
-  })
-}
-
 function showFakeMergeSuccessfulBanner() {
   throw new Error('Function not implemented.')
-}
-
-function showIconTestDialog(dispatcher: Dispatcher) {
-  dispatcher.showPopup({
-    type: PopupType.TestIcons,
-  })
 }
 
 function showTestNoExternalEditor(
