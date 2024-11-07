@@ -188,7 +188,24 @@ function showFakeThankYouBanner(dispatcher: Dispatcher) {
   const banner: Banner = {
     type: BannerType.OpenThankYouCard,
     // Grab emoji's by reference because we could still be loading emoji's
-    emoji: new Map<string, Emoji>(),
+    emoji: new Map<string, Emoji>([
+      [
+        ':tada:',
+        {
+          emoji: '🎉',
+          url: '',
+          aliases: ['tada'],
+        },
+      ],
+      [
+        ':sob:',
+        {
+          emoji: '😭',
+          url: '',
+          aliases: ['sob'],
+        },
+      ],
+    ]),
     onOpenCard: () =>
       dispatcher.showPopup({
         type: PopupType.ThankYou,
