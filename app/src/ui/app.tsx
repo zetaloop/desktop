@@ -529,8 +529,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.resizeActiveResizable('decrease-active-resizable-width')
       case 'test-update-banner':
         return this.showFakeUpdateBanner({})
-      case 'test-arm64-banner':
-        return this.showFakeUpdateBanner({ isArm64: true })
       case 'test-showcase-update-banner':
         return this.showFakeUpdateBanner({ isShowcase: true })
       case 'test-thank-you-banner':
