@@ -16,6 +16,7 @@ import { enableTestMenuItems } from '../../../lib/feature-flag'
 import { BannerType } from '../../../models/banner'
 import { PopupType } from '../../../models/popup'
 import { CloningRepository } from '../../../models/cloning-repository'
+import { generateDevReleaseSummary } from '../../../lib/release-notes'
 
 export function showTestUI(
   name: TestMenuEvent,
@@ -45,12 +46,10 @@ export function showTestUI(
       return testShowNotification(repository, dispatcher)
     case 'test-prune-branches':
       return testPruneBranches(dispatcher)
-
     case 'test-release-notes-popup':
-      return showFakeReleaseNotesPopup()
-
+      return showFakeReleaseNotesPopup(dispatcher)
     case 'test-reorder-banner':
-      return showFakeReorderBanner()
+      return showFakeReorderBanner(dispatcher)
 
     case 'test-showcase-update-banner':
       return showFakeUpdateBanner(dispatcher, { isShowcase: true })
@@ -156,12 +155,24 @@ function testPruneBranches(dispatcher: Dispatcher) {
   dispatcher.testPruneBranches()
 }
 
-function showFakeReleaseNotesPopup() {
-  throw new Error('Function not implemented.')
+async function showFakeReleaseNotesPopup(dispatcher: Dispatcher) {
+  dispatcher.showPopup({
+    type: PopupType.ReleaseNotes,
+    newReleases: await generateDevReleaseSummary(),
+  })
 }
 
-function showFakeReorderBanner() {
-  throw new Error('Function not implemented.')
+function showFakeReorderBanner(dispatcher: Dispatcher) {
+  dispatcher.setBanner({
+    type: BannerType.SuccessfulReorder,
+    count: 1,
+    onUndo: () => {
+      dispatcher.setBanner({
+        type: BannerType.ReorderUndone,
+        commitsCount: 1,
+      })
+    },
+  })
 }
 
 function showFakeThankYouBanner() {

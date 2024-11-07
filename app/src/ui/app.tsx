@@ -509,8 +509,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.openCurrentRepositoryInExternalEditor()
       case 'select-all':
         return this.selectAll()
-      case 'test-release-notes-popup':
-        return this.showFakeReleaseNotesPopup()
       case 'test-thank-you-popup':
         return this.showFakeThankYouPopup()
       case 'show-stashed-changes':
@@ -529,8 +527,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.showFakeUpdateBanner({ isShowcase: true })
       case 'test-thank-you-banner':
         return this.showFakeThankYouBanner()
-      case 'test-reorder-banner':
-        return this.showFakeReorderBanner()
       case 'test-undone-banner':
         return this.showFakeUndoneBanner()
       case 'boomtown':
@@ -594,20 +590,6 @@ export class App extends React.Component<IAppProps, IAppState> {
     this.setBanner(banner)
   }
 
-  /**
-   * Show a release notes popup for a fake release, intended only to
-   * make it easier to verify changes to the popup. Has no meaning
-   * about a new release being available.
-   */
-  private async showFakeReleaseNotesPopup() {
-    if (__DEV__) {
-      this.props.dispatcher.showPopup({
-        type: PopupType.ReleaseNotes,
-        newReleases: await generateDevReleaseSummary(),
-      })
-    }
-  }
-
   private showFakeThankYouPopup() {
     if (__DEV__) {
       this.props.dispatcher.showPopup({
@@ -620,21 +602,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         ],
         friendlyName: 'kind contributor',
         latestVersion: '3.0.0',
-      })
-    }
-  }
-
-  private async showFakeReorderBanner() {
-    if (__DEV__) {
-      this.props.dispatcher.setBanner({
-        type: BannerType.SuccessfulReorder,
-        count: 1,
-        onUndo: () => {
-          this.props.dispatcher.setBanner({
-            type: BannerType.ReorderUndone,
-            commitsCount: 1,
-          })
-        },
       })
     }
   }
