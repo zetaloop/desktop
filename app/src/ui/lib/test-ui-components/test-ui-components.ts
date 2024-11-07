@@ -9,12 +9,19 @@ import {
   suggestedExternalEditor,
 } from '../../../lib/editors/shared'
 import { updateStore } from '../update-store'
+import { enableTestMenuItems } from '../../../lib/feature-flag'
+import { BannerType } from '../../../models/banner'
+import { CloningRepository } from '../../../models/cloning-repository'
 
 export function showTestUI(
   name: TestMenuEvent,
-  repository: Repository | null,
+  repository: Repository | CloningRepository | null,
   dispatcher: Dispatcher
 ) {
+  if (!__DEV__ && !enableTestMenuItems()) {
+    return
+  }
+
   switch (name) {
     case 'boomtown':
       return boomtown()
@@ -22,6 +29,8 @@ export function showTestUI(
       return testAppError(dispatcher)
     case 'test-arm64-banner':
       return showFakeUpdateBanner(dispatcher, { isArm64: true })
+    case 'test-cherry-pick-conflicts-banner':
+      return showFakeCherryPickConflictBanner(dispatcher)
 
     case 'test-release-notes-popup':
       return showFakeReleaseNotesPopup()
@@ -43,8 +52,7 @@ export function showTestUI(
       return showFakeReorderBanner()
     case 'test-undone-banner':
       return showFakeUpdateBanner(dispatcher)
-    case 'test-cherry-pick-conflicts-banner':
-      return showFakeCherryPickConflictBanner()
+
     case 'test-merge-successful-banner':
       return showFakeMergeSuccessfulBanner()
     case 'test-icons':
@@ -109,8 +117,12 @@ function showFakeReorderBanner() {
   throw new Error('Function not implemented.')
 }
 
-function showFakeCherryPickConflictBanner() {
-  throw new Error('Function not implemented.')
+function showFakeCherryPickConflictBanner(dispatcher: Dispatcher) {
+  dispatcher.setBanner({
+    type: BannerType.CherryPickConflictsFound,
+    targetBranchName: 'fake-branch',
+    onOpenConflictsDialog: () => {},
+  })
 }
 
 function showFakeMergeSuccessfulBanner() {
