@@ -523,10 +523,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.testPruneBranches()
       case 'find-text':
         return this.findText()
-      case 'test-app-error':
-        return this.props.dispatcher.postError(
-          new Error('Test Error - to use default error handler' + uuid())
-        )
       case 'increase-active-resizable-width':
         return this.resizeActiveResizable('increase-active-resizable-width')
       case 'decrease-active-resizable-width':
