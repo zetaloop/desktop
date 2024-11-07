@@ -34,6 +34,8 @@ export function showTestUI(
       return showFakeCherryPickConflictBanner(dispatcher)
     case 'test-icons':
       return showIconTestDialog(dispatcher)
+    case 'test-merge-successful-banner':
+      return showFakeMergeSuccessfulBanner(dispatcher)
 
     case 'test-release-notes-popup':
       return showFakeReleaseNotesPopup()
@@ -55,9 +57,6 @@ export function showTestUI(
       return showFakeReorderBanner()
     case 'test-undone-banner':
       return showFakeUpdateBanner(dispatcher)
-
-    case 'test-merge-successful-banner':
-      return showFakeMergeSuccessfulBanner()
 
     case 'test-no-external-editor':
       return showTestNoExternalEditor(repository, dispatcher)
@@ -109,6 +108,13 @@ function showIconTestDialog(dispatcher: Dispatcher) {
   })
 }
 
+function showFakeMergeSuccessfulBanner(dispatcher: Dispatcher) {
+  dispatcher.setBanner({
+    type: BannerType.SuccessfulMerge,
+    ourBranch: 'fake-branch',
+  })
+}
+
 function showFakeReleaseNotesPopup() {
   throw new Error('Function not implemented.')
 }
@@ -130,10 +136,6 @@ function showFakeThankYouBanner() {
 }
 
 function showFakeReorderBanner() {
-  throw new Error('Function not implemented.')
-}
-
-function showFakeMergeSuccessfulBanner() {
   throw new Error('Function not implemented.')
 }
 

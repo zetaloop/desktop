@@ -652,15 +652,6 @@ export class App extends React.Component<IAppProps, IAppState> {
     }
   }
 
-  private async showFakeMergeSuccessfulBanner() {
-    if (__DEV__) {
-      this.props.dispatcher.setBanner({
-        type: BannerType.SuccessfulMerge,
-        ourBranch: 'fake-branch',
-      })
-    }
-  }
-
   private testShowNotification() {
     if (
       __RELEASE_CHANNEL__ !== 'development' &&
