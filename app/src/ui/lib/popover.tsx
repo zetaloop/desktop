@@ -17,7 +17,7 @@ import {
   size,
 } from '@floating-ui/core'
 import { assertNever } from '../../lib/fatal-error'
-import { isMacOSSonoma, isMacOSVentura } from '../../lib/get-os'
+import { isMacOSSequoia, isMacOSSonoma, isMacOSVentura } from '../../lib/get-os'
 
 /**
  * Position of the popover relative to its anchor element. It's composed by 2
@@ -252,7 +252,7 @@ export class Popover extends React.Component<IPopoverProps, IPopoverState> {
       }
     }
 
-    if (isMacOSSonoma()) {
+    if (isMacOSSonoma() || isMacOSSequoia()) {
       // macOS Sonoma introduced a regression in that: For role of 'dialog', the
       // aria-labelledby is not announced. However, if the dialog has a child
       // with a role of header (aka h* elemeent) it will be announced as long as
