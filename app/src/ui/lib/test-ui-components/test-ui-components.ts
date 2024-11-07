@@ -11,14 +11,9 @@ import {
 import { updateStore } from '../update-store'
 import { enableTestMenuItems } from '../../../lib/feature-flag'
 import { BannerType } from '../../../models/banner'
-import { CloningRepository } from '../../../models/cloning-repository'
 import { PopupType } from '../../../models/popup'
 
-export function showTestUI(
-  name: TestMenuEvent,
-  repository: Repository | CloningRepository | null,
-  dispatcher: Dispatcher
-) {
+export function showTestUI(name: TestMenuEvent, dispatcher: Dispatcher) {
   if (!__DEV__ && !enableTestMenuItems()) {
     return
   }
@@ -36,6 +31,8 @@ export function showTestUI(
       return showIconTestDialog(dispatcher)
     case 'test-merge-successful-banner':
       return showFakeMergeSuccessfulBanner(dispatcher)
+    case 'test-no-external-editor':
+      return showTestNoExternalEditor()
 
     case 'test-release-notes-popup':
       return showFakeReleaseNotesPopup()
@@ -58,8 +55,6 @@ export function showTestUI(
     case 'test-undone-banner':
       return showFakeUpdateBanner(dispatcher)
 
-    case 'test-no-external-editor':
-      return showTestNoExternalEditor(repository, dispatcher)
     default:
       return assertNever(name, `Unknown menu event name: ${name}`)
   }
@@ -139,10 +134,7 @@ function showFakeReorderBanner() {
   throw new Error('Function not implemented.')
 }
 
-function showTestNoExternalEditor(
-  repository: Repository | null,
-  dispatcher: Dispatcher
-) {
+function showTestNoExternalEditor() {
   const emitter = new Emitter()
   emitter.emit(
     'did-error',
