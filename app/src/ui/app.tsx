@@ -517,8 +517,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.showStashedChanges()
       case 'hide-stashed-changes':
         return this.hideStashedChanges()
-      case 'test-notification':
-        return this.testShowNotification()
       case 'test-prune-branches':
         return this.testPruneBranches()
       case 'find-text':
@@ -553,7 +551,7 @@ export class App extends React.Component<IAppProps, IAppState> {
       case 'test-thank-you-popup':
       case 'test-undone-banner':
       case 'test-update-banner':
-        return showTestUI(name, this.props.dispatcher)
+        return showTestUI(name, this.getRepository(), this.props.dispatcher)
       default:
         return assertNever(name, `Unknown menu event name: ${name}`)
     }
@@ -650,30 +648,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         commitsCount: 1,
       })
     }
-  }
-
-  private testShowNotification() {
-    if (
-      __RELEASE_CHANNEL__ !== 'development' &&
-      __RELEASE_CHANNEL__ !== 'test'
-    ) {
-      return
-    }
-
-    // if current repository is not repository with github repository, return
-    const repository = this.getRepository()
-    if (
-      repository == null ||
-      repository instanceof CloningRepository ||
-      !isRepositoryWithGitHubRepository(repository)
-    ) {
-      return
-    }
-
-    this.props.dispatcher.showPopup({
-      type: PopupType.TestNotifications,
-      repository,
-    })
   }
 
   private testPruneBranches() {

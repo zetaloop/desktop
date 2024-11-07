@@ -1,6 +1,9 @@
 import uuid from 'uuid'
 import { TestMenuEvent } from '../../../main-process/menu'
-import { Repository } from '../../../models/repository'
+import {
+  isRepositoryWithGitHubRepository,
+  Repository,
+} from '../../../models/repository'
 import { Dispatcher } from '../../dispatcher'
 import { assertNever } from '../../../lib/fatal-error'
 import { Emitter } from 'event-kit'
@@ -12,8 +15,13 @@ import { updateStore } from '../update-store'
 import { enableTestMenuItems } from '../../../lib/feature-flag'
 import { BannerType } from '../../../models/banner'
 import { PopupType } from '../../../models/popup'
+import { CloningRepository } from '../../../models/cloning-repository'
 
-export function showTestUI(name: TestMenuEvent, dispatcher: Dispatcher) {
+export function showTestUI(
+  name: TestMenuEvent,
+  repository: Repository | CloningRepository | null,
+  dispatcher: Dispatcher
+) {
   if (!__DEV__ && !enableTestMenuItems()) {
     return
   }
@@ -33,13 +41,14 @@ export function showTestUI(name: TestMenuEvent, dispatcher: Dispatcher) {
       return showFakeMergeSuccessfulBanner(dispatcher)
     case 'test-no-external-editor':
       return showTestNoExternalEditor()
+    case 'test-notification':
+      return testShowNotification(repository, dispatcher)
 
     case 'test-release-notes-popup':
       return showFakeReleaseNotesPopup()
     case 'test-thank-you-popup':
       return showFakeThankYouPopup()
-    case 'test-notification':
-      return testShowNotification()
+
     case 'test-prune-branches':
       return testPruneBranches()
 
@@ -110,15 +119,41 @@ function showFakeMergeSuccessfulBanner(dispatcher: Dispatcher) {
   })
 }
 
+function showTestNoExternalEditor() {
+  const emitter = new Emitter()
+  emitter.emit(
+    'did-error',
+    new ExternalEditorError(
+      `No suitable editors installed for GitHub Desktop to launch. Install ${suggestedExternalEditor.name} for your platform and restart GitHub Desktop to try again.`,
+      { suggestDefaultEditor: true }
+    )
+  )
+}
+
+function testShowNotification(
+  repository: Repository | CloningRepository | null,
+  dispatcher: Dispatcher
+) {
+  // if current repository is not repository with github repository, return
+  if (
+    repository == null ||
+    repository instanceof CloningRepository ||
+    !isRepositoryWithGitHubRepository(repository)
+  ) {
+    return
+  }
+
+  dispatcher.showPopup({
+    type: PopupType.TestNotifications,
+    repository,
+  })
+}
+
 function showFakeReleaseNotesPopup() {
   throw new Error('Function not implemented.')
 }
 
 function showFakeThankYouPopup() {
-  throw new Error('Function not implemented.')
-}
-
-function testShowNotification() {
   throw new Error('Function not implemented.')
 }
 
@@ -132,15 +167,4 @@ function showFakeThankYouBanner() {
 
 function showFakeReorderBanner() {
   throw new Error('Function not implemented.')
-}
-
-function showTestNoExternalEditor() {
-  const emitter = new Emitter()
-  emitter.emit(
-    'did-error',
-    new ExternalEditorError(
-      `No suitable editors installed for GitHub Desktop to launch. Install ${suggestedExternalEditor.name} for your platform and restart GitHub Desktop to try again.`,
-      { suggestDefaultEditor: true }
-    )
-  )
 }
