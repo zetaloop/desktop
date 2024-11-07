@@ -537,20 +537,22 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.showFakeReorderBanner()
       case 'test-undone-banner':
         return this.showFakeUndoneBanner()
-      case 'test-merge-successful-banner':
-        return this.showFakeMergeSuccessfulBanner()
-      case 'test-thank-you-popup':
-      case 'test-no-external-editor':
-      case 'test-update-banner':
-      case 'test-thank-you-banner':
+      case 'boomtown':
+      case 'test-app-error':
       case 'test-arm64-banner':
-      case 'test-showcase-update-banner':
-      case 'test-reorder-banner':
-      case 'test-undone-banner':
       case 'test-cherry-pick-conflicts-banner':
+      case 'test-icons':
       case 'test-merge-successful-banner':
       case 'test-no-external-editor':
-      case 'test-icons':
+      case 'test-notification':
+      case 'test-prune-branches':
+      case 'test-release-notes-popup':
+      case 'test-reorder-banner':
+      case 'test-showcase-update-banner':
+      case 'test-thank-you-banner':
+      case 'test-thank-you-popup':
+      case 'test-undone-banner':
+      case 'test-update-banner':
         return showTestUI(name, this.getRepository(), this.props.dispatcher)
       default:
         return assertNever(name, `Unknown menu event name: ${name}`)
