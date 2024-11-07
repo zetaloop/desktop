@@ -517,8 +517,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.showStashedChanges()
       case 'hide-stashed-changes':
         return this.hideStashedChanges()
-      case 'test-prune-branches':
-        return this.testPruneBranches()
       case 'find-text':
         return this.findText()
       case 'increase-active-resizable-width':
@@ -648,14 +646,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         commitsCount: 1,
       })
     }
-  }
-
-  private testPruneBranches() {
-    if (!__DEV__) {
-      return
-    }
-
-    this.props.appStore._testPruneBranches()
   }
 
   /**

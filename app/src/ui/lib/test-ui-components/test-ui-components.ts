@@ -44,7 +44,7 @@ export function showTestUI(
     case 'test-notification':
       return testShowNotification(repository, dispatcher)
     case 'test-prune-branches':
-      return testPruneBranches()
+      return testPruneBranches(dispatcher)
 
     case 'test-release-notes-popup':
       return showFakeReleaseNotesPopup()
@@ -152,8 +152,8 @@ function testShowNotification(
   })
 }
 
-function testPruneBranches() {
-  throw new Error('Function not implemented.')
+function testPruneBranches(dispatcher: Dispatcher) {
+  dispatcher.testPruneBranches()
 }
 
 function showFakeReleaseNotesPopup() {
