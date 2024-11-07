@@ -301,6 +301,7 @@ export abstract class AutocompletingTextInput<
           onRowClick={this.insertCompletionOnClick}
           onSelectedRowChanged={this.onSelectedRowChanged}
           invalidationProps={searchText}
+          shouldDisableTabFocus={true}
         />
       </Popover>
     )
