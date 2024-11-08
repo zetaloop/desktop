@@ -301,6 +301,9 @@ export abstract class AutocompletingTextInput<
           onRowClick={this.insertCompletionOnClick}
           onSelectedRowChanged={this.onSelectedRowChanged}
           invalidationProps={searchText}
+          // Disable tab focus so that the user can't tab to the list of autocompletions
+          // Focus belongs to the input field.
+          shouldDisableTabFocus={true}
         />
       </Popover>
     )
