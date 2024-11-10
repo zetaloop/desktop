@@ -226,13 +226,11 @@ export class CompareSidebar extends React.Component<
       emptyListMessage =
         formState.comparisonMode === ComparisonMode.Ahead ? (
           <p>
-            The compared branch (<Ref>{currentlyComparedBranchName}</Ref>) is up
-            to date with your branch
+            所选分支 (<Ref>{currentlyComparedBranchName}</Ref>) 已与当前分支同步
           </p>
         ) : (
           <p>
-            Your branch is up to date with the compared branch (
-            <Ref>{currentlyComparedBranchName}</Ref>)
+            当前分支已与所选分支 (<Ref>{currentlyComparedBranchName}</Ref>) 同步
           </p>
         )
     }
