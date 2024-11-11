@@ -82,17 +82,6 @@ export interface IGitResult extends DugiteResult {
   readonly gitErrorDescription: string | null
 
   /**
-   * The combined contents of stdout and stderr with some light processing
-   * applied to remove redundant lines caused by Git's use of `\r` to "erase"
-   * the current line while writing progress output. See createTerminalOutput.
-   *
-   * Note: The output is capped at a maximum of 256kb and the sole intent of
-   * this property is to provide "terminal-like" output to the user when a Git
-   * command fails.
-   */
-  readonly terminalOutput: string
-
-  /**
    * The path that the Git command was executed from, i.e. the
    * process working directory (not to be confused with the Git
    * working directory which is... super confusing, I know)
@@ -138,15 +127,19 @@ export class GitError extends Error {
    */
   public readonly isRawMessage: boolean
 
-  public constructor(result: IGitResult, args: ReadonlyArray<string>) {
+  public constructor(
+    result: IGitResult,
+    args: ReadonlyArray<string>,
+    terminalOutput: string
+  ) {
     let rawMessage = true
     let message
 
     if (result.gitErrorDescription) {
       message = result.gitErrorDescription
       rawMessage = false
-    } else if (result.terminalOutput.length > 0) {
-      message = result.terminalOutput
+    } else if (terminalOutput.length > 0) {
+      message = terminalOutput
     } else if (result.stderr.length) {
       message = coerceToString(result.stderr)
     } else if (result.stdout.length) {
@@ -209,6 +202,13 @@ export async function git(
 
   const opts = { ...defaultOptions, ...options }
 
+  // The combined contents of stdout and stderr with some light processing
+  // applied to remove redundant lines caused by Git's use of `\r` to "erase"
+  // the current line while writing progress output. See createTerminalOutput.
+  //
+  // Note: The output is capped at a maximum of 256kb and the sole intent of
+  // this property is to provide "terminal-like" output to the user when a Git
+  // command fails.
   let terminalOutput = ''
 
   // Keep at most 256kb of combined stderr and stdout output. This is used
@@ -274,7 +274,6 @@ export async function git(
         ...result,
         gitError,
         gitErrorDescription,
-        terminalOutput,
         path,
       }
 
@@ -316,7 +315,7 @@ export async function git(
         }
       }
 
-      throw new GitError(gitResult, args)
+      throw new GitError(gitResult, args, terminalOutput)
     },
     path,
     options?.isBackgroundTask ?? false,
