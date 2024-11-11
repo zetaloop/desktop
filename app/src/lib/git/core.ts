@@ -16,6 +16,7 @@ import { getFileFromExceedsError } from '../helpers/regex'
 import { merge } from '../merge'
 import { withTrampolineEnv } from '../trampoline/trampoline-environment'
 import { createTailStream } from './create-tail-stream'
+import { createTerminalStream } from '../create-terminal-stream'
 
 export const coerceToString = (
   value: string | Buffer,
@@ -205,10 +206,15 @@ export async function git(
   // Keep at most 256kb of combined stderr and stdout output. This is used
   // to provide more context in error messages.
   opts.processCallback = process => {
-    const ts = createTailStream(256 * 1024, { encoding: 'utf8' }).on(
-      'data',
-      data => (combinedOutput = data)
-    )
+    const ts = createTerminalStream()
+      .pipe(createTailStream(256 * 1024, { encoding: 'utf8' }))
+      .on('data', data => {
+        if (args.includes('clone')) {
+          debugger
+        }
+        combinedOutput = data
+      })
+
     process.stdout?.pipe(ts, { end: false })
     process.stderr?.pipe(ts, { end: false })
     process.on('close', () => ts.end())
