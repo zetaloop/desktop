@@ -206,18 +206,17 @@ export async function git(
   // Keep at most 256kb of combined stderr and stdout output. This is used
   // to provide more context in error messages.
   opts.processCallback = process => {
-    const ts = createTerminalStream()
-      .pipe(createTailStream(256 * 1024, { encoding: 'utf8' }))
-      .on('data', data => {
-        if (args.includes('clone')) {
-          debugger
-        }
-        combinedOutput = data
-      })
+    const terminalStream = createTerminalStream()
+    const tailStream = createTailStream(256 * 1024, { encoding: 'utf8' })
 
-    process.stdout?.pipe(ts, { end: false })
-    process.stderr?.pipe(ts, { end: false })
-    process.on('close', () => ts.end())
+    terminalStream
+      .pipe(tailStream)
+      .on('data', (data: string) => (combinedOutput = data))
+      .on('error', e => log.error(`Terminal output error`, e))
+
+    process.stdout?.pipe(terminalStream, { end: false })
+    process.stderr?.pipe(terminalStream, { end: false })
+    process.on('close', () => terminalStream.end())
     options?.processCallback?.(process)
   }
 
