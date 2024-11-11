@@ -294,7 +294,7 @@ export async function git(
 
       if (terminalOutput.length > 0) {
         // Leave even less of the combined output in the log
-        errorMessage.push(terminalOutput.slice(-10240))
+        errorMessage.push(terminalOutput.slice(-1024))
       }
 
       if (gitError !== null) {
