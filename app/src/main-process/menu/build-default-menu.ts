@@ -565,7 +565,7 @@ export function buildDefaultMenu({
     }
   }
 
-  if (__RELEASE_CHANNEL__ === 'development' || enableTestMenuItems()) {
+  if (enableTestMenuItems()) {
     helpItems.push(
       separator,
       {
