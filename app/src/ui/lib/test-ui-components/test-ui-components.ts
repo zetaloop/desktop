@@ -19,6 +19,7 @@ import { generateDevReleaseSummary } from '../../../lib/release-notes'
 import { ReleaseNote } from '../../../models/release-notes'
 import { getVersion } from '../app-proxy'
 import { Emoji } from '../../../lib/emoji'
+import { GitHubRepository } from '../../../models/github-repository'
 
 export function showTestUI(
   name: TestMenuEvent,
@@ -74,6 +75,8 @@ export function showTestUI(
       return showFakeUpdateBanner({})
     case 'test-update-existing-git-lfs-filters':
       return dispatcher.showPopup({ type: PopupType.LFSAttributeMismatch })
+    case 'test-upstream-already-exists':
+      return showFakeUpstreamAlreadyExists()
     default:
       return assertNever(name, `Unknown menu event name: ${name}`)
   }
@@ -230,6 +233,47 @@ export function showTestUI(
     dispatcher.setBanner({
       type: BannerType.ReorderUndone,
       commitsCount: 1,
+    })
+  }
+
+  function showFakeUpstreamAlreadyExists() {
+    if (
+      repository == null ||
+      repository instanceof CloningRepository ||
+      !isRepositoryWithGitHubRepository(repository)
+    ) {
+      return dispatcher.postError(
+        new Error(
+          'No GitHub repository to test with - check out a github repo and try again'
+        )
+      )
+    }
+
+    const repo = new Repository(
+      repository.path,
+      repository.id,
+      new GitHubRepository(
+        repository.gitHubRepository.name,
+        repository.gitHubRepository.owner,
+        repository.gitHubRepository.dbID,
+        repository.gitHubRepository.isPrivate,
+        repository.gitHubRepository.htmlURL,
+        repository.gitHubRepository.cloneURL,
+        repository.gitHubRepository.issuesEnabled,
+        repository.gitHubRepository.isArchived,
+        repository.gitHubRepository.permissions,
+        repository.gitHubRepository // This ensures the repository has a parent even if it's not a fork for easier testing purposes
+      ),
+      repository.missing
+    )
+
+    return dispatcher.showPopup({
+      type: PopupType.UpstreamAlreadyExists,
+      repository: repo,
+      existingRemote: {
+        name: 'heya',
+        url: 'http://github.com/tidy-dev/heya.git',
+      },
     })
   }
 }
