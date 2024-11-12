@@ -134,6 +134,10 @@ export function buildTestMenu() {
           label: 'Re-Authorization Required',
           click: emit('test-re-authorization-required'),
         },
+        {
+          label: 'Do you want to fork this repository?',
+          click: emit('test-do-you-want-fork-this-repository'),
+        },
       ],
     }
   )
