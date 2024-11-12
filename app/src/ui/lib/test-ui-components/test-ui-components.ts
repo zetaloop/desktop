@@ -50,6 +50,8 @@ export function showTestUI(
       return showIconTestDialog()
     case 'test-merge-successful-banner':
       return showFakeMergeSuccessfulBanner()
+    case 'test-newer-commits-on-remote':
+      return showNewerCommitsOnRemote()
     case 'test-no-external-editor':
       return showTestNoExternalEditor()
     case 'test-notification':
@@ -119,6 +121,13 @@ export function showTestUI(
       type: BannerType.SuccessfulMerge,
       ourBranch: 'fake-branch',
     })
+  }
+
+  function showNewerCommitsOnRemote() {
+    if (repository == null || repository instanceof CloningRepository) {
+      return
+    }
+    dispatcher.showPopup({ type: PopupType.PushNeedsPull, repository })
   }
 
   function showTestNoExternalEditor() {

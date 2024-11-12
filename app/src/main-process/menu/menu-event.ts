@@ -58,6 +58,7 @@ const TestMenuEvents = [
   'test-generic-git-authentication',
   'test-icons',
   'test-merge-successful-banner',
+  'test-newer-commits-on-remote',
   'test-no-external-editor',
   'test-notification',
   'test-prune-branches',

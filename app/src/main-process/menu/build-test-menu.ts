@@ -114,6 +114,10 @@ export function buildTestMenu() {
           label: 'Generic Git Authentication',
           click: emit('test-generic-git-authentication'),
         },
+        {
+          label: 'Newer Commits On Remote',
+          click: emit('test-newer-commits-on-remote'),
+        },
       ],
     }
   )
