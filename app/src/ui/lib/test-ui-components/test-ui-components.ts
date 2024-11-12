@@ -43,6 +43,8 @@ export function showTestUI(
       return showFakeCherryPickConflictBanner()
     case 'test-do-you-want-fork-this-repository':
       return showFakeDoYouWantForkThisRepository()
+    case 'test-files-too-large':
+      return showFakeFilesTooLarge()
     case 'test-generic-git-authentication':
       return dispatcher.showPopup({
         type: PopupType.GenericGitAuthentication,
@@ -153,6 +155,30 @@ export function showTestUI(
       type: PopupType.CreateFork,
       repository,
       account: Account.anonymous(),
+    })
+  }
+
+  function showFakeFilesTooLarge() {
+    if (
+      repository == null ||
+      repository instanceof CloningRepository ||
+      !isRepositoryWithGitHubRepository(repository)
+    ) {
+      return dispatcher.postError(
+        new Error(
+          'No GitHub repository to test with - check out a GitHub repository and try again'
+        )
+      )
+    }
+
+    return dispatcher.showPopup({
+      type: PopupType.OversizedFiles,
+      oversizedFiles: ['test/app.tsx', 'test/popup.tsx'],
+      context: {
+        summary: 'Test summary',
+        description: 'Test description',
+      },
+      repository,
     })
   }
 
