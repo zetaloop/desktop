@@ -72,6 +72,8 @@ export function showTestUI(
       return showFakeUndoneBanner()
     case 'test-update-banner':
       return showFakeUpdateBanner({})
+    case 'test-update-existing-git-lfs-filters':
+      return dispatcher.showPopup({ type: PopupType.LFSAttributeMismatch })
     default:
       return assertNever(name, `Unknown menu event name: ${name}`)
   }
