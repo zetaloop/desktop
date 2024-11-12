@@ -7,6 +7,7 @@ import { UNSAFE_openDirectory } from '../shell'
 import { MenuLabelsEvent } from '../../models/menu-labels'
 import * as ipcWebContents from '../ipc-webcontents'
 import { mkdir } from 'fs/promises'
+import { enableTestMenuItems } from '../../lib/feature-flag'
 
 const createPullRequestLabel = __DARWIN__
   ? 'Create Pull Request'
@@ -546,48 +547,7 @@ export function buildDefaultMenu({
     showLogsItem,
   ]
 
-  if (__DEV__) {
-    helpItems.push(
-      separator,
-      {
-        label: 'Crash main process…',
-        click() {
-          throw new Error('Boomtown!')
-        },
-      },
-      {
-        label: 'Crash renderer process…',
-        click: emit('boomtown'),
-      },
-      {
-        label: 'Show popup',
-        submenu: [
-          {
-            label: 'Release notes',
-            click: emit('show-release-notes-popup'),
-          },
-          {
-            label: 'Thank you',
-            click: emit('show-thank-you-popup'),
-          },
-          {
-            label: 'Show App Error',
-            click: emit('show-app-error'),
-          },
-          {
-            label: 'Octicons',
-            click: emit('show-icon-test-dialog'),
-          },
-        ],
-      },
-      {
-        label: 'Prune branches',
-        click: emit('test-prune-branches'),
-      }
-    )
-  }
-
-  if (__RELEASE_CHANNEL__ === 'development' || __RELEASE_CHANNEL__ === 'test') {
+  if (enableTestMenuItems()) {
     if (__WIN32__) {
       helpItems.push(separator, {
         label: 'Command Line Tool',
@@ -603,46 +563,93 @@ export function buildDefaultMenu({
         ],
       })
     }
+  }
 
+  if (enableTestMenuItems()) {
     helpItems.push(
+      separator,
+      {
+        label: 'Crash main process…',
+        click() {
+          throw new Error('Boomtown!')
+        },
+      },
+      {
+        label: 'Crash renderer process…',
+        click: emit('boomtown'),
+      },
+      {
+        label: 'Prune branches',
+        click: emit('test-prune-branches'),
+      },
       {
         label: 'Show notification',
-        click: emit('test-show-notification'),
+        click: emit('test-notification'),
+      },
+      {
+        label: 'Show popup',
+        submenu: [
+          {
+            label: 'Release notes',
+            click: emit('test-release-notes-popup'),
+          },
+          {
+            label: 'Thank you',
+            click: emit('test-thank-you-popup'),
+          },
+          {
+            label: 'Show App Error',
+            click: emit('test-app-error'),
+          },
+          {
+            label: 'Octicons',
+            click: emit('test-icons'),
+          },
+        ],
       },
       {
         label: 'Show banner',
         submenu: [
           {
             label: 'Update banner',
-            click: emit('show-update-banner'),
+            click: emit('test-update-banner'),
           },
           {
             label: `Showcase Update banner`,
-            click: emit('show-showcase-update-banner'),
+            click: emit('test-showcase-update-banner'),
           },
           {
             label: `${__DARWIN__ ? 'Apple silicon' : 'Arm64'} banner`,
-            click: emit('show-arm64-banner'),
+            click: emit('test-arm64-banner'),
           },
           {
             label: 'Thank you',
-            click: emit('show-thank-you-banner'),
+            click: emit('test-thank-you-banner'),
           },
           {
             label: 'Reorder Successful',
-            click: emit('show-test-reorder-banner'),
+            click: emit('test-reorder-banner'),
           },
           {
             label: 'Reorder Undone',
-            click: emit('show-test-undone-banner'),
+            click: emit('test-undone-banner'),
           },
           {
             label: 'Cherry Pick Conflicts',
-            click: emit('show-test-cherry-pick-conflicts-banner'),
+            click: emit('test-cherry-pick-conflicts-banner'),
           },
           {
             label: 'Merge Successful',
-            click: emit('show-test-merge-successful-banner'),
+            click: emit('test-merge-successful-banner'),
+          },
+        ],
+      },
+      {
+        label: 'Show Error Dialogs',
+        submenu: [
+          {
+            label: 'No External Editor',
+            click: emit('test-no-external-editor'),
           },
         ],
       }
