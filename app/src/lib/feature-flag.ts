@@ -36,7 +36,7 @@ function enableBetaFeatures(): boolean {
  * we may want to create a test release for a user to test a fix in which case
  * they should not need access to the test menu items.
  */
-export const enableTestMenuItems = () => __RELEASE_CHANNEL__ === 'test' && true
+export const enableTestMenuItems = () => enableDevelopmentFeatures() || __RELEASE_CHANNEL__ === 'test'
 
 /** Should git pass `--recurse-submodules` when performing operations? */
 export function enableRecurseSubmodulesFlag(): boolean {
