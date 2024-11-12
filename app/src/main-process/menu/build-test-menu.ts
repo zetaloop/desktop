@@ -130,6 +130,10 @@ export function buildTestMenu() {
           label: 'Push Rejected',
           click: emit('test-push-rejected'),
         },
+        {
+          label: 'Re-Authorization Required',
+          click: emit('test-re-authorization-required'),
+        },
       ],
     }
   )
