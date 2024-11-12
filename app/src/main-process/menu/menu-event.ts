@@ -55,6 +55,7 @@ const TestMenuEvents = [
   'test-app-error',
   'test-arm64-banner',
   'test-cherry-pick-conflicts-banner',
+  `test-do-you-want-fork-this-repository`,
   'test-generic-git-authentication',
   'test-icons',
   'test-merge-successful-banner',
