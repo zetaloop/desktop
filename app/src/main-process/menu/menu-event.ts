@@ -70,6 +70,7 @@ const TestMenuEvents = [
   'test-showcase-update-banner',
   'test-thank-you-banner',
   'test-thank-you-popup',
+  'test-unable-to-locate-git',
   'test-undone-banner',
   'test-update-banner',
   'test-update-existing-git-lfs-filters',

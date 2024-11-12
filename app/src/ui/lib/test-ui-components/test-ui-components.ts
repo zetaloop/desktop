@@ -80,6 +80,11 @@ export function showTestUI(
       return showFakeThankYouBanner()
     case 'test-thank-you-popup':
       return showFakeThankYouPopup()
+    case 'test-unable-to-locate-git':
+      return dispatcher.showPopup({
+        type: PopupType.InstallGit,
+        path: '/test/path/to/git',
+      })
     case 'test-undone-banner':
       return showFakeUndoneBanner()
     case 'test-update-banner':

@@ -138,6 +138,10 @@ export function buildTestMenu() {
           label: 'Do you want to fork this repository?',
           click: emit('test-do-you-want-fork-this-repository'),
         },
+        {
+          label: 'Unable to Locate Git',
+          click: emit('test-unable-to-locate-git'),
+        },
       ],
     }
   )
