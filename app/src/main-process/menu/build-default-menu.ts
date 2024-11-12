@@ -547,7 +547,7 @@ export function buildDefaultMenu({
     showLogsItem,
   ]
 
-  if (__RELEASE_CHANNEL__ === 'development' || __RELEASE_CHANNEL__ === 'test') {
+  if (enableTestMenuItems()) {
     if (__WIN32__) {
       helpItems.push(separator, {
         label: 'Command Line Tool',
