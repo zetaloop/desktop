@@ -7,7 +7,7 @@ import { UNSAFE_openDirectory } from '../shell'
 import { MenuLabelsEvent } from '../../models/menu-labels'
 import * as ipcWebContents from '../ipc-webcontents'
 import { mkdir } from 'fs/promises'
-import { enableTestMenuItems } from '../../lib/feature-flag'
+import { buildTestMenu } from './build-test-menu'
 
 const createPullRequestLabel = __DARWIN__
   ? 'Create Pull Request'
@@ -29,6 +29,10 @@ enum ZoomDirection {
   Reset,
   In,
   Out,
+}
+
+export const separator: Electron.MenuItemConstructorOptions = {
+  type: 'separator',
 }
 
 export function buildDefaultMenu({
@@ -56,7 +60,6 @@ export function buildDefaultMenu({
     : createPullRequestLabel
 
   const template = new Array<Electron.MenuItemConstructorOptions>()
-  const separator: Electron.MenuItemConstructorOptions = { type: 'separator' }
 
   if (__DARWIN__) {
     template.push({
@@ -547,114 +550,7 @@ export function buildDefaultMenu({
     showLogsItem,
   ]
 
-  if (enableTestMenuItems()) {
-    if (__WIN32__) {
-      helpItems.push(separator, {
-        label: 'Command Line Tool',
-        submenu: [
-          {
-            label: 'Install',
-            click: emit('install-windows-cli'),
-          },
-          {
-            label: 'Uninstall',
-            click: emit('uninstall-windows-cli'),
-          },
-        ],
-      })
-    }
-  }
-
-  if (enableTestMenuItems()) {
-    helpItems.push(
-      separator,
-      {
-        label: 'Crash main process…',
-        click() {
-          throw new Error('Boomtown!')
-        },
-      },
-      {
-        label: 'Crash renderer process…',
-        click: emit('boomtown'),
-      },
-      {
-        label: 'Prune branches',
-        click: emit('test-prune-branches'),
-      },
-      {
-        label: 'Show notification',
-        click: emit('test-notification'),
-      },
-      {
-        label: 'Show popup',
-        submenu: [
-          {
-            label: 'Release notes',
-            click: emit('test-release-notes-popup'),
-          },
-          {
-            label: 'Thank you',
-            click: emit('test-thank-you-popup'),
-          },
-          {
-            label: 'Show App Error',
-            click: emit('test-app-error'),
-          },
-          {
-            label: 'Octicons',
-            click: emit('test-icons'),
-          },
-        ],
-      },
-      {
-        label: 'Show banner',
-        submenu: [
-          {
-            label: 'Update banner',
-            click: emit('test-update-banner'),
-          },
-          {
-            label: `Showcase Update banner`,
-            click: emit('test-showcase-update-banner'),
-          },
-          {
-            label: `${__DARWIN__ ? 'Apple silicon' : 'Arm64'} banner`,
-            click: emit('test-arm64-banner'),
-          },
-          {
-            label: 'Thank you',
-            click: emit('test-thank-you-banner'),
-          },
-          {
-            label: 'Reorder Successful',
-            click: emit('test-reorder-banner'),
-          },
-          {
-            label: 'Reorder Undone',
-            click: emit('test-undone-banner'),
-          },
-          {
-            label: 'Cherry Pick Conflicts',
-            click: emit('test-cherry-pick-conflicts-banner'),
-          },
-          {
-            label: 'Merge Successful',
-            click: emit('test-merge-successful-banner'),
-          },
-        ],
-      },
-      {
-        label: 'Show Error Dialogs',
-        submenu: [
-          {
-            label: 'No External Editor',
-            click: emit('test-no-external-editor'),
-          },
-        ],
-      }
-    )
-  }
+  helpItems.push(...buildTestMenu())
 
   if (__DARWIN__) {
     template.push({
@@ -714,7 +610,7 @@ type ClickHandler = (
  * Utility function returning a Click event handler which, when invoked, emits
  * the provided menu event over IPC.
  */
-function emit(name: MenuEvent): ClickHandler {
+export function emit(name: MenuEvent): ClickHandler {
   return (_, focusedWindow) => {
     // focusedWindow can be null if the menu item was clicked without the window
     // being in focus. A simple way to reproduce this is to click on a menu item
