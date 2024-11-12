@@ -59,6 +59,8 @@ export function showTestUI(
       return testShowNotification()
     case 'test-prune-branches':
       return testPruneBranches()
+    case 'test-push-rejected':
+      return showFakePushRejected()
     case 'test-release-notes-popup':
       return showFakeReleaseNotesPopup()
     case 'test-reorder-banner':
@@ -162,6 +164,26 @@ export function showTestUI(
 
   function testPruneBranches() {
     dispatcher.testPruneBranches()
+  }
+
+  function showFakePushRejected() {
+    if (
+      repository == null ||
+      repository instanceof CloningRepository ||
+      !isRepositoryWithGitHubRepository(repository)
+    ) {
+      return dispatcher.postError(
+        new Error(
+          'No GitHub repository to test with - check out a GitHub repository and try again'
+        )
+      )
+    }
+
+    return dispatcher.showPopup({
+      type: PopupType.PushRejectedDueToMissingWorkflowScope,
+      rejectedPath: `.gitub/workflows/test.yml`,
+      repository,
+    })
   }
 
   async function showFakeReleaseNotesPopup() {
