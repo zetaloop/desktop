@@ -50,20 +50,28 @@ export type MenuEvent =
  * This is an alphabetized list of menu event's that are only used for testing
  * UI.
  */
-export type TestMenuEvent =
-  | 'boomtown'
-  | 'test-app-error'
-  | 'test-arm64-banner'
-  | 'test-cherry-pick-conflicts-banner'
-  | 'test-icons'
-  | 'test-merge-successful-banner'
-  | 'test-no-external-editor'
-  | 'test-notification'
-  | 'test-prune-branches'
-  | 'test-release-notes-popup'
-  | 'test-reorder-banner'
-  | 'test-showcase-update-banner'
-  | 'test-thank-you-banner'
-  | 'test-thank-you-popup'
-  | 'test-undone-banner'
-  | 'test-update-banner'
+const TestMenuEvents = [
+  'boomtown',
+  'test-app-error',
+  'test-arm64-banner',
+  'test-cherry-pick-conflicts-banner',
+  'test-generic-git-authentication',
+  'test-icons',
+  'test-merge-successful-banner',
+  'test-no-external-editor',
+  'test-notification',
+  'test-prune-branches',
+  'test-release-notes-popup',
+  'test-reorder-banner',
+  'test-showcase-update-banner',
+  'test-thank-you-banner',
+  'test-thank-you-popup',
+  'test-undone-banner',
+  'test-update-banner',
+] as const
+
+export type TestMenuEvent = typeof TestMenuEvents[number]
+
+export function isTestMenuEvent(value: any): value is TestMenuEvent {
+  return TestMenuEvents.includes(value)
+}
