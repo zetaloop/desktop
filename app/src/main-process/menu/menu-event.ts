@@ -73,6 +73,7 @@ const TestMenuEvents = [
   'test-thank-you-banner',
   'test-thank-you-popup',
   'test-unable-to-locate-git',
+  'test-unable-to-open-shell',
   'test-undone-banner',
   'test-untrusted-server',
   'test-update-banner',

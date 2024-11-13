@@ -21,6 +21,7 @@ import { getVersion } from '../app-proxy'
 import { Emoji } from '../../../lib/emoji'
 import { GitHubRepository } from '../../../models/github-repository'
 import { Account } from '../../../models/account'
+import { ShellError } from '../../../lib/shells/error'
 
 export function showTestUI(
   name: TestMenuEvent,
@@ -92,6 +93,16 @@ export function showTestUI(
         type: PopupType.InstallGit,
         path: '/test/path/to/git',
       })
+    case 'test-unable-to-open-shell':
+      return dispatcher.postError(
+        new ShellError(
+          `Could not find executable for '${
+            __DARWIN__ ? 'Terminal' : 'Command Prompt'
+          }' at path 'some/invalid/path'.  Please open ${
+            __DARWIN__ ? 'Settings' : 'Options'
+          } and select an available shell.`
+        )
+      )
     case 'test-undone-banner':
       return showFakeUndoneBanner()
     case 'test-untrusted-server':
