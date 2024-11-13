@@ -70,6 +70,8 @@ export function showTestUI(
       })
     case 'test-merge-successful-banner':
       return showFakeMergeSuccessfulBanner()
+    case 'test-move-to-application-folder':
+      return dispatcher.showPopup({ type: PopupType.MoveToApplicationsFolder })
     case 'test-newer-commits-on-remote':
       return showNewerCommitsOnRemote()
     case 'test-no-external-editor':
