@@ -158,6 +158,10 @@ export function buildTestMenu() {
           label: 'Unable to Open Shell',
           click: emit('test-unable-to-open-shell'),
         },
+        {
+          label: 'Discarded Changes Will Be Unrecoverable',
+          click: emit('test-discarded-changes-will-be-unrecoverable'),
+        },
       ],
     }
   )
