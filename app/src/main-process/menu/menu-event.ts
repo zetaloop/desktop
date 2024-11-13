@@ -74,6 +74,7 @@ const TestMenuEvents = [
   'test-thank-you-popup',
   'test-unable-to-locate-git',
   'test-undone-banner',
+  'test-untrusted-server',
   'test-update-banner',
   'test-update-existing-git-lfs-filters',
   'test-upstream-already-exists',

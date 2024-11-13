@@ -94,6 +94,34 @@ export function showTestUI(
       })
     case 'test-undone-banner':
       return showFakeUndoneBanner()
+    case 'test-untrusted-server':
+      const mockIssuer = {
+        commonName: 'asdf',
+        country: 'asfd',
+        locality: 'asd',
+        organizations: ['org'],
+        organizationUnits: ['orgUnit'],
+        state: 'asdf',
+      }
+
+      const mockCert: any = {
+        data: 'asdf',
+        fingerprint: 'asdf',
+        issuerName: 'asdf',
+        issuer: mockIssuer,
+        serialNumber: 'asdf',
+        subject: mockIssuer,
+        subjectName: 'asdf',
+        validExpiry: 1731503528677,
+        validStart: 1731503528677,
+      }
+
+      mockCert.issueCert = mockCert
+      return dispatcher.showPopup({
+        type: PopupType.UntrustedCertificate,
+        certificate: mockCert,
+        url: `https://www.github.com`,
+      })
     case 'test-update-banner':
       return showFakeUpdateBanner({})
     case 'test-update-existing-git-lfs-filters':
