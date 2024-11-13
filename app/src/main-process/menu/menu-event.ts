@@ -54,6 +54,7 @@ const TestMenuEvents = [
   'boomtown',
   'test-app-error',
   'test-arm64-banner',
+  'test-confirm-committing-conflicted-files',
   'test-cherry-pick-conflicts-banner',
   'test-discarded-changes-will-be-unrecoverable',
   `test-do-you-want-fork-this-repository`,

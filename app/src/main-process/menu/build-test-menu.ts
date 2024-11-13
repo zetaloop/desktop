@@ -91,6 +91,11 @@ export function buildTestMenu() {
     })
   }
 
+  errorDialogsSubmenu.push({
+    label: 'Confirm Committing Conflicted Files',
+    click: emit('test-confirm-committing-conflicted-files'),
+  })
+
   testMenuItems.push(
     separator,
     {
