@@ -73,10 +73,10 @@ export async function launchCustomExternalEditor(
 ): Promise<void> {
   const editorPath = customEditor.path
   const exists = await pathExists(editorPath)
-  const label = __DARWIN__ ? 'Settings' : 'Options'
+  const label = __DARWIN__ ? '设置' : '设置'
   if (!exists) {
     throw new ExternalEditorError(
-      `Could not find executable for custom editor at path '${customEditor.path}'.  Please open ${label} and select an available editor.`,
+      `找不到自定义编辑器的可执行文件 '${customEditor.path}'。请打开${label}并选择一个可用的编辑器。`,
       { openPreferences: true }
     )
   }
@@ -116,12 +116,12 @@ export async function launchCustomExternalEditor(
     )
     if (error?.code === 'EACCES') {
       throw new ExternalEditorError(
-        `GitHub Desktop doesn't have the proper permissions to start custom editor at path ${customEditor.path}. Please open ${label} and try another editor.`,
+        `GitHub Desktop 没有启动自定义编辑器 '${customEditor.path}' 的权限。可以尝试打开${label}换一个编辑器。`,
         { openPreferences: true }
       )
     } else {
       throw new ExternalEditorError(
-        `Something went wrong while trying to start custom editor at path ${customEditor.path}. Please open ${label} and try another editor.`,
+        `启动自定义编辑器 '${customEditor.path}' 时出现错误。可以尝试打开${label}换一个编辑器。`,
         { openPreferences: true }
       )
     }
