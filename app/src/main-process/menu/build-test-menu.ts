@@ -25,6 +25,79 @@ export function buildTestMenu() {
     })
   }
 
+  const errorDialogsSubmenu: MenuItemConstructorOptions[] = [
+    {
+      label: 'Confirm Committing Conflicted Files',
+      click: emit('test-confirm-committing-conflicted-files'),
+    },
+    {
+      label: 'Discarded Changes Will Be Unrecoverable',
+      click: emit('test-discarded-changes-will-be-unrecoverable'),
+    },
+    {
+      label: 'Do you want to fork this repository?',
+      click: emit('test-do-you-want-fork-this-repository'),
+    },
+    {
+      label: 'Newer Commits On Remote',
+      click: emit('test-newer-commits-on-remote'),
+    },
+    {
+      label: 'Files Too Large',
+      click: emit('test-files-too-large'),
+    },
+    {
+      label: 'Generic Git Authentication',
+      click: emit('test-generic-git-authentication'),
+    },
+    {
+      label: 'Invalidated Account Token',
+      click: emit('test-invalidated-account-token'),
+    },
+  ]
+
+  if (__DARWIN__) {
+    errorDialogsSubmenu.push({
+      label: 'Move to Application Folder',
+      click: emit('test-move-to-application-folder'),
+    })
+  }
+
+  errorDialogsSubmenu.push(
+    {
+      label: 'Push Rejected',
+      click: emit('test-push-rejected'),
+    },
+    {
+      label: 'Re-Authorization Required',
+      click: emit('test-re-authorization-required'),
+    },
+    {
+      label: 'Unable to Locate Git',
+      click: emit('test-unable-to-locate-git'),
+    },
+    {
+      label: 'Unable to Open External Editor',
+      click: emit('test-no-external-editor'),
+    },
+    {
+      label: 'Unable to Open Shell',
+      click: emit('test-unable-to-open-shell'),
+    },
+    {
+      label: 'Untrusted Server',
+      click: emit('test-untrusted-server'),
+    },
+    {
+      label: 'Update Existing Git LFS Filters?',
+      click: emit('test-update-existing-git-lfs-filters'),
+    },
+    {
+      label: 'Upstream Already Exists',
+      click: emit('test-upstream-already-exists'),
+    }
+  )
+
   testMenuItems.push(
     separator,
     {
@@ -105,16 +178,7 @@ export function buildTestMenu() {
     },
     {
       label: 'Show Error Dialogs',
-      submenu: [
-        {
-          label: 'No External Editor',
-          click: emit('test-no-external-editor'),
-        },
-        {
-          label: 'Generic Git Authentication',
-          click: emit('test-generic-git-authentication'),
-        },
-      ],
+      submenu: errorDialogsSubmenu,
     }
   )
 
