@@ -154,6 +154,10 @@ export function buildTestMenu() {
           label: 'Untrusted Server',
           click: emit('test-untrusted-server'),
         },
+        {
+          label: 'Unable to Open Shell',
+          click: emit('test-unable-to-open-shell'),
+        },
       ],
     }
   )
