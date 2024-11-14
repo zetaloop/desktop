@@ -135,7 +135,7 @@ export const getGlobalConfigPath = (env?: { HOME: string }) =>
     // escape sequences like \n which would be bad in a case like
     // c:\Users\niik\.gitconfig
     //         ^^
-    env: { ...env, GIT_EDITOR: 'printf' },
+    env: { ...env, GIT_EDITOR: 'printf %s' },
   }).then(x => normalize(x.stdout))
 
 /** Set the local config value by name. */
