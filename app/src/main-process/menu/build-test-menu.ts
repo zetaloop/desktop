@@ -122,6 +122,10 @@ export function buildTestMenu() {
           label: 'Update Existing Git LFS Filters?',
           click: emit('test-update-existing-git-lfs-filters'),
         },
+        {
+          label: 'Upstream Already Exists',
+          click: emit('test-upstream-already-exists'),
+        },
       ],
     }
   )

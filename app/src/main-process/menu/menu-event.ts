@@ -70,6 +70,7 @@ const TestMenuEvents = [
   'test-undone-banner',
   'test-update-banner',
   'test-update-existing-git-lfs-filters',
+  'test-upstream-already-exists',
 ] as const
 
 export type TestMenuEvent = typeof TestMenuEvents[number]
