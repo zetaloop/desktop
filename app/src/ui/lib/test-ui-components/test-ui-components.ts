@@ -20,6 +20,7 @@ import { ReleaseNote } from '../../../models/release-notes'
 import { getVersion } from '../app-proxy'
 import { Emoji } from '../../../lib/emoji'
 import { GitHubRepository } from '../../../models/github-repository'
+import { Account } from '../../../models/account'
 
 export function showTestUI(
   name: TestMenuEvent,
@@ -40,6 +41,8 @@ export function showTestUI(
       return showFakeUpdateBanner({ isArm64: true })
     case 'test-cherry-pick-conflicts-banner':
       return showFakeCherryPickConflictBanner()
+    case 'test-do-you-want-fork-this-repository':
+      return showFakeDoYouWantForkThisRepository()
     case 'test-generic-git-authentication':
       return dispatcher.showPopup({
         type: PopupType.GenericGitAuthentication,
@@ -120,6 +123,26 @@ export function showTestUI(
       type: BannerType.CherryPickConflictsFound,
       targetBranchName: 'fake-branch',
       onOpenConflictsDialog: () => {},
+    })
+  }
+
+  function showFakeDoYouWantForkThisRepository() {
+    if (
+      repository == null ||
+      repository instanceof CloningRepository ||
+      !isRepositoryWithGitHubRepository(repository)
+    ) {
+      return dispatcher.postError(
+        new Error(
+          'No GitHub repository to test with - check out a GitHub repository and try again'
+        )
+      )
+    }
+
+    return dispatcher.showPopup({
+      type: PopupType.CreateFork,
+      repository,
+      account: Account.anonymous(),
     })
   }
 
