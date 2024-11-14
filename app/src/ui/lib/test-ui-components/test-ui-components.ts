@@ -42,6 +42,11 @@ export function showTestUI(
   switch (name) {
     case 'boomtown':
       return boomtown()
+    case 'test-accessibility-banner':
+      return dispatcher.setBanner({
+        type: BannerType.AccessibilitySettingsBanner,
+        onOpenAccessibilitySettings: () => {},
+      })
     case 'test-app-error':
       return testAppError()
     case 'test-arm64-banner':
@@ -80,6 +85,10 @@ export function showTestUI(
       return showTestNoExternalEditor()
     case 'test-notification':
       return testShowNotification()
+    case 'test-os-version-no-longer-supported':
+      return dispatcher.setBanner({
+        type: BannerType.OSVersionNoLongerSupported,
+      })
     case 'test-prune-branches':
       return testPruneBranches()
     case 'test-push-rejected':

@@ -52,12 +52,13 @@ export type MenuEvent =
  */
 const TestMenuEvents = [
   'boomtown',
+  'test-accessibility-banner',
   'test-app-error',
   'test-arm64-banner',
   'test-confirm-committing-conflicted-files',
   'test-cherry-pick-conflicts-banner',
   'test-discarded-changes-will-be-unrecoverable',
-  `test-do-you-want-fork-this-repository`,
+  'test-do-you-want-fork-this-repository',
   'test-files-too-large',
   'test-generic-git-authentication',
   'test-icons',
@@ -67,6 +68,7 @@ const TestMenuEvents = [
   'test-newer-commits-on-remote',
   'test-no-external-editor',
   'test-notification',
+  'test-os-version-no-longer-supported',
   'test-prune-branches',
   'test-push-rejected',
   'test-re-authorization-required',
