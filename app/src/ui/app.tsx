@@ -26,7 +26,7 @@ import {
   isMacOSAndNoLongerSupportedByElectron,
   isWindowsAndNoLongerSupportedByElectron,
 } from '../lib/get-os'
-import { MenuEvent } from '../main-process/menu'
+import { MenuEvent, isTestMenuEvent } from '../main-process/menu'
 import {
   Repository,
   getGitHubHtmlUrl,
@@ -517,29 +517,15 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.resizeActiveResizable('increase-active-resizable-width')
       case 'decrease-active-resizable-width':
         return this.resizeActiveResizable('decrease-active-resizable-width')
-      case 'boomtown':
-      case 'test-app-error':
-      case 'test-arm64-banner':
-      case 'test-cherry-pick-conflicts-banner':
-      case 'test-icons':
-      case 'test-merge-successful-banner':
-      case 'test-no-external-editor':
-      case 'test-notification':
-      case 'test-prune-branches':
-      case 'test-release-notes-popup':
-      case 'test-reorder-banner':
-      case 'test-showcase-update-banner':
-      case 'test-thank-you-banner':
-      case 'test-thank-you-popup':
-      case 'test-undone-banner':
-      case 'test-update-banner':
-        return showTestUI(
-          name,
-          this.getRepository(),
-          this.props.dispatcher,
-          this.state.emoji
-        )
       default:
+        if (isTestMenuEvent(name)) {
+          return showTestUI(
+            name,
+            this.getRepository(),
+            this.props.dispatcher,
+            this.state.emoji
+          )
+        }
         return assertNever(name, `Unknown menu event name: ${name}`)
     }
   }

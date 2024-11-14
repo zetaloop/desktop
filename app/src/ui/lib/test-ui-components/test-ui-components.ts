@@ -39,6 +39,13 @@ export function showTestUI(
       return showFakeUpdateBanner({ isArm64: true })
     case 'test-cherry-pick-conflicts-banner':
       return showFakeCherryPickConflictBanner()
+    case 'test-generic-git-authentication':
+      return dispatcher.showPopup({
+        type: PopupType.GenericGitAuthentication,
+        remoteUrl: 'test-github.com',
+        onSubmit: (login: string, token: string) => {},
+        onDismiss: () => {},
+      })
     case 'test-icons':
       return showIconTestDialog()
     case 'test-merge-successful-banner':
