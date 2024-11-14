@@ -146,6 +146,10 @@ export function buildTestMenu() {
           label: 'Invalidated Account Token',
           click: emit('test-invalidated-account-token'),
         },
+        {
+          label: 'Files Too Large',
+          click: emit('test-files-too-large'),
+        },
       ],
     }
   )
