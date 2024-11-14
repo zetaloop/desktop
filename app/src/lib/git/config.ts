@@ -122,7 +122,13 @@ async function getConfigValueInPath(
   return pieces[0]
 }
 
-/** Get the path to the global git config. */
+/**
+ * Get the path to the global git config
+ *
+ * Note: this uses git config --edit which will automatically create the global
+ * config file if it doesn't exist yet. The primary purpose behind this method
+ * is to support opening the global git config for editing.
+ */
 export const getGlobalConfigPath = (env?: { HOME: string }) =>
   git(['config', '--edit', '--global'], __dirname, 'getGlobalConfigPath', {
     // We're using printf instead of echo because echo could attempt to decode
