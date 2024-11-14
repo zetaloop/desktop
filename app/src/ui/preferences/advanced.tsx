@@ -131,7 +131,7 @@ export class Advanced extends React.Component<
             onChange={this.onReportingOptOutChanged}
           />
         </div>
-        <h2>Network and credentials</h2>
+        <h2>网络与认证</h2>
         {this.renderSSHSettings()}
         <div className="advanced-section">
           <Checkbox
