@@ -62,6 +62,7 @@ const TestMenuEvents = [
   'test-no-external-editor',
   'test-notification',
   'test-prune-branches',
+  'test-push-rejected',
   'test-release-notes-popup',
   'test-reorder-banner',
   'test-showcase-update-banner',

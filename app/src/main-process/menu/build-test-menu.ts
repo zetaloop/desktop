@@ -126,6 +126,10 @@ export function buildTestMenu() {
           label: 'Upstream Already Exists',
           click: emit('test-upstream-already-exists'),
         },
+        {
+          label: 'Push Rejected',
+          click: emit('test-push-rejected'),
+        },
       ],
     }
   )
