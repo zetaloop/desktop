@@ -118,6 +118,10 @@ export function buildTestMenu() {
           label: 'Newer Commits On Remote',
           click: emit('test-newer-commits-on-remote'),
         },
+        {
+          label: 'Update Existing Git LFS Filters?',
+          click: emit('test-update-existing-git-lfs-filters'),
+        },
       ],
     }
   )

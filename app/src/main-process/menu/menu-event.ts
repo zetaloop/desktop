@@ -69,6 +69,7 @@ const TestMenuEvents = [
   'test-thank-you-popup',
   'test-undone-banner',
   'test-update-banner',
+  'test-update-existing-git-lfs-filters',
 ] as const
 
 export type TestMenuEvent = typeof TestMenuEvents[number]
