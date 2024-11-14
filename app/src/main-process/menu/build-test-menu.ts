@@ -174,6 +174,14 @@ export function buildTestMenu() {
           label: 'Merge Successful',
           click: emit('test-merge-successful-banner'),
         },
+        {
+          label: 'Accessibility',
+          click: emit('test-accessibility-banner'),
+        },
+        {
+          label: 'OS Version No Longer Supported',
+          click: emit('test-os-version-no-longer-supported'),
+        },
       ],
     },
     {
