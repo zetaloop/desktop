@@ -46,6 +46,8 @@ export function showTestUI(
       return testAppError()
     case 'test-arm64-banner':
       return showFakeUpdateBanner({ isArm64: true })
+    case 'test-confirm-committing-conflicted-files':
+      return showFakeConfirmCommittingConflictedFiles()
     case 'test-cherry-pick-conflicts-banner':
       return showFakeCherryPickConflictBanner()
     case 'test-discarded-changes-will-be-unrecoverable':
@@ -177,6 +179,37 @@ export function showTestUI(
     }
 
     dispatcher.setUpdateBannerVisibility(true)
+  }
+
+  function showFakeConfirmCommittingConflictedFiles() {
+    if (repository == null || repository instanceof CloningRepository) {
+      return dispatcher.postError(
+        new Error(
+          'No repository to test with - check out a repository and try again'
+        )
+      )
+    }
+
+    return dispatcher.showPopup({
+      type: PopupType.CommitConflictsWarning,
+      files: [
+        new WorkingDirectoryFileChange(
+          'test/test.md',
+          { kind: AppFileStatusKind.New },
+          DiffSelection.fromInitialSelection(DiffSelectionType.All)
+        ),
+        new WorkingDirectoryFileChange(
+          'mock/mock.md',
+          { kind: AppFileStatusKind.New },
+          DiffSelection.fromInitialSelection(DiffSelectionType.All)
+        ),
+      ],
+      repository,
+      context: {
+        summary: 'Test summary',
+        description: 'Test description',
+      },
+    })
   }
 
   function showFakeCherryPickConflictBanner() {
