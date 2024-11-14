@@ -150,6 +150,10 @@ export function buildTestMenu() {
           label: 'Files Too Large',
           click: emit('test-files-too-large'),
         },
+        {
+          label: 'Untrusted Server',
+          click: emit('test-untrusted-server'),
+        },
       ],
     }
   )
