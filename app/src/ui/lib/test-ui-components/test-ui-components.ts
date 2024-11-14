@@ -61,6 +61,12 @@ export function showTestUI(
       return testPruneBranches()
     case 'test-push-rejected':
       return showFakePushRejected()
+    case 'test-re-authorization-required':
+      return dispatcher.showPopup({
+        type: PopupType.SAMLReauthRequired,
+        organizationName: 'test-org',
+        endpoint: 'test-endpoint',
+      })
     case 'test-release-notes-popup':
       return showFakeReleaseNotesPopup()
     case 'test-reorder-banner':
