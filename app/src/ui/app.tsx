@@ -2535,7 +2535,8 @@ export class App extends React.Component<IAppProps, IAppState> {
     this.props.dispatcher.installGlobalLFSFilters(true)
   }
 
-  private editGlobalGitConfig = () => this.props.dispatcher.editGlobalGitConfig
+  private editGlobalGitConfig = () =>
+    this.props.dispatcher.editGlobalGitConfig()
 
   private initializeLFS = (repositories: ReadonlyArray<Repository>) => {
     this.props.dispatcher.installLFSHooks(repositories)
