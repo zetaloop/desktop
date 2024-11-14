@@ -62,6 +62,7 @@ const TestMenuEvents = [
   'test-icons',
   'test-invalidated-account-token',
   'test-merge-successful-banner',
+  'test-move-to-application-folder',
   'test-newer-commits-on-remote',
   'test-no-external-editor',
   'test-notification',
