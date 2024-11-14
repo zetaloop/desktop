@@ -52,6 +52,11 @@ export function showTestUI(
       })
     case 'test-icons':
       return showIconTestDialog()
+    case 'test-invalidated-account-token':
+      return dispatcher.showPopup({
+        type: PopupType.InvalidatedToken,
+        account: Account.anonymous(),
+      })
     case 'test-merge-successful-banner':
       return showFakeMergeSuccessfulBanner()
     case 'test-newer-commits-on-remote':

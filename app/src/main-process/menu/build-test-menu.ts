@@ -142,6 +142,10 @@ export function buildTestMenu() {
           label: 'Unable to Locate Git',
           click: emit('test-unable-to-locate-git'),
         },
+        {
+          label: 'Invalidated Account Token',
+          click: emit('test-invalidated-account-token'),
+        },
       ],
     }
   )
