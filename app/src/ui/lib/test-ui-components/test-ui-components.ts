@@ -22,6 +22,12 @@ import { Emoji } from '../../../lib/emoji'
 import { GitHubRepository } from '../../../models/github-repository'
 import { Account } from '../../../models/account'
 import { ShellError } from '../../../lib/shells/error'
+import { RetryActionType } from '../../../models/retry-actions'
+import {
+  AppFileStatusKind,
+  WorkingDirectoryFileChange,
+} from '../../../models/status'
+import { DiffSelection, DiffSelectionType } from '../../../models/diff'
 
 export function showTestUI(
   name: TestMenuEvent,
@@ -42,6 +48,8 @@ export function showTestUI(
       return showFakeUpdateBanner({ isArm64: true })
     case 'test-cherry-pick-conflicts-banner':
       return showFakeCherryPickConflictBanner()
+    case 'test-discarded-changes-will-be-unrecoverable':
+      return showFakeDiscardedChangesWillBeUnrecoverable()
     case 'test-do-you-want-fork-this-repository':
       return showFakeDoYouWantForkThisRepository()
     case 'test-files-too-large':
@@ -174,6 +182,36 @@ export function showTestUI(
       type: BannerType.CherryPickConflictsFound,
       targetBranchName: 'fake-branch',
       onOpenConflictsDialog: () => {},
+    })
+  }
+
+  function showFakeDiscardedChangesWillBeUnrecoverable() {
+    if (repository == null || repository instanceof CloningRepository) {
+      return dispatcher.postError(
+        new Error(
+          'No repository to test with - check out a repository and try again'
+        )
+      )
+    }
+
+    return dispatcher.showPopup({
+      type: PopupType.DiscardChangesRetry,
+      retryAction: {
+        type: RetryActionType.DiscardChanges,
+        repository,
+        files: [
+          new WorkingDirectoryFileChange(
+            'test/test.md',
+            { kind: AppFileStatusKind.New },
+            DiffSelection.fromInitialSelection(DiffSelectionType.All)
+          ),
+          new WorkingDirectoryFileChange(
+            'mock/mock.md',
+            { kind: AppFileStatusKind.New },
+            DiffSelection.fromInitialSelection(DiffSelectionType.All)
+          ),
+        ],
+      },
     })
   }
 
