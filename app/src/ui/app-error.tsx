@@ -13,8 +13,6 @@ import { OkCancelButtonGroup } from './dialog/ok-cancel-button-group'
 import { ErrorWithMetadata } from '../lib/error-with-metadata'
 import { RetryActionType, RetryAction } from '../models/retry-actions'
 import { Ref } from './lib/ref'
-import memoizeOne from 'memoize-one'
-import { parseCarriageReturn } from '../lib/parse-carriage-return'
 
 interface IAppErrorProps {
   /** The error to be displayed  */
@@ -44,7 +42,6 @@ interface IAppErrorState {
  */
 export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
   private dialogContent: HTMLDivElement | null = null
-  private formatGitErrorMessage = memoizeOne(parseCarriageReturn)
 
   public constructor(props: IAppErrorProps) {
     super(props)
@@ -94,8 +91,7 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
     // If the error message is just the raw git output, display it in
     // fixed-width font
     if (isRawGitError(e)) {
-      const formattedMessage = this.formatGitErrorMessage(e.message)
-      return <p className="monospace">{formattedMessage}</p>
+      return <p className="monospace">{e.message}</p>
     }
 
     return <p>{e.message}</p>

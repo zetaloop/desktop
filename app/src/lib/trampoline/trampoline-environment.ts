@@ -186,13 +186,15 @@ export async function withTrampolineEnv<T>(
         e instanceof GitError &&
         fatalPromptsDisabledRe.test(e.message)
       ) {
+        const msg = 'Authentication failed: user cancelled authentication'
         const gitErrorDescription =
           getDescriptionForError(DugiteError.HTTPSAuthenticationFailed, '') ??
-          'Authentication failed: user cancelled authentication'
+          msg
 
         const fakeAuthError = new GitError(
           { ...e.result, gitErrorDescription },
-          e.args
+          e.args,
+          msg
         )
 
         fakeAuthError.cause = e
