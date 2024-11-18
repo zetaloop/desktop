@@ -13,6 +13,7 @@ import {
 
 import { mkdirSync } from '../../helpers/temp'
 import { setupFixtureRepository } from '../../helpers/repositories'
+import { realpath } from 'fs/promises'
 
 describe('git/config', () => {
   let repository: Repository
@@ -68,6 +69,7 @@ describe('git/config', () => {
     const HOME = mkdirSync('global-config-here')
     const env = { HOME }
     const expectedConfigPath = Path.normalize(Path.join(HOME, '.gitconfig'))
+
     const baseArgs = ['config', '-f', expectedConfigPath]
 
     describe('getGlobalConfigPath', () => {
@@ -79,7 +81,7 @@ describe('git/config', () => {
 
       it('gets the config path', async () => {
         const path = await getGlobalConfigPath(env)
-        expect(path).toBe(expectedConfigPath)
+        expect(path).toBe(await realpath(expectedConfigPath))
       })
     })
 
