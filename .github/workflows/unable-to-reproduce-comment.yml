@@ -25,12 +25,12 @@ jobs:
         Here are some tips for writing reproduction steps: 
           - Step by step instructions accompanied by screenshots or screencasts
         are the best.
-          - Be as specific as possible; Include as much detail as you can. 
-          - If not already provided, include the version of the software you are
-        using. 
-          - If not already provided, include the version of the operating system
-        you are using and any environment factors you can think of.
-          - If you are using a custom configuration, please provide it.
+          - Be as specific as possible; include as much detail as you can. 
+          - If not already provided, include:
+              - the version of GitHub Desktop you are using. 
+              - the operating system you are using
+              - any environment factors you can think of.
+              - any custom configuration you are using.
           - If relevant and can be shared, provide the repository or code you
         are using.
     steps:
