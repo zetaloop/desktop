@@ -108,6 +108,9 @@ interface IListProps {
    */
   readonly selectedRows: ReadonlyArray<number>
 
+  /** Whether or not to disable focusing on the list with Tab (optional, defaults to false) */
+  readonly shouldDisableTabFocus?: boolean
+
   /**
    * Used to attach special classes to specific rows
    */
@@ -1128,7 +1131,8 @@ export class List extends React.Component<IListProps, IListState> {
 
   private getRowRenderer = (firstSelectableRowIndex: number | null) => {
     return (params: IRowRendererParams) => {
-      const { selectedRows, keyboardInsertionData } = this.props
+      const { selectedRows, keyboardInsertionData, shouldDisableTabFocus } =
+        this.props
       const { keyboardInsertionIndexPath } = this.state
       const rowIndex = params.rowIndex
       const selectable = this.canSelectRow(rowIndex)
@@ -1137,7 +1141,9 @@ export class List extends React.Component<IListProps, IListState> {
 
       // An unselectable row shouldn't be focusable
       let tabIndex: number | undefined = undefined
-      if (selectable) {
+      if (shouldDisableTabFocus === true) {
+        tabIndex = -1
+      } else if (selectable) {
         tabIndex =
           (selected && selectedRows[0] === rowIndex) ||
           (selectedRows.length === 0 && firstSelectableRowIndex === rowIndex)
@@ -1352,7 +1358,12 @@ export class List extends React.Component<IListProps, IListState> {
     // The currently selected list item is focusable but if there's no focused
     // item the list itself needs to be focusable so that you can reach it with
     // keyboard navigation and select an item.
-    const tabIndex = this.props.selectedRows.length < 1 ? 0 : -1
+    const tabIndex =
+      this.props.shouldDisableTabFocus === true
+        ? -1
+        : this.props.selectedRows.length < 1
+        ? 0
+        : -1
 
     // we select the last item from the selection array for this prop
     const activeDescendant =
