@@ -11,7 +11,6 @@ interface IGitProps {
   readonly email: string
   readonly defaultBranch: string
   readonly isLoadingGitConfig: boolean
-  readonly globalGitConfigPath: string | null
 
   readonly dotComAccount: Account | null
   readonly enterpriseAccount: Account | null
@@ -20,8 +19,7 @@ interface IGitProps {
   readonly onEmailChanged: (email: string) => void
   readonly onDefaultBranchChanged: (defaultBranch: string) => void
 
-  readonly selectedExternalEditor: string | null
-  readonly onOpenFileInExternalEditor: (path: string) => void
+  readonly onEditGlobalGitConfig: () => void
 }
 
 export class Git extends React.Component<IGitProps> {
@@ -71,25 +69,12 @@ export class Git extends React.Component<IGitProps> {
 
         <p className="git-settings-description">
           These preferences will{' '}
-          {this.props.selectedExternalEditor &&
-          this.props.globalGitConfigPath ? (
-            <LinkButton onClick={this.openGlobalGitConfigInEditor}>
-              edit your global Git config file
-            </LinkButton>
-          ) : (
-            'edit your global Git config file'
-          )}
+          <LinkButton onClick={this.props.onEditGlobalGitConfig}>
+            edit your global Git config file
+          </LinkButton>
           .
         </p>
       </div>
     )
-  }
-
-  // This function is called to open the global git config file in the
-  // user's default editor.
-  private openGlobalGitConfigInEditor = () => {
-    if (this.props.globalGitConfigPath) {
-      this.props.onOpenFileInExternalEditor(this.props.globalGitConfigPath)
-    }
   }
 }
