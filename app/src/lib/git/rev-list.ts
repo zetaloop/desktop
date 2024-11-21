@@ -182,3 +182,19 @@ export async function getCommitsInRange(
 
   return commits
 }
+
+/**
+ * Determine if merge commits exist in history after given commit
+ * If no commitRef is null, goes back to HEAD of branch.
+ */
+export async function doMergeCommitsExistAfterCommit(
+  repository: Repository,
+  commitRef: string | null
+): Promise<boolean> {
+  const revision = commitRef === null ? 'HEAD' : revRange(commitRef, 'HEAD')
+  const args = ['rev-list', '-1', '--merges', revision]
+
+  return git(args, repository.path, 'doMergeCommitsExistAfterCommit', {
+    successExitCodes: new Set([0, 128]),
+  }).then(x => x.stdout.length > 0)
+}
