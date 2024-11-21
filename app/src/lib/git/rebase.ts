@@ -461,7 +461,7 @@ export async function continueRebase(
 
   await stageFiles(repository, otherFiles)
 
-  const status = await getStatus(repository)
+  const status = await getStatus(repository, false)
   if (status == null) {
     log.warn(
       `[continueRebase] unable to get status after staging changes, skipping any other steps`
