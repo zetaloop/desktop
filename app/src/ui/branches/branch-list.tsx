@@ -4,7 +4,7 @@ import { Branch, BranchType } from '../../models/branch'
 
 import { assertNever } from '../../lib/fatal-error'
 
-import { IFilterListGroup, SelectionSource } from '../lib/filter-list'
+import { SelectionSource } from '../lib/filter-list'
 import { IMatches } from '../../lib/fuzzy-find'
 import { Button } from '../lib/button'
 import { TextBox } from '../lib/text-box'
@@ -19,6 +19,7 @@ import { SelectionDirection, ClickSource } from '../lib/list'
 import { generateBranchContextMenuItems } from './branch-list-item-context-menu'
 import { showContextualMenu } from '../../lib/menu-item'
 import { SectionFilterList } from '../lib/section-filter-list'
+import memoizeOne from 'memoize-one'
 
 const RowHeight = 30
 
@@ -123,79 +124,29 @@ interface IBranchListProps {
   readonly onDeleteBranch?: (branchName: string) => void
 }
 
-interface IBranchListState {
-  /**
-   * The grouped list of branches.
-   *
-   * Groups are currently defined as 'default branch', 'current branch',
-   * 'recent branches' and all branches.
-   */
-  readonly groups: ReadonlyArray<IFilterListGroup<IBranchListItem>>
-
-  /** The selected item in the filtered list */
-  readonly selectedItem: IBranchListItem | null
-}
-
-function createState(
-  defaultBranch: Branch | null,
-  currentBranch: Branch | null,
-  allBranches: ReadonlyArray<Branch>,
-  recentBranches: ReadonlyArray<Branch>,
-  selectedBranch: Branch | null
-): IBranchListState {
-  const groups = groupBranches(
-    defaultBranch,
-    currentBranch,
-    allBranches,
-    recentBranches
-  )
-
-  let selectedItem: IBranchListItem | null = null
-  if (selectedBranch) {
-    for (const group of groups) {
-      selectedItem =
-        group.items.find(i => {
-          const branch = i.branch
-          return branch.name === selectedBranch.name
-        }) || null
-
-      if (selectedItem) {
-        break
-      }
-    }
-  }
-
-  return { groups, selectedItem }
-}
-
 /** The Branches list component. */
-export class BranchList extends React.Component<
-  IBranchListProps,
-  IBranchListState
-> {
+export class BranchList extends React.Component<IBranchListProps> {
   private branchFilterList: SectionFilterList<IBranchListItem> | null = null
 
-  public constructor(props: IBranchListProps) {
-    super(props)
-    this.state = createState(
-      props.defaultBranch,
-      props.currentBranch,
-      props.allBranches,
-      props.recentBranches,
-      props.selectedBranch
+  private getGroups = memoizeOne(groupBranches)
+  private getSelectedItem = memoizeOne(
+    (groups: ReturnType<typeof groupBranches>, selectedBranch: Branch | null) =>
+      groups
+        .flatMap(g => g.items)
+        .find(i => i.branch.name === selectedBranch?.name) ?? null
+  )
+
+  private get groups() {
+    return this.getGroups(
+      this.props.defaultBranch,
+      this.props.currentBranch,
+      this.props.allBranches,
+      this.props.recentBranches
     )
   }
 
-  public componentWillReceiveProps(nextProps: IBranchListProps) {
-    this.setState(
-      createState(
-        nextProps.defaultBranch,
-        nextProps.currentBranch,
-        nextProps.allBranches,
-        nextProps.recentBranches,
-        nextProps.selectedBranch
-      )
-    )
+  private get selectedItem() {
+    return this.getSelectedItem(this.groups, this.props.selectedBranch)
   }
 
   public selectNextItem(focus: boolean = false, direction: SelectionDirection) {
@@ -213,13 +164,13 @@ export class BranchList extends React.Component<
         filterText={this.props.filterText}
         onFilterTextChanged={this.props.onFilterTextChanged}
         onFilterKeyDown={this.props.onFilterKeyDown}
-        selectedItem={this.state.selectedItem}
+        selectedItem={this.selectedItem}
         renderItem={this.renderItem}
         renderGroupHeader={this.renderGroupHeader}
         onItemClick={this.onItemClick}
         onSelectionChanged={this.onSelectionChanged}
         onEnterPressedWithoutFilteredItems={this.onCreateNewBranch}
-        groups={this.state.groups}
+        groups={this.groups}
         invalidationProps={this.props.allBranches}
         renderPostFilter={this.onRenderNewButton}
         renderNoItems={this.onRenderNoItems}
@@ -285,8 +236,7 @@ export class BranchList extends React.Component<
   }
 
   private getGroupAriaLabel = (group: number) => {
-    const identifier = this.state.groups[group]
-      .identifier as BranchGroupIdentifier
+    const identifier = this.groups[group].identifier as BranchGroupIdentifier
     return this.getGroupLabel(identifier)
   }
 
