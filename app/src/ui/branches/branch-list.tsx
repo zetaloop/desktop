@@ -206,7 +206,6 @@ export class BranchList extends React.Component<
   private populateCommitDates = () => {
     const cached = new Map<string, Date>()
     const missing = new Array<string>()
-
     const uniqShas = new Set(this.props.allBranches.map(b => b.tip.sha))
 
     for (const sha of uniqShas) {
@@ -229,10 +228,10 @@ export class BranchList extends React.Component<
 
     if (missing.length > 0) {
       getAuthors(this.props.repository, missing)
-        .then(x =>
-          x.forEach((author, i) => commitDateCache.set(missing[i], author.date))
-        )
-        .then(() => this.populateCommitDates())
+        .then(x => {
+          x.forEach(({ date }, i) => commitDateCache.set(missing[i], date))
+          this.populateCommitDates()
+        })
         .catch(e => log.error(`Failed to populate commit dates`, e))
     }
   }
