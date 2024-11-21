@@ -21,6 +21,8 @@ interface IBranchListItemProps {
   /** The characters in the branch name to highlight */
   readonly matches: IMatches
 
+  readonly authorDate: Date | undefined
+
   /** When a drag element has landed on a branch that is not current */
   readonly onDropOntoBranch?: (branchName: string) => void
 
@@ -35,9 +37,6 @@ interface IBranchListItemState {
    * events when dragging.
    */
   readonly isDragInProgress: boolean
-
-  /** The date may be null if we haven't loaded the tip commit yet. */
-  readonly lastCommitDate: Date | null
 }
 
 /** The branch component. */
@@ -47,7 +46,7 @@ export class BranchListItem extends React.Component<
 > {
   public constructor(props: IBranchListItemProps) {
     super(props)
-    this.state = { isDragInProgress: false, lastCommitDate: null }
+    this.state = { isDragInProgress: false }
   }
 
   private onMouseEnter = () => {
@@ -91,8 +90,8 @@ export class BranchListItem extends React.Component<
   }
 
   public render() {
-    const { isCurrentBranch, name } = this.props
-    const { lastCommitDate } = this.state
+    const { authorDate, isCurrentBranch, name } = this.props
+
     const icon = isCurrentBranch ? octicons.check : octicons.gitBranch
     const className = classNames('branches-list-item', {
       'drop-target': this.state.isDragInProgress,
@@ -115,10 +114,10 @@ export class BranchListItem extends React.Component<
         >
           <HighlightText text={name} highlight={this.props.matches.title} />
         </TooltippedContent>
-        {lastCommitDate && (
+        {authorDate && (
           <RelativeTime
             className="description"
-            date={lastCommitDate}
+            date={authorDate}
             onlyRelative={true}
           />
         )}

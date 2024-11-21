@@ -14,6 +14,7 @@ import { CommitIdentity } from '../../models/commit-identity'
 import { parseRawUnfoldedTrailers } from './interpret-trailers'
 import { createLogParser } from './git-delimiter-parser'
 import { forceUnwrap } from '../fatal-error'
+import assert from 'assert'
 
 // File mode 160000 is used by git specifically for submodules:
 // https://github.com/git/git/blob/v2.37.3/cache.h#L62-L69
@@ -321,4 +322,28 @@ export async function getCommit(
   }
 
   return commits[0]
+}
+
+export async function getAuthors(repository: Repository, shas: string[]) {
+  if (shas.length === 0) {
+    return []
+  }
+
+  const { stdout } = await git(
+    [
+      'log',
+      '--format=format:%an <%ae> %ad',
+      '--no-walk',
+      '--date=raw',
+      '-z',
+      '--stdin',
+    ],
+    repository.path,
+    'getAuthors',
+    { stdin: shas.join('\n') }
+  )
+
+  const authors = stdout.split('\0').map(CommitIdentity.parseIdentity)
+  assert.equal(authors.length, shas.length, 'Commit to author mismatch')
+  return authors
 }

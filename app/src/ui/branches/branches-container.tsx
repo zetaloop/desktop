@@ -217,11 +217,16 @@ export class BranchesContainer extends React.Component<
     )
   }
 
-  private renderBranch = (item: IBranchListItem, matches: IMatches) => {
+  private renderBranch = (
+    item: IBranchListItem,
+    matches: IMatches,
+    authorDate: Date | undefined
+  ) => {
     return renderDefaultBranch(
       item,
       matches,
       this.props.currentBranch,
+      authorDate,
       this.onDropOntoBranch,
       this.onDropOntoCurrentBranch
     )
@@ -261,6 +266,7 @@ export class BranchesContainer extends React.Component<
       case BranchesTab.Branches:
         return (
           <BranchList
+            repository={this.props.repository}
             defaultBranch={this.props.defaultBranch}
             currentBranch={this.props.currentBranch}
             allBranches={this.props.allBranches}

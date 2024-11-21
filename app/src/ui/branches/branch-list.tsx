@@ -20,10 +20,15 @@ import { generateBranchContextMenuItems } from './branch-list-item-context-menu'
 import { showContextualMenu } from '../../lib/menu-item'
 import { SectionFilterList } from '../lib/section-filter-list'
 import memoizeOne from 'memoize-one'
+import QuickLRU from 'quick-lru'
+import { getAuthors } from '../../lib/git/log'
+import { Repository } from '../../models/repository'
 
 const RowHeight = 30
 
 interface IBranchListProps {
+  readonly repository: Repository
+
   /**
    * See IBranchesState.defaultBranch
    */
@@ -100,7 +105,8 @@ interface IBranchListProps {
    */
   readonly renderBranch: (
     item: IBranchListItem,
-    matches: IMatches
+    matches: IMatches,
+    authorDate: Date | undefined
   ) => JSX.Element
 
   /**
@@ -124,8 +130,17 @@ interface IBranchListProps {
   readonly onDeleteBranch?: (branchName: string) => void
 }
 
+interface IBranchListState {
+  readonly commitAuthorDates: ReadonlyMap<string, Date>
+}
+
+const commitDateCache = new QuickLRU<string, Date>({ maxSize: 1000 })
+
 /** The Branches list component. */
-export class BranchList extends React.Component<IBranchListProps> {
+export class BranchList extends React.Component<
+  IBranchListProps,
+  IBranchListState
+> {
   private branchFilterList: SectionFilterList<IBranchListItem> | null = null
 
   private getGroups = memoizeOne(groupBranches)
@@ -149,10 +164,54 @@ export class BranchList extends React.Component<IBranchListProps> {
     return this.getSelectedItem(this.groups, this.props.selectedBranch)
   }
 
+  public constructor(props: IBranchListProps) {
+    super(props)
+    this.state = {
+      commitAuthorDates: new Map<string, Date>(),
+    }
+  }
+
   public selectNextItem(focus: boolean = false, direction: SelectionDirection) {
     if (this.branchFilterList !== null) {
       this.branchFilterList.selectNextItem(focus, direction)
     }
+  }
+
+  public componentDidUpdate(prevProps: IBranchListProps) {
+    if (prevProps.allBranches !== this.props.allBranches) {
+      this.populateCommitDates()
+    }
+  }
+
+  private populateCommitDates = () => {
+    const cached = new Map<string, Date>()
+    const missing = new Array<string>()
+
+    const uniqShas = new Set(this.props.allBranches.map(b => b.tip.sha))
+
+    for (const sha of uniqShas) {
+      const date = commitDateCache.get(sha)
+      if (date) {
+        cached.set(sha, date)
+      } else {
+        missing.push(sha)
+      }
+    }
+
+    this.setState({ commitAuthorDates: new Map(cached) })
+
+    if (missing.length > 0) {
+      getAuthors(this.props.repository, missing)
+        .then(x =>
+          x.forEach((author, i) => commitDateCache.set(missing[i], author.date))
+        )
+        .then(() => this.populateCommitDates())
+        .catch(e => log.error(`Failed to populate commit dates`, e))
+    }
+  }
+
+  public componentDidMount() {
+    this.populateCommitDates()
   }
 
   public render() {
@@ -217,7 +276,11 @@ export class BranchList extends React.Component<IBranchListProps> {
   }
 
   private renderItem = (item: IBranchListItem, matches: IMatches) => {
-    return this.props.renderBranch(item, matches)
+    return this.props.renderBranch(
+      item,
+      matches,
+      this.state.commitAuthorDates.get(item.branch.tip.sha)
+    )
   }
 
   private parseHeader(label: string): BranchGroupIdentifier | null {

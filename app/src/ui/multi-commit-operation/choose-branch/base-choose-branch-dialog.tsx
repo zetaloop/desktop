@@ -196,8 +196,17 @@ export class ChooseBranchDialog extends React.Component<
     return <div className="merge-status-component">{children}</div>
   }
 
-  private renderBranch = (item: IBranchListItem, matches: IMatches) => {
-    return renderDefaultBranch(item, matches, this.props.currentBranch)
+  private renderBranch = (
+    item: IBranchListItem,
+    matches: IMatches,
+    authorDate: Date | undefined
+  ) => {
+    return renderDefaultBranch(
+      item,
+      matches,
+      this.props.currentBranch,
+      authorDate
+    )
   }
 
   private getBranchAriaLabel = (item: IBranchListItem): string => {
@@ -225,6 +234,7 @@ export class ChooseBranchDialog extends React.Component<
       >
         <DialogContent>
           <BranchList
+            repository={this.props.repository}
             allBranches={this.props.allBranches}
             currentBranch={currentBranch}
             defaultBranch={this.props.defaultBranch}

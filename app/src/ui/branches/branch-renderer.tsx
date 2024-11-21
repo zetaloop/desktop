@@ -11,6 +11,7 @@ export function renderDefaultBranch(
   item: IBranchListItem,
   matches: IMatches,
   currentBranch: Branch | null,
+  authorDate: Date | undefined,
   onDropOntoBranch?: (branchName: string) => void,
   onDropOntoCurrentBranch?: () => void
 ): JSX.Element {
@@ -20,6 +21,7 @@ export function renderDefaultBranch(
     <BranchListItem
       name={branch.name}
       isCurrentBranch={branch.name === currentBranchName}
+      authorDate={authorDate}
       matches={matches}
       onDropOntoBranch={onDropOntoBranch}
       onDropOntoCurrentBranch={onDropOntoCurrentBranch}
