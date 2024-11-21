@@ -143,6 +143,7 @@ export async function getCommits(
   )
   const result = await git(args, repository.path, 'getCommits', {
     successExitCodes: new Set([0, 128]),
+    encoding: 'buffer',
   })
 
   // if the repository has an unborn HEAD, return an empty history of commits
@@ -157,17 +158,18 @@ export async function getCommits(
     // Refs are comma separated, but some like tags can also contain commas in the name, so we split on the pattern ", " and then
     // check each ref for the tag prefix. We used to use the regex /tag: ([^\s,]+)/g)`, but will clip a tag with a comma short.
     const tags = commit.refs
+      .toString()
       .split(', ')
       .flatMap(ref => (ref.startsWith('tag: ') ? ref.substring(5) : []))
 
     return new Commit(
-      commit.sha,
-      commit.shortSha,
-      commit.summary,
-      commit.body,
-      CommitIdentity.parseIdentity(commit.author),
-      CommitIdentity.parseIdentity(commit.committer),
-      commit.parents.length > 0 ? commit.parents.split(' ') : [],
+      commit.sha.toString(),
+      commit.shortSha.toString(),
+      commit.summary.subarray(0, 100 * 1024).toString(),
+      commit.body.subarray(0, 100 * 1024).toString(),
+      CommitIdentity.parseIdentity(commit.author.toString()),
+      CommitIdentity.parseIdentity(commit.committer.toString()),
+      commit.parents.length > 0 ? commit.parents.toString().split(' ') : [],
       // We know for sure that the trailer separator will be ':' since we got
       // them from %(trailers:unfold) above, see `git help log`:
       //
@@ -175,7 +177,7 @@ export async function getCommits(
       //    trailer lines. When this option is not given each trailer key-value
       //    pair is separated by ": ". Otherwise it shares the same semantics as
       //    separator=<SEP> above."
-      parseRawUnfoldedTrailers(commit.trailers, ':'),
+      parseRawUnfoldedTrailers(commit.trailers.toString(), ':'),
       tags
     )
   })
