@@ -183,12 +183,13 @@ const conflictStatusCodes = ['DD', 'AU', 'UD', 'UA', 'DU', 'AA', 'UU']
  *  and fail gracefully if the location is not a Git repository
  */
 export async function getStatus(
-  repository: Repository
+  repository: Repository,
+  includeUntracked = true
 ): Promise<IStatusResult | null> {
   const args = [
     '--no-optional-locks',
     'status',
-    '--untracked-files=all',
+    ...(includeUntracked ? ['--untracked-files=all'] : []),
     '--branch',
     '--porcelain=2',
     '-z',
