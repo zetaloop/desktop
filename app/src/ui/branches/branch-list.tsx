@@ -20,7 +20,6 @@ import { generateBranchContextMenuItems } from './branch-list-item-context-menu'
 import { showContextualMenu } from '../../lib/menu-item'
 import { SectionFilterList } from '../lib/section-filter-list'
 import memoizeOne from 'memoize-one'
-import QuickLRU from 'quick-lru'
 import { getAuthors } from '../../lib/git/log'
 import { Repository } from '../../models/repository'
 
@@ -134,7 +133,7 @@ interface IBranchListState {
   readonly commitAuthorDates: ReadonlyMap<string, Date>
 }
 
-const commitDateCache = new QuickLRU<string, Date>({ maxSize: 1000 })
+const commitDateCache = new Map<string, Date>()
 
 /** The Branches list component. */
 export class BranchList extends React.Component<
@@ -198,7 +197,14 @@ export class BranchList extends React.Component<
       }
     }
 
-    this.setState({ commitAuthorDates: new Map(cached) })
+    // Clean up the cache
+    for (const sha of commitDateCache.keys()) {
+      if (!uniqShas.has(sha)) {
+        commitDateCache.delete(sha)
+      }
+    }
+
+    this.setState({ commitAuthorDates: cached })
 
     if (missing.length > 0) {
       getAuthors(this.props.repository, missing)
