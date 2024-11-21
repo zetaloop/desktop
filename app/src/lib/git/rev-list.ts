@@ -185,7 +185,7 @@ export async function getCommitsInRange(
 
 /**
  * Determine if merge commits exist in history after given commit
- * If no commitRef is null, goes back to HEAD of branch.
+ * If commitRef is null, goes back to HEAD of branch.
  */
 export async function doMergeCommitsExistAfterCommit(
   repository: Repository,
