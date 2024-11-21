@@ -162,7 +162,6 @@ export async function getBranchMergeBaseDiff(
     comparisonBranchName,
     ...(hideWhitespaceInDiff ? ['-w'] : []),
     '--patch-with-raw',
-    '--format=',
     '-z',
     '--no-color',
     '--',
