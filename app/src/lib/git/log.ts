@@ -345,6 +345,10 @@ export async function getAuthors(repository: Repository, shas: string[]) {
   )
 
   const authors = stdout.split('\0').map(CommitIdentity.parseIdentity)
+
+  // This can happen if there are duplicate shas in the input, git log will only
+  // return the author once for each sha.
   assert.equal(authors.length, shas.length, 'Commit to author mismatch')
+
   return authors
 }
