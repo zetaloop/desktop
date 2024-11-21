@@ -346,7 +346,6 @@ export async function getWorkingDirectoryDiff(
     ...(hideWhitespaceInDiff ? ['-w'] : []),
     '--no-ext-diff',
     '--patch-with-raw',
-    '--format=',
     '-z',
     '--no-color',
   ]
