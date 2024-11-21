@@ -12,7 +12,6 @@ import { assertNever } from '../fatal-error'
 import * as GitPerf from '../../ui/lib/git-perf'
 import * as Path from 'path'
 import { isErrnoException } from '../errno-exception'
-import { getFileFromExceedsError } from '../helpers/regex'
 import { merge } from '../merge'
 import { withTrampolineEnv } from '../trampoline/trampoline-environment'
 import { createTailStream } from './create-tail-stream'
@@ -304,16 +303,6 @@ export async function git(
       }
 
       log.error(errorMessage.join('\n'))
-
-      if (gitError === DugiteError.PushWithFileSizeExceedingLimit) {
-        const files = getFileFromExceedsError(
-          coerceToString(result.stderr)
-        ).join('\n')
-
-        if (files !== '') {
-          gitResult.gitErrorDescription += '\n\nFile causing error:\n\n' + files
-        }
-      }
 
       throw new GitError(gitResult, args, terminalOutput)
     },
