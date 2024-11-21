@@ -13,7 +13,6 @@ import { Commit } from '../../models/commit'
 import { CommitIdentity } from '../../models/commit-identity'
 import { parseRawUnfoldedTrailers } from './interpret-trailers'
 import { createLogParser } from './git-delimiter-parser'
-import { revRange } from '.'
 import { forceUnwrap } from '../fatal-error'
 
 // File mode 160000 is used by git specifically for submodules:
@@ -322,26 +321,4 @@ export async function getCommit(
   }
 
   return commits[0]
-}
-
-/**
- * Determine if merge commits exist in history after given commit
- * If no commitRef is null, goes back to HEAD of branch.
- */
-export async function doMergeCommitsExistAfterCommit(
-  repository: Repository,
-  commitRef: string | null
-): Promise<boolean> {
-  const commitRevRange =
-    commitRef === null ? undefined : revRange(commitRef, 'HEAD')
-
-  const mergeCommits = await getCommits(
-    repository,
-    commitRevRange,
-    undefined,
-    undefined,
-    ['--merges']
-  )
-
-  return mergeCommits.length > 0
 }
