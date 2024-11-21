@@ -324,6 +324,7 @@ export async function getCommit(
   return commits[0]
 }
 
+/** Get the author identity for the given shas */
 export async function getAuthors(repository: Repository, shas: string[]) {
   if (shas.length === 0) {
     return []
