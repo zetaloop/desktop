@@ -7,7 +7,7 @@ export function splitBuffer(buffer: Buffer, delimiter: string): Buffer[] {
     start = index + delimiter.length
     index = buffer.indexOf(delimiter, start)
   }
-  if (start < buffer.length) {
+  if (start <= buffer.length) {
     result.push(buffer.subarray(start))
   }
   return result
