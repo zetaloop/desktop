@@ -80,8 +80,11 @@ export class BranchSelect extends React.Component<
     )
   }
 
-  private getBranchAriaLabel = (item: IBranchListItem): string => {
-    return getDefaultAriaLabelForBranch(item)
+  private getBranchAriaLabel = (
+    item: IBranchListItem,
+    authorDate: Date | undefined
+  ): string => {
+    return getDefaultAriaLabelForBranch(item, authorDate)
   }
 
   private onItemClick = (branch: Branch, source: ClickSource) => {

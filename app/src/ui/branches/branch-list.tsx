@@ -22,6 +22,7 @@ import { SectionFilterList } from '../lib/section-filter-list'
 import memoizeOne from 'memoize-one'
 import { getAuthors } from '../../lib/git/log'
 import { Repository } from '../../models/repository'
+import uuid from 'uuid'
 
 const RowHeight = 30
 
@@ -97,7 +98,10 @@ interface IBranchListProps {
   readonly textbox?: TextBox
 
   /** Aria label for a specific row */
-  readonly getBranchAriaLabel: (item: IBranchListItem) => string | undefined
+  readonly getBranchAriaLabel: (
+    item: IBranchListItem,
+    authorDate: Date | undefined
+  ) => string | undefined
 
   /**
    * Render function to apply to each branch in the list
@@ -149,6 +153,23 @@ export class BranchList extends React.Component<
         .flatMap(g => g.items)
         .find(i => i.branch.name === selectedBranch?.name) ?? null
   )
+
+  /**
+   * Generate an opaque value any time groups or commitAuthorDates changes
+   * in order to force the list to re-render.
+   *
+   * Note, change is determined by reference equality
+   */
+  private getInvalidationProp = memoizeOne(
+    (
+      _groups: ReturnType<typeof groupBranches>,
+      _commitAuthorDates: IBranchListState['commitAuthorDates']
+    ) => uuid()
+  )
+
+  private get invalidationProp() {
+    return this.getInvalidationProp(this.groups, this.state.commitAuthorDates)
+  }
 
   private get groups() {
     return this.getGroups(
@@ -236,7 +257,7 @@ export class BranchList extends React.Component<
         onSelectionChanged={this.onSelectionChanged}
         onEnterPressedWithoutFilteredItems={this.onCreateNewBranch}
         groups={this.groups}
-        invalidationProps={this.props.allBranches}
+        invalidationProps={this.invalidationProp}
         renderPostFilter={this.onRenderNewButton}
         renderNoItems={this.onRenderNoItems}
         filterTextBox={this.props.textbox}
@@ -301,7 +322,10 @@ export class BranchList extends React.Component<
   }
 
   private getItemAriaLabel = (item: IBranchListItem) => {
-    return this.props.getBranchAriaLabel?.(item)
+    return this.props.getBranchAriaLabel(
+      item,
+      this.state.commitAuthorDates.get(item.branch.tip.sha)
+    )
   }
 
   private getGroupAriaLabel = (group: number) => {

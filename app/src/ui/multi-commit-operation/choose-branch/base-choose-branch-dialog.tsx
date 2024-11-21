@@ -209,8 +209,11 @@ export class ChooseBranchDialog extends React.Component<
     )
   }
 
-  private getBranchAriaLabel = (item: IBranchListItem): string => {
-    return getDefaultAriaLabelForBranch(item)
+  private getBranchAriaLabel = (
+    item: IBranchListItem,
+    authorDate: Date | undefined
+  ): string => {
+    return getDefaultAriaLabelForBranch(item, authorDate)
   }
 
   public render() {

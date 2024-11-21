@@ -29,16 +29,16 @@ export function renderDefaultBranch(
   )
 }
 
-export function getDefaultAriaLabelForBranch(item: IBranchListItem): string {
+export function getDefaultAriaLabelForBranch(
+  item: IBranchListItem,
+  authorDate: Date | undefined
+): string {
   const branch = item.branch
 
-  // TODO! look up through cache
-  const date: Date | null = null
-
-  if (!date) {
+  if (!authorDate) {
     return branch.name
   }
 
-  const { relativeText } = getRelativeTimeInfoFromDate(date, true)
+  const { relativeText } = getRelativeTimeInfoFromDate(authorDate, true)
   return `${item.branch.name} ${relativeText}`
 }
