@@ -15,13 +15,11 @@ export function renderDefaultBranch(
   onDropOntoCurrentBranch?: () => void
 ): JSX.Element {
   const branch = item.branch
-  const commit = branch.tip
   const currentBranchName = currentBranch ? currentBranch.name : null
   return (
     <BranchListItem
       name={branch.name}
       isCurrentBranch={branch.name === currentBranchName}
-      lastCommitDate={commit ? commit.author.date : null}
       matches={matches}
       onDropOntoBranch={onDropOntoBranch}
       onDropOntoCurrentBranch={onDropOntoCurrentBranch}
@@ -32,8 +30,8 @@ export function renderDefaultBranch(
 export function getDefaultAriaLabelForBranch(item: IBranchListItem): string {
   const branch = item.branch
 
-  const commit = branch.tip
-  const date = commit ? commit.author.date : null
+  // TODO! look up through cache
+  const date: Date | null = null
 
   if (!date) {
     return branch.name
