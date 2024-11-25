@@ -334,7 +334,7 @@ export async function getAuthors(repository: Repository, shas: string[]) {
     [
       'log',
       '--format=format:%an <%ae> %ad',
-      '--no-walk',
+      '--no-walk=unsorted',
       '--date=raw',
       '-z',
       '--stdin',
