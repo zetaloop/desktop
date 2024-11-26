@@ -1,4 +1,4 @@
-import { git, gitNetworkArguments, IGitExecutionOptions } from './core'
+import { git, IGitStringExecutionOptions } from './core'
 
 import { Repository } from '../../models/repository'
 import { Commit } from '../../models/commit'
@@ -25,14 +25,14 @@ export async function revertCommit(
   currentRemote: IRemote | null,
   progressCallback?: (progress: IRevertProgress) => void
 ) {
-  const args = [...gitNetworkArguments(), 'revert']
+  const args = ['revert']
   if (commit.parentSHAs.length > 1) {
     args.push('-m', '1')
   }
 
   args.push(commit.sha)
 
-  let opts: IGitExecutionOptions = {}
+  let opts: IGitStringExecutionOptions = {}
   if (progressCallback) {
     const env = await envForRemoteOperation(
       getFallbackUrlForProxyResolve(repository, currentRemote)

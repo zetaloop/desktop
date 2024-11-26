@@ -12,7 +12,6 @@ import {
   getGlobalConfigValue,
   setGlobalConfigValue,
 } from '../../lib/git/config'
-import { getGlobalConfigPath } from '../../lib/git'
 import { lookupPreferredEmail } from '../../lib/email'
 import { Shell, getAvailableShells } from '../../lib/shells'
 import { getAvailableEditors } from '../../lib/editors/lookup'
@@ -43,10 +42,6 @@ import { Prompts } from './prompts'
 import { Repository } from '../../models/repository'
 import { Notifications } from './notifications'
 import { Accessibility } from './accessibility'
-import {
-  enableExternalCredentialHelper,
-  enableLinkUnderlines,
-} from '../../lib/feature-flag'
 import {
   ICustomIntegration,
   TargetPathArgument,
@@ -82,7 +77,7 @@ interface IPreferencesProps {
   readonly useCustomShell: boolean
   readonly customShell: ICustomIntegration | null
   readonly repositoryIndicatorsEnabled: boolean
-  readonly onOpenFileInExternalEditor: (path: string) => void
+  readonly onEditGlobalGitConfig: () => void
   readonly underlineLinks: boolean
   readonly showDiffCheckMarks: boolean
 }
@@ -132,7 +127,6 @@ interface IPreferencesState {
   readonly initiallySelectedTabSize: number
 
   readonly isLoadingGitConfig: boolean
-  readonly globalGitConfigPath: string | null
 
   readonly underlineLinks: boolean
 
@@ -191,7 +185,6 @@ export class Preferences extends React.Component<
       initiallySelectedTheme: this.props.selectedTheme,
       initiallySelectedTabSize: this.props.selectedTabSize,
       isLoadingGitConfig: true,
-      globalGitConfigPath: null,
       underlineLinks: this.props.underlineLinks,
       showDiffCheckMarks: this.props.showDiffCheckMarks,
     }
@@ -230,8 +223,6 @@ export class Preferences extends React.Component<
     const availableEditors = editors.map(e => e.editor) ?? null
     const availableShells = shells.map(e => e.shell) ?? null
 
-    const globalGitConfigPath = await getGlobalConfigPath()
-
     this.setState({
       committerName,
       committerEmail,
@@ -260,7 +251,6 @@ export class Preferences extends React.Component<
       useCustomShell: this.props.useCustomShell,
       customShell: this.props.customShell ?? DefaultCustomIntegration,
       isLoadingGitConfig: false,
-      globalGitConfigPath,
     })
   }
 
@@ -318,12 +308,10 @@ export class Preferences extends React.Component<
               <Octicon className="icon" symbol={octicons.gear} />
               Advanced
             </span>
-            {enableLinkUnderlines() && (
-              <span id={this.getTabId(PreferencesTab.Accessibility)}>
-                <Octicon className="icon" symbol={octicons.accessibility} />
-                Accessibility
-              </span>
-            )}
+            <span id={this.getTabId(PreferencesTab.Accessibility)}>
+              <Octicon className="icon" symbol={octicons.accessibility} />
+              Accessibility
+            </span>
           </TabBar>
 
           {this.renderActiveTab()}
@@ -452,9 +440,7 @@ export class Preferences extends React.Component<
               onEmailChanged={this.onCommitterEmailChanged}
               onDefaultBranchChanged={this.onDefaultBranchChanged}
               isLoadingGitConfig={this.state.isLoadingGitConfig}
-              selectedExternalEditor={this.props.selectedExternalEditor}
-              onOpenFileInExternalEditor={this.props.onOpenFileInExternalEditor}
-              globalGitConfigPath={this.state.globalGitConfigPath}
+              onEditGlobalGitConfig={this.props.onEditGlobalGitConfig}
             />
           </>
         )
@@ -780,15 +766,13 @@ export class Preferences extends React.Component<
       dispatcher.setCustomShell(customShell)
     }
 
-    if (enableExternalCredentialHelper()) {
-      if (
-        this.props.useExternalCredentialHelper !==
+    if (
+      this.props.useExternalCredentialHelper !==
+      this.state.useExternalCredentialHelper
+    ) {
+      dispatcher.setUseExternalCredentialHelper(
         this.state.useExternalCredentialHelper
-      ) {
-        dispatcher.setUseExternalCredentialHelper(
-          this.state.useExternalCredentialHelper
-        )
-      }
+      )
     }
 
     await dispatcher.setConfirmRepoRemovalSetting(

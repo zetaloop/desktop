@@ -1,4 +1,3 @@
-import { spawnAndComplete } from './spawn'
 import { getFilesWithConflictMarkers } from './diff-check'
 import {
   WorkingDirectoryStatus,
@@ -28,14 +27,7 @@ import { getBinaryPaths } from './diff'
 import { getRebaseInternalState } from './rebase'
 import { RebaseInternalState } from '../../models/rebase'
 import { isCherryPickHeadFound } from './cherry-pick'
-
-/**
- * V8 has a limit on the size of string it can create (~256MB), and unless we want to
- * trigger an unhandled exception we need to do the encoding conversion by hand.
- *
- * As we may be executing status often, we should keep this to a reasonable threshold.
- */
-const MaxStatusBufferSize = 20e6 // 20MB in decimal
+import { git } from '.'
 
 /** The encapsulation of the result from 'git status' */
 export interface IStatusResult {
@@ -191,46 +183,37 @@ const conflictStatusCodes = ['DD', 'AU', 'UD', 'UA', 'DU', 'AA', 'UU']
  *  and fail gracefully if the location is not a Git repository
  */
 export async function getStatus(
-  repository: Repository
+  repository: Repository,
+  includeUntracked = true
 ): Promise<IStatusResult | null> {
   const args = [
     '--no-optional-locks',
     'status',
-    '--untracked-files=all',
+    ...(includeUntracked ? ['--untracked-files=all'] : []),
     '--branch',
     '--porcelain=2',
     '-z',
   ]
 
-  const result = await spawnAndComplete(
-    args,
-    repository.path,
-    'getStatus',
-    new Set([0, 128])
-  )
+  const { stdout, exitCode } = await git(args, repository.path, 'getStatus', {
+    successExitCodes: new Set([0, 128]),
+    encoding: 'buffer',
+  })
 
-  if (result.exitCode === 128) {
+  if (exitCode === 128) {
     log.debug(
       `'git status' returned 128 for '${repository.path}' and is likely missing its .git directory`
     )
     return null
   }
 
-  if (result.output.length > MaxStatusBufferSize) {
-    log.error(
-      `'git status' emitted ${result.output.length} bytes, which is beyond the supported threshold of ${MaxStatusBufferSize} bytes`
-    )
-    return null
-  }
-
-  const stdout = result.output.toString('utf8')
   const parsed = parsePorcelainStatus(stdout)
   const headers = parsed.filter(isStatusHeader)
   const entries = parsed.filter(isStatusEntry)
 
   const mergeHeadFound = await isMergeHeadSet(repository)
-  const conflictedFilesInIndex = entries.some(
-    e => conflictStatusCodes.indexOf(e.statusCode) > -1
+  const conflictedFilesInIndex = entries.filter(e =>
+    conflictStatusCodes.includes(e.statusCode)
   )
   const rebaseInternalState = await getRebaseInternalState(repository)
 
@@ -277,7 +260,7 @@ export async function getStatus(
     workingDirectory,
     isCherryPickingHeadFound,
     squashMsgFound,
-    doConflictedFilesExist: conflictedFilesInIndex,
+    doConflictedFilesExist: conflictedFilesInIndex.length > 0,
   }
 }
 
@@ -379,22 +362,36 @@ function parseStatusHeader(results: IStatusHeadersData, header: IStatusHeader) {
   }
 }
 
-async function getMergeConflictDetails(repository: Repository) {
+async function getMergeConflictDetails(
+  repository: Repository,
+  conflictedFilesInIndex: ReadonlyArray<IStatusEntry>
+) {
   const conflictCountsByPath = await getFilesWithConflictMarkers(
     repository.path
   )
-  const binaryFilePaths = await getBinaryPaths(repository, 'MERGE_HEAD')
+  const binaryFilePaths = await getBinaryPaths(
+    repository,
+    'MERGE_HEAD',
+    conflictedFilesInIndex
+  )
   return {
     conflictCountsByPath,
     binaryFilePaths,
   }
 }
 
-async function getRebaseConflictDetails(repository: Repository) {
+async function getRebaseConflictDetails(
+  repository: Repository,
+  conflictedFilesInIndex: ReadonlyArray<IStatusEntry>
+) {
   const conflictCountsByPath = await getFilesWithConflictMarkers(
     repository.path
   )
-  const binaryFilePaths = await getBinaryPaths(repository, 'REBASE_HEAD')
+  const binaryFilePaths = await getBinaryPaths(
+    repository,
+    'REBASE_HEAD',
+    conflictedFilesInIndex
+  )
   return {
     conflictCountsByPath,
     binaryFilePaths,
@@ -405,14 +402,21 @@ async function getRebaseConflictDetails(repository: Repository) {
  * We need to do these operations to detect conflicts that were the result
  * of popping a stash into the index
  */
-async function getWorkingDirectoryConflictDetails(repository: Repository) {
+async function getWorkingDirectoryConflictDetails(
+  repository: Repository,
+  conflictedFilesInIndex: ReadonlyArray<IStatusEntry>
+) {
   const conflictCountsByPath = await getFilesWithConflictMarkers(
     repository.path
   )
   let binaryFilePaths: ReadonlyArray<string> = []
   try {
     // its totally fine if HEAD doesn't exist, which throws an error
-    binaryFilePaths = await getBinaryPaths(repository, 'HEAD')
+    binaryFilePaths = await getBinaryPaths(
+      repository,
+      'HEAD',
+      conflictedFilesInIndex
+    )
   } catch (error) {}
 
   return {
@@ -427,26 +431,36 @@ async function getWorkingDirectoryConflictDetails(repository: Repository) {
  *
  * @param repository to get details from
  * @param mergeHeadFound whether a merge conflict has been detected
- * @param lookForStashConflicts whether it looks like a stash has introduced conflicts
- * @param rebaseInternalState details about the current rebase operation (if found)
+ * @param conflictedFilesInIndex all files marked as being conflicted in the
+ *                               index. Used to check for files using the binary
+ *                               merge driver and whether it looks like a stash
+ *                               has introduced conflicts
+ * @param rebaseInternalState details about the current rebase operation (if
+ * found)
  */
 async function getConflictDetails(
   repository: Repository,
   mergeHeadFound: boolean,
-  lookForStashConflicts: boolean,
+  conflictedFilesInIndex: ReadonlyArray<IStatusEntry>,
   rebaseInternalState: RebaseInternalState | null
 ): Promise<ConflictFilesDetails> {
   try {
     if (mergeHeadFound) {
-      return await getMergeConflictDetails(repository)
+      return await getMergeConflictDetails(repository, conflictedFilesInIndex)
     }
 
     if (rebaseInternalState !== null) {
-      return await getRebaseConflictDetails(repository)
+      return await getRebaseConflictDetails(repository, conflictedFilesInIndex)
     }
 
-    if (lookForStashConflicts) {
-      return await getWorkingDirectoryConflictDetails(repository)
+    // If there's conflicted files in the index but we don't have a merge head
+    // or a rebase internal state, then we're likely in a situation where a
+    // stash has introduced conflicts
+    if (conflictedFilesInIndex.length > 0) {
+      return await getWorkingDirectoryConflictDetails(
+        repository,
+        conflictedFilesInIndex
+      )
     }
   } catch (error) {
     log.error(

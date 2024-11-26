@@ -18,9 +18,10 @@ import { formatRebaseValue } from '../rebase'
 
 import {
   git,
-  IGitResult,
   IGitExecutionOptions,
   gitRebaseArguments,
+  IGitStringExecutionOptions,
+  IGitStringResult,
 } from './core'
 import { stageManualConflictResolution } from './stage'
 import { stageFiles } from './update-index'
@@ -313,8 +314,8 @@ class GitRebaseParser {
   }
 }
 
-function configureOptionsForRebase(
-  options: IGitExecutionOptions,
+function configureOptionsForRebase<T extends IGitExecutionOptions>(
+  options: T,
   progress?: RebaseProgressOptions
 ) {
   if (progress === undefined) {
@@ -361,7 +362,7 @@ export async function rebase(
   targetBranch: Branch,
   progressCallback?: (progress: IMultiCommitOperationProgress) => void
 ): Promise<RebaseResult> {
-  const baseOptions: IGitExecutionOptions = {
+  const baseOptions: IGitStringExecutionOptions = {
     expectedErrors: new Set([GitError.RebaseConflicts]),
   }
 
@@ -405,7 +406,7 @@ export async function abortRebase(repository: Repository) {
   await git(['rebase', '--abort'], repository.path, 'abortRebase')
 }
 
-function parseRebaseResult(result: IGitResult): RebaseResult {
+function parseRebaseResult(result: IGitStringResult): RebaseResult {
   if (result.exitCode === 0) {
     if (result.stdout.trim().match(/^Current branch [^ ]+ is up to date.$/i)) {
       return RebaseResult.AlreadyUpToDate
@@ -460,7 +461,7 @@ export async function continueRebase(
 
   await stageFiles(repository, otherFiles)
 
-  const status = await getStatus(repository)
+  const status = await getStatus(repository, false)
   if (status == null) {
     log.warn(
       `[continueRebase] unable to get status after staging changes, skipping any other steps`
@@ -477,7 +478,7 @@ export async function continueRebase(
     f => f.status.kind !== AppFileStatusKind.Untracked
   )
 
-  const baseOptions: IGitExecutionOptions = {
+  const baseOptions: IGitStringExecutionOptions = {
     expectedErrors: new Set([
       GitError.RebaseConflicts,
       GitError.UnresolvedConflicts,
@@ -554,9 +555,10 @@ export async function rebaseInteractive(
   progressCallback?: (progress: IMultiCommitOperationProgress) => void,
   commits?: ReadonlyArray<Commit>
 ): Promise<RebaseResult> {
-  const baseOptions: IGitExecutionOptions = {
+  const baseOptions: IGitStringExecutionOptions = {
     expectedErrors: new Set([GitError.RebaseConflicts]),
     env: {
+      GIT_SEQUENCE_EDITOR: undefined,
       GIT_EDITOR: gitEditor,
     },
   }

@@ -21,11 +21,8 @@ import {
   ILargeTextDiff,
 } from '../../models/diff'
 
-import { spawnAndComplete } from './spawn'
-
 import { DiffParser } from '../diff-parser'
 import { getOldPathOrDefault } from '../get-old-path'
-import { getCaptures } from '../helpers/regex'
 import { readFile } from 'fs/promises'
 import { forceUnwrap } from '../fatal-error'
 import { git } from './core'
@@ -34,6 +31,9 @@ import { GitError } from 'dugite'
 import { IChangesetData, parseRawLogWithNumstat } from './log'
 import { getConfigValue } from './config'
 import { getMergeBase } from './merge'
+import { IStatusEntry } from '../status-parser'
+import { createLogParser } from './git-delimiter-parser'
+import { enableImagePreviewsForDDSFiles } from '../feature-flag'
 
 /**
  * V8 has a limit on the size of string it can create (~256MB), and unless we want to
@@ -98,6 +98,10 @@ const imageFileExtensions = new Set([
   '.avif',
 ])
 
+if (enableImagePreviewsForDDSFiles()) {
+  imageFileExtensions.add('.dds')
+}
+
 /**
  * Render the difference between a file in the given commit and its parent
  *
@@ -118,6 +122,7 @@ export async function getCommitDiff(
     '-1',
     '--first-parent',
     '--patch-with-raw',
+    '--format=',
     '-z',
     '--no-color',
     '--',
@@ -131,13 +136,11 @@ export async function getCommitDiff(
     args.push(file.status.oldPath)
   }
 
-  const { output } = await spawnAndComplete(
-    args,
-    repository.path,
-    'getCommitDiff'
-  )
+  const { stdout } = await git(args, repository.path, 'getCommitDiff', {
+    encoding: 'buffer',
+  })
 
-  return buildDiff(output, repository, file, commitish)
+  return buildDiff(stdout, repository, file, commitish)
 }
 
 /**
@@ -173,10 +176,10 @@ export async function getBranchMergeBaseDiff(
   }
 
   const result = await git(args, repository.path, 'getBranchMergeBaseDiff', {
-    maxBuffer: Infinity,
+    encoding: 'buffer',
   })
 
-  return buildDiff(Buffer.from(result.stdout), repository, file, latestCommit)
+  return buildDiff(result.stdout, repository, file, latestCommit)
 }
 
 /**
@@ -202,6 +205,7 @@ export async function getCommitRangeDiff(
     latestCommit,
     ...(hideWhitespaceInDiff ? ['-w'] : []),
     '--patch-with-raw',
+    '--format=',
     '-z',
     '--no-color',
     '--',
@@ -216,7 +220,7 @@ export async function getCommitRangeDiff(
   }
 
   const result = await git(args, repository.path, 'getCommitsDiff', {
-    maxBuffer: Infinity,
+    encoding: 'buffer',
     expectedErrors: new Set([GitError.BadRevision]),
   })
 
@@ -233,7 +237,7 @@ export async function getCommitRangeDiff(
     )
   }
 
-  return buildDiff(Buffer.from(result.stdout), repository, file, latestCommit)
+  return buildDiff(result.stdout, repository, file, latestCommit)
 }
 
 /**
@@ -380,15 +384,15 @@ export async function getWorkingDirectoryDiff(
     args.push('HEAD', '--', file.path)
   }
 
-  const { output, error } = await spawnAndComplete(
+  const { stdout, stderr } = await git(
     args,
     repository.path,
     'getWorkingDirectoryDiff',
-    successExitCodes
+    { successExitCodes, encoding: 'buffer' }
   )
-  const lineEndingsChange = parseLineEndingsWarning(error)
+  const lineEndingsChange = parseLineEndingsWarning(stderr)
 
-  return buildDiff(output, repository, file, 'HEAD', lineEndingsChange)
+  return buildDiff(stdout, repository, file, 'HEAD', lineEndingsChange)
 }
 
 async function getImageDiff(
@@ -521,6 +525,9 @@ function getMediaType(extension: string) {
   }
   if (extension === '.avif') {
     return 'image/avif'
+  }
+  if (extension === '.dds') {
+    return 'image/vnd-ms.dds'
   }
 
   // fallback value as per the spec
@@ -679,6 +686,7 @@ export async function getBlobImage(
   const extension = Path.extname(path)
   const contents = await getBlobContents(repository, commitish, path)
   return new Image(
+    contents.buffer,
     contents.toString('base64'),
     getMediaType(extension),
     contents.length
@@ -699,6 +707,7 @@ export async function getWorkingDirectoryImage(
 ): Promise<Image> {
   const contents = await readFile(Path.join(repository.path, file.path))
   return new Image(
+    contents.buffer,
     contents.toString('base64'),
     getMediaType(Path.extname(file.path)),
     contents.length
@@ -716,20 +725,51 @@ export async function getWorkingDirectoryImage(
  */
 export async function getBinaryPaths(
   repository: Repository,
-  ref: string
+  ref: string,
+  conflictedFilesInIndex: ReadonlyArray<IStatusEntry>
 ): Promise<ReadonlyArray<string>> {
-  const { output } = await spawnAndComplete(
+  const [detectedBinaryFiles, conflictedFilesUsingBinaryMergeDriver] =
+    await Promise.all([
+      getDetectedBinaryFiles(repository, ref),
+      getFilesUsingBinaryMergeDriver(repository, conflictedFilesInIndex),
+    ])
+
+  return Array.from(
+    new Set([...detectedBinaryFiles, ...conflictedFilesUsingBinaryMergeDriver])
+  )
+}
+
+/**
+ * Runs diff --numstat to get the list of files that have changed and which
+ * Git have detected as binary files
+ */
+async function getDetectedBinaryFiles(repository: Repository, ref: string) {
+  const { stdout } = await git(
     ['diff', '--numstat', '-z', ref],
     repository.path,
     'getBinaryPaths'
   )
-  const captures = getCaptures(output.toString('utf8'), binaryListRegex)
-  if (captures.length === 0) {
-    return []
-  }
-  // flatten the list (only does one level deep)
-  const flatCaptures = captures.reduce((acc, val) => acc.concat(val))
-  return flatCaptures
+
+  return Array.from(stdout.matchAll(binaryListRegex), m => m[1])
 }
 
 const binaryListRegex = /-\t-\t(?:\0.+\0)?([^\0]*)/gi
+
+async function getFilesUsingBinaryMergeDriver(
+  repository: Repository,
+  files: ReadonlyArray<IStatusEntry>
+) {
+  const { stdout } = await git(
+    ['check-attr', '--stdin', '-z', 'merge'],
+    repository.path,
+    'getConflictedFilesUsingBinaryMergeDriver',
+    {
+      stdin: files.map(f => f.path).join('\0'),
+    }
+  )
+
+  return createLogParser({ path: '', attr: '', value: '' })
+    .parse(stdout)
+    .filter(x => x.attr === 'merge' && x.value === 'binary')
+    .map(x => x.path)
+}

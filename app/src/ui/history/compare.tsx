@@ -356,6 +356,7 @@ export class CompareSidebar extends React.Component<
 
     return (
       <BranchList
+        repository={this.props.repository}
         ref={this.onBranchesListRef}
         defaultBranch={defaultBranch}
         currentBranch={this.props.currentBranch}

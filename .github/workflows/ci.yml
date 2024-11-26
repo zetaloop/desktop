@@ -38,7 +38,7 @@ on:
       APPLE_APPLICATION_CERT_PASSWORD:
 
 env:
-  NODE_VERSION: 20.11.1
+  NODE_VERSION: 20.17.0
 
 jobs:
   lint:
@@ -78,6 +78,7 @@ jobs:
           - os: windows-2019
             friendlyName: Windows
     timeout-minutes: 60
+    environment: ${{ inputs.environment }}
     env:
       RELEASE_CHANNEL: ${{ inputs.environment }}
     steps:

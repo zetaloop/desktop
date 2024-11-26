@@ -22,6 +22,8 @@ import { dragAndDropManager } from '../../lib/drag-and-drop-manager'
 import { formatRelative } from '../../lib/format-relative'
 import { AriaLiveContainer } from '../accessibility/aria-live-container'
 import { SectionFilterList } from '../lib/section-filter-list'
+import { generatePullRequestContextMenuItems } from './pull-request-list-item-context-menu'
+import { showContextualMenu } from '../../lib/menu-item'
 
 interface IPullRequestListItem extends IFilterListItem {
   readonly id: string
@@ -154,6 +156,7 @@ export class PullRequestList extends React.Component<
           filterText={this.state.filterText}
           onFilterTextChanged={this.onFilterTextChanged}
           invalidationProps={this.props.pullRequests}
+          onItemContextMenu={this.onPullRequestItemContextMenu}
           onItemClick={this.onItemClick}
           onSelectionChanged={this.onSelectionChanged}
           renderGroupHeader={this.renderListHeader}
@@ -199,6 +202,21 @@ export class PullRequestList extends React.Component<
         onMouseLeave={this.onMouseLeavePullRequest}
       />
     )
+  }
+
+  private onPullRequestItemContextMenu = (
+    item: IPullRequestListItem,
+    event: React.MouseEvent<HTMLDivElement>
+  ): void => {
+    event.preventDefault()
+
+    const items = generatePullRequestContextMenuItems({
+      onViewPullRequestOnGitHub: () => {
+        this.props.dispatcher.showPullRequestByPR(item.pullRequest)
+      },
+    })
+
+    showContextualMenu(items)
   }
 
   private onMouseEnterPullRequest = (

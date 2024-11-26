@@ -1,4 +1,4 @@
-import { git, IGitExecutionOptions, gitNetworkArguments } from './core'
+import { git, IGitStringExecutionOptions } from './core'
 import { Repository } from '../../models/repository'
 import { Branch, BranchType } from '../../models/branch'
 import { ICheckoutProgress } from '../../models/progress'
@@ -20,11 +20,7 @@ import { IRemote } from '../../models/remote'
 export type ProgressCallback = (progress: ICheckoutProgress) => void
 
 function getCheckoutArgs(progressCallback?: ProgressCallback) {
-  return [
-    ...gitNetworkArguments(),
-    'checkout',
-    ...(progressCallback ? ['--progress'] : []),
-  ]
+  return ['checkout', ...(progressCallback ? ['--progress'] : [])]
 }
 
 async function getBranchCheckoutArgs(branch: Branch) {
@@ -45,8 +41,8 @@ async function getCheckoutOpts(
   currentRemote: IRemote | null,
   progressCallback?: ProgressCallback,
   initialDescription?: string
-): Promise<IGitExecutionOptions> {
-  const opts: IGitExecutionOptions = {
+): Promise<IGitStringExecutionOptions> {
+  const opts: IGitStringExecutionOptions = {
     env: await envForRemoteOperation(
       getFallbackUrlForProxyResolve(repository, currentRemote)
     ),

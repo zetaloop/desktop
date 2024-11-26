@@ -3,10 +3,13 @@ import { Branch } from '../../models/branch'
 import { BranchSelect } from '../branches/branch-select'
 import { DialogHeader } from '../dialog/header'
 import { Ref } from '../lib/ref'
+import { Repository } from '../../models/repository'
 
 export const OpenPullRequestDialogId = 'Dialog_Open_Pull_Request'
 
 interface IOpenPullRequestDialogHeaderProps {
+  readonly repository: Repository
+
   /** The base branch of the pull request */
   readonly baseBranch: Branch | null
 
@@ -80,6 +83,7 @@ export class OpenPullRequestDialogHeader extends React.Component<IOpenPullReques
         <div className="base-branch-details">
           Merge {commits} into{' '}
           <BranchSelect
+            repository={this.props.repository}
             branch={baseBranch}
             defaultBranch={defaultBranch}
             currentBranch={currentBranch}

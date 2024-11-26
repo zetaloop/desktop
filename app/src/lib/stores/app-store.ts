@@ -184,6 +184,7 @@ import {
   getBranchMergeBaseDiff,
   checkoutCommit,
   getRemoteURL,
+  getGlobalConfigPath,
 } from '../git'
 import {
   installGlobalLFSFilters,
@@ -242,12 +243,7 @@ import {
 } from './updates/changes-state'
 import { ManualConflictResolution } from '../../models/manual-conflict-resolution'
 import { BranchPruner } from './helpers/branch-pruner'
-import {
-  enableCustomIntegration,
-  enableDiffCheckMarks,
-  enableLinkUnderlines,
-  enableMoveStash,
-} from '../feature-flag'
+import { enableCustomIntegration } from '../feature-flag'
 import { Banner, BannerType } from '../../models/banner'
 import { ComputedAction } from '../../models/computed-action'
 import {
@@ -435,10 +431,10 @@ const lastThankYouKey = 'version-and-users-of-last-thank-you'
 const pullRequestSuggestedNextActionKey =
   'pull-request-suggested-next-action-key'
 
-const useCustomEditorKey = 'use-custom-editor'
+export const useCustomEditorKey = 'use-custom-editor'
 const customEditorKey = 'custom-editor'
 
-const useCustomShellKey = 'use-custom-shell'
+export const useCustomShellKey = 'use-custom-shell'
 const customShellKey = 'custom-shell'
 
 export const underlineLinksKey = 'underline-links'
@@ -872,13 +868,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.cloningRepositoriesStore.onDidError(e => this.emitError(e))
 
-    this.signInStore.onDidAuthenticate((account, method) => {
-      this._addAccount(account)
-
-      if (this.showWelcomeFlow) {
-        this.statsStore.recordWelcomeWizardSignInMethod(method)
-      }
-    })
+    this.signInStore.onDidAuthenticate(account => this._addAccount(account))
     this.signInStore.onDidUpdate(() => this.emitUpdate())
     this.signInStore.onDidError(error => this.emitError(error))
 
@@ -2300,13 +2290,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
       ) ?? defaultPullRequestSuggestedNextAction
 
     // Always false if the feature flag is disabled.
-    this.underlineLinks = enableLinkUnderlines()
-      ? getBoolean(underlineLinksKey, underlineLinksDefault)
-      : false
+    this.underlineLinks = getBoolean(underlineLinksKey, underlineLinksDefault)
 
-    this.showDiffCheckMarks = enableDiffCheckMarks()
-      ? getBoolean(showDiffCheckMarksKey, showDiffCheckMarksDefault)
-      : false
+    this.showDiffCheckMarks = getBoolean(
+      showDiffCheckMarksKey,
+      showDiffCheckMarksDefault
+    )
 
     this.emitUpdateNow()
 
@@ -4318,12 +4307,10 @@ export class AppStore extends TypedBaseStore<IAppState> {
     await gitStore.performFailableOperation(async () => {
       await renameBranch(repository, branch, newName)
 
-      if (enableMoveStash()) {
-        const stashEntry = gitStore.desktopStashEntries.get(branch.name)
+      const stashEntry = gitStore.desktopStashEntries.get(branch.name)
 
-        if (stashEntry) {
-          await moveStashEntry(repository, stashEntry, newName)
-        }
+      if (stashEntry) {
+        await moveStashEntry(repository, stashEntry, newName)
       }
     })
 
@@ -5644,6 +5631,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return shell.openExternal(url)
   }
 
+  public async _editGlobalGitConfig() {
+    await getGlobalConfigPath()
+      .then(p => this._openInExternalEditor(p))
+      .catch(e => log.error('Could not open global Git config for editing', e))
+  }
+
   /** Open a path to a repository or file using the user's configured editor */
   public async _openInExternalEditor(fullPath: string): Promise<void> {
     const { selectedExternalEditor, useCustomEditor, customEditor } =
@@ -5945,19 +5938,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return this.signInStore.setEndpoint(url)
   }
 
-  public _setSignInCredentials(
-    username: string,
-    password: string
-  ): Promise<void> {
-    return this.signInStore.authenticateWithBasicAuth(username, password)
-  }
-
   public _requestBrowserAuthentication() {
     this.signInStore.authenticateWithBrowser()
-  }
-
-  public _setSignInOTP(otp: string): Promise<void> {
-    return this.signInStore.setTwoFactorOTP(otp)
   }
 
   public async _setAppFocusState(isFocused: boolean): Promise<void> {
@@ -7054,7 +7036,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     const { commitSHAs } = compareState
     const commitIndexBySha = new Map(commitSHAs.map((sha, i) => [sha, i]))
 
-    return [...commits].sort((a, b) =>
+    return commits.toSorted((a, b) =>
       compare(commitIndexBySha.get(b.sha), commitIndexBySha.get(a.sha))
     )
   }
@@ -7074,7 +7056,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     const { commitSHAs } = compareState
     const commitIndexBySha = new Map(commitSHAs.map((sha, i) => [sha, i]))
 
-    return [...commits].sort((a, b) =>
+    return commits.toSorted((a, b) =>
       compare(commitIndexBySha.get(b), commitIndexBySha.get(a))
     )
   }
