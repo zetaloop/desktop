@@ -28,7 +28,7 @@ export class Swipe extends React.Component<
     const swiperWidth = this.props.maxSize.width * (1 - this.state.percentage)
 
     const previousStyle: React.CSSProperties = {
-      position: "absolute",
+      position: 'absolute',
       top: 0,
       left: 0,
       height: this.props.maxSize.height,
@@ -37,12 +37,14 @@ export class Swipe extends React.Component<
     }
 
     const currentStyle: React.CSSProperties = {
-      position: "absolute",
+      position: 'absolute',
       top: 0,
       left: 0,
       height: this.props.maxSize.height,
       width: this.props.maxSize.width,
-      clipPath: `inset(0 0 0 ${Math.floor(this.props.maxSize.width - swiperWidth)}px)`,
+      clipPath: `inset(0 0 0 ${Math.floor(
+        this.props.maxSize.width - swiperWidth
+      )}px)`,
     }
 
     const maxSize: React.CSSProperties = {
