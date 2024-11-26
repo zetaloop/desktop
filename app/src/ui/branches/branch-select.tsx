@@ -9,8 +9,11 @@ import {
   renderDefaultBranch,
 } from './branch-renderer'
 import { IBranchListItem } from './group-branches'
+import { Repository } from '../../models/repository'
 
 interface IBranchSelectProps {
+  readonly repository: Repository
+
   /** The initially selected branch. */
   readonly branch: Branch | null
 
@@ -64,12 +67,24 @@ export class BranchSelect extends React.Component<
     }
   }
 
-  private renderBranch = (item: IBranchListItem, matches: IMatches) => {
-    return renderDefaultBranch(item, matches, this.props.currentBranch)
+  private renderBranch = (
+    item: IBranchListItem,
+    matches: IMatches,
+    authorDate: Date | undefined
+  ) => {
+    return renderDefaultBranch(
+      item,
+      matches,
+      this.props.currentBranch,
+      authorDate
+    )
   }
 
-  private getBranchAriaLabel = (item: IBranchListItem): string => {
-    return getDefaultAriaLabelForBranch(item)
+  private getBranchAriaLabel = (
+    item: IBranchListItem,
+    authorDate: Date | undefined
+  ): string => {
+    return getDefaultAriaLabelForBranch(item, authorDate)
   }
 
   private onItemClick = (branch: Branch, source: ClickSource) => {
@@ -102,6 +117,7 @@ export class BranchSelect extends React.Component<
         ref={this.popoverRef}
       >
         <BranchList
+          repository={this.props.repository}
           allBranches={allBranches}
           currentBranch={currentBranch}
           defaultBranch={defaultBranch}
