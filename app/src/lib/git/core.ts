@@ -1,20 +1,40 @@
 import {
-  GitProcess,
-  IGitResult as DugiteResult,
+  exec,
   GitError as DugiteError,
+  parseError,
+  IGitResult as DugiteResult,
   IGitExecutionOptions as DugiteExecutionOptions,
+  parseBadConfigValueErrorInfo,
+  ExecError,
 } from 'dugite'
 
 import { assertNever } from '../fatal-error'
 import * as GitPerf from '../../ui/lib/git-perf'
 import * as Path from 'path'
 import { isErrnoException } from '../errno-exception'
-import { ChildProcess } from 'child_process'
-import { Readable } from 'stream'
-import split2 from 'split2'
-import { getFileFromExceedsError } from '../helpers/regex'
 import { merge } from '../merge'
 import { withTrampolineEnv } from '../trampoline/trampoline-environment'
+import { createTailStream } from './create-tail-stream'
+import { createTerminalStream } from '../create-terminal-stream'
+
+export const coerceToString = (
+  value: string | Buffer,
+  encoding: BufferEncoding = 'utf8'
+) => (Buffer.isBuffer(value) ? value.toString(encoding) : value)
+
+export const coerceToBuffer = (
+  value: string | Buffer,
+  encoding: BufferEncoding = 'utf8'
+) => (Buffer.isBuffer(value) ? value : Buffer.from(value, encoding))
+
+export const isMaxBufferExceededError = (
+  error: unknown
+): error is ExecError & { code: 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER' } => {
+  return (
+    error instanceof ExecError &&
+    error.code === 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER'
+  )
+}
 
 /**
  * An extension of the execution options in dugite that
@@ -60,9 +80,6 @@ export interface IGitResult extends DugiteResult {
   /** The human-readable error description, based on `gitError`. */
   readonly gitErrorDescription: string | null
 
-  /** Both stdout and stderr combined. */
-  readonly combinedOutput: string
-
   /**
    * The path that the Git command was executed from, i.e. the
    * process working directory (not to be confused with the Git
@@ -70,6 +87,33 @@ export interface IGitResult extends DugiteResult {
    */
   readonly path: string
 }
+
+/** The result of shelling out to git using a string encoding (default) */
+export interface IGitStringResult extends IGitResult {
+  /** The standard output from git. */
+  readonly stdout: string
+
+  /** The standard error output from git. */
+  readonly stderr: string
+}
+
+export interface IGitStringExecutionOptions extends IGitExecutionOptions {
+  readonly encoding?: BufferEncoding
+}
+
+export interface IGitBufferExecutionOptions extends IGitExecutionOptions {
+  readonly encoding: 'buffer'
+}
+
+/** The result of shelling out to git using a buffer encoding */
+export interface IGitBufferResult extends IGitResult {
+  /** The standard output from git. */
+  readonly stdout: Buffer
+
+  /** The standard error output from git. */
+  readonly stderr: Buffer
+}
+
 export class GitError extends Error {
   /** The result from the failed command. */
   public readonly result: IGitResult
@@ -82,19 +126,23 @@ export class GitError extends Error {
    */
   public readonly isRawMessage: boolean
 
-  public constructor(result: IGitResult, args: ReadonlyArray<string>) {
+  public constructor(
+    result: IGitResult,
+    args: ReadonlyArray<string>,
+    terminalOutput: string
+  ) {
     let rawMessage = true
     let message
 
     if (result.gitErrorDescription) {
       message = result.gitErrorDescription
       rawMessage = false
-    } else if (result.combinedOutput.length > 0) {
-      message = result.combinedOutput
+    } else if (terminalOutput.length > 0) {
+      message = terminalOutput
     } else if (result.stderr.length) {
-      message = result.stderr
+      message = coerceToString(result.stderr)
     } else if (result.stdout.length) {
-      message = result.stdout
+      message = coerceToString(result.stdout)
     } else {
       message = `Unknown error (exit code ${result.exitCode})`
       rawMessage = false
@@ -132,6 +180,18 @@ export async function git(
   args: string[],
   path: string,
   name: string,
+  options?: IGitStringExecutionOptions
+): Promise<IGitStringResult>
+export async function git(
+  args: string[],
+  path: string,
+  name: string,
+  options?: IGitBufferExecutionOptions
+): Promise<IGitBufferResult>
+export async function git(
+  args: string[],
+  path: string,
+  name: string,
   options?: IGitExecutionOptions
 ): Promise<IGitResult> {
   const defaultOptions: IGitExecutionOptions = {
@@ -139,25 +199,32 @@ export async function git(
     expectedErrors: new Set(),
   }
 
-  let combinedOutput = ''
-  const opts = {
-    ...defaultOptions,
-    ...options,
-  }
+  const opts = { ...defaultOptions, ...options }
 
-  opts.processCallback = (process: ChildProcess) => {
+  // The combined contents of stdout and stderr with some light processing
+  // applied to remove redundant lines caused by Git's use of `\r` to "erase"
+  // the current line while writing progress output. See createTerminalOutput.
+  //
+  // Note: The output is capped at a maximum of 256kb and the sole intent of
+  // this property is to provide "terminal-like" output to the user when a Git
+  // command fails.
+  let terminalOutput = ''
+
+  // Keep at most 256kb of combined stderr and stdout output. This is used
+  // to provide more context in error messages.
+  opts.processCallback = process => {
+    const terminalStream = createTerminalStream()
+    const tailStream = createTailStream(256 * 1024, { encoding: 'utf8' })
+
+    terminalStream
+      .pipe(tailStream)
+      .on('data', (data: string) => (terminalOutput = data))
+      .on('error', e => log.error(`Terminal output error`, e))
+
+    process.stdout?.pipe(terminalStream, { end: false })
+    process.stderr?.pipe(terminalStream, { end: false })
+    process.on('close', () => terminalStream.end())
     options?.processCallback?.(process)
-
-    const combineOutput = (readable: Readable | null) => {
-      if (readable) {
-        readable.pipe(split2()).on('data', (line: string) => {
-          combinedOutput += line + '\n'
-        })
-      }
-    }
-
-    combineOutput(process.stderr)
-    combineOutput(process.stdout)
   }
 
   return withTrampolineEnv(
@@ -173,7 +240,7 @@ export async function git(
       const commandName = `${name}: git ${args.join(' ')}`
 
       const result = await GitPerf.measure(commandName, () =>
-        GitProcess.exec(args, path, opts)
+        exec(args, path, opts)
       ).catch(err => {
         // If this is an exception thrown by Node.js (as opposed to
         // dugite) let's keep the salient details but include the name of
@@ -192,21 +259,20 @@ export async function git(
         ? opts.successExitCodes.has(exitCode)
         : false
       if (!acceptableExitCode) {
-        gitError = GitProcess.parseError(result.stderr)
+        gitError = parseError(coerceToString(result.stderr))
         if (gitError === null) {
-          gitError = GitProcess.parseError(result.stdout)
+          gitError = parseError(coerceToString(result.stdout))
         }
       }
 
       const gitErrorDescription =
         gitError !== null
-          ? getDescriptionForError(gitError, result.stderr)
+          ? getDescriptionForError(gitError, coerceToString(result.stderr))
           : null
       const gitResult = {
         ...result,
         gitError,
         gitErrorDescription,
-        combinedOutput,
         path,
       }
 
@@ -225,14 +291,9 @@ export async function git(
         `\`git ${args.join(' ')}\` exited with an unexpected code: ${exitCode}.`
       )
 
-      if (result.stdout) {
-        errorMessage.push('stdout:')
-        errorMessage.push(result.stdout)
-      }
-
-      if (result.stderr) {
-        errorMessage.push('stderr:')
-        errorMessage.push(result.stderr)
+      if (terminalOutput.length > 0) {
+        // Leave even less of the combined output in the log
+        errorMessage.push(terminalOutput.slice(-1024))
       }
 
       if (gitError !== null) {
@@ -243,16 +304,7 @@ export async function git(
 
       log.error(errorMessage.join('\n'))
 
-      if (gitError === DugiteError.PushWithFileSizeExceedingLimit) {
-        const result = getFileFromExceedsError(errorMessage.join())
-        const files = result.join('\n')
-
-        if (files !== '') {
-          gitResult.gitErrorDescription += '\n\nFile causing error:\n\n' + files
-        }
-      }
-
-      throw new GitError(gitResult, args)
+      throw new GitError(gitResult, args, terminalOutput)
     },
     path,
     options?.isBackgroundTask ?? false,
@@ -302,7 +354,7 @@ const lockFilePathRe = /^error: could not lock config file (.+?): File exists$/m
  * output.
  */
 export function parseConfigLockFilePathFromError(result: IGitResult) {
-  const match = lockFilePathRe.exec(result.stderr)
+  const match = lockFilePathRe.exec(coerceToString(result.stderr))
 
   if (match === null) {
     return null
@@ -339,7 +391,7 @@ export function getDescriptionForError(
 
   switch (error) {
     case DugiteError.BadConfigValue:
-      const errorInfo = GitProcess.parseBadConfigValueErrorInfo(stderr)
+      const errorInfo = parseBadConfigValueErrorInfo(stderr)
       if (errorInfo === null) {
         return 'Unsupported git configuration value.'
       }
@@ -476,6 +528,6 @@ export function gitRebaseArguments() {
 /**
  * Returns the SHA of the passed in IGitResult
  */
-export function parseCommitSHA(result: IGitResult): string {
+export function parseCommitSHA(result: IGitStringResult): string {
   return result.stdout.split(']')[0].split(' ')[1]
 }

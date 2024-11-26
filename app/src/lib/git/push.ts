@@ -1,10 +1,7 @@
-import { GitError as DugiteError } from 'dugite'
-
-import { git, IGitExecutionOptions, GitError } from './core'
+import { git, IGitStringExecutionOptions } from './core'
 import { Repository } from '../../models/repository'
 import { IPushProgress } from '../../models/progress'
 import { PushProgressParser, executionOptionsWithProgress } from '../progress'
-import { AuthenticationErrors } from './authentication'
 import { IRemote } from '../../models/remote'
 import { envForRemoteOperation } from './environment'
 import { Branch } from '../../models/branch'
@@ -72,12 +69,8 @@ export async function push(
     args.push('--force-with-lease')
   }
 
-  const expectedErrors = new Set<DugiteError>(AuthenticationErrors)
-  expectedErrors.add(DugiteError.ProtectedBranchForcePush)
-
-  let opts: IGitExecutionOptions = {
+  let opts: IGitStringExecutionOptions = {
     env: await envForRemoteOperation(remote.url),
-    expectedErrors,
   }
 
   if (progressCallback) {
@@ -114,9 +107,5 @@ export async function push(
     })
   }
 
-  const result = await git(args, repository.path, 'push', opts)
-
-  if (result.gitErrorDescription) {
-    throw new GitError(result, args)
-  }
+  await git(args, repository.path, 'push', opts)
 }

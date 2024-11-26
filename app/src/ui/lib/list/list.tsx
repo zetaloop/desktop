@@ -108,6 +108,9 @@ interface IListProps {
    */
   readonly selectedRows: ReadonlyArray<number>
 
+  /** Whether or not to disable focusing on the list with Tab (optional, defaults to false) */
+  readonly shouldDisableTabFocus?: boolean
+
   /**
    * Used to attach special classes to specific rows
    */
@@ -297,13 +300,13 @@ interface IListProps {
 
   /** Optional role setting.
    *
-   * By default our lists use the `list-box` role paired with list items of role
+   * By default our lists use the `listbox` role paired with list items of role
    * 'option' because that have selection capability. In that case, a
    * screenreader will only browse to the selected list option. If the list is
    * meant to be a read only list, we should use `list` with `listitem` as the
    * role for the items so browse mode can navigate them.
    */
-  readonly role?: `list-box` | `list`
+  readonly role?: 'listbox' | 'list'
 
   /**
    * Optional callback for providing an aria label for screen readers for each
@@ -1128,7 +1131,8 @@ export class List extends React.Component<IListProps, IListState> {
 
   private getRowRenderer = (firstSelectableRowIndex: number | null) => {
     return (params: IRowRendererParams) => {
-      const { selectedRows, keyboardInsertionData } = this.props
+      const { selectedRows, keyboardInsertionData, shouldDisableTabFocus } =
+        this.props
       const { keyboardInsertionIndexPath } = this.state
       const rowIndex = params.rowIndex
       const selectable = this.canSelectRow(rowIndex)
@@ -1137,7 +1141,9 @@ export class List extends React.Component<IListProps, IListState> {
 
       // An unselectable row shouldn't be focusable
       let tabIndex: number | undefined = undefined
-      if (selectable) {
+      if (shouldDisableTabFocus === true) {
+        tabIndex = -1
+      } else if (selectable) {
         tabIndex =
           (selected && selectedRows[0] === rowIndex) ||
           (selectedRows.length === 0 && firstSelectableRowIndex === rowIndex)
@@ -1182,7 +1188,7 @@ export class List extends React.Component<IListProps, IListState> {
         <ListRow
           key={params.key}
           id={id}
-          role={this.props.role === undefined ? undefined : 'listitem'}
+          role={this.props.role === 'list' ? 'listitem' : undefined}
           onRowRef={this.onRowRef}
           rowCount={this.props.rowCount}
           rowIndex={{ section: 0, row: rowIndex }}
@@ -1352,7 +1358,12 @@ export class List extends React.Component<IListProps, IListState> {
     // The currently selected list item is focusable but if there's no focused
     // item the list itself needs to be focusable so that you can reach it with
     // keyboard navigation and select an item.
-    const tabIndex = this.props.selectedRows.length < 1 ? 0 : -1
+    const tabIndex =
+      this.props.shouldDisableTabFocus === true
+        ? -1
+        : this.props.selectedRows.length < 1
+        ? 0
+        : -1
 
     // we select the last item from the selection array for this prop
     const activeDescendant =
@@ -1378,7 +1389,7 @@ export class List extends React.Component<IListProps, IListState> {
           id={this.props.accessibleListId}
           aria-labelledby={this.props.ariaLabelledBy}
           aria-label={this.props.ariaLabel}
-          role={this.props.role ?? 'list-box'}
+          role={this.props.role ?? 'listbox'}
           ref={this.onGridRef}
           autoContainerWidth={true}
           containerRole="presentation"

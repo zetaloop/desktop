@@ -28,6 +28,17 @@ function enableBetaFeatures(): boolean {
   return enableDevelopmentFeatures() || __RELEASE_CHANNEL__ === 'beta'
 }
 
+/**
+ * Should the app show menu items that are used for testing various parts of the
+ * UI
+ *
+ * For our own testing purposes, this will likely remain enabled. But, sometimes
+ * we may want to create a test release for a user to test a fix in which case
+ * they should not need access to the test menu items.
+ */
+export const enableTestMenuItems = () =>
+  enableDevelopmentFeatures() || __RELEASE_CHANNEL__ === 'test'
+
 /** Should git pass `--recurse-submodules` when performing operations? */
 export function enableRecurseSubmodulesFlag(): boolean {
   return true
@@ -81,7 +92,12 @@ export function enablePullRequestQuickView(): boolean {
   return enableDevelopmentFeatures()
 }
 
+/** Should we support image previews for dds files? */
+export function enableImagePreviewsForDDSFiles(): boolean {
+  return enableBetaFeatures()
+}
+
 export const enableCustomIntegration = () => true
 
-export const enableResizingToolbarButtons = enableBetaFeatures
+export const enableResizingToolbarButtons = () => true
 export const enableGitConfigParameters = enableBetaFeatures

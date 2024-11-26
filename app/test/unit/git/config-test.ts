@@ -1,4 +1,4 @@
-import { GitProcess } from 'dugite'
+import { exec } from 'dugite'
 import * as Path from 'path'
 
 import { Repository } from '../../../src/models/repository'
@@ -13,6 +13,7 @@ import {
 
 import { mkdirSync } from '../../helpers/temp'
 import { setupFixtureRepository } from '../../helpers/repositories'
+import { realpath } from 'fs/promises'
 
 describe('git/config', () => {
   let repository: Repository
@@ -68,18 +69,19 @@ describe('git/config', () => {
     const HOME = mkdirSync('global-config-here')
     const env = { HOME }
     const expectedConfigPath = Path.normalize(Path.join(HOME, '.gitconfig'))
+
     const baseArgs = ['config', '-f', expectedConfigPath]
 
     describe('getGlobalConfigPath', () => {
       beforeEach(async () => {
         // getGlobalConfigPath requires at least one entry, so the
         // test needs to setup an existing config value
-        await GitProcess.exec([...baseArgs, 'user.name', 'bar'], __dirname)
+        await exec([...baseArgs, 'user.name', 'bar'], __dirname)
       })
 
       it('gets the config path', async () => {
         const path = await getGlobalConfigPath(env)
-        expect(path).toBe(expectedConfigPath)
+        expect(path).toBe(await realpath(expectedConfigPath))
       })
     })
 
@@ -87,8 +89,8 @@ describe('git/config', () => {
       const key = 'foo.bar'
 
       beforeEach(async () => {
-        await GitProcess.exec([...baseArgs, '--add', key, 'first'], __dirname)
-        await GitProcess.exec([...baseArgs, '--add', key, 'second'], __dirname)
+        await exec([...baseArgs, '--add', key, 'first'], __dirname)
+        await exec([...baseArgs, '--add', key, 'second'], __dirname)
       })
 
       it('will replace all entries for a global value', async () => {

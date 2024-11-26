@@ -1,4 +1,3 @@
-import { spawnAndComplete } from './spawn'
 import { getFilesWithConflictMarkers } from './diff-check'
 import {
   WorkingDirectoryStatus,
@@ -28,14 +27,7 @@ import { getBinaryPaths } from './diff'
 import { getRebaseInternalState } from './rebase'
 import { RebaseInternalState } from '../../models/rebase'
 import { isCherryPickHeadFound } from './cherry-pick'
-
-/**
- * V8 has a limit on the size of string it can create (~256MB), and unless we want to
- * trigger an unhandled exception we need to do the encoding conversion by hand.
- *
- * As we may be executing status often, we should keep this to a reasonable threshold.
- */
-const MaxStatusBufferSize = 20e6 // 20MB in decimal
+import { git } from '.'
 
 /** The encapsulation of the result from 'git status' */
 export interface IStatusResult {
@@ -191,39 +183,30 @@ const conflictStatusCodes = ['DD', 'AU', 'UD', 'UA', 'DU', 'AA', 'UU']
  *  and fail gracefully if the location is not a Git repository
  */
 export async function getStatus(
-  repository: Repository
+  repository: Repository,
+  includeUntracked = true
 ): Promise<IStatusResult | null> {
   const args = [
     '--no-optional-locks',
     'status',
-    '--untracked-files=all',
+    ...(includeUntracked ? ['--untracked-files=all'] : []),
     '--branch',
     '--porcelain=2',
     '-z',
   ]
 
-  const result = await spawnAndComplete(
-    args,
-    repository.path,
-    'getStatus',
-    new Set([0, 128])
-  )
+  const { stdout, exitCode } = await git(args, repository.path, 'getStatus', {
+    successExitCodes: new Set([0, 128]),
+    encoding: 'buffer',
+  })
 
-  if (result.exitCode === 128) {
+  if (exitCode === 128) {
     log.debug(
       `'git status' returned 128 for '${repository.path}' and is likely missing its .git directory`
     )
     return null
   }
 
-  if (result.output.length > MaxStatusBufferSize) {
-    log.error(
-      `'git status' emitted ${result.output.length} bytes, which is beyond the supported threshold of ${MaxStatusBufferSize} bytes`
-    )
-    return null
-  }
-
-  const stdout = result.output.toString('utf8')
   const parsed = parsePorcelainStatus(stdout)
   const headers = parsed.filter(isStatusHeader)
   const entries = parsed.filter(isStatusEntry)

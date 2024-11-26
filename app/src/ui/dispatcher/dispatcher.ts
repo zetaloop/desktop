@@ -3945,4 +3945,12 @@ export class Dispatcher {
   public setDiffCheckMarksSetting(diffCheckMarks: boolean) {
     return this.appStore._updateShowDiffCheckMarks(diffCheckMarks)
   }
+
+  public testPruneBranches() {
+    return this.appStore._testPruneBranches()
+  }
+
+  public editGlobalGitConfig() {
+    return this.appStore._editGlobalGitConfig()
+  }
 }

@@ -6,7 +6,7 @@ import {
   deleteMostRecentSSHCredential,
   removeMostRecentSSHCredential,
 } from '../ssh/ssh-credential-storage'
-import { GitError as DugiteError, GitProcess } from 'dugite'
+import { GitError as DugiteError, exec } from 'dugite'
 import memoizeOne from 'memoize-one'
 import { enableGitConfigParameters } from '../feature-flag'
 import { GitError, getDescriptionForError } from '../git/core'
@@ -61,7 +61,7 @@ export const getCredentialUrl = (cred: Map<string, string>) => {
 
 export const GitUserAgent = memoizeOne(() =>
   // Can't use git() as that will call withTrampolineEnv which calls this method
-  GitProcess.exec(['--version'], process.cwd())
+  exec(['--version'], process.cwd())
     // https://github.com/git/git/blob/a9e066fa63149291a55f383cfa113d8bdbdaa6b3/help.c#L733-L739
     .then(r => /git version (.*)/.exec(r.stdout)?.at(1) ?? 'unknown')
     .catch(e => {
@@ -113,8 +113,7 @@ export async function withTrampolineEnv<T>(
 
     // The code below assumes a few things in order to manage SSH key passphrases
     // correctly:
-    // 1. `withTrampolineEnv` is only used in the functions `git` (core.ts) and
-    //    `spawnAndComplete` (spawn.ts)
+    // 1. `withTrampolineEnv` is only used in the functions `git` (core.ts)
     // 2. Those two functions always thrown an error when something went wrong,
     //    and just return a result when everything went fine.
     //
@@ -187,13 +186,15 @@ export async function withTrampolineEnv<T>(
         e instanceof GitError &&
         fatalPromptsDisabledRe.test(e.message)
       ) {
+        const msg = 'Authentication failed: user cancelled authentication'
         const gitErrorDescription =
           getDescriptionForError(DugiteError.HTTPSAuthenticationFailed, '') ??
-          'Authentication failed: user cancelled authentication'
+          msg
 
         const fakeAuthError = new GitError(
           { ...e.result, gitErrorDescription },
-          e.args
+          e.args,
+          msg
         )
 
         fakeAuthError.cause = e

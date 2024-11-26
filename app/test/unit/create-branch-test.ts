@@ -6,18 +6,9 @@ import {
   IBranchTip,
   Branch,
 } from '../../src/models/branch'
-import { CommitIdentity } from '../../src/models/commit-identity'
-
-const stubAuthor: CommitIdentity = {
-  name: 'Brendan Forster',
-  email: 'brendan@example.com',
-  date: new Date(),
-  tzOffset: 0,
-}
 
 const stubTip: IBranchTip = {
   sha: 'deadbeef',
-  author: stubAuthor,
 }
 
 const defaultBranch: Branch = {

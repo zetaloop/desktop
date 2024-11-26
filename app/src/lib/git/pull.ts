@@ -1,8 +1,7 @@
-import { git, GitError, IGitExecutionOptions, gitRebaseArguments } from './core'
+import { git, gitRebaseArguments, IGitStringExecutionOptions } from './core'
 import { Repository } from '../../models/repository'
 import { IPullProgress } from '../../models/progress'
 import { PullProgressParser, executionOptionsWithProgress } from '../progress'
-import { AuthenticationErrors } from './authentication'
 import { enableRecurseSubmodulesFlag } from '../feature-flag'
 import { IRemote } from '../../models/remote'
 import { envForRemoteOperation } from './environment'
@@ -41,9 +40,8 @@ export async function pull(
   remote: IRemote,
   progressCallback?: (progress: IPullProgress) => void
 ): Promise<void> {
-  let opts: IGitExecutionOptions = {
+  let opts: IGitStringExecutionOptions = {
     env: await envForRemoteOperation(remote.url),
-    expectedErrors: AuthenticationErrors,
   }
 
   if (progressCallback) {
@@ -84,11 +82,7 @@ export async function pull(
   }
 
   const args = await getPullArgs(repository, remote.name, progressCallback)
-  const result = await git(args, repository.path, 'pull', opts)
-
-  if (result.gitErrorDescription) {
-    throw new GitError(result, args)
-  }
+  await git(args, repository.path, 'pull', opts)
 }
 
 /**
