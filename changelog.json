@@ -1,5 +1,11 @@
 {
   "releases": {
+    "3.4.10-beta2": [
+      "[Fixed] Screen readers announce the position of the list items in selectable lists such as the history commit list - #19603",
+      "[Fixed] Limit the commit message length we accept - #15355",
+      "[Fixed] Prevent repository not found message for large git status operations - #19583",
+      "[Improved] Improved appearance of the list of files in 'File size limit exceeded' dialog - #19581"
+    ],
     "3.4.10-beta1": [
       "[Added] Add \"View Pull Request on GitHub\" Option to the Checked-Out Branch Button and Pull Requests List - #19453. Thanks @DylanDevelops!",
       "[Fixed] Add aria-labelledby and aria-describedby attributes to \"Show whitespace changes?\" popover - #19518",
