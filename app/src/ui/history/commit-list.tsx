@@ -499,7 +499,7 @@ export class CommitList extends React.Component<
         {this.renderReorderCommitsHint()}
         <List
           ariaLabel="Commits"
-          role={this.props.isInformationalView === true ? 'list' : 'list-box'}
+          role={this.props.isInformationalView === true ? 'list' : 'listbox'}
           ref={this.listRef}
           rowCount={commitSHAs.length}
           rowHeight={RowHeight}
