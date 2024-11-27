@@ -107,7 +107,7 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
           <p>{error.message}</p>
           {files.length > 0 && (
             <>
-              <p>Files that exceed the limit</p>
+              <p>以下文件超过大小限制</p>
               <ul>
                 {files.map(file => (
                   <li key={file}>{file}</li>
@@ -116,9 +116,11 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
             </>
           )}
           <p>
-            See{' '}
-            <LinkButton uri="https://gh.io/lfs">https://gh.io/lfs</LinkButton>{' '}
-            for more information on managing large files on GitHub
+            前往{' '}
+            <LinkButton uri="https://docs.github.com/zh/repositories/working-with-files/managing-large-files">
+              https://gh.io/lfs
+            </LinkButton>{' '}
+            了解如何在 GitHub 上储存大文件
           </p>
         </>
       )
@@ -130,14 +132,14 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
   private getTitle(error: Error) {
     switch (getDugiteError(error)) {
       case DugiteError.PushWithFileSizeExceedingLimit:
-        return 'File size limit exceeded'
+        return '文件过大'
     }
 
     switch (getRetryActionType(error)) {
       case RetryActionType.Clone:
         return '克隆失败'
       case RetryActionType.Push:
-        return 'Failed to push'
+        return '推送失败'
     }
 
     return '错误'
