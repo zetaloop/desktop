@@ -32,7 +32,7 @@ export class DiscardChangesRetryDialog extends React.Component<
 
     return (
       <Dialog
-        title={__DARWIN__ ? '永久放弃这些改动' : '永久放弃这些改动'}
+        title={__DARWIN__ ? '放弃改动无法恢复' : '放弃改动无法恢复'}
         id="discard-changes-retry"
         loading={retrying}
         disabled={retrying}
