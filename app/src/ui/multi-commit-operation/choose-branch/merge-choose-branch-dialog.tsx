@@ -14,13 +14,17 @@ import {
 } from './base-choose-branch-dialog'
 import { truncateWithEllipsis } from '../../../lib/truncate-with-ellipsis'
 import QuickLRU from 'quick-lru'
+import pMemoize from 'p-memoize'
 
-const mergeTreeResultCache = new QuickLRU<string, Promise<MergeTreeResult>>({
-  maxSize: 250,
+const mergeTreeCache = pMemoize(determineMergeability, {
+  cache: new QuickLRU<string, MergeTreeResult>({ maxSize: 250 }),
+  cacheKey: ([_, ours, theirs]: Parameters<typeof determineMergeability>) =>
+    `${ours.tip.sha} <- ${theirs.tip.sha}`,
 })
 
-const aheadBehindCache = new QuickLRU<string, Promise<IAheadBehind | null>>({
-  maxSize: 250,
+const aheadBehindCache = pMemoize(getAheadBehind, {
+  cache: new QuickLRU<string, IAheadBehind | null>({ maxSize: 250 }),
+  cacheKey: ([_, range]: Parameters<typeof getAheadBehind>) => range,
 })
 
 interface IMergeChooseBranchDialogState {
@@ -110,25 +114,14 @@ export class MergeChooseBranchDialog extends React.Component<
   private updateStatus = async (branch: Branch) => {
     const { currentBranch, repository } = this.props
 
-    const cacheKey = `${currentBranch.tip.sha} <- ${branch.tip.sha}`
-    const cachedMergeStatus = mergeTreeResultCache.get(cacheKey)
-
-    const mergeStatusPromise =
-      cachedMergeStatus ??
-      determineMergeability(
-        repository,
-        currentBranch,
-        branch
-      ).catch<MergeTreeResult>(e => {
-        log.error('Failed determining mergeability', e)
-        return { kind: ComputedAction.Clean }
-      })
-
-    if (!cachedMergeStatus) {
-      mergeTreeResultCache.set(cacheKey, mergeStatusPromise)
-    }
-
-    const mergeStatus = await mergeStatusPromise
+    const mergeStatus = await mergeTreeCache(
+      repository,
+      currentBranch,
+      branch
+    ).catch<MergeTreeResult>(e => {
+      log.error('Failed determining mergeability', e)
+      return { kind: ComputedAction.Clean }
+    })
 
     // The user has selected a different branch since we started or the branch
     // has changed, so don't update the preview with stale data.
@@ -149,20 +142,7 @@ export class MergeChooseBranchDialog extends React.Component<
     // Commit count is used in the UI output as well as determining whether the
     // submit button is enabled
     const range = revSymmetricDifference('', branch.name)
-    const cachedAheadBehind = aheadBehindCache.get(cacheKey)
-
-    // No point in us computing the ahead and behind if we know there'll be
-    // conflicts as that per definition means we're behind.
-    const aheadBehindPromise =
-      mergeStatus.kind === ComputedAction.Conflicts
-        ? Promise.resolve(null)
-        : cachedAheadBehind ?? getAheadBehind(this.props.repository, range)
-
-    if (!cachedAheadBehind) {
-      aheadBehindCache.set(cacheKey, aheadBehindPromise)
-    }
-
-    const aheadBehind = await aheadBehindPromise
+    const aheadBehind = await aheadBehindCache(repository, range)
     const commitCount = aheadBehind ? aheadBehind.behind : 0
 
     if (this.state.selectedBranch.tip.sha !== branch.tip.sha) {
