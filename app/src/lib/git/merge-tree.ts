@@ -6,6 +6,8 @@ import { Repository } from '../../models/repository'
 import { isErrnoException } from '../errno-exception'
 import { getMergeBase } from './merge'
 import { spawnGit } from './spawn'
+import { git } from './core'
+import { enableMergeTreeWriteTree } from '../feature-flag'
 
 // the merge-tree output is a collection of entries like this
 //
@@ -42,6 +44,35 @@ export async function determineMergeability(
   ours: Branch,
   theirs: Branch
 ): Promise<MergeTreeResult> {
+  if (enableMergeTreeWriteTree()) {
+    return git(
+      [
+        'merge-tree',
+        '--write-tree',
+        '--name-only',
+        '--no-messages',
+        '-z',
+        ours.tip.sha,
+        theirs.tip.sha,
+      ],
+      repository.path,
+      'determineMergeability',
+      { successExitCodes: new Set([0, 1]) }
+    ).then(({ stdout, exitCode }) => {
+      if (exitCode === 0) {
+        return { kind: ComputedAction.Clean }
+      }
+
+      const entries = stdout.split('\0')
+      // The first "entry" is the tree id and will always be present
+      const conflictedFiles = entries.length - 1
+
+      return conflictedFiles > 0
+        ? { kind: ComputedAction.Conflicts, conflictedFiles }
+        : { kind: ComputedAction.Clean }
+    })
+  }
+
   const mergeBase = await getMergeBase(repository, ours.tip.sha, theirs.tip.sha)
 
   if (mergeBase === null) {
