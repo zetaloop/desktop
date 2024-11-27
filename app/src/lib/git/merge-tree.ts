@@ -41,46 +41,35 @@ export async function determineMergeability(
   ours: Branch,
   theirs: Branch
 ) {
-  try {
-    const { stdout, exitCode } = await git(
-      [
-        'merge-tree',
-        '--write-tree',
-        '--name-only',
-        '--no-messages',
-        '-z',
-        ours.tip.sha,
-        theirs.tip.sha,
-      ],
-      repository.path,
-      'determineMergeability',
-      { successExitCodes: new Set([0, 1]) }
+  return git(
+    [
+      'merge-tree',
+      '--write-tree',
+      '--name-only',
+      '--no-messages',
+      '-z',
+      ours.tip.sha,
+      theirs.tip.sha,
+    ],
+    repository.path,
+    'determineMergeability',
+    { successExitCodes: new Set([0, 1]) }
+  )
+    .then<MergeTreeResult>(({ stdout }) => {
+      // The output will be "<tree-id>\0[<filename>\0]*" so we can get the
+      // number of conflicted files by counting the number of null bytes and
+      // subtracting one for the tree id.
+      const conflictedFiles = (stdout.match(/\0/g)?.length ?? 0) - 1
+      return conflictedFiles > 0
+        ? { kind: ComputedAction.Conflicts, conflictedFiles }
+        : { kind: ComputedAction.Clean }
+    })
+    .catch<MergeTreeResult>(e =>
+      isGitError(e, GitError.CannotMergeUnrelatedHistories)
+        ? Promise.resolve({ kind: ComputedAction.Invalid })
+        : Promise.reject(e)
     )
 
-    if (exitCode === 0) {
-      return { kind: ComputedAction.Clean }
-    }
-
-    // The output will be "<tree-id>\0[<filename>\0]*" so we can get the
-    // number of conflicted files by counting the number of null bytes and
-    // subtracting one for the tree id
-    const nulls = stdout.match(/\0/g)?.length ?? 0
-    const conflictedFiles = nulls - 1
-
-    return conflictedFiles > 0
-      ? { kind: ComputedAction.Conflicts, conflictedFiles }
-      : { kind: ComputedAction.Clean }
-  } catch (e) {
-    if (
-      e instanceof GitError &&
-      e.result.gitError === DugiteError.CannotMergeUnrelatedHistories
-    ) {
-      return { kind: ComputedAction.Invalid }
-    }
-
-    throw e
-  }
-}
 
 export function parseMergeTreeResult(stream: NodeJS.ReadableStream) {
   return new Promise<MergeTreeResult>(resolve => {
