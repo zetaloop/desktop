@@ -57,11 +57,11 @@ export class GenericGitAuthentication extends React.Component<
             无法在 <Ref>{this.props.remoteUrl}</Ref> 验证。请输入
             {this.props.username ? (
               <>
-                用户 <Ref>{this.props.username} 的密码</Ref>
+                用户 <Ref>{this.props.username}</Ref> 的密码
               </>
             ) : (
               '您的用户名与密码'
-            )}{' '}
+            )}
             再试一次。
           </p>
 
