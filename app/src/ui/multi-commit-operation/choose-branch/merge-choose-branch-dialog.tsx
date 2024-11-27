@@ -130,12 +130,13 @@ export class MergeChooseBranchDialog extends React.Component<
 
     const mergeStatus = await mergeStatusPromise
 
-    // The user has selected a different branch since we started, so don't
-    // update the preview with stale data.
+    // The user has selected a different branch since we started or the branch
+    // has changed, so don't update the preview with stale data.
+    //
     // We don't have to check if the state changed from underneath us if we
-    // loaded the status from cache, because that means we never kicked off
-    // an async operation.
-    if (this.state.selectedBranch !== branch) {
+    // loaded the status from cache, because that means we never kicked off an
+    // async operation.
+    if (this.state.selectedBranch?.tip.sha !== branch.tip.sha) {
       return
     }
 
@@ -164,7 +165,7 @@ export class MergeChooseBranchDialog extends React.Component<
     const aheadBehind = await aheadBehindPromise
     const commitCount = aheadBehind ? aheadBehind.behind : 0
 
-    if (this.state.selectedBranch !== branch) {
+    if (this.state.selectedBranch.tip.sha !== branch.tip.sha) {
       return
     }
 
