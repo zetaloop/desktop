@@ -63,9 +63,11 @@ export async function determineMergeability(
         return { kind: ComputedAction.Clean }
       }
 
-      const entries = stdout.split('\0')
-      // The first "entry" is the tree id and will always be present
-      const conflictedFiles = entries.length - 1
+      // The output will be "<tree-id>\0[<filename>\0]*" so we can get the
+      // number of conflicted files by counting the number of null bytes and
+      // subtracting one for the tree id
+      const nulls = stdout.match(/\0/g)?.length ?? 0
+      const conflictedFiles = nulls - 1
 
       return conflictedFiles > 0
         ? { kind: ComputedAction.Conflicts, conflictedFiles }
