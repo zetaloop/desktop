@@ -3,11 +3,7 @@ import { Branch } from '../../models/branch'
 import { ComputedAction } from '../../models/computed-action'
 import { MergeTreeResult } from '../../models/merge'
 import { Repository } from '../../models/repository'
-import { isErrnoException } from '../errno-exception'
-import { getMergeBase } from './merge'
-import { spawnGit } from './spawn'
 import { git, GitError } from './core'
-import { enableMergeTreeWriteTree } from '../feature-flag'
 import { GitError as DugiteError } from 'dugite'
 
 // the merge-tree output is a collection of entries like this
@@ -44,9 +40,9 @@ export async function determineMergeability(
   repository: Repository,
   ours: Branch,
   theirs: Branch
-): Promise<MergeTreeResult> {
-  if (enableMergeTreeWriteTree()) {
-    return git(
+) {
+  try {
+    const { stdout, exitCode } = await git(
       [
         'merge-tree',
         '--write-tree',
@@ -60,68 +56,30 @@ export async function determineMergeability(
       'determineMergeability',
       { successExitCodes: new Set([0, 1]) }
     )
-      .then<MergeTreeResult>(({ stdout, exitCode }) => {
-        if (exitCode === 0) {
-          return { kind: ComputedAction.Clean }
-        }
 
-        // The output will be "<tree-id>\0[<filename>\0]*" so we can get the
-        // number of conflicted files by counting the number of null bytes and
-        // subtracting one for the tree id
-        const nulls = stdout.match(/\0/g)?.length ?? 0
-        const conflictedFiles = nulls - 1
+    if (exitCode === 0) {
+      return { kind: ComputedAction.Clean }
+    }
 
-        return conflictedFiles > 0
-          ? { kind: ComputedAction.Conflicts, conflictedFiles }
-          : { kind: ComputedAction.Clean }
-      })
-      .catch<MergeTreeResult>(e => {
-        return e instanceof GitError &&
-          e.result.gitError === DugiteError.CannotMergeUnrelatedHistories
-          ? Promise.resolve({ kind: ComputedAction.Invalid })
-          : Promise.reject(e)
-      })
+    // The output will be "<tree-id>\0[<filename>\0]*" so we can get the
+    // number of conflicted files by counting the number of null bytes and
+    // subtracting one for the tree id
+    const nulls = stdout.match(/\0/g)?.length ?? 0
+    const conflictedFiles = nulls - 1
+
+    return conflictedFiles > 0
+      ? { kind: ComputedAction.Conflicts, conflictedFiles }
+      : { kind: ComputedAction.Clean }
+  } catch (e) {
+    if (
+      e instanceof GitError &&
+      e.result.gitError === DugiteError.CannotMergeUnrelatedHistories
+    ) {
+      return { kind: ComputedAction.Invalid }
+    }
+
+    throw e
   }
-
-  const mergeBase = await getMergeBase(repository, ours.tip.sha, theirs.tip.sha)
-
-  if (mergeBase === null) {
-    return { kind: ComputedAction.Invalid }
-  }
-
-  if (mergeBase === ours.tip.sha || mergeBase === theirs.tip.sha) {
-    return { kind: ComputedAction.Clean }
-  }
-
-  const process = await spawnGit(
-    ['merge-tree', mergeBase, ours.tip.sha, theirs.tip.sha],
-    repository.path,
-    'mergeTree'
-  )
-
-  return await new Promise<MergeTreeResult>((resolve, reject) => {
-    const mergeTreeResultPromise: Promise<MergeTreeResult> =
-      process.stdout !== null
-        ? parseMergeTreeResult(process.stdout)
-        : Promise.reject(new Error('Failed reading merge-tree output'))
-
-    // If this is an exception thrown by Node.js while attempting to
-    // spawn let's keep the salient details but include the name of
-    // the operation.
-    process.on('error', e =>
-      reject(
-        isErrnoException(e) ? new Error(`merge-tree failed: ${e.code}`) : e
-      )
-    )
-
-    process.on('exit', code => {
-      if (code !== 0) {
-        reject(new Error(`merge-tree exited with code '${code}'`))
-      } else {
-        mergeTreeResultPromise.then(resolve, reject)
-      }
-    })
-  })
 }
 
 export function parseMergeTreeResult(stream: NodeJS.ReadableStream) {
