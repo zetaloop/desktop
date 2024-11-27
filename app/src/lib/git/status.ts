@@ -158,20 +158,12 @@ function convertToAppStatus(
       renameIncludesModifications: false,
     }
   } else if (entry.kind === 'renamed' && oldPath != null) {
-    // The renamed files includes modifications if the working tree has
-    // modifications of the rename score is not 100%.
-    let renameIncludesModifications = false;
-    if (
-      entry.workingTree === GitStatusEntry.Modified ||
-      (entry.renameOrCopyScore !== undefined && entry.renameOrCopyScore < 100)
-    ) {
-      renameIncludesModifications = true;
-    }
     return {
       kind: AppFileStatusKind.Renamed,
       oldPath,
       submoduleStatus: entry.submoduleStatus,
-      renameIncludesModifications,
+      renameIncludesModifications: entry.workingTree === GitStatusEntry.Modified ||
+      (entry.renameOrCopyScore !== undefined && entry.renameOrCopyScore < 100),
     }
   } else if (entry.kind === 'untracked') {
     return {

@@ -236,14 +236,11 @@ export class Diff extends React.Component<IDiffProps, IDiffState> {
             </div>
           )
         }
-        else
-        {
-          return (
-            <div className="panel renamed">
-              The file was renamed but not changed
-            </div>
-          )
-        }
+        return (
+          <div className="panel renamed">
+            The file was renamed but not changed
+          </div>
+        )
       }
 
       if (
