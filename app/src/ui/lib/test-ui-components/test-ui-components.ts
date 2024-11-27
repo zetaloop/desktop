@@ -117,11 +117,11 @@ export function showTestUI(
     case 'test-unable-to-open-shell':
       return dispatcher.postError(
         new ShellError(
-          `Could not find executable for '${
-            __DARWIN__ ? 'Terminal' : 'Command Prompt'
-          }' at path 'some/invalid/path'.  Please open ${
-            __DARWIN__ ? 'Settings' : 'Options'
-          } and select an available shell.`
+          `找不到终端 '${
+            __DARWIN__ ? '终端' : '终端'
+          }' 的可执行文件 'some/invalid/path'。请打开${
+            __DARWIN__ ? '设置' : '设置'
+          }并选择一个可用的终端。`
         )
       )
     case 'test-undone-banner':
@@ -206,9 +206,7 @@ export function showTestUI(
   function showFakeConfirmCommittingConflictedFiles() {
     if (repository == null || repository instanceof CloningRepository) {
       return dispatcher.postError(
-        new Error(
-          'No repository to test with - check out a repository and try again'
-        )
+        new Error('无可测试仓库 - 请检出一个仓库再试')
       )
     }
 
@@ -245,9 +243,7 @@ export function showTestUI(
   function showFakeDiscardedChangesWillBeUnrecoverable() {
     if (repository == null || repository instanceof CloningRepository) {
       return dispatcher.postError(
-        new Error(
-          'No repository to test with - check out a repository and try again'
-        )
+        new Error('无可测试仓库 - 请检出一个仓库再试')
       )
     }
 
@@ -279,9 +275,7 @@ export function showTestUI(
       !isRepositoryWithGitHubRepository(repository)
     ) {
       return dispatcher.postError(
-        new Error(
-          'No GitHub repository to test with - check out a GitHub repository and try again'
-        )
+        new Error('无可测试 GitHub 仓库 - 请检出一个 GitHub 仓库再试')
       )
     }
 
@@ -299,9 +293,7 @@ export function showTestUI(
       !isRepositoryWithGitHubRepository(repository)
     ) {
       return dispatcher.postError(
-        new Error(
-          'No GitHub repository to test with - check out a GitHub repository and try again'
-        )
+        new Error('无可测试 GitHub 仓库 - 请检出一个 GitHub 仓库再试')
       )
     }
 
@@ -309,8 +301,8 @@ export function showTestUI(
       type: PopupType.OversizedFiles,
       oversizedFiles: ['test/app.tsx', 'test/popup.tsx'],
       context: {
-        summary: 'Test summary',
-        description: 'Test description',
+        summary: '测试摘要',
+        description: '测试描述',
       },
       repository,
     })
@@ -372,9 +364,7 @@ export function showTestUI(
       !isRepositoryWithGitHubRepository(repository)
     ) {
       return dispatcher.postError(
-        new Error(
-          'No GitHub repository to test with - check out a GitHub repository and try again'
-        )
+        new Error('无可测试 GitHub 仓库 - 请检出一个 GitHub 仓库再试')
       )
     }
 
@@ -463,9 +453,7 @@ export function showTestUI(
       !isRepositoryWithGitHubRepository(repository)
     ) {
       return dispatcher.postError(
-        new Error(
-          'No GitHub repository to test with - check out a github repo and try again'
-        )
+        new Error('无可测试 GitHub 仓库 - 请检出一个 GitHub 仓库再试')
       )
     }
 
