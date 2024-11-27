@@ -98,7 +98,7 @@ export function parseMergeTreeResult(stream: NodeJS.ReadableStream) {
             conflictedFiles++
             seenConflictMarker = false
           }
-        } else if (conflictMarkerRe.test(line)) {
+        } else if (!seenConflictMarker && conflictMarkerRe.test(line)) {
           seenConflictMarker = true
         }
       })
