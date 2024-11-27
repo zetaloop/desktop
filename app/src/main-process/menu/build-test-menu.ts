@@ -27,73 +27,73 @@ export function buildTestMenu() {
 
   const errorDialogsSubmenu: MenuItemConstructorOptions[] = [
     {
-      label: 'Confirm Committing Conflicted Files',
+      label: '确定提交冲突文件',
       click: emit('test-confirm-committing-conflicted-files'),
     },
     {
-      label: 'Discarded Changes Will Be Unrecoverable',
+      label: '放弃改动无法恢复',
       click: emit('test-discarded-changes-will-be-unrecoverable'),
     },
     {
-      label: 'Do you want to fork this repository?',
+      label: '是否分叉该仓库？',
       click: emit('test-do-you-want-fork-this-repository'),
     },
     {
-      label: 'Newer Commits On Remote',
+      label: '远程端有更新',
       click: emit('test-newer-commits-on-remote'),
     },
     {
-      label: 'Files Too Large',
+      label: '文件过大',
       click: emit('test-files-too-large'),
     },
     {
-      label: 'Generic Git Authentication',
+      label: '通用 Git 验证',
       click: emit('test-generic-git-authentication'),
     },
     {
-      label: 'Invalidated Account Token',
+      label: '账号令牌失效',
       click: emit('test-invalidated-account-token'),
     },
   ]
 
   if (__DARWIN__) {
     errorDialogsSubmenu.push({
-      label: 'Move to Application Folder',
+      label: '移动到应用程序文件夹',
       click: emit('test-move-to-application-folder'),
     })
   }
 
   errorDialogsSubmenu.push(
     {
-      label: 'Push Rejected',
+      label: '推送被拒绝',
       click: emit('test-push-rejected'),
     },
     {
-      label: 'Re-Authorization Required',
+      label: '需要重新授权',
       click: emit('test-re-authorization-required'),
     },
     {
-      label: 'Unable to Locate Git',
+      label: '找不到 Git',
       click: emit('test-unable-to-locate-git'),
     },
     {
-      label: 'Unable to Open External Editor',
+      label: '无法打开自定义编辑器',
       click: emit('test-no-external-editor'),
     },
     {
-      label: 'Unable to Open Shell',
+      label: '无法打开终端',
       click: emit('test-unable-to-open-shell'),
     },
     {
-      label: 'Untrusted Server',
+      label: '服务器不可信',
       click: emit('test-untrusted-server'),
     },
     {
-      label: 'Update Existing Git LFS Filters?',
+      label: '更新当前的 Git LFS 过滤器？',
       click: emit('test-update-existing-git-lfs-filters'),
     },
     {
-      label: 'Upstream Already Exists',
+      label: '上游已存在',
       click: emit('test-upstream-already-exists'),
     }
   )
@@ -183,7 +183,7 @@ export function buildTestMenu() {
           click: emit('test-merge-successful-banner'),
         },
         {
-          label: 'OS Version No Longer Supported',
+          label: '系统版本过低',
           click: emit('test-os-version-no-longer-supported'),
         },
       ],
