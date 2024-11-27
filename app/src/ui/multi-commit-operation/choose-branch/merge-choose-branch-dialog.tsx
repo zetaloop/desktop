@@ -1,8 +1,7 @@
 import React from 'react'
 import { getAheadBehind, revSymmetricDifference } from '../../../lib/git'
 import { determineMergeability } from '../../../lib/git/merge-tree'
-import { promiseWithMinimumTimeout } from '../../../lib/promise'
-import { Branch } from '../../../models/branch'
+import { Branch, IAheadBehind } from '../../../models/branch'
 import { ComputedAction } from '../../../models/computed-action'
 import { MergeTreeResult } from '../../../models/merge'
 import { MultiCommitOperationKind } from '../../../models/multi-commit-operation'
@@ -14,6 +13,15 @@ import {
   canStartOperation,
 } from './base-choose-branch-dialog'
 import { truncateWithEllipsis } from '../../../lib/truncate-with-ellipsis'
+import QuickLRU from 'quick-lru'
+
+const mergeTreeResultCache = new QuickLRU<string, Promise<MergeTreeResult>>({
+  maxSize: 250,
+})
+
+const aheadBehindCache = new QuickLRU<string, Promise<IAheadBehind | null>>({
+  maxSize: 250,
+})
 
 interface IMergeChooseBranchDialogState {
   readonly commitCount: number
@@ -69,14 +77,18 @@ export class MergeChooseBranchDialog extends React.Component<
   }
 
   private onSelectionChanged = (selectedBranch: Branch | null) => {
-    this.setState({ selectedBranch })
-
     if (selectedBranch === null) {
-      this.setState({ commitCount: 0, mergeStatus: null })
-      return
+      this.setState({ selectedBranch, commitCount: 0, mergeStatus: null })
+    } else {
+      this.setState(
+        {
+          selectedBranch,
+          commitCount: 0,
+          mergeStatus: { kind: ComputedAction.Loading },
+        },
+        () => this.updateStatus(selectedBranch)
+      )
     }
-
-    this.updateStatus(selectedBranch)
   }
 
   private getDialogTitle = () => {
@@ -97,21 +109,32 @@ export class MergeChooseBranchDialog extends React.Component<
 
   private updateStatus = async (branch: Branch) => {
     const { currentBranch, repository } = this.props
-    this.setState({
-      commitCount: 0,
-      mergeStatus: { kind: ComputedAction.Loading },
-    })
 
-    const mergeStatus = await promiseWithMinimumTimeout(
-      () => determineMergeability(repository, currentBranch, branch),
-      500
-    ).catch<MergeTreeResult>(e => {
-      log.error('Failed determining mergeability', e)
-      return { kind: ComputedAction.Clean }
-    })
+    const cacheKey = `${currentBranch.tip.sha} <- ${branch.tip.sha}`
+    const cachedMergeStatus = mergeTreeResultCache.get(cacheKey)
+
+    const mergeStatusPromise =
+      cachedMergeStatus ??
+      determineMergeability(
+        repository,
+        currentBranch,
+        branch
+      ).catch<MergeTreeResult>(e => {
+        log.error('Failed determining mergeability', e)
+        return { kind: ComputedAction.Clean }
+      })
+
+    if (!cachedMergeStatus) {
+      mergeTreeResultCache.set(cacheKey, mergeStatusPromise)
+    }
+
+    const mergeStatus = await mergeStatusPromise
 
     // The user has selected a different branch since we started, so don't
     // update the preview with stale data.
+    // We don't have to check if the state changed from underneath us if we
+    // loaded the status from cache, because that means we never kicked off
+    // an async operation.
     if (this.state.selectedBranch !== branch) {
       return
     }
@@ -125,7 +148,20 @@ export class MergeChooseBranchDialog extends React.Component<
     // Commit count is used in the UI output as well as determining whether the
     // submit button is enabled
     const range = revSymmetricDifference('', branch.name)
-    const aheadBehind = await getAheadBehind(this.props.repository, range)
+    const cachedAheadBehind = aheadBehindCache.get(cacheKey)
+
+    // No point in us computing the ahead and behind if we know there'll be
+    // conflicts as that per definition means we're behind.
+    const aheadBehindPromise =
+      mergeStatus.kind === ComputedAction.Conflicts
+        ? Promise.resolve(null)
+        : cachedAheadBehind ?? getAheadBehind(this.props.repository, range)
+
+    if (!cachedAheadBehind) {
+      aheadBehindCache.set(cacheKey, aheadBehindPromise)
+    }
+
+    const aheadBehind = await aheadBehindPromise
     const commitCount = aheadBehind ? aheadBehind.behind : 0
 
     if (this.state.selectedBranch !== branch) {
