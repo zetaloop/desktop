@@ -162,8 +162,10 @@ function convertToAppStatus(
       kind: AppFileStatusKind.Renamed,
       oldPath,
       submoduleStatus: entry.submoduleStatus,
-      renameIncludesModifications: entry.workingTree === GitStatusEntry.Modified ||
-      (entry.renameOrCopyScore !== undefined && entry.renameOrCopyScore < 100),
+      renameIncludesModifications:
+        entry.workingTree === GitStatusEntry.Modified ||
+        (entry.renameOrCopyScore !== undefined &&
+          entry.renameOrCopyScore < 100),
     }
   } else if (entry.kind === 'untracked') {
     return {
@@ -279,7 +281,11 @@ function buildStatusMap(
   entry: IStatusEntry,
   conflictDetails: ConflictFilesDetails
 ): Map<string, WorkingDirectoryFileChange> {
-  const status = mapStatus(entry.statusCode, entry.submoduleStatusCode, entry.renameOrCopyScore)
+  const status = mapStatus(
+    entry.statusCode,
+    entry.submoduleStatusCode,
+    entry.renameOrCopyScore
+  )
 
   if (status.kind === 'ordinary') {
     // when a file is added in the index but then removed in the working

@@ -227,11 +227,10 @@ export class Diff extends React.Component<IDiffProps, IDiffState> {
 
       if (this.props.file.status.kind === AppFileStatusKind.Renamed) {
         // Check if it was changed too
-        if (this.props.file.status.renameIncludesModifications)
-        {
+        if (this.props.file.status.renameIncludesModifications) {
           return (
             <div className="panel renamed">
-               <Octicon symbol={OcticonSymbol.alert} />
+              <Octicon symbol={OcticonSymbol.alert} />
               The file was renamed and includes changes.
             </div>
           )

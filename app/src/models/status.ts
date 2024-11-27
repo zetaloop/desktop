@@ -47,7 +47,7 @@ export type PlainFileStatus = {
 export type CopiedOrRenamedFileStatus = {
   kind: AppFileStatusKind.Copied | AppFileStatusKind.Renamed
   oldPath: string
-  renameIncludesModifications: boolean;
+  renameIncludesModifications: boolean
   submoduleStatus?: SubmoduleStatus
 }
 
