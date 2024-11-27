@@ -40,7 +40,7 @@ export class TermsAndConditions extends React.Component<
           <h2>连接到 GitHub</h2>
 
           <p>
-            如果您将软件配置为与 GitHub.com 网站上的一个或多个账户或 GitHub
+            如果您将软件配置为与 GitHub.com 网站上的一个或多个账号或 GitHub
             Enterprise Server 的实例一起使用，您对该软件的使用也将受适用于您的
             GitHub.com 网站服务条款和/或适用于您 GitHub Enterprise
             实例的许可协议（“GitHub 条款”）的约束。
