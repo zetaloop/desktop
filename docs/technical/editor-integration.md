@@ -284,6 +284,7 @@ These editors are currently supported:
  - [JetBrains DataSpell](https://www.jetbrains.com/dataspell/)
  - [Pulsar](https://pulsar-edit.dev/)
  - [Cursor](https://www.cursor.com/)
+ - [Zed](https://zed.dev/)
 
 These are defined in a list at the top of the file:
 
