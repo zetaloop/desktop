@@ -354,6 +354,7 @@ These editors are currently supported:
  - [Neovide](https://github.com/neovide/neovide)
  - [Code](https://github.com/elementary/code)
  - [Lite XL](https://lite-xl.com/)
+ - [Kate](https://kate-editor.org/)
  - [JetBrains PHPStorm](https://www.jetbrains.com/phpstorm/)
  - [JetBrains PyCharm](https://www.jetbrains.com/pycharm/)
  - [JetBrains WebStorm](https://www.jetbrains.com/webstorm/)
