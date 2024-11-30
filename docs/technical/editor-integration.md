@@ -276,6 +276,7 @@ These editors are currently supported:
  - [JetBrains GoLand](https://www.jetbrains.com/go/)
  - [Android Studio](https://developer.android.com/studio)
  - [JetBrains Rider](https://www.jetbrains.com/rider/)
+ - [JetBrains RustRover](https://www.jetbrains.com/rust/)
  - [Nova](https://nova.app/)
  - [Aptana Studio](http://www.aptana.com/)
  - [Emacs](https://www.gnu.org/software/emacs/)
