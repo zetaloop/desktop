@@ -353,6 +353,7 @@ These editors are currently supported:
  - [Neovim](https://neovim.io/)
  - [Neovide](https://github.com/neovide/neovide)
  - [Notepadqq](https://github.com/notepadqq/notepadqq)
+ - [Mousepad](https://github.com/codebrainz/mousepad)
  - [GNOME Builder](https://apps.gnome.org/Builder/)
  - [Code](https://github.com/elementary/code)
  - [Lite XL](https://lite-xl.com/)
