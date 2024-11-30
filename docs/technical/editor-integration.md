@@ -352,6 +352,7 @@ These editors are currently supported:
  - [SlickEdit](https://www.slickedit.com)
  - [Neovim](https://neovim.io/)
  - [Neovide](https://github.com/neovide/neovide)
+ - [GNOME Builder](https://apps.gnome.org/Builder/)
  - [Code](https://github.com/elementary/code)
  - [Lite XL](https://lite-xl.com/)
  - [Kate](https://kate-editor.org/)
