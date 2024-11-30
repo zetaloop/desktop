@@ -351,6 +351,7 @@ These editors are currently supported:
  - [Typora](https://typora.io/)
  - [SlickEdit](https://www.slickedit.com)
  - [Neovim](https://neovim.io/)
+ - [Neovide](https://github.com/neovide/neovide)
  - [Code](https://github.com/elementary/code)
  - [Lite XL](https://lite-xl.com/)
  - [JetBrains PHPStorm](https://www.jetbrains.com/phpstorm/)
