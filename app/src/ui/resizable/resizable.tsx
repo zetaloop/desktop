@@ -169,16 +169,22 @@ export class Resizable extends React.Component<
     this.resizeContainer = ref
   }
 
-  private updateResizeMessage(direction: ResizeDirection) {
+  private getResizePercentage() {
     const minWidth = this.props.minimumWidth ?? 0
     const maxWidth = this.props.maximumWidth ?? DefaultMaxWidth
-    const percentage = Math.round(
+    return Math.round(
       ((this.getCurrentWidth() - minWidth) / (maxWidth - minWidth)) * 100
     )
+  }
+
+  private updateResizeMessage(direction: ResizeDirection) {
     const directionMessage =
       direction === ResizeDirection.Increase ? 'increased' : 'decreased'
-    const message = `${this.props.description} width ${directionMessage}. Set to ${percentage}%`
-    this.setState({ resizeMessage: message })
+    this.setState({
+      resizeMessage: `${
+        this.props.description
+      } width ${directionMessage}. Set to ${this.getResizePercentage()}%`,
+    })
   }
 
   public render() {
