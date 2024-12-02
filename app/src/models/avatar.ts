@@ -77,5 +77,9 @@ export function getAvatarUsersForCommit(
     )
   }
 
-  return avatarUsers
+  const avatarUsersByIdentity = new Map<string, IAvatarUser>(
+    avatarUsers.map(x => [x.name + x.email, x])
+  )
+
+  return [...avatarUsersByIdentity.values()]
 }
