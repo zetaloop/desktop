@@ -94,19 +94,19 @@ export class UpdateAvailable extends React.Component<IUpdateAvailableProps> {
     if (this.props.prioritizeUpdate) {
       return (
         <span onSubmit={this.updateNow}>
-          This version of GitHub Desktop is missing important updates. Please{' '}
+          This version of GitHub Desktop is missing{' '}
+          {this.props.prioritizeUpdateInfoUrl ? (
+            <LinkButton uri={this.props.prioritizeUpdateInfoUrl}>
+              important updates
+            </LinkButton>
+          ) : (
+            'important updates'
+          )}
+          . Please{' '}
           <LinkButton onClick={this.updateNow}>
             restart GitHub Desktop
           </LinkButton>{' '}
           now to install pending updates.
-          {this.props.prioritizeUpdateInfoUrl && (
-            <>
-              {' '}
-              <LinkButton uri={this.props.prioritizeUpdateInfoUrl}>
-                Read more
-              </LinkButton>
-            </>
-          )}
         </span>
       )
     }
