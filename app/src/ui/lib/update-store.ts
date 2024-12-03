@@ -23,6 +23,7 @@ import { enableUpdateFromEmulatedX64ToARM64 } from '../../lib/feature-flag'
 import { offsetFromNow } from '../../lib/offset-from'
 import { gte, SemVer } from 'semver'
 import { getVersion } from './app-proxy'
+import { getUserAgent } from '../../lib/http'
 
 /** The last version a showcase was seen. */
 export const lastShowCaseVersionSeen = 'version-of-last-showcase'
@@ -62,6 +63,11 @@ class UpdateStore {
 
   /** Is the most recent update check user initiated? */
   private userInitiatedUpdate = true
+  private _prioritizeUpdate = false
+
+  public get prioritizeUpdate() {
+    return this._prioritizeUpdate
+  }
 
   public constructor() {
     const lastSuccessfulCheckTime = getNumber(lastSuccessfulCheckKey, 0)
@@ -127,6 +133,8 @@ class UpdateStore {
       (await isRunningUnderARM64Translation())
     this.status = UpdateStatus.UpdateReady
     this.emitDidChange()
+
+    this.updatePriorityUpdateStatus()
   }
 
   /**
@@ -187,6 +195,7 @@ class UpdateStore {
     // button to crash the app if in the subsequent check, there is no update
     // available anymore due to a disabled update.
     if (this.status === UpdateStatus.UpdateReady) {
+      this.updatePriorityUpdateStatus()
       return
     }
 
@@ -250,6 +259,25 @@ class UpdateStore {
     // eslint-disable-next-line no-sync
     sendWillQuitSync()
     quitAndInstallUpdate()
+  }
+
+  private async updatePriorityUpdateStatus() {
+    try {
+      const response = await fetch(await this.getUpdatesUrl(false), {
+        method: 'HEAD',
+        headers: { 'user-agent': getUserAgent() },
+      })
+
+      const prioritizeUpdate =
+        response.headers.get('x-prioritize-update') === 'true'
+
+      if (this._prioritizeUpdate !== prioritizeUpdate) {
+        this._prioritizeUpdate = prioritizeUpdate
+        this.emitDidChange()
+      }
+    } catch (e) {
+      log.error('Error updating priority update status', e)
+    }
   }
 
   /**
