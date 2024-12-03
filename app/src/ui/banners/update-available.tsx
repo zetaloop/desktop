@@ -25,6 +25,7 @@ interface IUpdateAvailableProps {
   readonly emoji: Map<string, Emoji>
   readonly onDismissed: () => void
   readonly prioritizeUpdate: boolean
+  readonly prioritizeUpdateInfoUrl: string | undefined
 }
 
 /**
@@ -36,6 +37,7 @@ export class UpdateAvailable extends React.Component<IUpdateAvailableProps> {
     return (
       <Banner
         id="update-available"
+        className={this.props.prioritizeUpdate ? 'priority' : undefined}
         dismissable={!this.props.prioritizeUpdate}
         onDismissed={this.props.onDismissed}
       >
@@ -85,6 +87,26 @@ export class UpdateAvailable extends React.Component<IUpdateAvailableProps> {
             dismiss
           </LinkButton>
           .
+        </span>
+      )
+    }
+
+    if (this.props.prioritizeUpdate) {
+      return (
+        <span onSubmit={this.updateNow}>
+          This version of GitHub Desktop is missing important updates. Please{' '}
+          <LinkButton onClick={this.updateNow}>
+            restart GitHub Desktop
+          </LinkButton>{' '}
+          now to install pending updates.
+          {this.props.prioritizeUpdateInfoUrl && (
+            <>
+              {' '}
+              <LinkButton uri={this.props.prioritizeUpdateInfoUrl}>
+                Read more
+              </LinkButton>
+            </>
+          )}
         </span>
       )
     }
