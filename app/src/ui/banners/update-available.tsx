@@ -41,15 +41,23 @@ export class UpdateAvailable extends React.Component<IUpdateAvailableProps> {
         dismissable={!this.props.prioritizeUpdate}
         onDismissed={this.props.onDismissed}
       >
-        {!this.props.isUpdateShowcaseVisible && (
-          <Octicon
-            className="download-icon"
-            symbol={octicons.desktopDownload}
-          />
-        )}
-
+        {this.renderIcon()}
         {this.renderMessage()}
       </Banner>
+    )
+  }
+
+  private renderIcon() {
+    if (this.props.isUpdateShowcaseVisible) {
+      return null
+    }
+
+    if (this.props.prioritizeUpdate) {
+      return <Octicon className="warning-icon" symbol={octicons.alert} />
+    }
+
+    return (
+      <Octicon className="download-icon" symbol={octicons.desktopDownload} />
     )
   }
 
