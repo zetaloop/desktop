@@ -24,19 +24,21 @@ interface IUpdateAvailableProps {
   readonly isUpdateShowcaseVisible: boolean
   readonly emoji: Map<string, Emoji>
   readonly onDismissed: () => void
+  readonly prioritizeUpdate: boolean
 }
 
 /**
  * A component which tells the user an update is available and gives them the
  * option of moving into the future or being a luddite.
  */
-export class UpdateAvailable extends React.Component<
-  IUpdateAvailableProps,
-  {}
-> {
+export class UpdateAvailable extends React.Component<IUpdateAvailableProps> {
   public render() {
     return (
-      <Banner id="update-available" onDismissed={this.props.onDismissed}>
+      <Banner
+        id="update-available"
+        dismissable={!this.props.prioritizeUpdate}
+        onDismissed={this.props.onDismissed}
+      >
         {!this.props.isUpdateShowcaseVisible && (
           <Octicon
             className="download-icon"

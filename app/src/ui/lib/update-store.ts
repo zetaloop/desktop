@@ -51,6 +51,7 @@ export interface IUpdateState {
   lastSuccessfulCheck: Date | null
   isX64ToARM64ImmediateAutoUpdate: boolean
   newReleases: ReadonlyArray<ReleaseSummary> | null
+  prioritizeUpdate: boolean
 }
 
 /** A store which contains the current state of the auto updater. */
@@ -176,6 +177,7 @@ class UpdateStore {
       lastSuccessfulCheck: this.lastSuccessfulCheck,
       newReleases: this.newReleases,
       isX64ToARM64ImmediateAutoUpdate: this.isX64ToARM64ImmediateAutoUpdate,
+      prioritizeUpdate: this.prioritizeUpdate,
     }
   }
 

@@ -3130,6 +3130,7 @@ export class App extends React.Component<IAppProps, IAppState> {
         isX64ToARM64ImmediateAutoUpdate={
           updateStore.state.isX64ToARM64ImmediateAutoUpdate
         }
+        prioritizeUpdate={updateStore.state.prioritizeUpdate}
         onDismissed={this.onUpdateAvailableDismissed}
         isUpdateShowcaseVisible={this.state.isUpdateShowcaseVisible}
         emoji={this.state.emoji}
