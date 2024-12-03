@@ -82,6 +82,7 @@ const TestMenuEvents = [
   'test-undone-banner',
   'test-untrusted-server',
   'test-update-banner',
+  'test-prioritized-update-banner',
   'test-update-existing-git-lfs-filters',
   'test-upstream-already-exists',
 ] as const
