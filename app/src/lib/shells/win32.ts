@@ -22,7 +22,7 @@ export enum Shell {
   GitBash = 'Git Bash',
   Cygwin = 'Cygwin',
   WSL = 'WSL',
-  WindowTerminal = 'Windows Terminal',
+  WindowsTerminal = 'Windows Terminal',
   FluentTerminal = 'Fluent Terminal',
   Alacritty = 'Alacritty',
 }
@@ -108,7 +108,7 @@ export async function getAvailableShells(): Promise<
   const windowsTerminal = await findWindowsTerminal()
   if (windowsTerminal != null) {
     shells.push({
-      shell: Shell.WindowTerminal,
+      shell: Shell.WindowsTerminal,
       path: windowsTerminal,
     })
   }
@@ -469,7 +469,7 @@ export function launch(
           cwd: path,
         }
       )
-    case Shell.WindowTerminal:
+    case Shell.WindowsTerminal:
       const windowsTerminalPath = `"${foundShell.path}"`
       log.info(`launching ${shell} at path: ${windowsTerminalPath}`)
       return spawn(windowsTerminalPath, ['-d .'], { shell: true, cwd: path })
