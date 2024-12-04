@@ -45,7 +45,7 @@ export enum Shell {
   GitBash = 'Git Bash',
   Cygwin = 'Cygwin',
   WSL = 'WSL',
-  WindowTerminal = 'Windows Terminal',
+  WindowsTerminal = 'Windows Terminal',
   Alacritty = 'Alacritty',
 }
 ```
