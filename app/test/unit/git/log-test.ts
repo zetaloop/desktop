@@ -83,6 +83,8 @@ describe('git/log', () => {
       expect(first.files[0].status).toEqual({
         kind: AppFileStatusKind.Renamed,
         oldPath: 'NEW.md',
+        renameIncludesModifications: true,
+        submoduleStatus: undefined,
       })
 
       const second = await getChangedFiles(repository, 'c898ca8')
@@ -92,6 +94,8 @@ describe('git/log', () => {
       expect(second.files[0].status).toEqual({
         kind: AppFileStatusKind.Renamed,
         oldPath: 'OLD.md',
+        renameIncludesModifications: false,
+        submoduleStatus: undefined,
       })
     })
 
@@ -111,12 +115,16 @@ describe('git/log', () => {
       expect(changesetData.files[0].status).toEqual({
         kind: AppFileStatusKind.Copied,
         oldPath: 'initial.md',
+        renameIncludesModifications: false,
+        submoduleStatus: undefined,
       })
 
       expect(changesetData.files[1].path).toBe('duplicate.md')
       expect(changesetData.files[1].status).toEqual({
         kind: AppFileStatusKind.Copied,
         oldPath: 'initial.md',
+        renameIncludesModifications: false,
+        submoduleStatus: undefined,
       })
     })
 
