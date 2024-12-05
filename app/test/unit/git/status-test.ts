@@ -247,8 +247,8 @@ describe('git/status', () => {
         expect(files[0].status).toEqual({
           kind: AppFileStatusKind.Renamed,
           oldPath: 'foo',
-          "renameIncludesModifications": false,
-          "submoduleStatus": undefined,
+          renameIncludesModifications: false,
+          submoduleStatus: undefined,
         })
       })
 
@@ -277,8 +277,8 @@ describe('git/status', () => {
         expect(files[1].status).toEqual({
           kind: AppFileStatusKind.Copied,
           oldPath: 'CONTRIBUTING.md',
-          "renameIncludesModifications": false,
-          "submoduleStatus": undefined,
+          renameIncludesModifications: false,
+          submoduleStatus: undefined,
         })
       })
 
