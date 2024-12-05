@@ -376,6 +376,12 @@ body.theme-dark {
   --dialog-information-color: #{$blue-400};
   --dialog-error-color: #{$red-600};
 
+  /** Banner */
+  --banner-warning-background: #272216;
+  --banner-warning-text-color: var(--text-color);
+  --banner-warning-link-color: #6682ff;
+  --banner-warning-icon-color: #{$yellow-700};
+
   /** File warning */
   --file-warning-background-color: #{rgba($yellow-900, 0.4)};
   --file-warning-color: #{$yellow-700};

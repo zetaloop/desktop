@@ -36,6 +36,7 @@ import { isInApplicationFolder } from '../../ui/main-process-proxy'
 import { getRendererGUID } from '../get-renderer-guid'
 import { ValidNotificationPullRequestReviewState } from '../valid-notification-pull-request-review'
 import { useExternalCredentialHelperKey } from '../trampoline/use-external-credential-helper'
+import { getUserAgent } from '../http'
 
 type PullRequestReviewStatFieldInfix =
   | 'Approved'
@@ -424,7 +425,10 @@ export interface IStatsStore {
 const defaultPostImplementation = (body: Record<string, any>) =>
   fetch(StatsEndpoint, {
     method: 'POST',
-    headers: new Headers({ 'Content-Type': 'application/json' }),
+    headers: {
+      'Content-Type': 'application/json',
+      'user-agent': getUserAgent(),
+    },
     body: JSON.stringify(body),
   })
 

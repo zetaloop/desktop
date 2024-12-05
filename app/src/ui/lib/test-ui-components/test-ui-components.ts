@@ -156,6 +156,11 @@ export function showTestUI(
       })
     case 'test-update-banner':
       return showFakeUpdateBanner({})
+    case 'test-prioritized-update-banner':
+      return showFakeUpdateBanner({
+        isPriority: true,
+        priorityInfoUrl: 'https://desktop.github.com',
+      })
     case 'test-update-existing-git-lfs-filters':
       return dispatcher.showPopup({ type: PopupType.LFSAttributeMismatch })
     case 'test-upstream-already-exists':
@@ -179,6 +184,8 @@ export function showTestUI(
   function showFakeUpdateBanner(options: {
     isArm64?: boolean
     isShowcase?: boolean
+    isPriority?: boolean
+    priorityInfoUrl?: string
   }) {
     updateStore.setIsx64ToARM64ImmediateAutoUpdate(options.isArm64 === true)
 
@@ -186,6 +193,12 @@ export function showTestUI(
       dispatcher.setUpdateShowCaseVisibility(true)
       return
     }
+
+    if (options.isPriority !== undefined) {
+      updateStore.setPrioritizeUpdate(options.isPriority)
+    }
+
+    updateStore.setPrioritizeUpdateInfoUrl(options.priorityInfoUrl)
 
     dispatcher.setUpdateBannerVisibility(true)
   }

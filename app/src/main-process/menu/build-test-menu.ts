@@ -147,6 +147,10 @@ export function buildTestMenu() {
           click: emit('test-update-banner'),
         },
         {
+          label: 'Update banner (priority)',
+          click: emit('test-prioritized-update-banner'),
+        },
+        {
           label: `Showcase Update banner`,
           click: emit('test-showcase-update-banner'),
         },

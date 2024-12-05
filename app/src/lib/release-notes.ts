@@ -10,6 +10,7 @@ import { getVersion } from '../ui/lib/app-proxy'
 import { formatDate } from './format-date'
 import { offsetFromNow } from './offset-from'
 import { encodePathAsUrl } from './path'
+import { getUserAgent } from './http'
 
 // expects a release note entry to contain a header and then some text
 // example:
@@ -102,7 +103,9 @@ export async function getChangeLog(
     changelogURL.searchParams.set('limit', limit.toString())
   }
 
-  const response = await fetch(changelogURL.toString())
+  const response = await fetch(changelogURL.toString(), {
+    headers: { 'user-agent': getUserAgent() },
+  })
   if (response.ok) {
     const releases: ReadonlyArray<ReleaseMetadata> = await response.json()
     return releases
