@@ -478,9 +478,10 @@ $overlay-background-color: rgba(0, 0, 0, 0.4);
   --dialog-error-color: #{$red};
 
   /** Banner */
-  --banner-warning-background: #{$yellow-700};
+  --banner-warning-background: #{$yellow-100};
   --banner-warning-text-color: var(--text-color);
-  --banner-warning-link-color: #{$blue-700};
+  --banner-warning-link-color: #{$blue};
+  --banner-warning-icon-color: #{darken($yellow-700, 10%)};
 
   /** File warning */
   --file-warning-background-color: #{$yellow-100};
