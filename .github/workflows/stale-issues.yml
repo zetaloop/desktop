@@ -13,7 +13,7 @@ jobs:
       - uses: actions/stale@v9
         with:
           stale-issue-label: 'stale, triage' # The label that will be added to the issues when automatically marked as stale
-          start-date: '2024-011-25T00:00:00Z' # Skip stale action for issues/PRs created before it
+          start-date: '2024-11-25T00:00:00Z' # Skip stale action for issues/PRs created before it
           days-before-stale: 365
           days-before-close: -1 # If -1, the issues nor pull requests will never be closed automatically.
           days-before-pr-stale: -1 # If  -1, no pull requests will be marked as stale automatically.
