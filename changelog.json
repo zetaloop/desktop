@@ -1,5 +1,17 @@
 {
   "releases": {
+    "3.4.10-beta3": [
+      "[Added] Add a banner for communicating when prioritized updates exist - #19655",
+      "[Fixed] Accurately calculate number of conflicted files in a merge - #8049",
+      "[Fixed] Inform user when a staged renamed file renamed has changes - #17467. Thanks @ssigwart!",
+      "[Fixed] The visual label for the remote url in the repository settings is announced by screen readers - #19647",
+      "[Fixed] Remove duplicate avatar users - #19597",
+      "[Fixed] Fix for indents of clear button in text box - #19613. Thanks @artbutko!",
+      "[Improved] Resize events of resizable elements are announced by screen readers - #19649",
+      "[Improved] Update the names of some JetBrains editors on Linux - #19637. Thanks @ankddev!",
+      "[Improved] Swipe image diffs now handle images with transparency better - #16657 #17735. Thanks @Psychpsyo!",
+      "[Improved] Commit messages now show correct indentation - #17691. Thanks @SuperLlama88888!"
+    ],
     "3.4.10-beta2": [
       "[Fixed] Screen readers announce the position of the list items in selectable lists such as the history commit list - #19603",
       "[Fixed] Limit the commit message length we accept - #15355",
