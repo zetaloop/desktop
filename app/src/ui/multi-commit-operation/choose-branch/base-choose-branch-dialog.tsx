@@ -39,6 +39,12 @@ export function canStartOperation(
     return false
   }
 
+  // We can always start if there are conflicts, we'll just
+  // have to deal with the conflicts post the operation
+  if (statusKind === ComputedAction.Conflicts) {
+    return true
+  }
+
   // Are there even commits to operate on?
   if (commitCount === undefined || commitCount === 0) {
     return false

@@ -157,6 +157,16 @@ export class GitError extends Error {
   }
 }
 
+export const isGitError = (
+  e: unknown,
+  parsedError?: DugiteError
+): e is GitError => {
+  return (
+    e instanceof GitError &&
+    (parsedError === undefined || e.result.gitError === parsedError)
+  )
+}
+
 /**
  * Shell out to git with the given arguments, at the given path.
  *
