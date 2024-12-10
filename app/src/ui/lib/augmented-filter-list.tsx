@@ -84,6 +84,8 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
    */
   readonly onItemClick?: (item: T, source: ClickSource) => void
 
+  readonly onItemDoubleClick?: (item: T, source: ClickSource) => void
+
   /**
    * This function will be called when the selection changes as a result of a
    * user keyboard or mouse action (i.e. not when props change). This function
@@ -376,6 +378,7 @@ export class AugmentedSectionFilterList<
           }
           onSelectedRowChanged={this.onSelectedRowChanged}
           onRowClick={this.onRowClick}
+          onRowDoubleClick={this.onRowDoubleClick}
           onRowKeyDown={this.onRowKeyDown}
           onRowContextMenu={this.onRowContextMenu}
           canSelectRow={this.canSelectRow}
@@ -479,6 +482,16 @@ export class AugmentedSectionFilterList<
 
       if (row.kind === 'item') {
         this.props.onItemClick(row.item, source)
+      }
+    }
+  }
+
+  private onRowDoubleClick = (index: RowIndexPath, source: ClickSource) => {
+    if (this.props.onItemDoubleClick) {
+      const row = this.state.rows[index.section][index.row]
+
+      if (row.kind === 'item') {
+        this.props.onItemDoubleClick(row.item, source)
       }
     }
   }

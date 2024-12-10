@@ -1009,11 +1009,8 @@ export class FilterChangesList extends React.Component<
     )
   }
 
-  // TBD: make private
-  public onRowDoubleClick = (row: number) => {
-    const file = this.props.workingDirectory.files[row]
-
-    this.props.onOpenItemInExternalEditor(file.path)
+  private onChangedFileDoubleClick = (item: IChangesListItem) => {
+    this.props.onOpenItemInExternalEditor(item.change.path)
   }
 
   // TBD: make private
@@ -1117,8 +1114,8 @@ export class FilterChangesList extends React.Component<
             selectedItem={this.state.selectedItem}
             renderItem={this.renderChangedFile}
             onItemClick={this.onChangedFileClick}
+            onItemDoubleClick={this.onChangedFileDoubleClick}
             // selectionMode="multi"...
-            // onRowDoubleClick={this.onRowDoubleClick}
             // onRowKeyboardFocus={this.onRowFocus}
             // onRowBlur={this.onRowBlur}
             // onScroll={this.onScroll}
