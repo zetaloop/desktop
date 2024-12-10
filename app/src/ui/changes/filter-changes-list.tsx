@@ -769,12 +769,10 @@ export class FilterChangesList extends React.Component<
   }
 
   private onItemContextMenu = (
-    item: any,
+    item: IChangesListItem,
     event: React.MouseEvent<HTMLDivElement>
   ) => {
-    const row = 0 /// TBD;
-    const { workingDirectory } = this.props
-    const file = workingDirectory.files[row]
+    const file = item.change
 
     if (this.props.isCommitting) {
       return
