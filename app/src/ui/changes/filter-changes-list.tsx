@@ -234,6 +234,7 @@ interface IFilterChangesListProps {
 }
 
 interface IFilterChangesListState {
+  readonly filterText: string
   readonly selectedRows: ReadonlyArray<number>
   readonly focusedRow: string | null
   readonly groups: ReadonlyArray<IFilterListGroup<IChangesListItem>>
@@ -268,6 +269,7 @@ export class FilterChangesList extends React.Component<
     const groups = [this.createListItems(props.workingDirectory.files)]
 
     this.state = {
+      filterText: '',
       selectedRows: getSelectedRowsFromProps(props),
       focusedRow: null,
       groups,
@@ -1014,6 +1016,10 @@ export class FilterChangesList extends React.Component<
     console.log('ChangedFileClick', item)
   }
 
+  private onFilterTextChanged = (text: string) => {
+    this.setState({ filterText: text })
+  }
+
   public render() {
     const { workingDirectory, rebaseConflictState, isCommitting } = this.props
     const { files } = workingDirectory
@@ -1064,8 +1070,8 @@ export class FilterChangesList extends React.Component<
           <AugmentedSectionFilterList<IChangesListItem>
             id="changes-list"
             rowHeight={RowHeight}
-            filterText={undefined} // TBD: likely a prop so it can be remembered...
-            onFilterTextChanged={undefined} // TBD: likely update store state
+            filterText={this.state.filterText}
+            onFilterTextChanged={this.onFilterTextChanged}
             selectedItem={null} // selectedRows={this.state.selectedRows} need multi selection // selectionMode="multi"...
             renderItem={this.renderChangedFile} //rowRenderer={this.renderRow}
             onItemClick={this.onChangedFileClick} // onRowClick={this.props.onRowClick}
