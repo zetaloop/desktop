@@ -421,7 +421,7 @@ export class PushPullButton extends React.Component<
           onResize={this.onResize}
           maximumWidth={this.props.pushPullButtonWidth.max}
           minimumWidth={this.props.pushPullButtonWidth.min}
-          description="Push pull button"
+          description="推送拉取按钮"
         >
           {this.renderButton()}
           <span id="push-pull-button-state">
