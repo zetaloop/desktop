@@ -33,7 +33,6 @@ import {
   getCommitsBetweenCommits,
   getBranches,
   getRebaseSnapshot,
-  getRepositoryType,
 } from '../../lib/git'
 import { isGitOnPath } from '../../lib/is-git-on-path'
 import {
@@ -1770,6 +1769,7 @@ export class Dispatcher {
 
     if (filepath !== null) {
       if (isAbsolute(filepath)) {
+        log.error(`Refusing to open absolute path: ${filepath}`)
         return
       }
 
