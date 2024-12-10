@@ -264,10 +264,13 @@ export class FilterChangesList extends React.Component<
 
   public constructor(props: IFilterChangesListProps) {
     super(props)
+
+    const groups = [this.createListItems(props.workingDirectory.files)]
+
     this.state = {
       selectedRows: getSelectedRowsFromProps(props),
       focusedRow: null,
-      groups: [],
+      groups,
     }
 
     // TBD: remove with selected rows figured out
@@ -284,7 +287,25 @@ export class FilterChangesList extends React.Component<
         this.props.workingDirectory.files
       )
     ) {
-      this.setState({ selectedRows: getSelectedRowsFromProps(nextProps) })
+      this.setState({
+        selectedRows: getSelectedRowsFromProps(nextProps),
+        groups: [this.createListItems(nextProps.workingDirectory.files)],
+      })
+    }
+  }
+
+  private createListItems(
+    files: ReadonlyArray<WorkingDirectoryFileChange>
+  ): IFilterListGroup<IChangesListItem> {
+    const items = files.map(file => ({
+      text: [file.path, file.status.kind.toString()],
+      id: file.id,
+      change: file,
+    }))
+
+    return {
+      identifier: 'changed-files',
+      items,
     }
   }
 
