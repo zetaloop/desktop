@@ -1900,7 +1900,6 @@ export class Dispatcher {
 
         if (existingRepository) {
           await this.selectRepository(existingRepository)
-          this.statsStore.recordAddExistingRepository()
         } else {
           await this.showPopup({ type: PopupType.AddRepository, path })
         }
