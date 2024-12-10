@@ -31,6 +31,8 @@ import { isConflictedFile, hasUnresolvedConflicts } from '../../lib/status'
 import { getAccountForRepository } from '../../lib/get-account-for-repository'
 import { IAheadBehind } from '../../models/branch'
 import { Emoji } from '../../lib/emoji'
+import { enableFilteredChangesList } from '../../lib/feature-flag'
+import { FilterChangesList } from './filter-changes-list'
 
 /**
  * The timeout for the animation of the enter/leave animation for Undo.
@@ -395,9 +397,13 @@ export class ChangesSidebar extends React.Component<IChangesSidebarProps, {}> {
       this.props.repository
     )
 
+    const ChangesListComponent = enableFilteredChangesList()
+      ? FilterChangesList
+      : ChangesList
+
     return (
       <div className="panel" role="tabpanel" aria-labelledby="changes-tab">
-        <ChangesList
+        <ChangesListComponent
           ref={this.changesListRef}
           dispatcher={this.props.dispatcher}
           repository={this.props.repository}
