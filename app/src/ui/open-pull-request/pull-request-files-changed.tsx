@@ -265,7 +265,7 @@ export class PullRequestFilesChanged extends React.Component<
         maximumWidth={fileListWidth.max}
         onResize={this.onFileListResize}
         onReset={this.onFileListSizeReset}
-        description="Pull request file list"
+        description="拉取请求文件列表"
       >
         <FileList
           files={files}
