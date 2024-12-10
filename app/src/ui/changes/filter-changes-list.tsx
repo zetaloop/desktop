@@ -1113,8 +1113,8 @@ export class FilterChangesList extends React.Component<
             renderItem={this.renderChangedFile}
             onItemClick={this.onChangedFileClick}
             onItemDoubleClick={this.onChangedFileDoubleClick}
+            onItemKeyboardFocus={this.onChangedFileFocus}
             // selectionMode="multi"...
-            // onRowKeyboardFocus={this.onRowFocus}
             // onRowBlur={this.onRowBlur}
             // onScroll={this.onScroll}
             // setScrollTop={this.props.changesListScrollTop}
@@ -1136,8 +1136,7 @@ export class FilterChangesList extends React.Component<
     )
   }
 
-  // TBD: Needs private once hooked into list
-  public onRowFocus = (changeListItem: IChangesListItem) => {
+  private onChangedFileFocus = (changeListItem: IChangesListItem) => {
     this.setState({ focusedRow: changeListItem.id })
   }
 

@@ -170,6 +170,12 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
     item: T,
     event: React.MouseEvent<HTMLDivElement>
   ) => void
+
+  /** This function will be called only when an item obtains focus via keyboard */
+  readonly onItemKeyboardFocus?: (
+    item: T,
+    event: React.KeyboardEvent<any>
+  ) => void
 }
 
 interface IAugmentedSectionFilterListState<T extends IFilterListItem> {
@@ -381,6 +387,7 @@ export class AugmentedSectionFilterList<
           onRowDoubleClick={this.onRowDoubleClick}
           onRowKeyDown={this.onRowKeyDown}
           onRowContextMenu={this.onRowContextMenu}
+          onRowKeyboardFocus={this.onRowKeyboardFocus}
           canSelectRow={this.canSelectRow}
           invalidationProps={{
             ...this.props,
@@ -511,6 +518,23 @@ export class AugmentedSectionFilterList<
     }
 
     this.props.onItemContextMenu(row.item, source)
+  }
+
+  private onRowKeyboardFocus = (
+    index: RowIndexPath,
+    source: React.KeyboardEvent<any>
+  ) => {
+    if (!this.props.onItemKeyboardFocus) {
+      return
+    }
+
+    const row = this.state.rows[index.section][index.row]
+
+    if (row.kind !== 'item') {
+      return
+    }
+
+    this.props.onItemKeyboardFocus(row.item, source)
   }
 
   private onRowKeyDown = (
