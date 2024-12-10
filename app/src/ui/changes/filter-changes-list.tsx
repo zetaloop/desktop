@@ -59,6 +59,7 @@ import { IAheadBehind } from '../../models/branch'
 import { StashDiffViewerId } from '../stashing'
 import { AugmentedSectionFilterList } from '../lib/augmented-filter-list'
 import { IFilterListGroup, IFilterListItem } from '../lib/filter-list'
+import { ClickSource } from '../lib/list'
 
 interface IChangesListItem extends IFilterListItem {
   readonly id: string
@@ -186,7 +187,7 @@ interface IFilterChangesListProps {
    * Click event handler passed directly to the onRowClick prop of List, see
    * List Props for documentation.
    */
-  // TBD: readonly onRowClick?: (row: number, source: ClickSource) => void
+  readonly onRowClick?: (row: number, source: ClickSource) => void
   readonly commitMessage: ICommitMessage
 
   /** The autocompletion providers available to the repository. */
@@ -1012,8 +1013,14 @@ export class FilterChangesList extends React.Component<
     this.includeAllCheckBoxRef.current?.focus()
   }
 
-  private onChangedFileClick = (item: any) => {
-    console.log('ChangedFileClick', item)
+  private onChangedFileClick = (
+    item: IChangesListItem,
+    source: ClickSource
+  ) => {
+    const fileIndex = this.props.workingDirectory.files.findIndex(
+      f => f.id === item.change.id
+    )
+    this.props.onRowClick?.(fileIndex, source)
   }
 
   private onFilterTextChanged = (text: string) => {
@@ -1073,8 +1080,8 @@ export class FilterChangesList extends React.Component<
             filterText={this.state.filterText}
             onFilterTextChanged={this.onFilterTextChanged}
             selectedItem={null} // selectedRows={this.state.selectedRows} need multi selection // selectionMode="multi"...
-            renderItem={this.renderChangedFile} //rowRenderer={this.renderRow}
-            onItemClick={this.onChangedFileClick} // onRowClick={this.props.onRowClick}
+            renderItem={this.renderChangedFile}
+            onItemClick={this.onChangedFileClick}
             // onRowDoubleClick={this.onRowDoubleClick}
             // onRowKeyboardFocus={this.onRowFocus}
             // onRowBlur={this.onRowBlur}
