@@ -178,11 +178,11 @@ export class Resizable extends React.Component<
 
   private updateResizeMessage(direction: ResizeDirection) {
     const directionMessage =
-      direction === ResizeDirection.Increase ? 'increased' : 'decreased'
+      direction === ResizeDirection.Increase ? '变大' : '变小'
     this.setState({
       resizeMessage: `${
         this.props.description
-      } width ${directionMessage}. Set to ${this.getResizePercentage()}%`,
+      }的宽度${directionMessage}，已设为 ${this.getResizePercentage()}%`,
     })
   }
 
