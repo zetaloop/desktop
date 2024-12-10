@@ -122,7 +122,7 @@ import { UnreachableCommitsTab } from '../history/unreachable-commits-dialog'
 import { sendNonFatalException } from '../../lib/helpers/non-fatal-exception'
 import { SignInResult } from '../../lib/stores/sign-in-store'
 import { ICustomIntegration } from '../../lib/custom-integration'
-import { isAbsolute } from 'path'
+import { dirname, isAbsolute } from 'path'
 
 /**
  * An error handler function.
@@ -1886,22 +1886,26 @@ export class Dispatcher {
         // user may accidentally provide a folder within the repository
         // this ensures we use the repository root, if it is actually a repository
         // otherwise we consider it an untracked repository
-        const path = await getRepositoryType(action.path)
-          .then(t =>
-            t.kind === 'regular' ? t.topLevelWorkingDirectory : action.path
-          )
-          .catch(e => {
-            log.error('Could not determine repository type', e)
-            return action.path
-          })
-
         const { repositories } = this.appStore.getState()
-        const existingRepository = matchExistingRepository(repositories, path)
 
-        if (existingRepository) {
-          await this.selectRepository(existingRepository)
+        let repo
+        let path = action.path
+
+        while (!(repo = matchExistingRepository(repositories, path))) {
+          const parent = dirname(path)
+          if (parent === path) {
+            break
+          }
+          path = parent
+        }
+
+        if (repo) {
+          await this.selectRepository(repo)
         } else {
-          await this.showPopup({ type: PopupType.AddRepository, path })
+          await this.showPopup({
+            type: PopupType.AddRepository,
+            path: action.path,
+          })
         }
         break
 
