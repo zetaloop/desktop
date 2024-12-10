@@ -58,7 +58,7 @@ import { RepoRulesInfo } from '../../models/repo-rules'
 import { IAheadBehind } from '../../models/branch'
 import { StashDiffViewerId } from '../stashing'
 import { AugmentedSectionFilterList } from '../lib/augmented-filter-list'
-import { IFilterListItem } from '../lib/filter-list'
+import { IFilterListGroup, IFilterListItem } from '../lib/filter-list'
 
 interface IChangesListItem extends IFilterListItem {
   readonly id: string
@@ -236,6 +236,7 @@ interface IFilterChangesListProps {
 interface IFilterChangesListState {
   readonly selectedRows: ReadonlyArray<number>
   readonly focusedRow: string | null
+  readonly groups: ReadonlyArray<IFilterListGroup<IChangesListItem>>
 }
 
 function getSelectedRowsFromProps(
@@ -266,6 +267,7 @@ export class FilterChangesList extends React.Component<
     this.state = {
       selectedRows: getSelectedRowsFromProps(props),
       focusedRow: null,
+      groups: [],
     }
 
     // TBD: remove with selected rows figured out
@@ -1053,7 +1055,7 @@ export class FilterChangesList extends React.Component<
             // setScrollTop={this.props.changesListScrollTop}
             // onRowKeyDown={this.onRowKeyDown}
             onSelectionChanged={undefined} // this.props.onFileSelectionChanged
-            groups={[]} //
+            groups={this.state.groups} //
             invalidationProps={{
               workingDirectory: workingDirectory,
               isCommitting: isCommitting,
