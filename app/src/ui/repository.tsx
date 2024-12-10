@@ -358,7 +358,7 @@ export class RepositoryView extends React.Component<
           minimumWidth={this.props.sidebarWidth.min}
           onReset={this.handleSidebarWidthReset}
           onResize={this.handleSidebarResize}
-          description="Repository sidebar"
+          description="仓库侧边栏"
         >
           {this.renderTabs()}
           {this.renderSidebarContents()}
