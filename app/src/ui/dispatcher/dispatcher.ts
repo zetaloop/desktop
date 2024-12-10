@@ -122,6 +122,7 @@ import { UnreachableCommitsTab } from '../history/unreachable-commits-dialog'
 import { sendNonFatalException } from '../../lib/helpers/non-fatal-exception'
 import { SignInResult } from '../../lib/stores/sign-in-store'
 import { ICustomIntegration } from '../../lib/custom-integration'
+import { isAbsolute } from 'path'
 
 /**
  * An error handler function.
@@ -1768,6 +1769,10 @@ export class Dispatcher {
     }
 
     if (filepath !== null) {
+      if (isAbsolute(filepath)) {
+        return
+      }
+
       const resolved = await resolveWithin(repository.path, filepath)
 
       if (resolved !== null) {
