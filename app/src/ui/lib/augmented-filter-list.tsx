@@ -1,36 +1,27 @@
 import * as React from 'react'
 import classnames from 'classnames'
 
+import { SectionList, ClickSource } from '../lib/list/section-list'
 import {
-  List,
-  SelectionSource as ListSelectionSource,
   findNextSelectableRow,
-  ClickSource,
   SelectionDirection,
-} from '../lib/list'
+} from '../lib/list/section-list-selection'
 import { TextBox } from '../lib/text-box'
 import { Row } from '../lib/row'
 
 import { match, IMatch, IMatches } from '../../lib/fuzzy-find'
 import { AriaLiveContainer } from '../accessibility/aria-live-container'
-
-/** An item in the filter list. */
-export interface IFilterListItem {
-  /** The text which represents the item. This is used for filtering. */
-  readonly text: ReadonlyArray<string>
-
-  /** A unique identifier for the item. */
-  readonly id: string
-}
-
-/** A group of items in the list. */
-export interface IFilterListGroup<T extends IFilterListItem> {
-  /** The identifier for this group. */
-  readonly identifier: string
-
-  /** The items in the group. */
-  readonly items: ReadonlyArray<T>
-}
+import {
+  InvalidRowIndexPath,
+  RowIndexPath,
+  rowIndexPathEquals,
+} from './list/list-row-index-path'
+import {
+  IFilterListGroup,
+  IFilterListItem,
+  SelectionSource,
+} from './filter-list'
+import * as octicons from '../octicons/octicons.generated'
 
 interface IFlattenedGroup {
   readonly kind: 'group'
@@ -52,7 +43,7 @@ type IFilterListRow<T extends IFilterListItem> =
   | IFlattenedGroup
   | IFlattenedItem<T>
 
-interface IAugmentedFilterListProps<T extends IFilterListItem> {
+interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
   /** A class name for the wrapping element. */
   readonly className?: string
 
@@ -117,6 +108,12 @@ interface IAugmentedFilterListProps<T extends IFilterListItem> {
   /** Called when the Enter key is pressed in field of type search */
   readonly onEnterPressedWithoutFilteredItems?: (text: string) => void
 
+  /** Aria label for a specific item */
+  readonly getItemAriaLabel?: (item: T) => string | undefined
+
+  /** Aria label for a specific group */
+  readonly getGroupAriaLabel?: (group: number) => string | undefined
+
   /** The current filter text to use in the form */
   readonly filterText?: string
 
@@ -170,37 +167,26 @@ interface IAugmentedFilterListProps<T extends IFilterListItem> {
   ) => void
 }
 
-interface IAugmentedFilterListState<T extends IFilterListItem> {
-  readonly rows: ReadonlyArray<IFilterListRow<T>>
-  readonly selectedRow: number
+interface IAugmentedSectionFilterListState<T extends IFilterListItem> {
+  readonly rows: ReadonlyArray<ReadonlyArray<IFilterListRow<T>>>
+  readonly selectedRow: RowIndexPath
   readonly filterValue: string
   readonly filterValueChanged: boolean
+  // Indices of groups in the filtered list
+  readonly groups: ReadonlyArray<number>
 }
-
-/**
- * Interface describing a user initiated selection change event
- * originating from changing the filter text.
- */
-export interface IFilterSelectionSource {
-  kind: 'filter'
-
-  /** The filter text at the time the selection event was raised.  */
-  filterText: string
-}
-
-export type SelectionSource = ListSelectionSource | IFilterSelectionSource
 
 /** A List which includes the ability to filter based on its contents. */
-export class AugmentedFilterList<
+export class AugmentedSectionFilterList<
   T extends IFilterListItem
 > extends React.Component<
-  IAugmentedFilterListProps<T>,
-  IAugmentedFilterListState<T>
+  IAugmentedSectionFilterListProps<T>,
+  IAugmentedSectionFilterListState<T>
 > {
-  private list: List | null = null
+  private list: SectionList | null = null
   private filterTextBox: TextBox | null = null
 
-  public constructor(props: IAugmentedFilterListProps<T>) {
+  public constructor(props: IAugmentedSectionFilterListProps<T>) {
     super(props)
 
     if (props.filterTextBox !== undefined) {
@@ -210,13 +196,15 @@ export class AugmentedFilterList<
     this.state = createStateUpdate(props, null)
   }
 
-  public componentWillReceiveProps(nextProps: IAugmentedFilterListProps<T>) {
+  public componentWillReceiveProps(
+    nextProps: IAugmentedSectionFilterListProps<T>
+  ) {
     this.setState(createStateUpdate(nextProps, this.state))
   }
 
   public componentDidUpdate(
-    prevProps: IAugmentedFilterListProps<T>,
-    prevState: IAugmentedFilterListState<T>
+    prevProps: IAugmentedSectionFilterListProps<T>,
+    prevState: IAugmentedSectionFilterListState<T>
   ) {
     if (this.props.onSelectionChanged) {
       const oldSelectedItemId = getItemIdFromRowIndex(
@@ -247,9 +235,9 @@ export class AugmentedFilterList<
     }
 
     if (this.props.onFilterListResultsChanged !== undefined) {
-      const itemCount = this.state.rows.filter(
-        row => row.kind === 'item'
-      ).length
+      const itemCount = this.state.rows
+        .flat()
+        .filter(row => row.kind === 'item').length
 
       this.props.onFilterListResultsChanged(itemCount)
     }
@@ -266,6 +254,7 @@ export class AugmentedFilterList<
       <TextBox
         ref={this.onTextBoxRef}
         displayClearButton={true}
+        prefixedIcon={octicons.search}
         autoFocus={true}
         placeholder={this.props.placeholderText || 'Filter'}
         className="filter-list-filter-field"
@@ -283,14 +272,14 @@ export class AugmentedFilterList<
       return null
     }
 
-    const itemRows = this.state.rows.filter(row => row.kind === 'item')
+    const itemRows = this.state.rows.flat().filter(row => row.kind === 'item')
     const resultsPluralized = itemRows.length === 1 ? 'result' : 'results'
     const screenReaderMessage = `${itemRows.length} ${resultsPluralized}`
 
     return (
       <AriaLiveContainer
-        message={screenReaderMessage}
         trackedUserInput={this.state.filterValue}
+        message={screenReaderMessage}
       />
     )
   }
@@ -329,23 +318,24 @@ export class AugmentedFilterList<
     if (this.list === null) {
       return
     }
-    let next: number | null = null
+    let next: RowIndexPath | null = null
 
+    const rowCount = this.state.rows.map(r => r.length)
     if (
-      this.state.selectedRow === -1 ||
-      this.state.selectedRow === this.state.rows.length
+      this.state.selectedRow.row === -1 ||
+      this.state.selectedRow.row === this.state.rows.length
     ) {
       next = findNextSelectableRow(
-        this.state.rows.length,
+        rowCount,
         {
           direction: inDirection,
-          row: -1,
+          row: InvalidRowIndexPath,
         },
         this.canSelectRow
       )
     } else {
       next = findNextSelectableRow(
-        this.state.rows.length,
+        rowCount,
         {
           direction: inDirection,
           row: this.state.selectedRow,
@@ -368,13 +358,17 @@ export class AugmentedFilterList<
       return this.props.renderNoItems()
     } else {
       return (
-        <List
+        <SectionList
           ref={this.onListRef}
-          rowCount={this.state.rows.length}
+          rowCount={this.state.rows.map(r => r.length)}
           rowRenderer={this.renderRow}
+          sectionHasHeader={this.sectionHasHeader}
+          getRowAriaLabel={this.getRowAriaLabel}
           rowHeight={this.props.rowHeight}
           selectedRows={
-            this.state.selectedRow === -1 ? [] : [this.state.selectedRow]
+            rowIndexPathEquals(this.state.selectedRow, InvalidRowIndexPath)
+              ? []
+              : [this.state.selectedRow]
           }
           onSelectedRowChanged={this.onSelectedRowChanged}
           onRowClick={this.onRowClick}
@@ -390,8 +384,34 @@ export class AugmentedFilterList<
     }
   }
 
-  private renderRow = (index: number) => {
-    const row = this.state.rows[index]
+  private sectionHasHeader = (section: number) => {
+    const rows = this.state.rows[section]
+    return rows.length > 0 && rows[0].kind === 'group'
+  }
+
+  private getRowAriaLabel = (index: RowIndexPath) => {
+    const row = this.state.rows[index.section][index.row]
+    if (row.kind !== 'item') {
+      return undefined
+    }
+
+    const itemAriaLabel = this.props.getItemAriaLabel?.(row.item)
+
+    if (itemAriaLabel === undefined) {
+      return undefined
+    }
+
+    const groupAriaLabel = this.props.getGroupAriaLabel?.(
+      this.state.groups[index.section]
+    )
+
+    return groupAriaLabel !== undefined
+      ? `${itemAriaLabel}, ${groupAriaLabel}`
+      : itemAriaLabel
+  }
+
+  private renderRow = (index: RowIndexPath) => {
+    const row = this.state.rows[index.section][index.row]
     if (row.kind === 'item') {
       return this.props.renderItem(row.item, row.matches)
     } else if (this.props.renderGroupHeader) {
@@ -405,7 +425,7 @@ export class AugmentedFilterList<
     this.filterTextBox = component
   }
 
-  private onListRef = (instance: List | null) => {
+  private onListRef = (instance: SectionList | null) => {
     this.list = instance
   }
 
@@ -426,29 +446,32 @@ export class AugmentedFilterList<
     }
   }
 
-  private onSelectedRowChanged = (index: number, source: SelectionSource) => {
+  private onSelectedRowChanged = (
+    index: RowIndexPath,
+    source: SelectionSource
+  ) => {
     this.setState({ selectedRow: index })
 
     if (this.props.onSelectionChanged) {
-      const row = this.state.rows[index]
+      const row = this.state.rows[index.section][index.row]
       if (row.kind === 'item') {
         this.props.onSelectionChanged(row.item, source)
       }
     }
   }
 
-  private canSelectRow = (index: number) => {
+  private canSelectRow = (index: RowIndexPath) => {
     if (this.props.disabled) {
       return false
     }
 
-    const row = this.state.rows[index]
+    const row = this.state.rows[index.section][index.row]
     return row.kind === 'item'
   }
 
-  private onRowClick = (index: number, source: ClickSource) => {
+  private onRowClick = (index: RowIndexPath, source: ClickSource) => {
     if (this.props.onItemClick) {
-      const row = this.state.rows[index]
+      const row = this.state.rows[index.section][index.row]
 
       if (row.kind === 'item') {
         this.props.onItemClick(row.item, source)
@@ -457,14 +480,14 @@ export class AugmentedFilterList<
   }
 
   private onRowContextMenu = (
-    index: number,
+    index: RowIndexPath,
     source: React.MouseEvent<HTMLDivElement>
   ) => {
     if (!this.props.onItemContextMenu) {
       return
     }
 
-    const row = this.state.rows[index]
+    const row = this.state.rows[index.section][index.row]
 
     if (row.kind !== 'item') {
       return
@@ -473,30 +496,47 @@ export class AugmentedFilterList<
     this.props.onItemContextMenu(row.item, source)
   }
 
-  private onRowKeyDown = (row: number, event: React.KeyboardEvent<any>) => {
+  private onRowKeyDown = (
+    indexPath: RowIndexPath,
+    event: React.KeyboardEvent<any>
+  ) => {
     const list = this.list
     if (!list) {
       return
     }
 
-    const rowCount = this.state.rows.length
+    const rowCount = this.state.rows.map(r => r.length)
 
     const firstSelectableRow = findNextSelectableRow(
       rowCount,
-      { direction: 'down', row: -1 },
+      { direction: 'down', row: InvalidRowIndexPath },
       this.canSelectRow
     )
     const lastSelectableRow = findNextSelectableRow(
       rowCount,
-      { direction: 'up', row: 0 },
+      {
+        direction: 'up',
+        row: {
+          section: 0,
+          row: 0,
+        },
+      },
       this.canSelectRow
     )
 
     let shouldFocus = false
 
-    if (event.key === 'ArrowUp' && row === firstSelectableRow) {
+    if (
+      event.key === 'ArrowUp' &&
+      firstSelectableRow &&
+      rowIndexPathEquals(indexPath, firstSelectableRow)
+    ) {
       shouldFocus = true
-    } else if (event.key === 'ArrowDown' && row === lastSelectableRow) {
+    } else if (
+      event.key === 'ArrowDown' &&
+      lastSelectableRow &&
+      rowIndexPathEquals(indexPath, lastSelectableRow)
+    ) {
       shouldFocus = true
     }
 
@@ -526,13 +566,13 @@ export class AugmentedFilterList<
       return
     }
 
-    const rowCount = this.state.rows.length
+    const rowCount = this.state.rows.map(r => r.length)
 
     if (key === 'ArrowDown') {
-      if (rowCount > 0) {
+      if (rowCount.length > 0) {
         const selectedRow = findNextSelectableRow(
           rowCount,
-          { direction: 'down', row: -1 },
+          { direction: 'down', row: InvalidRowIndexPath },
           this.canSelectRow
         )
         if (selectedRow != null) {
@@ -544,10 +584,16 @@ export class AugmentedFilterList<
 
       event.preventDefault()
     } else if (key === 'ArrowUp') {
-      if (rowCount > 0) {
+      if (rowCount.length > 0) {
         const selectedRow = findNextSelectableRow(
           rowCount,
-          { direction: 'up', row: 0 },
+          {
+            direction: 'up',
+            row: {
+              section: 0,
+              row: 0,
+            },
+          },
           this.canSelectRow
         )
         if (selectedRow != null) {
@@ -560,7 +606,7 @@ export class AugmentedFilterList<
       event.preventDefault()
     } else if (key === 'Enter') {
       // no repositories currently displayed, bail out
-      if (rowCount === 0) {
+      if (rowCount.length === 0) {
         return event.preventDefault()
       }
 
@@ -572,7 +618,7 @@ export class AugmentedFilterList<
 
       const row = findNextSelectableRow(
         rowCount,
-        { direction: 'down', row: -1 },
+        { direction: 'down', row: InvalidRowIndexPath },
         this.canSelectRow
       )
 
@@ -589,14 +635,35 @@ export function getText<T extends IFilterListItem>(
   return item['text']
 }
 
-function createStateUpdate<T extends IFilterListItem>(
-  props: IAugmentedFilterListProps<T>,
-  state: IAugmentedFilterListState<T> | null
-) {
-  const flattenedRows = new Array<IFilterListRow<T>>()
-  const filter = (props.filterText || '').toLowerCase()
+function getFirstVisibleRow<T extends IFilterListItem>(
+  rows: ReadonlyArray<ReadonlyArray<IFilterListRow<T>>>
+): RowIndexPath {
+  for (let i = 0; i < rows.length; i++) {
+    const groupRows = rows[i]
+    for (let j = 0; j < groupRows.length; j++) {
+      const row = groupRows[j]
+      if (row.kind === 'item') {
+        return { section: i, row: j }
+      }
+    }
+  }
 
-  for (const group of props.groups) {
+  return InvalidRowIndexPath
+}
+
+function createStateUpdate<T extends IFilterListItem>(
+  props: IAugmentedSectionFilterListProps<T>,
+  state: IAugmentedSectionFilterListState<T> | null
+) {
+  const rows = new Array<Array<IFilterListRow<T>>>()
+  const filter = (props.filterText || '').toLowerCase()
+  let selectedRow = InvalidRowIndexPath
+  let section = 0
+  const selectedItem = props.selectedItem
+  const groupIndices = []
+
+  for (const [idx, group] of props.groups.entries()) {
+    const groupRows = new Array<IFilterListRow<T>>()
     const items: ReadonlyArray<IMatch<T>> = filter
       ? match(filter, group.items, getText)
       : group.items.map(item => ({
@@ -609,27 +676,31 @@ function createStateUpdate<T extends IFilterListItem>(
       continue
     }
 
+    groupIndices.push(idx)
+
     if (props.renderGroupHeader) {
-      flattenedRows.push({ kind: 'group', identifier: group.identifier })
+      groupRows.push({ kind: 'group', identifier: group.identifier })
     }
 
     for (const { item, matches } of items) {
-      flattenedRows.push({ kind: 'item', item, matches })
+      if (selectedItem && item.id === selectedItem.id) {
+        selectedRow = {
+          section,
+          row: groupRows.length,
+        }
+      }
+
+      groupRows.push({ kind: 'item', item, matches })
     }
+
+    rows.push(groupRows)
+    section++
   }
 
-  let selectedRow = -1
-  const selectedItem = props.selectedItem
-  if (selectedItem) {
-    selectedRow = flattenedRows.findIndex(
-      i => i.kind === 'item' && i.item.id === selectedItem.id
-    )
-  }
-
-  if (selectedRow < 0 && filter.length) {
+  if (selectedRow.row < 0 && filter.length) {
     // If the selected item isn't in the list (e.g., filtered out), then
     // select the first visible item.
-    selectedRow = flattenedRows.findIndex(i => i.kind === 'item')
+    selectedRow = getFirstVisibleRow(rows)
   }
 
   // Stay true if already set, otherwise become true if the filter has content
@@ -638,31 +709,39 @@ function createStateUpdate<T extends IFilterListItem>(
     : filter.length > 0
 
   return {
-    rows: flattenedRows,
+    rows: rows,
     selectedRow,
     filterValue: filter,
     filterValueChanged,
+    groups: groupIndices,
   }
 }
 
 function getItemFromRowIndex<T extends IFilterListItem>(
-  items: ReadonlyArray<IFilterListRow<T>>,
-  index: number
+  items: ReadonlyArray<ReadonlyArray<IFilterListRow<T>>>,
+  index: RowIndexPath
 ): T | null {
-  if (index >= 0 && index < items.length) {
-    const row = items[index]
+  if (index.section < 0 || index.section >= items.length) {
+    return null
+  }
 
-    if (row.kind === 'item') {
-      return row.item
-    }
+  const group = items[index.section]
+  if (index.row < 0 || index.row >= group.length) {
+    return null
+  }
+
+  const row = group[index.row]
+
+  if (row.kind === 'item') {
+    return row.item
   }
 
   return null
 }
 
 function getItemIdFromRowIndex<T extends IFilterListItem>(
-  items: ReadonlyArray<IFilterListRow<T>>,
-  index: number
+  items: ReadonlyArray<ReadonlyArray<IFilterListRow<T>>>,
+  index: RowIndexPath
 ): string | null {
   const item = getItemFromRowIndex(items, index)
   return item ? item.id : null
