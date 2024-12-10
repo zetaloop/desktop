@@ -318,7 +318,7 @@ export class SelectedCommits extends React.Component<
             maximumWidth={commitSummaryWidth.max}
             onResize={this.onCommitSummaryResize}
             onReset={this.onCommitSummaryReset}
-            description="Selected commit file list"
+            description="所选提交文件列表"
           >
             {this.renderFileList()}
           </Resizable>
