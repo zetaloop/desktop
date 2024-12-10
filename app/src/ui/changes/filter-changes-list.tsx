@@ -1036,7 +1036,7 @@ export class FilterChangesList extends React.Component<
             </div>
           </div>
           <AugmentedSectionFilterList
-            // id="changes-list"
+            id="changes-list"
             rowHeight={RowHeight}
             filterText={undefined} // TBD: likely a prop so it can be remembered...
             onFilterTextChanged={undefined} // TBD: likely update store state

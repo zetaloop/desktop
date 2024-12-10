@@ -44,6 +44,9 @@ type IFilterListRow<T extends IFilterListItem> =
   | IFlattenedItem<T>
 
 interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
+  /** The unique identifier for the outer element of the component (optional, defaults to null) */
+  readonly id?: string
+
   /** A class name for the wrapping element. */
   readonly className?: string
 
@@ -359,6 +362,7 @@ export class AugmentedSectionFilterList<
     } else {
       return (
         <SectionList
+          id={this.props.id}
           ref={this.onListRef}
           rowCount={this.state.rows.map(r => r.length)}
           rowRenderer={this.renderRow}
