@@ -136,7 +136,7 @@ interface IFilterChangesListProps {
   readonly conflictState: ConflictState | null
   readonly rebaseConflictState: RebaseConflictState | null
   readonly selectedFileIDs: ReadonlyArray<string>
-  // TBD: readonly onFileSelectionChanged: (rows: ReadonlyArray<number>) => void
+  readonly onFileSelectionChanged: (rows: ReadonlyArray<number>) => void
   readonly onIncludeChanged: (path: string, include: boolean) => void
   readonly onSelectAll: (selectAll: boolean) => void
   readonly onCreateCommit: (context: ICommitContext) => Promise<boolean>
@@ -1051,6 +1051,17 @@ export class FilterChangesList extends React.Component<
     this.setState({ filterText: text })
   }
 
+  private onFileSelectionChanged = (item: IChangesListItem | null) => {
+    const rows = item
+      ? [
+          this.props.workingDirectory.files.findIndex(
+            f => f.id === item.change.id
+          ),
+        ]
+      : []
+    this.props.onFileSelectionChanged(rows)
+  }
+
   public render() {
     const { workingDirectory, rebaseConflictState, isCommitting } = this.props
     const { files } = workingDirectory
@@ -1103,16 +1114,17 @@ export class FilterChangesList extends React.Component<
             rowHeight={RowHeight}
             filterText={this.state.filterText}
             onFilterTextChanged={this.onFilterTextChanged}
-            selectedItem={this.state.selectedItem} // selectedRows={this.state.selectedRows} need multi selection // selectionMode="multi"...
+            selectedItem={this.state.selectedItem}
             renderItem={this.renderChangedFile}
             onItemClick={this.onChangedFileClick}
+            // selectionMode="multi"...
             // onRowDoubleClick={this.onRowDoubleClick}
             // onRowKeyboardFocus={this.onRowFocus}
             // onRowBlur={this.onRowBlur}
             // onScroll={this.onScroll}
             // setScrollTop={this.props.changesListScrollTop}
             // onRowKeyDown={this.onRowKeyDown}
-            onSelectionChanged={undefined} // this.props.onFileSelectionChanged
+            onSelectionChanged={this.onFileSelectionChanged}
             groups={this.state.groups} //
             invalidationProps={{
               workingDirectory: workingDirectory,
