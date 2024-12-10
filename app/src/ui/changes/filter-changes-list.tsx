@@ -1117,9 +1117,9 @@ export class FilterChangesList extends React.Component<
             onItemBlur={this.onChangedFileBlur}
             // onScroll={this.onScroll}
             // setScrollTop={this.props.changesListScrollTop}
-            // onRowKeyDown={this.onRowKeyDown}
+            onItemKeyDown={this.onItemKeyDown}
             onSelectionChanged={this.onFileSelectionChanged}
-            groups={this.state.groups} //
+            groups={this.state.groups}
             invalidationProps={{
               workingDirectory: workingDirectory,
               isCommitting: isCommitting,

@@ -182,6 +182,8 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
     item: T,
     event: React.FocusEvent<HTMLDivElement>
   ) => void
+
+  readonly onItemKeyDown?: (item: T, event: React.KeyboardEvent<any>) => void
 }
 
 interface IAugmentedSectionFilterListState<T extends IFilterListItem> {
@@ -565,6 +567,16 @@ export class AugmentedSectionFilterList<
     indexPath: RowIndexPath,
     event: React.KeyboardEvent<any>
   ) => {
+    const row = this.state.rows[indexPath.section][indexPath.row]
+
+    if (row.kind === 'item' && this.props.onItemKeyDown) {
+      this.props.onItemKeyDown(row.item, event)
+    }
+
+    if (event.defaultPrevented) {
+      return
+    }
+
     const list = this.list
     if (!list) {
       return
