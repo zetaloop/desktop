@@ -235,7 +235,7 @@ interface IFilterChangesListProps {
 
 interface IFilterChangesListState {
   readonly selectedRows: ReadonlyArray<number>
-  readonly focusedRow: number | null
+  readonly focusedRow: string | null
 }
 
 function getSelectedRowsFromProps(
@@ -291,17 +291,17 @@ export class FilterChangesList extends React.Component<
     this.props.onSelectAll(include)
   }
 
-  // TBD: private when rendered
-  public renderRow = (row: number): JSX.Element => {
+  private renderChangedFile = (
+    changeListItem: IChangesListItem
+  ): JSX.Element | null => {
     const {
-      workingDirectory,
       rebaseConflictState,
       isCommitting,
       onIncludeChanged,
       availableWidth,
     } = this.props
 
-    const file = workingDirectory.files[row]
+    const file = changeListItem.change
     const selection = file.selection.getSelectionType()
     const { submoduleStatus } = file.status
 
@@ -347,13 +347,9 @@ export class FilterChangesList extends React.Component<
         availableWidth={availableWidth}
         disableSelection={disableSelection}
         checkboxTooltip={checkboxTooltip}
-        focused={this.state.focusedRow === row}
+        focused={this.state.focusedRow === changeListItem.id}
       />
     )
-  }
-
-  private renderChangedFile = (): JSX.Element | null => {
-    return null
   }
 
   private onDiscardAllChanges = () => {
@@ -1074,13 +1070,13 @@ export class FilterChangesList extends React.Component<
   }
 
   // TBD: Needs private once hooked into list
-  public onRowFocus = (row: number) => {
-    this.setState({ focusedRow: row })
+  public onRowFocus = (changeListItem: IChangesListItem) => {
+    this.setState({ focusedRow: changeListItem.id })
   }
 
   // TBD: Needs private once hooked into list
-  public onRowBlur = (row: number) => {
-    if (this.state.focusedRow === row) {
+  public onRowBlur = (changeListItem: IChangesListItem) => {
+    if (this.state.focusedRow === changeListItem.id) {
       this.setState({ focusedRow: null })
     }
   }
