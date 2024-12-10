@@ -1011,9 +1011,8 @@ export class FilterChangesList extends React.Component<
     this.props.onOpenItemInExternalEditor(item.change.path)
   }
 
-  // TBD: make private
-  public onRowKeyDown = (
-    _row: number,
+  private onItemKeyDown = (
+    _item: IChangesListItem,
     event: React.KeyboardEvent<HTMLDivElement>
   ) => {
     // The commit is already in-flight but this check prevents the
@@ -1110,12 +1109,12 @@ export class FilterChangesList extends React.Component<
             filterText={this.state.filterText}
             onFilterTextChanged={this.onFilterTextChanged}
             selectedItem={this.state.selectedItem}
+            // selectionMode="multi"...
             renderItem={this.renderChangedFile}
             onItemClick={this.onChangedFileClick}
             onItemDoubleClick={this.onChangedFileDoubleClick}
             onItemKeyboardFocus={this.onChangedFileFocus}
-            // selectionMode="multi"...
-            // onRowBlur={this.onRowBlur}
+            onItemBlur={this.onChangedFileBlur}
             // onScroll={this.onScroll}
             // setScrollTop={this.props.changesListScrollTop}
             // onRowKeyDown={this.onRowKeyDown}
@@ -1140,8 +1139,7 @@ export class FilterChangesList extends React.Component<
     this.setState({ focusedRow: changeListItem.id })
   }
 
-  // TBD: Needs private once hooked into list
-  public onRowBlur = (changeListItem: IChangesListItem) => {
+  private onChangedFileBlur = (changeListItem: IChangesListItem) => {
     if (this.state.focusedRow === changeListItem.id) {
       this.setState({ focusedRow: null })
     }

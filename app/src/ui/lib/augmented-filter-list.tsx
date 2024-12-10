@@ -176,6 +176,12 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
     item: T,
     event: React.KeyboardEvent<any>
   ) => void
+
+  /** This function will be called when a row loses focus */
+  readonly onItemBlur?: (
+    item: T,
+    event: React.FocusEvent<HTMLDivElement>
+  ) => void
 }
 
 interface IAugmentedSectionFilterListState<T extends IFilterListItem> {
@@ -388,6 +394,7 @@ export class AugmentedSectionFilterList<
           onRowKeyDown={this.onRowKeyDown}
           onRowContextMenu={this.onRowContextMenu}
           onRowKeyboardFocus={this.onRowKeyboardFocus}
+          onRowBlur={this.onRowBlur}
           canSelectRow={this.canSelectRow}
           invalidationProps={{
             ...this.props,
@@ -535,6 +542,23 @@ export class AugmentedSectionFilterList<
     }
 
     this.props.onItemKeyboardFocus(row.item, source)
+  }
+
+  private onRowBlur = (
+    index: RowIndexPath,
+    source: React.FocusEvent<HTMLDivElement>
+  ) => {
+    if (!this.props.onItemBlur) {
+      return
+    }
+
+    const row = this.state.rows[index.section][index.row]
+
+    if (row.kind !== 'item') {
+      return
+    }
+
+    this.props.onItemBlur(row.item, source)
   }
 
   private onRowKeyDown = (
