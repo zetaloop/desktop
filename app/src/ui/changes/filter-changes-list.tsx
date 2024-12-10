@@ -237,6 +237,7 @@ interface IFilterChangesListProps {
 interface IFilterChangesListState {
   readonly filterText: string
   readonly selectedRows: ReadonlyArray<number>
+  readonly selectedItem: IChangesListItem | null
   readonly focusedRow: string | null
   readonly groups: ReadonlyArray<IFilterListGroup<IChangesListItem>>
 }
@@ -257,6 +258,26 @@ function getSelectedRowsFromProps(
   return selectedRows
 }
 
+function getSelectedItemFromProps(
+  props: IFilterChangesListProps
+): IChangesListItem | null {
+  if (props.selectedFileIDs.length === 0) {
+    return null
+  }
+
+  const file = props.workingDirectory.findFileWithID(props.selectedFileIDs[0])
+
+  if (!file) {
+    return null
+  }
+
+  return {
+    text: [file.path, file.status.kind.toString()],
+    id: file.id,
+    change: file,
+  }
+}
+
 export class FilterChangesList extends React.Component<
   IFilterChangesListProps,
   IFilterChangesListState
@@ -272,6 +293,8 @@ export class FilterChangesList extends React.Component<
     this.state = {
       filterText: '',
       selectedRows: getSelectedRowsFromProps(props),
+      // TBD: should be selectedItem(s) but section list doesn't support that yet.
+      selectedItem: getSelectedItemFromProps(props),
       focusedRow: null,
       groups,
     }
@@ -292,6 +315,7 @@ export class FilterChangesList extends React.Component<
     ) {
       this.setState({
         selectedRows: getSelectedRowsFromProps(nextProps),
+        selectedItem: getSelectedItemFromProps(nextProps),
         groups: [this.createListItems(nextProps.workingDirectory.files)],
       })
     }
@@ -1079,7 +1103,7 @@ export class FilterChangesList extends React.Component<
             rowHeight={RowHeight}
             filterText={this.state.filterText}
             onFilterTextChanged={this.onFilterTextChanged}
-            selectedItem={null} // selectedRows={this.state.selectedRows} need multi selection // selectionMode="multi"...
+            selectedItem={this.state.selectedItem} // selectedRows={this.state.selectedRows} need multi selection // selectionMode="multi"...
             renderItem={this.renderChangedFile}
             onItemClick={this.onChangedFileClick}
             // onRowDoubleClick={this.onRowDoubleClick}
