@@ -18,7 +18,6 @@ import {
 } from '../../models/repository'
 import { Account } from '../../models/account'
 import { Author, UnknownAuthor } from '../../models/author'
-import { List, ClickSource } from '../lib/list'
 import { Checkbox, CheckboxValue } from '../lib/checkbox'
 import {
   isSafeFileExtension,
@@ -58,6 +57,7 @@ import { TooltippedContent } from '../lib/tooltipped-content'
 import { RepoRulesInfo } from '../../models/repo-rules'
 import { IAheadBehind } from '../../models/branch'
 import { StashDiffViewerId } from '../stashing'
+import { AugmentedSectionFilterList } from '../lib/augmented-filter-list'
 
 const RowHeight = 29
 const StashIcon: OcticonSymbolVariant = {
@@ -128,7 +128,7 @@ interface IFilterChangesListProps {
   readonly conflictState: ConflictState | null
   readonly rebaseConflictState: RebaseConflictState | null
   readonly selectedFileIDs: ReadonlyArray<string>
-  readonly onFileSelectionChanged: (rows: ReadonlyArray<number>) => void
+  // TBD: readonly onFileSelectionChanged: (rows: ReadonlyArray<number>) => void
   readonly onIncludeChanged: (path: string, include: boolean) => void
   readonly onSelectAll: (selectAll: boolean) => void
   readonly onCreateCommit: (context: ICommitContext) => Promise<boolean>
@@ -146,7 +146,7 @@ interface IFilterChangesListProps {
   readonly onChangesListScrolled: (scrollTop: number) => void
 
   /* The scrollTop of the compareList. It is stored to allow for scroll position persistence */
-  readonly changesListScrollTop?: number
+  // TBD: readonly changesListScrollTop?: number
 
   /**
    * Called to open a file in its default application
@@ -179,7 +179,7 @@ interface IFilterChangesListProps {
    * Click event handler passed directly to the onRowClick prop of List, see
    * List Props for documentation.
    */
-  readonly onRowClick?: (row: number, source: ClickSource) => void
+  // TBD: readonly onRowClick?: (row: number, source: ClickSource) => void
   readonly commitMessage: ICommitMessage
 
   /** The autocompletion providers available to the repository. */
@@ -260,6 +260,9 @@ export class FilterChangesList extends React.Component<
       selectedRows: getSelectedRowsFromProps(props),
       focusedRow: null,
     }
+
+    // TBD: remove with selected rows figured out
+    console.log(this.state.selectedRows)
   }
 
   public componentWillReceiveProps(nextProps: IFilterChangesListProps) {
@@ -281,7 +284,8 @@ export class FilterChangesList extends React.Component<
     this.props.onSelectAll(include)
   }
 
-  private renderRow = (row: number): JSX.Element => {
+  // TBD: private when rendered
+  public renderRow = (row: number): JSX.Element => {
     const {
       workingDirectory,
       rebaseConflictState,
@@ -339,6 +343,10 @@ export class FilterChangesList extends React.Component<
         focused={this.state.focusedRow === row}
       />
     )
+  }
+
+  private renderChangedFile = (): JSX.Element | null => {
+    return null
   }
 
   private onDiscardAllChanges = () => {
@@ -708,9 +716,10 @@ export class FilterChangesList extends React.Component<
   }
 
   private onItemContextMenu = (
-    row: number,
+    item: any,
     event: React.MouseEvent<HTMLDivElement>
   ) => {
+    const row = 0 /// TBD;
     const { workingDirectory } = this.props
     const file = workingDirectory.files[row]
 
@@ -754,7 +763,8 @@ export class FilterChangesList extends React.Component<
     }
   }
 
-  private onScroll = (scrollTop: number, clientHeight: number) => {
+  // TBD: make private
+  public onScroll = (scrollTop: number, clientHeight: number) => {
     this.props.onChangesListScrolled(scrollTop)
   }
 
@@ -946,13 +956,15 @@ export class FilterChangesList extends React.Component<
     )
   }
 
-  private onRowDoubleClick = (row: number) => {
+  // TBD: make private
+  public onRowDoubleClick = (row: number) => {
     const file = this.props.workingDirectory.files[row]
 
     this.props.onOpenItemInExternalEditor(file.path)
   }
 
-  private onRowKeyDown = (
+  // TBD: make private
+  public onRowKeyDown = (
     _row: number,
     event: React.KeyboardEvent<HTMLDivElement>
   ) => {
@@ -970,6 +982,10 @@ export class FilterChangesList extends React.Component<
 
   public focus() {
     this.includeAllCheckBoxRef.current?.focus()
+  }
+
+  private onChangedFileClick = (item: any) => {
+    console.log('ChangedFileClick', item)
   }
 
   public render() {
@@ -1019,28 +1035,29 @@ export class FilterChangesList extends React.Component<
               {selectedChangesDescription}
             </div>
           </div>
-          <List
-            id="changes-list"
-            rowCount={files.length}
+          <AugmentedSectionFilterList
+            // id="changes-list"
             rowHeight={RowHeight}
-            rowRenderer={this.renderRow}
-            selectedRows={this.state.selectedRows}
-            selectionMode="multi"
-            onSelectionChanged={this.props.onFileSelectionChanged}
+            filterText={undefined} // TBD: likely a prop so it can be remembered...
+            onFilterTextChanged={undefined} // TBD: likely update store state
+            selectedItem={null} // selectedRows={this.state.selectedRows} need multi selection // selectionMode="multi"...
+            renderItem={this.renderChangedFile} //rowRenderer={this.renderRow}
+            onItemClick={this.onChangedFileClick} // onRowClick={this.props.onRowClick}
+            // onRowDoubleClick={this.onRowDoubleClick}
+            // onRowKeyboardFocus={this.onRowFocus}
+            // onRowBlur={this.onRowBlur}
+            // onScroll={this.onScroll}
+            // setScrollTop={this.props.changesListScrollTop}
+            // onRowKeyDown={this.onRowKeyDown}
+            onSelectionChanged={undefined} // this.props.onFileSelectionChanged
+            groups={[]} //
             invalidationProps={{
               workingDirectory: workingDirectory,
               isCommitting: isCommitting,
               focusedRow: this.state.focusedRow,
             }}
-            onRowClick={this.props.onRowClick}
-            onRowDoubleClick={this.onRowDoubleClick}
-            onRowKeyboardFocus={this.onRowFocus}
-            onRowBlur={this.onRowBlur}
-            onScroll={this.onScroll}
-            setScrollTop={this.props.changesListScrollTop}
-            onRowKeyDown={this.onRowKeyDown}
-            onRowContextMenu={this.onItemContextMenu}
-            ariaLabel={filesDescription}
+            onItemContextMenu={this.onItemContextMenu}
+            // ariaLabel={filesDescription}
           />
         </div>
         {this.renderStashedChanges()}
@@ -1049,11 +1066,13 @@ export class FilterChangesList extends React.Component<
     )
   }
 
-  private onRowFocus = (row: number) => {
+  // TBD: Needs private once hooked into list
+  public onRowFocus = (row: number) => {
     this.setState({ focusedRow: row })
   }
 
-  private onRowBlur = (row: number) => {
+  // TBD: Needs private once hooked into list
+  public onRowBlur = (row: number) => {
     if (this.state.focusedRow === row) {
       this.setState({ focusedRow: null })
     }
