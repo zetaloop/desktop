@@ -58,6 +58,13 @@ import { RepoRulesInfo } from '../../models/repo-rules'
 import { IAheadBehind } from '../../models/branch'
 import { StashDiffViewerId } from '../stashing'
 import { AugmentedSectionFilterList } from '../lib/augmented-filter-list'
+import { IFilterListItem } from '../lib/filter-list'
+
+interface IChangesListItem extends IFilterListItem {
+  readonly id: string
+  readonly text: ReadonlyArray<string>
+  readonly change: WorkingDirectoryFileChange
+}
 
 const RowHeight = 29
 const StashIcon: OcticonSymbolVariant = {
@@ -1035,7 +1042,7 @@ export class FilterChangesList extends React.Component<
               {selectedChangesDescription}
             </div>
           </div>
-          <AugmentedSectionFilterList
+          <AugmentedSectionFilterList<IChangesListItem>
             id="changes-list"
             rowHeight={RowHeight}
             filterText={undefined} // TBD: likely a prop so it can be remembered...
