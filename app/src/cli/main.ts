@@ -35,11 +35,11 @@ const args = parse(process.argv.slice(2), {
 const usage = (exitCode = 1): never => {
   process.stderr.write(
     'GitHub Desktop CLI usage: \n' +
-      '  github                                       Open the current directory\n' +
-      '  github open [path]                           Open the provided path\n' +
-      '  github clone [-b branch] <url|owner/name>    Clone the repository by url or \n' +
-      '                                               name/owner (ex torvalds/linux),\n' +
-      '                                               optionally checking out the branch\n'
+      '  github                            Open the current directory\n' +
+      '  github open [path]                Open the provided path\n' +
+      '  github clone [-b branch] <url>    Clone the repository by url or name/owner\n' +
+      '                                    (ex torvalds/linux), optionally checking out\n' +
+      '                                    the branch\n'
   )
   process.exit(exitCode)
 }
