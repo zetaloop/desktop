@@ -154,7 +154,7 @@ interface IFilterChangesListProps {
   readonly onChangesListScrolled: (scrollTop: number) => void
 
   /* The scrollTop of the compareList. It is stored to allow for scroll position persistence */
-  // TBD: readonly changesListScrollTop?: number
+  readonly changesListScrollTop?: number
 
   /**
    * Called to open a file in its default application
@@ -814,8 +814,7 @@ export class FilterChangesList extends React.Component<
     }
   }
 
-  // TBD: make private
-  public onScroll = (scrollTop: number, clientHeight: number) => {
+  private onScroll = (scrollTop: number, clientHeight: number) => {
     this.props.onChangesListScrolled(scrollTop)
   }
 
@@ -1115,8 +1114,8 @@ export class FilterChangesList extends React.Component<
             onItemDoubleClick={this.onChangedFileDoubleClick}
             onItemKeyboardFocus={this.onChangedFileFocus}
             onItemBlur={this.onChangedFileBlur}
-            // onScroll={this.onScroll}
-            // setScrollTop={this.props.changesListScrollTop}
+            onScroll={this.onScroll}
+            setScrollTop={this.props.changesListScrollTop}
             onItemKeyDown={this.onItemKeyDown}
             onSelectionChanged={this.onFileSelectionChanged}
             groups={this.state.groups}

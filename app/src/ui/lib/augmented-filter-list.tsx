@@ -184,6 +184,14 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
   ) => void
 
   readonly onItemKeyDown?: (item: T, event: React.KeyboardEvent<any>) => void
+
+  readonly onScroll?: (scrollTop: number, clientHeight: number) => void
+
+  /**
+   * The number of pixels from the top of the list indicating
+   * where to scroll do on rendering of the list.
+   */
+  readonly setScrollTop?: number
 }
 
 interface IAugmentedSectionFilterListState<T extends IFilterListItem> {
@@ -402,6 +410,8 @@ export class AugmentedSectionFilterList<
             ...this.props,
             ...this.props.invalidationProps,
           }}
+          onScroll={this.props.onScroll}
+          setScrollTop={this.props.setScrollTop}
         />
       )
     }
