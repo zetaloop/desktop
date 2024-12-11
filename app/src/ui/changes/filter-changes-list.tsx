@@ -1108,7 +1108,7 @@ export class FilterChangesList extends React.Component<
             filterText={this.state.filterText}
             onFilterTextChanged={this.onFilterTextChanged}
             selectedItem={this.state.selectedItem}
-            // selectionMode="multi"...
+            selectionMode="multi"
             renderItem={this.renderChangedFile}
             onItemClick={this.onChangedFileClick}
             onItemDoubleClick={this.onChangedFileDoubleClick}

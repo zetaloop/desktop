@@ -22,6 +22,7 @@ import {
   SelectionSource,
 } from './filter-list'
 import * as octicons from '../octicons/octicons.generated'
+import xor from 'lodash/xor'
 
 interface IFlattenedGroup {
   readonly kind: 'group'
@@ -195,11 +196,26 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
 
   /** The aria-label attribute for the list component. */
   readonly ariaLabel?: string
+
+  /**
+   * This prop defines the behaviour of the selection of items within this list.
+   *  - 'single' : (default) single list-item selection. [shift] and [ctrl] have
+   * no effect. Use in combination with one of:
+   *             onSelectedRowChanged(row: number)
+   *             onSelectionChanged(rows: number[])
+   *  - 'multi' : allows range and/or arbitrary selection. [shift] and [ctrl]
+   * can be used. Use in combination with:
+   *    onSelectionChanged(rows: number[])
+   *
+   * Note... the SectionList also has 'range' and this has not been implemented
+   * in this filter list (not needed yet)
+   */
+  readonly selectionMode?: 'single' | 'multi'
 }
 
 interface IAugmentedSectionFilterListState<T extends IFilterListItem> {
   readonly rows: ReadonlyArray<ReadonlyArray<IFilterListRow<T>>>
-  readonly selectedRow: RowIndexPath
+  readonly selectedRows: ReadonlyArray<RowIndexPath>
   readonly filterValue: string
   readonly filterValueChanged: boolean
   // Indices of groups in the filtered list
@@ -237,26 +253,26 @@ export class AugmentedSectionFilterList<
     prevState: IAugmentedSectionFilterListState<T>
   ) {
     if (this.props.onSelectionChanged) {
-      const oldSelectedItemId = getItemIdFromRowIndex(
-        prevState.rows,
-        prevState.selectedRow
+      const oldSelectedItemIds = prevState.selectedRows.map(row =>
+        getItemIdFromRowIndex(prevState.rows, row)
       )
-      const newSelectedItemId = getItemIdFromRowIndex(
-        this.state.rows,
-        this.state.selectedRow
+      const newSelectedItemIds = this.state.selectedRows.map(row =>
+        getItemIdFromRowIndex(this.state.rows, row)
       )
 
-      if (oldSelectedItemId !== newSelectedItemId) {
+      if (xor(oldSelectedItemIds, newSelectedItemIds).length > 0) {
         const propSelectionId = this.props.selectedItem
           ? this.props.selectedItem.id
           : null
 
-        if (propSelectionId !== newSelectedItemId) {
-          const newSelectedItem = getItemFromRowIndex(
-            this.state.rows,
-            this.state.selectedRow
+        // TBD: selectItem will eventually be selectedItems.
+        if (!newSelectedItemIds.includes(propSelectionId)) {
+          const newSelectedItems = this.state.selectedRows.map(row =>
+            getItemFromRowIndex(this.state.rows, row)
           )
-          this.props.onSelectionChanged(newSelectedItem, {
+
+          //TBD: onSelectionChange will eventually handle array of items
+          this.props.onSelectionChanged(newSelectedItems.at(0) ?? null, {
             kind: 'filter',
             filterText: this.props.filterText || '',
           })
@@ -348,12 +364,20 @@ export class AugmentedSectionFilterList<
     if (this.list === null) {
       return
     }
+
+    const lastSelectedRow = this.state.selectedRows.at(-1)
+
+    // TBD: assumes at least one selected item... if this isn't the case.. maybe we should set selection to first item?
+    if (lastSelectedRow === undefined) {
+      return
+    }
+
     let next: RowIndexPath | null = null
 
     const rowCount = this.state.rows.map(r => r.length)
     if (
-      this.state.selectedRow.row === -1 ||
-      this.state.selectedRow.row === this.state.rows.length
+      lastSelectedRow.row === -1 ||
+      lastSelectedRow.row === this.state.rows.length
     ) {
       next = findNextSelectableRow(
         rowCount,
@@ -368,14 +392,14 @@ export class AugmentedSectionFilterList<
         rowCount,
         {
           direction: inDirection,
-          row: this.state.selectedRow,
+          row: lastSelectedRow,
         },
         this.canSelectRow
       )
     }
 
     if (next !== null) {
-      this.setState({ selectedRow: next }, () => {
+      this.setState({ selectedRows: [next] }, () => {
         if (focus && this.list !== null) {
           this.list.focus()
         }
@@ -387,6 +411,8 @@ export class AugmentedSectionFilterList<
     if (this.state.rows.length === 0 && this.props.renderNoItems) {
       return this.props.renderNoItems()
     } else {
+      const firstSelectedRow = this.state.selectedRows.at(-1)
+
       return (
         <SectionList
           id={this.props.id}
@@ -397,11 +423,13 @@ export class AugmentedSectionFilterList<
           getRowAriaLabel={this.getRowAriaLabel}
           rowHeight={this.props.rowHeight}
           selectedRows={
-            rowIndexPathEquals(this.state.selectedRow, InvalidRowIndexPath)
+            firstSelectedRow &&
+            rowIndexPathEquals(firstSelectedRow, InvalidRowIndexPath)
               ? []
-              : [this.state.selectedRow]
+              : this.state.selectedRows
           }
           onSelectedRowChanged={this.onSelectedRowChanged}
+          onSelectionChanged={this.onRowSelectionChanged}
           onRowClick={this.onRowClick}
           onRowDoubleClick={this.onRowDoubleClick}
           onRowKeyDown={this.onRowKeyDown}
@@ -416,6 +444,7 @@ export class AugmentedSectionFilterList<
           onScroll={this.props.onScroll}
           setScrollTop={this.props.setScrollTop}
           ariaLabel={this.props.ariaLabel}
+          selectionMode={this.props.selectionMode}
         />
       )
     }
@@ -487,13 +516,29 @@ export class AugmentedSectionFilterList<
     index: RowIndexPath,
     source: SelectionSource
   ) => {
-    this.setState({ selectedRow: index })
+    this.setState({ selectedRows: [index] })
 
     if (this.props.onSelectionChanged) {
       const row = this.state.rows[index.section][index.row]
       if (row.kind === 'item') {
         this.props.onSelectionChanged(row.item, source)
       }
+    }
+  }
+
+  private onRowSelectionChanged = (
+    rows: ReadonlyArray<RowIndexPath>,
+    source: SelectionSource
+  ) => {
+    this.setState({ selectedRows: rows })
+
+    if (this.props.onSelectionChanged) {
+      const items = rows
+        .map(index => this.state.rows[index.section][index.row])
+        .filter(item => item.kind === 'item')
+      console.log(items)
+      // TBD: onSelectionChange to change to pass array of items
+      // this.props.onSelectionChanged(items, source)
     }
   }
 
@@ -667,7 +712,7 @@ export class AugmentedSectionFilterList<
           this.canSelectRow
         )
         if (selectedRow != null) {
-          this.setState({ selectedRow }, () => {
+          this.setState({ selectedRows: [selectedRow] }, () => {
             list.focus()
           })
         }
@@ -688,7 +733,7 @@ export class AugmentedSectionFilterList<
           this.canSelectRow
         )
         if (selectedRow != null) {
-          this.setState({ selectedRow }, () => {
+          this.setState({ selectedRows: [selectedRow] }, () => {
             list.focus()
           })
         }
@@ -801,7 +846,7 @@ function createStateUpdate<T extends IFilterListItem>(
 
   return {
     rows: rows,
-    selectedRow,
+    selectedRows: [selectedRow],
     filterValue: filter,
     filterValueChanged,
     groups: groupIndices,
