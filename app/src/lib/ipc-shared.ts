@@ -57,6 +57,7 @@ export type RequestChannels = {
   'app-menu': (menu: IMenu) => void
   'launch-timing-stats': (stats: ILaunchStats) => void
   'url-action': (action: URLActionType) => void
+  'cli-action': (action: CLIAction) => void
   'certificate-error': (
     certificate: Electron.Certificate,
     error: string,

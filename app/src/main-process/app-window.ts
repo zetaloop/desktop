@@ -28,6 +28,7 @@ import {
 } from './notifications'
 import { addTrustedIPCSender } from './trusted-ipc-sender'
 import { getUpdaterGUID } from '../lib/get-updater-guid'
+import { CLIAction } from '../lib/cli-action'
 
 export class AppWindow {
   private window: Electron.BrowserWindow
@@ -310,6 +311,13 @@ export class AppWindow {
     this.show()
 
     ipcWebContents.send(this.window.webContents, 'url-action', action)
+  }
+
+  /** Send the URL action to the renderer. */
+  public sendCLIAction(action: CLIAction) {
+    this.show()
+
+    ipcWebContents.send(this.window.webContents, 'cli-action', action)
   }
 
   /** Send the app launch timing stats to the renderer. */

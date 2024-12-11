@@ -50,6 +50,8 @@ import {
   showNotification,
 } from 'desktop-notifications'
 import { initializeDesktopNotifications } from './notifications'
+import parseCommandLineArgs from 'minimist'
+import { CLIAction } from '../lib/cli-action'
 
 app.setAppLogsPath()
 enableSourceMaps()
@@ -139,20 +141,18 @@ process.on('uncaughtException', (error: Error) => {
 let handlingSquirrelEvent = false
 if (__WIN32__ && process.argv.length > 1) {
   const arg = process.argv[1]
-
   const promise = handleSquirrelEvent(arg)
+
   if (promise) {
     handlingSquirrelEvent = true
     promise
-      .catch(e => {
-        log.error(`Failed handling Squirrel event: ${arg}`, e)
-      })
-      .then(() => {
-        app.quit()
-      })
-  } else {
-    handlePossibleProtocolLauncherArgs(process.argv)
+      .catch(e => log.error(`Failed handling Squirrel event: ${arg}`, e))
+      .then(() => app.quit())
   }
+}
+
+if (!handlingSquirrelEvent) {
+  handleCommandLineArguments(process.argv)
 }
 
 initializeDesktopNotifications()
@@ -190,7 +190,7 @@ if (!handlingSquirrelEvent) {
       mainWindow.focus()
     }
 
-    handlePossibleProtocolLauncherArgs(args)
+    handleCommandLineArguments(args)
   })
 
   if (isDuplicateInstance) {
@@ -233,6 +233,37 @@ if (__DARWIN__) {
         `x-github-client://openLocalRepo/${encodeURIComponent(path)}`
       )
     })
+  })
+}
+
+async function handleCommandLineArguments(argv: string[]) {
+  const args = parseCommandLineArgs(argv)
+
+  if (__WIN32__ && typeof args['protocol-launcher'] === 'string') {
+    handleAppURL(args['protocol-launcher'])
+    return
+  }
+
+  if (typeof args['cli-open'] === 'string') {
+    handleCLIAction({ kind: 'open-repository', path: args['cli-open'] })
+  } else if (typeof args['cli-clone'] === 'string') {
+    handleCLIAction({
+      kind: 'clone-url',
+      url: args['cli-clone'],
+      branch:
+        typeof args['cli-branch'] === 'string' ? args['cli-branch'] : undefined,
+    })
+  }
+
+  return
+}
+
+function handleCLIAction(action: CLIAction) {
+  onDidLoad(window => {
+    // This manual focus call _shouldn't_ be necessary, but is for Chrome on
+    // macOS. See https://github.com/desktop/desktop/issues/973.
+    window.focus()
+    window.sendCLIAction(action)
   })
 }
 

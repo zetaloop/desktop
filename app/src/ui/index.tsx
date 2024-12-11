@@ -352,6 +352,10 @@ ipcRenderer.on('url-action', (_, action) =>
   dispatcher.dispatchURLAction(action)
 )
 
+ipcRenderer.on('cli-action', (_, action) => {
+  dispatcher.dispatchCLIAction(action)
+})
+
 // react-virtualized will use the literal string "grid" as the 'aria-label'
 // attribute unless we override it. This is a problem because aria-label should
 // not be set unless there's a compelling reason for it[1].
