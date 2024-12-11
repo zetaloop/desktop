@@ -1,32 +1,30 @@
 import { join, resolve } from 'path'
 import parse from 'minimist'
-import { spawn } from 'child_process'
+import { execFile } from 'child_process'
 
-const _spawn = (cliArgs: string[]) => {
-  let execPath
-  let args = cliArgs
+const getExecParams = (args: string[]) => {
   if (process.platform === 'darwin') {
-    execPath = 'open'
-    const desktopPath = join(__dirname, '../../../').replace(/\/$/, '')
-    args = ['-n', desktopPath, '--args', ...cliArgs]
+    return {
+      command: 'open',
+      args: ['-n', join(__dirname, '../../..'), '--args', ...args],
+    }
   } else if (process.platform === 'win32') {
-    execPath = join(__dirname, '../../../GitHubDesktop.exe')
-  } else {
-    throw new Error('Unsupported platform')
+    const exeName = `GitHubDesktop${__DEV__ ? '-dev' : ''}.exe`
+    return { command: join(__dirname, `../../${exeName}`), args }
   }
-
-  return spawn(execPath, args, { stdio: 'inherit' })
+  throw new Error('Unsupported platform')
 }
 
-const run = (...args: Array<string | false | undefined>) =>
-  _spawn(args.filter(x => typeof x === 'string'))
-    .on('error', e => {
-      console.error('Error running command', e)
-      process.exitCode = 1
-    })
-    .on('exit', code => {
-      process.exitCode = typeof code === 'number' ? code : process.exitCode
-    })
+const run = (...args: Array<string | false | undefined>) => {
+  const p = getExecParams(args.filter(x => typeof x === 'string'))
+  return execFile(p.command, p.args, (error, stderr) => {
+    if (error) {
+      console.error(`Error running command ${p.command} ${p.args}`)
+      console.error(stderr)
+      process.exit(typeof error.code === 'number' ? error.code : 1)
+    }
+  })
+}
 
 const args = parse(process.argv.slice(2), {
   alias: { help: 'h', branch: 'b' },
