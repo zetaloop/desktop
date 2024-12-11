@@ -51,7 +51,6 @@ import {
 import { initializeDesktopNotifications } from './notifications'
 import parseCommandLineArgs from 'minimist'
 import { CLIAction } from '../lib/cli-action'
-import { tryParseUrl } from '../lib/try-parse-url'
 
 app.setAppLogsPath()
 enableSourceMaps()
