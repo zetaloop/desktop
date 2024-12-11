@@ -4,7 +4,7 @@
       "[Added] Add a banner for communicating when prioritized updates exist - #19655",
       "[Added] Add \"View Pull Request on GitHub\" Option to the Checked-Out Branch Button and Pull Requests List - #19453. Thanks @DylanDevelops!",
       "[Fixed] Accurately calculate number of conflicted files in a merge - #8049",
-      "[Fixed] Inform user when a staged renamed file renamed has changes - #17467. Thanks @ssigwart!",
+      "[Fixed] Inform user when a staged renamed file has changes - #17467. Thanks @ssigwart!",
       "[Fixed] The visual label for the remote url in the repository settings is announced by screen readers - #19647",
       "[Fixed] Remove duplicate avatar users - #19597",
       "[Fixed] Fix for indents of clear button in text box - #19613. Thanks @artbutko!",
