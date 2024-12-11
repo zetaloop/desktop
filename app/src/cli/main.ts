@@ -29,7 +29,6 @@ const run = (...args: Array<string | false | undefined>) => {
 const args = parse(process.argv.slice(2), {
   alias: { help: 'h', branch: 'b' },
   boolean: ['help'],
-  string: ['branch'],
 })
 
 const usage = (exitCode = 1): never => {
