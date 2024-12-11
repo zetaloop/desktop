@@ -1125,7 +1125,7 @@ export class FilterChangesList extends React.Component<
               focusedRow: this.state.focusedRow,
             }}
             onItemContextMenu={this.onItemContextMenu}
-            // ariaLabel={filesDescription}
+            ariaLabel={filesDescription}
           />
         </div>
         {this.renderStashedChanges()}

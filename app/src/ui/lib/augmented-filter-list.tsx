@@ -192,6 +192,9 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
    * where to scroll do on rendering of the list.
    */
   readonly setScrollTop?: number
+
+  /** The aria-label attribute for the list component. */
+  readonly ariaLabel?: string
 }
 
 interface IAugmentedSectionFilterListState<T extends IFilterListItem> {
@@ -412,6 +415,7 @@ export class AugmentedSectionFilterList<
           }}
           onScroll={this.props.onScroll}
           setScrollTop={this.props.setScrollTop}
+          ariaLabel={this.props.ariaLabel}
         />
       )
     }
