@@ -5,7 +5,7 @@ import { spawn } from 'child_process'
 const _spawn = (args: string[]) => {
   if (process.platform === 'darwin') {
     const execPath = join(__dirname, '../../../').replace(/\/$/, '')
-    return spawn('open', [execPath, '--args', ...args], {
+    return spawn('open', ['-n', execPath, '--args', ...args], {
       stdio: ['ignore', 'inherit', 'inherit'],
     })
   } else if (process.platform === 'win32') {
