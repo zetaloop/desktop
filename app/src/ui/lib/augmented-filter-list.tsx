@@ -59,7 +59,7 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
   readonly groups: ReadonlyArray<IFilterListGroup<T>>
 
   /** The selected item. */
-  readonly selectedItem: T | null
+  readonly selectedItems: ReadonlyArray<T>
 
   /** Called to render each visible item. */
   readonly renderItem: (item: T, matches: IMatches) => JSX.Element | null
@@ -98,7 +98,7 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
    *                       (arrow up/down)
    */
   readonly onSelectionChanged?: (
-    selectedItem: T | null,
+    selectedItems: ReadonlyArray<T>,
     source: SelectionSource
   ) => void
 
@@ -201,11 +201,11 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
    * This prop defines the behaviour of the selection of items within this list.
    *  - 'single' : (default) single list-item selection. [shift] and [ctrl] have
    * no effect. Use in combination with one of:
-   *             onSelectedRowChanged(row: number)
-   *             onSelectionChanged(rows: number[])
+   *             onSelectedRowChanged(row: T)
+   *             onSelectionChanged(rows: T[])
    *  - 'multi' : allows range and/or arbitrary selection. [shift] and [ctrl]
    * can be used. Use in combination with:
-   *    onSelectionChanged(rows: number[])
+   *    onSelectionChanged(rows: T[])
    *
    * Note... the SectionList also has 'range' and this has not been implemented
    * in this filter list (not needed yet)
@@ -261,18 +261,14 @@ export class AugmentedSectionFilterList<
       )
 
       if (xor(oldSelectedItemIds, newSelectedItemIds).length > 0) {
-        const propSelectionId = this.props.selectedItem
-          ? this.props.selectedItem.id
-          : null
+        const propSelectionIds = this.props.selectedItems.map(si => si.id)
 
-        // TBD: selectItem will eventually be selectedItems.
-        if (!newSelectedItemIds.includes(propSelectionId)) {
-          const newSelectedItems = this.state.selectedRows.map(row =>
-            getItemFromRowIndex(this.state.rows, row)
-          )
+        if (xor(newSelectedItemIds, propSelectionIds).length > 0) {
+          const newSelectedItems = this.state.selectedRows
+            .map(row => getItemFromRowIndex(this.state.rows, row))
+            .filter(r => r !== null)
 
-          //TBD: onSelectionChange will eventually handle array of items
-          this.props.onSelectionChanged(newSelectedItems.at(0) ?? null, {
+          this.props.onSelectionChanged(newSelectedItems, {
             kind: 'filter',
             filterText: this.props.filterText || '',
           })
@@ -367,7 +363,6 @@ export class AugmentedSectionFilterList<
 
     const lastSelectedRow = this.state.selectedRows.at(-1)
 
-    // TBD: assumes at least one selected item... if this isn't the case.. maybe we should set selection to first item?
     if (lastSelectedRow === undefined) {
       return
     }
@@ -428,7 +423,6 @@ export class AugmentedSectionFilterList<
               ? []
               : this.state.selectedRows
           }
-          onSelectedRowChanged={this.onSelectedRowChanged}
           onSelectionChanged={this.onRowSelectionChanged}
           onRowClick={this.onRowClick}
           onRowDoubleClick={this.onRowDoubleClick}
@@ -512,20 +506,6 @@ export class AugmentedSectionFilterList<
     }
   }
 
-  private onSelectedRowChanged = (
-    index: RowIndexPath,
-    source: SelectionSource
-  ) => {
-    this.setState({ selectedRows: [index] })
-
-    if (this.props.onSelectionChanged) {
-      const row = this.state.rows[index.section][index.row]
-      if (row.kind === 'item') {
-        this.props.onSelectionChanged(row.item, source)
-      }
-    }
-  }
-
   private onRowSelectionChanged = (
     rows: ReadonlyArray<RowIndexPath>,
     source: SelectionSource
@@ -535,10 +515,9 @@ export class AugmentedSectionFilterList<
     if (this.props.onSelectionChanged) {
       const items = rows
         .map(index => this.state.rows[index.section][index.row])
-        .filter(item => item.kind === 'item')
-      console.log(items)
-      // TBD: onSelectionChange to change to pass array of items
-      // this.props.onSelectionChanged(items, source)
+        .filter(r => r.kind === 'item')
+        .map(r => r.item)
+      this.props.onSelectionChanged(items, source)
     }
   }
 
@@ -793,9 +772,9 @@ function createStateUpdate<T extends IFilterListItem>(
 ) {
   const rows = new Array<Array<IFilterListRow<T>>>()
   const filter = (props.filterText || '').toLowerCase()
-  let selectedRow = InvalidRowIndexPath
+  const selectedRows = []
   let section = 0
-  const selectedItem = props.selectedItem
+  const selectedItems = props.selectedItems
   const groupIndices = []
 
   for (const [idx, group] of props.groups.entries()) {
@@ -819,11 +798,11 @@ function createStateUpdate<T extends IFilterListItem>(
     }
 
     for (const { item, matches } of items) {
-      if (selectedItem && item.id === selectedItem.id) {
-        selectedRow = {
+      if (selectedItems.some(si => item.id === si.id)) {
+        selectedRows.push({
           section,
           row: groupRows.length,
-        }
+        })
       }
 
       groupRows.push({ kind: 'item', item, matches })
@@ -833,10 +812,10 @@ function createStateUpdate<T extends IFilterListItem>(
     section++
   }
 
-  if (selectedRow.row < 0 && filter.length) {
+  if (selectedRows.length === 0 && filter.length) {
     // If the selected item isn't in the list (e.g., filtered out), then
     // select the first visible item.
-    selectedRow = getFirstVisibleRow(rows)
+    selectedRows.push(getFirstVisibleRow(rows))
   }
 
   // Stay true if already set, otherwise become true if the filter has content
@@ -846,7 +825,7 @@ function createStateUpdate<T extends IFilterListItem>(
 
   return {
     rows: rows,
-    selectedRows: [selectedRow],
+    selectedRows,
     filterValue: filter,
     filterValueChanged,
     groups: groupIndices,

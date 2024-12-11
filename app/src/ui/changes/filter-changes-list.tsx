@@ -236,46 +236,34 @@ interface IFilterChangesListProps {
 
 interface IFilterChangesListState {
   readonly filterText: string
-  readonly selectedRows: ReadonlyArray<number>
-  readonly selectedItem: IChangesListItem | null
+  readonly selectedItems: ReadonlyArray<IChangesListItem>
   readonly focusedRow: string | null
   readonly groups: ReadonlyArray<IFilterListGroup<IChangesListItem>>
 }
 
-function getSelectedRowsFromProps(
+function getSelectedItemsFromProps(
   props: IFilterChangesListProps
-): ReadonlyArray<number> {
-  const selectedFileIDs = props.selectedFileIDs
-  const selectedRows = []
-
-  for (const id of selectedFileIDs) {
-    const ix = props.workingDirectory.findFileIndexByID(id)
-    if (ix !== -1) {
-      selectedRows.push(ix)
-    }
-  }
-
-  return selectedRows
-}
-
-function getSelectedItemFromProps(
-  props: IFilterChangesListProps
-): IChangesListItem | null {
+): ReadonlyArray<IChangesListItem> {
   if (props.selectedFileIDs.length === 0) {
-    return null
+    return []
   }
 
-  const file = props.workingDirectory.findFileWithID(props.selectedFileIDs[0])
+  const selectedItems = []
+  for (let i = 0; i < props.selectedFileIDs.length; i++) {
+    const fid = props.selectedFileIDs[i]
+    const file = props.workingDirectory.findFileWithID(fid)
+    if (file === null) {
+      continue
+    }
 
-  if (!file) {
-    return null
+    selectedItems.push({
+      text: [file.path, file.status.kind.toString()],
+      id: file.id,
+      change: file,
+    })
   }
 
-  return {
-    text: [file.path, file.status.kind.toString()],
-    id: file.id,
-    change: file,
-  }
+  return selectedItems
 }
 
 export class FilterChangesList extends React.Component<
@@ -292,15 +280,10 @@ export class FilterChangesList extends React.Component<
 
     this.state = {
       filterText: '',
-      selectedRows: getSelectedRowsFromProps(props),
-      // TBD: should be selectedItem(s) but section list doesn't support that yet.
-      selectedItem: getSelectedItemFromProps(props),
+      selectedItems: getSelectedItemsFromProps(props),
       focusedRow: null,
       groups,
     }
-
-    // TBD: remove with selected rows figured out
-    console.log(this.state.selectedRows)
   }
 
   public componentWillReceiveProps(nextProps: IFilterChangesListProps) {
@@ -314,8 +297,7 @@ export class FilterChangesList extends React.Component<
       )
     ) {
       this.setState({
-        selectedRows: getSelectedRowsFromProps(nextProps),
-        selectedItem: getSelectedItemFromProps(nextProps),
+        selectedItems: getSelectedItemsFromProps(nextProps),
         groups: [this.createListItems(nextProps.workingDirectory.files)],
       })
     }
@@ -1044,14 +1026,10 @@ export class FilterChangesList extends React.Component<
     this.setState({ filterText: text })
   }
 
-  private onFileSelectionChanged = (item: IChangesListItem | null) => {
-    const rows = item
-      ? [
-          this.props.workingDirectory.files.findIndex(
-            f => f.id === item.change.id
-          ),
-        ]
-      : []
+  private onFileSelectionChanged = (items: ReadonlyArray<IChangesListItem>) => {
+    const rows = items.map(i =>
+      this.props.workingDirectory.files.findIndex(f => f.id === i.change.id)
+    )
     this.props.onFileSelectionChanged(rows)
   }
 
@@ -1107,7 +1085,7 @@ export class FilterChangesList extends React.Component<
             rowHeight={RowHeight}
             filterText={this.state.filterText}
             onFilterTextChanged={this.onFilterTextChanged}
-            selectedItem={this.state.selectedItem}
+            selectedItems={this.state.selectedItems}
             selectionMode="multi"
             renderItem={this.renderChangedFile}
             onItemClick={this.onChangedFileClick}
