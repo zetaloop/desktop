@@ -2,17 +2,20 @@ import { join, resolve } from 'path'
 import parse from 'minimist'
 import { spawn } from 'child_process'
 
-const _spawn = (args: string[]) => {
+const _spawn = (cliArgs: string[]) => {
+  let execPath
+  let args = cliArgs
   if (process.platform === 'darwin') {
-    const execPath = join(__dirname, '../../../').replace(/\/$/, '')
-    return spawn('open', ['-n', execPath, '--args', ...args], {
-      stdio: ['ignore', 'inherit', 'inherit'],
-    })
+    execPath = 'open'
+    const desktopPath = join(__dirname, '../../../').replace(/\/$/, '')
+    args = ['-n', desktopPath, '--args', ...cliArgs]
   } else if (process.platform === 'win32') {
-    throw new Error('TODO')
+    execPath = join(__dirname, '../../../GitHubDesktop.exe')
   } else {
     throw new Error('Unsupported platform')
   }
+
+  return spawn(execPath, args, { stdio: 'inherit' })
 }
 
 const run = (...args: Array<string | false | undefined>) =>
