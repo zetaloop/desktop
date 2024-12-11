@@ -244,12 +244,7 @@ async function handleCommandLineArguments(argv: string[]) {
   // line arguments might be added by Chromium
   // (https://electronjs.org/docs/api/app#event-second-instance).
   if (__WIN32__ && typeof args['protocol-launcher'] === 'string') {
-    const url = tryParseUrl(args['protocol-launcher'])
-    if (url) {
-      handleAppURL(url.href)
-    } else {
-      log.error(`Malformed protocol launcher URL: ${args['protocol-launcher']}`)
-    }
+    handleAppURL(args['protocol-launcher'])
     return
   }
 
