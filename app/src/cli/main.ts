@@ -1,29 +1,24 @@
 import { join, resolve } from 'path'
 import parse from 'minimist'
-import { execFile } from 'child_process'
+import { execFile, ExecFileException } from 'child_process'
 
-const getExecParams = (args: string[]) => {
-  if (process.platform === 'darwin') {
-    return {
-      command: 'open',
-      args: ['-n', join(__dirname, '../../..'), '--args', ...args],
+const run = (...args: Array<string>) => {
+  function cb(e: ExecFileException | null, stderr: string) {
+    if (e) {
+      console.error(`Error running command ${args}`)
+      console.error(stderr)
+      process.exit(e.code)
     }
+  }
+
+  if (process.platform === 'darwin') {
+    execFile('open', ['-n', join(__dirname, '../../..'), '--args', ...args], cb)
   } else if (process.platform === 'win32') {
     const exeName = `GitHubDesktop${__DEV__ ? '-dev' : ''}.exe`
-    return { command: join(__dirname, `../../${exeName}`), args }
+    execFile(join(__dirname, `../../${exeName}`), args, cb)
+  } else {
+    throw new Error('Unsupported platform')
   }
-  throw new Error('Unsupported platform')
-}
-
-const run = (...args: Array<string | false | undefined>) => {
-  const p = getExecParams(args.filter(x => typeof x === 'string'))
-  return execFile(p.command, p.args, (error, stderr) => {
-    if (error) {
-      console.error(`Error running command ${p.command} ${p.args}`)
-      console.error(stderr)
-      process.exit(typeof error.code === 'number' ? error.code : 1)
-    }
-  })
 }
 
 const args = parse(process.argv.slice(2), {
@@ -57,8 +52,10 @@ if (args.help || args._.at(0) === 'help') {
 
   if (!url) {
     usage(1)
+  } else if (typeof args.branch === 'string') {
+    run(`--cli-clone=${url}`, `--cli-branch=${args.branch}`)
   } else {
-    run(`--cli-clone=${url}`, args.branch && `--cli-branch=${args.branch}`)
+    run(`--cli-clone=${url}`)
   }
 } else {
   const [firstArg, secondArg] = args._
