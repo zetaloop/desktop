@@ -3,12 +3,12 @@ import parse from 'minimist'
 import { spawn } from 'child_process'
 
 const _spawn = (args: string[]) => {
-  if (__DARWIN__) {
+  if (process.platform === 'darwin') {
     const execPath = join(__dirname, '../../../').replace(/\/$/, '')
     return spawn('open', [execPath, '--args', ...args], {
       stdio: ['ignore', 'inherit', 'inherit'],
     })
-  } else if (__WIN32__) {
+  } else if (process.platform === 'win32') {
     throw new Error('TODO')
   } else {
     throw new Error('Unsupported platform')
