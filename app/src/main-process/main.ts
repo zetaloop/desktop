@@ -10,7 +10,6 @@ import {
   nativeTheme,
 } from 'electron'
 import * as Fs from 'fs'
-import * as URL from 'url'
 
 import { AppWindow } from './app-window'
 import { buildDefaultMenu, getAllMenuItems } from './menu'
@@ -52,6 +51,7 @@ import {
 import { initializeDesktopNotifications } from './notifications'
 import parseCommandLineArgs from 'minimist'
 import { CLIAction } from '../lib/cli-action'
+import { tryParseUrl } from '../lib/try-parse-url'
 
 app.setAppLogsPath()
 enableSourceMaps()
@@ -229,9 +229,9 @@ if (__DARWIN__) {
         return
       }
 
-      handleAppURL(
-        `x-github-client://openLocalRepo/${encodeURIComponent(path)}`
-      )
+      // Yeah this isn't technically a CLI action we use it here to indicate
+      // that it's more trusted than a URL action.
+      handleCLIAction({ kind: 'open-repository', path })
     })
   })
 }
@@ -239,8 +239,17 @@ if (__DARWIN__) {
 async function handleCommandLineArguments(argv: string[]) {
   const args = parseCommandLineArgs(argv)
 
+  // Desktop registers it's protocol handler callback on Windows as
+  // `[executable path] --protocol-launcher "%1"`. Note that extra command
+  // line arguments might be added by Chromium
+  // (https://electronjs.org/docs/api/app#event-second-instance).
   if (__WIN32__ && typeof args['protocol-launcher'] === 'string') {
-    handleAppURL(args['protocol-launcher'])
+    const url = tryParseUrl(args['protocol-launcher'])
+    if (url) {
+      handleAppURL(url.href)
+    } else {
+      log.error(`Malformed protocol launcher URL: ${args['protocol-launcher']}`)
+    }
     return
   }
 
@@ -265,48 +274,6 @@ function handleCLIAction(action: CLIAction) {
     window.focus()
     window.sendCLIAction(action)
   })
-}
-
-/**
- * Attempt to detect and handle any protocol handler arguments passed
- * either via the command line directly to the current process or through
- * IPC from a duplicate instance (see makeSingleInstance)
- *
- * @param args Essentially process.argv, i.e. the first element is the exec
- *             path
- */
-function handlePossibleProtocolLauncherArgs(args: ReadonlyArray<string>) {
-  log.info(`Received possible protocol arguments: ${args.length}`)
-
-  if (__WIN32__) {
-    // Desktop registers it's protocol handler callback on Windows as
-    // `[executable path] --protocol-launcher "%1"`. Note that extra command
-    // line arguments might be added by Chromium
-    // (https://electronjs.org/docs/api/app#event-second-instance).
-    // At launch Desktop checks for that exact scenario here before doing any
-    // processing. If there's more than one matching url argument because of a
-    // malformed or untrusted url then we bail out.
-
-    const matchingUrls = args.filter(arg => {
-      // sometimes `URL.parse` throws an error
-      try {
-        const url = URL.parse(arg)
-        // i think this `slice` is just removing a trailing `:`
-        return url.protocol && possibleProtocols.has(url.protocol.slice(0, -1))
-      } catch (e) {
-        log.error(`Unable to parse argument as URL: ${arg}`)
-        return false
-      }
-    })
-
-    if (args.includes(protocolLauncherArg) && matchingUrls.length === 1) {
-      handleAppURL(matchingUrls[0])
-    } else {
-      log.error(`Malformed launch arguments received: ${args}`)
-    }
-  } else if (args.length > 1) {
-    handleAppURL(args[1])
-  }
 }
 
 /**

@@ -16,6 +16,7 @@ import { ThemeSource } from '../ui/lib/theme-source'
 import { DesktopNotificationPermission } from 'desktop-notifications/dist/notification-permission'
 import { NotificationCallback } from 'desktop-notifications/dist/notification-callback'
 import { DesktopAliveEvent } from './stores/alive-store'
+import { CLIAction } from './cli-action'
 
 /**
  * Defines the simplex IPC channel names we use from the renderer

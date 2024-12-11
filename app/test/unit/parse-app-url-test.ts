@@ -1,7 +1,6 @@
 import {
   parseAppURL,
   IOpenRepositoryFromURLAction,
-  IOpenRepositoryFromPathAction,
   IOAuthAction,
 } from '../../src/lib/parse-app-url'
 
@@ -153,29 +152,6 @@ describe('parseAppURL', () => {
       expect(openRepo.url).toBe('git@github.com/octokit/octokit.net')
       expect(openRepo.branch).toBe('master')
       expect(openRepo.filepath).toBe('Octokit.Reactive/Octokit.Reactive.csproj')
-    })
-  })
-
-  describe('openLocalRepo', () => {
-    it('parses local paths', () => {
-      const path = __WIN32__
-        ? 'C:\\Users\\johnsmith\\repo'
-        : '/Users/johnsmith/repo'
-      const result = parseAppURL(
-        `x-github-client://openLocalRepo/${encodeURIComponent(path)}`
-      )
-      expect(result.name).toBe('open-repository-from-path')
-
-      const openRepo = result as IOpenRepositoryFromPathAction
-      expect(openRepo.path).toBe(path)
-    })
-
-    it('deals with not having a local path', () => {
-      let result = parseAppURL(`x-github-client://openLocalRepo/`)
-      expect(result.name).toBe('unknown')
-
-      result = parseAppURL(`x-github-client://openLocalRepo`)
-      expect(result.name).toBe('unknown')
     })
   })
 })
