@@ -351,7 +351,7 @@ ipcRenderer.on('blur', () => {
 ipcRenderer.on('url-action', (_, action) =>
   dispatcher
     .dispatchURLAction(action)
-    .catch(e => log.error(`CLI action ${action.name} failed`, e))
+    .catch(e => log.error(`URL action ${action.name} failed`, e))
 )
 
 ipcRenderer.on('cli-action', (_, action) =>
