@@ -288,7 +288,8 @@ export class About extends React.Component<IAboutProps, IAboutState> {
           <p className="no-padding">
             <span className="selectable-text">
               {versionText} ({this.props.applicationArchitecture})
-            </span>
+            </span>{' '}
+            ({releaseNotesLink})
           </p>
           <p className="no-padding terms-and-license">
             <LinkButton onClick={this.props.onShowTermsAndConditions}>
