@@ -273,7 +273,7 @@ export async function git(
             // The null coalescing here is a safety net in case dugite's
             // behavior changes from underneath us.
             err.cause ?? err
-          ).message
+          )
         }
 
         throw err
