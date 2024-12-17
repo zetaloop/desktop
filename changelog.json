@@ -1,5 +1,8 @@
 {
   "releases": {
+    "3.4.11": [
+      "[Fixed] Prevent crash due to excessively long Git output - #19724"
+    ],
     "3.4.10": [
       "[Added] Add a banner for communicating when prioritized updates exist - #19655",
       "[Added] Add \"View Pull Request on GitHub\" Option to the Checked-Out Branch Button and Pull Requests List - #19453. Thanks @DylanDevelops!",
