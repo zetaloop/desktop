@@ -1,5 +1,13 @@
 {
   "releases": {
+    "3.4.12-beta1": [
+      "[Fixed] Merge branch dialog updates whether a branch can be merged when changing selection - #19730",
+      "[Fixed] Close diff options on mouse down outside of popover - #19644",
+      "[Fixed] Cap output from git at string max length - #19724",
+      "[Improved] Add aria label and aria description to ignore files text area in repository settings - #19684",
+      "[Improved] The link target height of the \"Terms and Conditions\" and \"License and Open Source Notices\" in the about dialog are 24px - #19685",
+      "[Improved] The contrast of the pending checks header text and progress pie chart meets 3:1 contrast requirements - #19687"
+    ],
     "3.4.11": [
       "[Fixed] Prevent crash due to excessively long Git output - #19724"
     ],
