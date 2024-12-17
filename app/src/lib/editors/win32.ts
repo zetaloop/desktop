@@ -510,9 +510,6 @@ function getAppInfo(
 }
 
 async function findApplication(editor: WindowsExternalEditor) {
-  if (editor.name.includes('RustRover')) {
-    debugger
-  }
   for (const { key, subKey } of editor.registryKeys) {
     const keys = enumerateValues(key, subKey)
     if (keys.length === 0) {
