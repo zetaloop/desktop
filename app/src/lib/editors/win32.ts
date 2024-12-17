@@ -62,16 +62,6 @@ type WindowsExternalEditor = {
 
   /** Value of the Publisher registry key that belongs to this editor. */
   readonly publishers: string[]
-
-  /**
-   * Default shell script name for JetBrains Product
-   * To get the script name go to:
-   * JetBrains Toolbox > Editor settings > Shell script name
-   *
-   * Go to `/docs/techical/editor-integration.md` for more information on
-   * how to use this field.
-   */
-  readonly jetBrainsToolboxScriptName?: string
 } & WindowsExternalEditorPathInfo
 
 const registryKey = (key: HKEY, ...subKeys: string[]): RegistryKey => ({
