@@ -44,7 +44,6 @@ declare const __RELEASE_CHANNEL__:
   | 'test'
   | 'development'
 
-
 /** The URL for Squirrel's updates. */
 declare const __UPDATES_URL__: string
 
