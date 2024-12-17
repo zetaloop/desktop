@@ -167,27 +167,6 @@ const getCleanInstallLocationFromDisplayIcon = (
  **/
 const editors: WindowsExternalEditor[] = [
   {
-    name: 'Atom',
-    registryKeys: [CurrentUserUninstallKey('atom')],
-    executableShimPaths: [['bin', 'atom.cmd']],
-    displayNamePrefixes: ['Atom'],
-    publishers: ['GitHub Inc.'],
-  },
-  {
-    name: 'Atom Beta',
-    registryKeys: [CurrentUserUninstallKey('atom-beta')],
-    executableShimPaths: [['bin', 'atom-beta.cmd']],
-    displayNamePrefixes: ['Atom Beta'],
-    publishers: ['GitHub Inc.'],
-  },
-  {
-    name: 'Atom Nightly',
-    registryKeys: [CurrentUserUninstallKey('atom-nightly')],
-    executableShimPaths: [['bin', 'atom-nightly.cmd']],
-    displayNamePrefixes: ['Atom Nightly'],
-    publishers: ['GitHub Inc.'],
-  },
-  {
     name: 'Visual Studio Code',
     registryKeys: [
       // 64-bit version of VSCode (user) - provided by default in 64-bit Windows
