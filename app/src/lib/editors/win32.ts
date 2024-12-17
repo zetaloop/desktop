@@ -184,7 +184,7 @@ const editors: WindowsExternalEditor[] = [
       // ARM64 version of VSCode (system)
       LocalMachineUninstallKey('{A5270FC5-65AD-483E-AC30-2C276B63D0AC}_is1'),
     ],
-    executableShimPaths: [['bin', 'code.cmd']],
+    executableShimPaths: [['code.exe']],
     displayNamePrefixes: ['Microsoft Visual Studio Code'],
     publishers: ['Microsoft Corporation'],
   },
@@ -206,7 +206,7 @@ const editors: WindowsExternalEditor[] = [
       // ARM64 version of VSCode (system)
       LocalMachineUninstallKey('{0AEDB616-9614-463B-97D7-119DD86CCA64}_is1'),
     ],
-    executableShimPaths: [['bin', 'code-insiders.cmd']],
+    executableShimPaths: [['Code - Insiders.exe']],
     displayNamePrefixes: ['Microsoft Visual Studio Code Insiders'],
     publishers: ['Microsoft Corporation'],
   },
@@ -240,7 +240,7 @@ const editors: WindowsExternalEditor[] = [
       // ARM64 version of VSCodium (system) - old key
       LocalMachineUninstallKey('{D1ACE434-89C5-48D1-88D3-E2991DF85475}_is1'),
     ],
-    executableShimPaths: [['bin', 'codium.cmd']],
+    executableShimPaths: [['VSCodium.exe']],
     displayNamePrefixes: ['VSCodium'],
     publishers: ['VSCodium', 'Microsoft Corporation'],
   },
@@ -262,7 +262,7 @@ const editors: WindowsExternalEditor[] = [
       // ARM64 version of VSCodium - Insiders (system)
       LocalMachineUninstallKey('{44721278-64C6-4513-BC45-D48E07830599}_is1'),
     ],
-    executableShimPaths: [['bin', 'codium-insiders.cmd']],
+    executableShimPaths: [['VSCodium - Insiders.exe']],
     displayNamePrefixes: ['VSCodium Insiders', 'VSCodium (Insiders)'],
     publishers: ['VSCodium'],
   },
