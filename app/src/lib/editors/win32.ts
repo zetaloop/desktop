@@ -1,6 +1,7 @@
 import * as Path from 'path'
 
 import {
+  enumerateKeys,
   enumerateValues,
   HKEY,
   RegistryValue,
@@ -9,6 +10,7 @@ import {
 import { pathExists } from '../../ui/lib/path-exists'
 
 import { IFoundEditor } from './found-editor'
+import memoizeOne from 'memoize-one'
 
 interface IWindowsAppInformation {
   displayName: string
@@ -530,6 +532,9 @@ function getAppInfo(
 }
 
 async function findApplication(editor: WindowsExternalEditor) {
+  if (editor.name.includes('RustRover')) {
+    debugger
+  }
   for (const { key, subKey } of editor.registryKeys) {
     const keys = enumerateValues(key, subKey)
     if (keys.length === 0) {
@@ -561,41 +566,31 @@ async function findApplication(editor: WindowsExternalEditor) {
     }
   }
 
-  return findJetBrainsToolboxApplication(editor)
+  return undefined
 }
 
-/**
- * Find JetBrain products installed through JetBrains Toolbox
- */
-async function findJetBrainsToolboxApplication(editor: WindowsExternalEditor) {
-  if (!editor.jetBrainsToolboxScriptName) {
-    return null
-  }
+const getJetBrainsToolboxEditors = memoizeOne(async () => {
+  const re = /^JetBrains Toolbox \((.*)\)/
+  const editors = new Array<WindowsExternalEditor>()
 
-  const toolboxRegistryReference = [
-    CurrentUserUninstallKey('toolbox'),
-    Wow64LocalMachineUninstallKey('toolbox'),
-  ]
-
-  for (const { key, subKey } of toolboxRegistryReference) {
-    const keys = enumerateValues(key, subKey)
-    if (keys.length > 0) {
-      const editorPathInToolbox = Path.join(
-        getKeyOrEmpty(keys, 'UninstallString'),
-        '..',
-        '..',
-        'scripts',
-        `${editor.jetBrainsToolboxScriptName}.cmd`
-      )
-      const exists = await pathExists(editorPathInToolbox)
-      if (exists) {
-        return editorPathInToolbox
-      }
+  for (const key of enumerateKeys(HKEY.HKEY_CURRENT_USER, uninstallSubKey)) {
+    const m = re.exec(key)
+    if (m) {
+      const [name, product] = m
+      editors.push({
+        name,
+        installLocationRegistryKey: 'DisplayIcon',
+        registryKeys: [
+          { key: HKEY.HKEY_CURRENT_USER, subKey: `${uninstallSubKey}\\${key}` },
+        ],
+        displayNamePrefixes: [product],
+        publishers: ['JetBrains s.r.o.'],
+      })
     }
   }
 
-  return null
-}
+  return editors
+})
 
 /**
  * Lookup known external editors using the Windows registry to find installed
@@ -605,16 +600,19 @@ export async function getAvailableEditors(): Promise<
   ReadonlyArray<IFoundEditor<string>>
 > {
   const results: Array<IFoundEditor<string>> = []
+  const candidates = [
+    ...editors,
+    ...(await getJetBrainsToolboxEditors().catch(e => {
+      log.error(`Failed resolving JetBrains Toolbox products`, e)
+      return []
+    })),
+  ]
 
-  for (const editor of editors) {
+  for (const editor of candidates) {
     const path = await findApplication(editor)
 
     if (path) {
-      results.push({
-        editor: editor.name,
-        path,
-        usesShell: path.endsWith('.cmd'),
-      })
+      results.push({ editor: editor.name, path })
     }
   }
 
