@@ -1,5 +1,8 @@
 {
   "releases": {
+    "3.4.12": [
+      "[Fixed] Merge branch dialog updates whether a branch can be merged when changing selection - #19730"
+    ],
     "3.4.11": [
       "[Fixed] Prevent crash due to excessively long Git output - #19724"
     ],
