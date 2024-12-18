@@ -51,7 +51,7 @@ import { hasWritePermission } from '../../models/github-repository'
 import { hasConflictedFiles } from '../../lib/status'
 import { createObservableRef } from '../lib/observable-ref'
 import { TooltipDirection } from '../lib/tooltip'
-import { Popup } from '../../models/popup'
+import { Popup, PopupType } from '../../models/popup'
 import { EOL } from 'os'
 import { TooltippedContent } from '../lib/tooltipped-content'
 import { RepoRulesInfo } from '../../models/repo-rules'
@@ -1048,8 +1048,12 @@ export class FilterChangesList extends React.Component<
     this.props.onFileSelectionChanged(rows)
   }
 
-  private onFilesToCommitNotVisible = () => {
-    console.log('Really?"')
+  private onFilesToCommitNotVisible = (onCommitAnyway: () => void) => {
+    this.props.dispatcher.showPopup({
+      type: PopupType.ConfirmCommitFilteredChanges,
+      onCommitAnyway,
+      onClearFilter: () => this.setState({ filterText: '' }),
+    })
   }
 
   public render() {
