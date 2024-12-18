@@ -542,7 +542,7 @@ export class PushPullButton extends React.Component<
       <ToolbarButton
         {...this.defaultButtonProps()}
         title="Publish branch"
-        description="Cannot publish unborn HEAD"
+        description="Cannot publish: no commits"
         icon={octicons.upload}
         disabled={true}
       />
