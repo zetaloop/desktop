@@ -25,7 +25,9 @@ export class ConfirmCommitFilteredChanges extends React.Component<
       <Dialog
         id="hidden-changes"
         type="warning"
-        title={__DARWIN__ ? 'Commit Hidden Changes?' : 'Commit hidden changes?'}
+        title={
+          __DARWIN__ ? 'Commit Filtered Changes?' : 'Commit filtered changes?'
+        }
         onSubmit={this.onSubmit}
         onDismissed={this.props.onDismissed}
         role="alertdialog"
