@@ -842,6 +842,7 @@ export class FilterChangesList extends React.Component<
     const anyFilesSelected =
       fileCount > 0 && includeAllValue !== CheckboxValue.Off
 
+    // Files selected to commit (to be committed) (not selected to see in diff)
     const filesSelected = workingDirectory.files.filter(
       f => f.selection.getSelectionType() !== DiffSelectionType.None
     )
@@ -859,6 +860,10 @@ export class FilterChangesList extends React.Component<
       this.props.repository.gitHubRepository === null ||
       hasWritePermission(this.props.repository.gitHubRepository)
 
+    const allFilesToCommitNotVisible = filesSelected.some(
+      file => !this.state.filteredItems.find(fi => fi.id === file.id)
+    )
+
     return (
       <CommitMessage
         onCreateCommit={this.props.onCreateCommit}
@@ -868,6 +873,7 @@ export class FilterChangesList extends React.Component<
         isShowingModal={this.props.isShowingModal}
         isShowingFoldout={this.props.isShowingFoldout}
         anyFilesSelected={anyFilesSelected}
+        allFilesToCommitNotVisible={allFilesToCommitNotVisible}
         anyFilesAvailable={fileCount > 0}
         repository={repository}
         repositoryAccount={repositoryAccount}
@@ -904,6 +910,7 @@ export class FilterChangesList extends React.Component<
         onCommitSpellcheckEnabledChanged={this.onCommitSpellcheckEnabledChanged}
         onStopAmending={this.onStopAmending}
         onShowCreateForkDialog={this.onShowCreateForkDialog}
+        onFilesToCommitNotVisible={this.onFilesToCommitNotVisible}
         accounts={this.props.accounts}
       />
     )
@@ -1032,8 +1039,6 @@ export class FilterChangesList extends React.Component<
     filteredItems: ReadonlyArray<IChangesListItem>
   ) => {
     this.setState({ filteredItems })
-    // TBD: Remove when used.
-    console.log(this.state.filteredItems, filteredItems)
   }
 
   private onFileSelectionChanged = (items: ReadonlyArray<IChangesListItem>) => {
@@ -1041,6 +1046,10 @@ export class FilterChangesList extends React.Component<
       this.props.workingDirectory.files.findIndex(f => f.id === i.change.id)
     )
     this.props.onFileSelectionChanged(rows)
+  }
+
+  private onFilesToCommitNotVisible = () => {
+    console.log('Really?"')
   }
 
   public render() {

@@ -74,6 +74,9 @@ interface ICommitMessageProps {
   readonly branch: string | null
   readonly commitAuthor: CommitIdentity | null
   readonly anyFilesSelected: boolean
+  /** Whether the user can see all the files to commit in the changes list. They
+   * may not be able to if the list is filtered */
+  readonly allFilesToCommitNotVisible?: boolean
   readonly isShowingModal: boolean
   readonly isShowingFoldout: boolean
 
@@ -161,7 +164,7 @@ interface ICommitMessageProps {
   readonly onCommitSpellcheckEnabledChanged: (enabled: boolean) => void
   readonly onStopAmending: () => void
   readonly onShowCreateForkDialog: () => void
-
+  readonly onFilesToCommitNotVisible?: () => void
   readonly accounts: ReadonlyArray<Account>
 }
 
@@ -479,6 +482,13 @@ export class CommitMessage extends React.Component<
   }
 
   private onSubmit = () => {
+    if (
+      this.props.allFilesToCommitNotVisible === true &&
+      this.props.onFilesToCommitNotVisible
+    ) {
+      this.props.onFilesToCommitNotVisible()
+      return
+    }
     this.createCommit()
   }
 
