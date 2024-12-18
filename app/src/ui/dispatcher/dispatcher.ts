@@ -2421,6 +2421,10 @@ export class Dispatcher {
     return this.appStore._setConfirmUndoCommitSetting(value)
   }
 
+  public setConfirmCommitFilteredChanges(value: boolean) {
+    return this.appStore._setConfirmCommitFilteredChanges(value)
+  }
+
   /**
    * Converts a local repository to use the given fork
    * as its default remote and associated `GitHubRepository`.

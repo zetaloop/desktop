@@ -67,6 +67,7 @@ interface IPreferencesProps {
   readonly confirmCheckoutCommit: boolean
   readonly confirmForcePush: boolean
   readonly confirmUndoCommit: boolean
+  readonly askForConfirmationOnCommitFilteredChanges: boolean
   readonly uncommittedChangesStrategy: UncommittedChangesStrategy
   readonly selectedExternalEditor: string | null
   readonly selectedShell: Shell
@@ -103,6 +104,7 @@ interface IPreferencesState {
   readonly confirmCheckoutCommit: boolean
   readonly confirmForcePush: boolean
   readonly confirmUndoCommit: boolean
+  readonly askForConfirmationOnCommitFilteredChanges: boolean
   readonly uncommittedChangesStrategy: UncommittedChangesStrategy
   readonly availableEditors: ReadonlyArray<string>
   readonly useCustomEditor: boolean
@@ -177,6 +179,7 @@ export class Preferences extends React.Component<
       confirmCheckoutCommit: false,
       confirmForcePush: false,
       confirmUndoCommit: false,
+      askForConfirmationOnCommitFilteredChanges: false,
       uncommittedChangesStrategy: defaultUncommittedChangesStrategy,
       selectedExternalEditor: this.props.selectedExternalEditor,
       availableShells: [],
@@ -243,6 +246,8 @@ export class Preferences extends React.Component<
       confirmCheckoutCommit: this.props.confirmCheckoutCommit,
       confirmForcePush: this.props.confirmForcePush,
       confirmUndoCommit: this.props.confirmUndoCommit,
+      askForConfirmationOnCommitFilteredChanges:
+        this.props.askForConfirmationOnCommitFilteredChanges,
       uncommittedChangesStrategy: this.props.uncommittedChangesStrategy,
       availableShells,
       availableEditors,
@@ -476,6 +481,9 @@ export class Preferences extends React.Component<
             confirmCheckoutCommit={this.state.confirmCheckoutCommit}
             confirmForcePush={this.state.confirmForcePush}
             confirmUndoCommit={this.state.confirmUndoCommit}
+            askForConfirmationOnCommitFilteredChanges={
+              this.state.askForConfirmationOnCommitFilteredChanges
+            }
             onConfirmRepositoryRemovalChanged={
               this.onConfirmRepositoryRemovalChanged
             }
@@ -487,6 +495,9 @@ export class Preferences extends React.Component<
               this.onConfirmDiscardChangesPermanentlyChanged
             }
             onConfirmUndoCommitChanged={this.onConfirmUndoCommitChanged}
+            onAskForConfirmationOnCommitFilteredChanges={
+              this.onAskForConfirmationOnCommitFilteredChanges
+            }
             uncommittedChangesStrategy={this.state.uncommittedChangesStrategy}
             onUncommittedChangesStrategyChanged={
               this.onUncommittedChangesStrategyChanged
@@ -605,6 +616,10 @@ export class Preferences extends React.Component<
 
   private onConfirmUndoCommitChanged = (value: boolean) => {
     this.setState({ confirmUndoCommit: value })
+  }
+
+  private onAskForConfirmationOnCommitFilteredChanges = (value: boolean) => {
+    this.setState({ askForConfirmationOnCommitFilteredChanges: value })
   }
 
   private onUncommittedChangesStrategyChanged = (
