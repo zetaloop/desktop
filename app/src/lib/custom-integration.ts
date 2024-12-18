@@ -193,12 +193,5 @@ export function spawnCustomIntegration(
   args: readonly string[],
   options?: SpawnOptions
 ): ChildProcess {
-  // On Windows, we need to wrap the arguments and the command in quotes,
-  // otherwise the shell will split them by spaces again after invoking spawn.
-  if (__WIN32__ && options?.shell) {
-    command = `"${command}"`
-    args = args.map(a => `"${a}"`)
-  }
-
   return options ? spawn(command, args, options) : spawn(command, args)
 }
