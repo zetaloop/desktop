@@ -236,6 +236,7 @@ interface IFilterChangesListProps {
 
 interface IFilterChangesListState {
   readonly filterText: string
+  readonly filteredItems: ReadonlyArray<IChangesListItem>
   readonly selectedItems: ReadonlyArray<IChangesListItem>
   readonly focusedRow: string | null
   readonly groups: ReadonlyArray<IFilterListGroup<IChangesListItem>>
@@ -280,6 +281,7 @@ export class FilterChangesList extends React.Component<
 
     this.state = {
       filterText: '',
+      filteredItems: [],
       selectedItems: getSelectedItemsFromProps(props),
       focusedRow: null,
       groups,
@@ -1026,6 +1028,14 @@ export class FilterChangesList extends React.Component<
     this.setState({ filterText: text })
   }
 
+  private onFilterListResultsChanged = (
+    filteredItems: ReadonlyArray<IChangesListItem>
+  ) => {
+    this.setState({ filteredItems })
+    // TBD: Remove when used.
+    console.log(this.state.filteredItems, filteredItems)
+  }
+
   private onFileSelectionChanged = (items: ReadonlyArray<IChangesListItem>) => {
     const rows = items.map(i =>
       this.props.workingDirectory.files.findIndex(f => f.id === i.change.id)
@@ -1085,6 +1095,7 @@ export class FilterChangesList extends React.Component<
             rowHeight={RowHeight}
             filterText={this.state.filterText}
             onFilterTextChanged={this.onFilterTextChanged}
+            onFilterListResultsChanged={this.onFilterListResultsChanged}
             selectedItems={this.state.selectedItems}
             selectionMode="multi"
             renderItem={this.renderChangedFile}

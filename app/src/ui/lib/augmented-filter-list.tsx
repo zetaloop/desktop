@@ -152,7 +152,9 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
   /**
    * Callback to fire when the items in the filter list are updated
    */
-  readonly onFilterListResultsChanged?: (resultCount: number) => void
+  readonly onFilterListResultsChanged?: (
+    filteredItems: ReadonlyArray<T>
+  ) => void
 
   /** Placeholder text for text box. Default is "Filter". */
   readonly placeholderText?: string
@@ -277,11 +279,25 @@ export class AugmentedSectionFilterList<
     }
 
     if (this.props.onFilterListResultsChanged !== undefined) {
-      const itemCount = this.state.rows
+      const oldfilteredItems = prevState.rows
         .flat()
-        .filter(row => row.kind === 'item').length
+        .filter(row => row.kind === 'item')
+        .map(r => r.item)
 
-      this.props.onFilterListResultsChanged(itemCount)
+      const currentFilteredItemIds = this.state.rows
+        .flat()
+        .filter(row => row.kind === 'item')
+        .map(r => r.item)
+
+      if (
+        oldfilteredItems.length !== currentFilteredItemIds.length ||
+        xor(
+          oldfilteredItems.map(i => i.id),
+          currentFilteredItemIds.map(i => i.id)
+        ).length > 0
+      ) {
+        this.props.onFilterListResultsChanged(currentFilteredItemIds)
+      }
     }
   }
 
