@@ -75,8 +75,15 @@ export class ConfirmCommitFilteredChanges extends React.Component<
     this.setState({ askForConfirmationOnCommitFilteredChanges: value })
   }
 
-  private onSubmit = async () => {
-    this.props.setConfirmCommitFilteredChanges(this.state.showAgain)
+  private onClearFilter = () => {
+    this.props.onClearFilter()
+    this.props.onDismissed()
+  }
+
+  private onSubmit = () => {
+    this.props.setConfirmCommitFilteredChanges(
+      this.state.askForConfirmationOnCommitFilteredChanges
+    )
     this.props.onCommitAnyway()
     this.props.onDismissed()
   }
