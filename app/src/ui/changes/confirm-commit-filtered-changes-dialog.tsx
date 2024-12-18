@@ -42,14 +42,11 @@ export class ConfirmCommitFilteredChanges extends React.Component<
         ariaDescribedBy="confirm-commit-filtered-changes-message"
       >
         <DialogContent>
-          <Row id="confirm-commit-filtered-changes-message">
-            Are you sure you want to commit this changes? You have a filter
-            applied and some the changes you are about to commit are hidden from
-            view.{' '}
-            <LinkButton onClick={this.props.onClearFilter}>
-              Clear Filter
-            </LinkButton>
-          </Row>
+          <p id="confirm-commit-filtered-changes-message">
+            You have a filter applied. There are changes that will be committed
+            hidden from view. Are you sure you want to commit these changes?{' '}
+            <LinkButton onClick={this.onClearFilter}>Clear Filter</LinkButton>
+          </p>
           <Row>
             <Checkbox
               label="Do not show this message again"
