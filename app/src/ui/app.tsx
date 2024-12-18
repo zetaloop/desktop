@@ -2493,7 +2493,7 @@ export class App extends React.Component<IAppProps, IAppState> {
             onDismissed={onPopupDismissedFn}
             onClearFilter={popup.onClearFilter}
             setConfirmCommitFilteredChanges={
-              this.props.dispatcher.setConfirmCommitFilteredChanges
+              this.setConfirmCommitFilteredChanges
             }
           />
         )
@@ -2501,6 +2501,10 @@ export class App extends React.Component<IAppProps, IAppState> {
       default:
         return assertNever(popup, `Unknown popup type: ${popup}`)
     }
+  }
+
+  private setConfirmCommitFilteredChanges = (value: boolean) => {
+    this.props.dispatcher.setConfirmCommitFilteredChanges(value)
   }
 
   private getPullRequestState() {
@@ -3240,6 +3244,9 @@ export class App extends React.Component<IAppProps, IAppState> {
           }
           askForConfirmationOnCheckoutCommit={
             state.askForConfirmationOnCheckoutCommit
+          }
+          askForConfirmationOnCommitFilteredChanges={
+            state.askForConfirmationOnCommitFilteredChanges
           }
           accounts={state.accounts}
           isExternalEditorAvailable={

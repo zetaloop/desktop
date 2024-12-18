@@ -2218,6 +2218,11 @@ export class AppStore extends TypedBaseStore<IAppState> {
       confirmUndoCommitDefault
     )
 
+    this.confirmCommitFilteredChanges = getBoolean(
+      confirmCommitFilteredChangesKey,
+      confirmCommitFilteredChangesDefault
+    )
+
     this.uncommittedChangesStrategy =
       getEnum(uncommittedChangesStrategyKey, UncommittedChangesStrategy) ??
       defaultUncommittedChangesStrategy

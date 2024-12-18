@@ -142,6 +142,7 @@ interface IFilterChangesListProps {
   readonly onCreateCommit: (context: ICommitContext) => Promise<boolean>
   readonly onDiscardChanges: (file: WorkingDirectoryFileChange) => void
   readonly askForConfirmationOnDiscardChanges: boolean
+  readonly askForConfirmationOnCommitFilteredChanges: boolean
   readonly focusCommitMessage: boolean
   readonly isShowingModal: boolean
   readonly isShowingFoldout: boolean
@@ -860,9 +861,11 @@ export class FilterChangesList extends React.Component<
       this.props.repository.gitHubRepository === null ||
       hasWritePermission(this.props.repository.gitHubRepository)
 
-    const allFilesToCommitNotVisible = filesSelected.some(
-      file => !this.state.filteredItems.find(fi => fi.id === file.id)
-    )
+    const allFilesToCommitNotVisible =
+      this.props.askForConfirmationOnCommitFilteredChanges &&
+      filesSelected.some(
+        file => !this.state.filteredItems.find(fi => fi.id === file.id)
+      )
 
     return (
       <CommitMessage

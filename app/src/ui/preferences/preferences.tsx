@@ -805,6 +805,9 @@ export class Preferences extends React.Component<
     )
 
     await dispatcher.setConfirmUndoCommitSetting(this.state.confirmUndoCommit)
+    await dispatcher.setConfirmCommitFilteredChanges(
+      this.state.askForConfirmationOnCommitFilteredChanges
+    )
 
     if (this.state.selectedExternalEditor) {
       await dispatcher.setExternalEditor(this.state.selectedExternalEditor)
