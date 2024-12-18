@@ -170,6 +170,7 @@ interface ICommitMessageProps {
   readonly onStopAmending: () => void
   readonly onShowCreateForkDialog: () => void
   readonly onFilesToCommitNotVisible?: (onCommitAnyway: () => {}) => void
+  readonly onSuccessfulCommitCreated?: () => void
   readonly accounts: ReadonlyArray<Account>
 }
 
@@ -557,6 +558,7 @@ export class CommitMessage extends React.Component<
     timer.done()
 
     if (commitCreated) {
+      this.props.onSuccessfulCommitCreated?.()
       this.clearCommitMessage()
     }
   }

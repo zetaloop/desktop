@@ -915,8 +915,13 @@ export class FilterChangesList extends React.Component<
         onShowCreateForkDialog={this.onShowCreateForkDialog}
         onFilesToCommitNotVisible={this.onFilesToCommitNotVisible}
         accounts={this.props.accounts}
+        onSuccessfulCommitCreated={this.onSuccessfulCommitCreated}
       />
     )
+  }
+
+  private onSuccessfulCommitCreated = () => {
+    this.clearFilter()
   }
 
   private onCoAuthorsUpdated = (coAuthors: ReadonlyArray<Author>) =>
@@ -1055,8 +1060,12 @@ export class FilterChangesList extends React.Component<
     this.props.dispatcher.showPopup({
       type: PopupType.ConfirmCommitFilteredChanges,
       onCommitAnyway,
-      onClearFilter: () => this.setState({ filterText: '' }),
+      onClearFilter: this.clearFilter,
     })
+  }
+
+  private clearFilter = () => {
+    this.setState({ filterText: '' })
   }
 
   public render() {
