@@ -513,7 +513,7 @@ export class CommitMessage extends React.Component<
       return
     }
 
-    if (options?.warnUnknownAuthors === true) {
+    if (options?.warnUnknownAuthors !== false) {
       const unknownAuthors = this.props.coAuthors.filter(
         (author): author is UnknownAuthor => !isKnownAuthor(author)
       )
@@ -539,6 +539,7 @@ export class CommitMessage extends React.Component<
     }
 
     if (
+      options?.warnFilesNotVisible !== false &&
       this.props.allFilesToCommitNotVisible === true &&
       this.props.onFilesToCommitNotVisible
     ) {
