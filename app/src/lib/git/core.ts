@@ -474,7 +474,7 @@ export function getDescriptionForError(
     case DugiteError.ProtectedBranchForcePush:
       return '该分支受保护，不允许强制推送。'
     case DugiteError.ProtectedBranchRequiresReview:
-      return '该分支受保护，任何更改都需要审核批准，你需要为此创建拉取请求。'
+      return '该分支受保护，任何改动都需要审核批准，你需要为此创建拉取请求。'
     case DugiteError.PushWithFileSizeExceedingLimit:
       return '推送包含了大小超过 100MB 的文件，超过 GitHub 文件大小限制，请从历史记录中删除过大的文件后重试。'
     case DugiteError.HexBranchNameRejected:
