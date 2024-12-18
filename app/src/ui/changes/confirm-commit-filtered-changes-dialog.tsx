@@ -13,13 +13,21 @@ interface IConfirmCommitFilteredChangesProps {
 }
 
 interface IConfirmCommitFilteredChangesState {
-  readonly showAgain: boolean
+  readonly askForConfirmationOnCommitFilteredChanges: boolean
 }
 
 export class ConfirmCommitFilteredChanges extends React.Component<
   IConfirmCommitFilteredChangesProps,
   IConfirmCommitFilteredChangesState
 > {
+  public constructor(props: IConfirmCommitFilteredChangesProps) {
+    super(props)
+
+    this.state = {
+      askForConfirmationOnCommitFilteredChanges: true,
+    }
+  }
+
   public render() {
     return (
       <Dialog
@@ -46,7 +54,9 @@ export class ConfirmCommitFilteredChanges extends React.Component<
             <Checkbox
               label="Do not show this message again"
               value={
-                this.state.showAgain ? CheckboxValue.Off : CheckboxValue.On
+                this.state.askForConfirmationOnCommitFilteredChanges
+                  ? CheckboxValue.Off
+                  : CheckboxValue.On
               }
               onChange={this.onShowMessageChange}
             />
@@ -65,7 +75,7 @@ export class ConfirmCommitFilteredChanges extends React.Component<
   private onShowMessageChange = (event: React.FormEvent<HTMLInputElement>) => {
     const value = !event.currentTarget.checked
 
-    this.setState({ showAgain: value })
+    this.setState({ askForConfirmationOnCommitFilteredChanges: value })
   }
 
   private onSubmit = async () => {
