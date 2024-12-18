@@ -548,19 +548,24 @@ const getJetBrainsToolboxEditors = memoizeOne(async () => {
   const re = /^JetBrains Toolbox \((.*)\)/
   const editors = new Array<WindowsExternalEditor>()
 
-  for (const key of enumerateKeys(HKEY.HKEY_CURRENT_USER, uninstallSubKey)) {
-    const m = re.exec(key)
-    if (m) {
-      const [name, product] = m
-      editors.push({
-        name,
-        installLocationRegistryKey: 'DisplayIcon',
-        registryKeys: [
-          { key: HKEY.HKEY_CURRENT_USER, subKey: `${uninstallSubKey}\\${key}` },
-        ],
-        displayNamePrefixes: [product],
-        publishers: ['JetBrains s.r.o.'],
-      })
+  for (const parent of [uninstallSubKey, wow64UninstallSubKey]) {
+    for (const key of enumerateKeys(HKEY.HKEY_CURRENT_USER, parent)) {
+      const m = re.exec(key)
+      if (m) {
+        const [name, product] = m
+        editors.push({
+          name,
+          installLocationRegistryKey: 'DisplayIcon',
+          registryKeys: [
+            {
+              key: HKEY.HKEY_CURRENT_USER,
+              subKey: `${parent}\\${key}`,
+            },
+          ],
+          displayNamePrefixes: [product],
+          publishers: ['JetBrains s.r.o.'],
+        })
+      }
     }
   }
 
