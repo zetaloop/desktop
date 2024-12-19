@@ -237,7 +237,7 @@ interface IFilterChangesListProps {
 
 interface IFilterChangesListState {
   readonly filterText: string
-  readonly filteredItems: ReadonlyArray<IChangesListItem>
+  readonly filteredItems: Map<string, IChangesListItem>
   readonly selectedItems: ReadonlyArray<IChangesListItem>
   readonly focusedRow: string | null
   readonly groups: ReadonlyArray<IFilterListGroup<IChangesListItem>>
@@ -282,7 +282,7 @@ export class FilterChangesList extends React.Component<
 
     this.state = {
       filterText: '',
-      filteredItems: [],
+      filteredItems: new Map<string, IChangesListItem>(),
       selectedItems: getSelectedItemsFromProps(props),
       focusedRow: null,
       groups,
@@ -863,9 +863,8 @@ export class FilterChangesList extends React.Component<
 
     const allFilesToCommitNotVisible =
       this.props.askForConfirmationOnCommitFilteredChanges &&
-      filesSelected.some(
-        file => !this.state.filteredItems.find(fi => fi.id === file.id)
-      )
+      (filesSelected.length > this.state.filteredItems.size ||
+        filesSelected.some(f => !this.state.filteredItems.get(f.id)))
 
     return (
       <CommitMessage
@@ -1046,7 +1045,9 @@ export class FilterChangesList extends React.Component<
   private onFilterListResultsChanged = (
     filteredItems: ReadonlyArray<IChangesListItem>
   ) => {
-    this.setState({ filteredItems })
+    const filteredSet = new Map<string, IChangesListItem>()
+    filteredItems.forEach(f => filteredSet.set(f.id, f))
+    this.setState({ filteredItems: filteredSet })
   }
 
   private onFileSelectionChanged = (items: ReadonlyArray<IChangesListItem>) => {
