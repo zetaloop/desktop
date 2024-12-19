@@ -86,43 +86,16 @@ const StashIcon: OcticonSymbolVariant = {
 
 const GitIgnoreFileName = '.gitignore'
 
-/** Compute the 'Include All' checkbox value from the repository state */
-function getIncludeAllValue(
-  workingDirectory: WorkingDirectoryStatus,
-  rebaseConflictState: RebaseConflictState | null
-) {
-  if (rebaseConflictState !== null) {
-    if (workingDirectory.files.length === 0) {
-      // the current commit will be skipped in the rebase
-      return CheckboxValue.Off
-    }
-
-    // untracked files will be skipped by the rebase, so we need to ensure that
-    // the "Include All" checkbox matches this state
-    const onlyUntrackedFilesFound = workingDirectory.files.every(
-      f => f.status.kind === AppFileStatusKind.Untracked
-    )
-
-    if (onlyUntrackedFilesFound) {
-      return CheckboxValue.Off
-    }
-
-    const onlyTrackedFilesFound = workingDirectory.files.every(
-      f => f.status.kind !== AppFileStatusKind.Untracked
-    )
-
-    // show "Mixed" if we have a mixture of tracked and untracked changes
-    return onlyTrackedFilesFound ? CheckboxValue.On : CheckboxValue.Mixed
-  }
-
-  const { includeAll } = workingDirectory
+function getCheckBoxValueFromIncludeAll(includeAll: boolean | null) {
   if (includeAll === true) {
     return CheckboxValue.On
-  } else if (includeAll === false) {
-    return CheckboxValue.Off
-  } else {
-    return CheckboxValue.Mixed
   }
+
+  if (includeAll === false) {
+    return CheckboxValue.Off
+  }
+
+  return CheckboxValue.Mixed
 }
 
 interface IFilterChangesListProps {
@@ -139,7 +112,6 @@ interface IFilterChangesListProps {
   readonly selectedFileIDs: ReadonlyArray<string>
   readonly onFileSelectionChanged: (rows: ReadonlyArray<number>) => void
   readonly onIncludeChanged: (path: string, include: boolean) => void
-  readonly onSelectAll: (selectAll: boolean) => void
   readonly onCreateCommit: (context: ICommitContext) => Promise<boolean>
   readonly onDiscardChanges: (file: WorkingDirectoryFileChange) => void
   readonly askForConfirmationOnDiscardChanges: boolean
@@ -298,17 +270,66 @@ export class FilterChangesList extends React.Component<
     }
   )
 
+  /** Compute the 'Include All' checkbox value */
+  private getCheckAllValue = memoizeOne(
+    (
+      workingDirectory: WorkingDirectoryStatus,
+      rebaseConflictState: RebaseConflictState | null,
+      filteredItems: Map<string, IChangesListItem>
+    ) => {
+      if (
+        filteredItems.size === workingDirectory.files.length &&
+        rebaseConflictState === null
+      ) {
+        return getCheckBoxValueFromIncludeAll(workingDirectory.includeAll)
+      }
+
+      const files = workingDirectory.files.filter(f => filteredItems.get(f.id))
+
+      if (files.length === 0) {
+        // the current commit will be skipped in the rebase
+        return CheckboxValue.Off
+      }
+
+      if (rebaseConflictState !== null) {
+        // untracked files will be skipped by the rebase, so we need to ensure that
+        // the "Include All" checkbox matches this state
+        const onlyUntrackedFilesFound = files.every(
+          f => f.status.kind === AppFileStatusKind.Untracked
+        )
+
+        if (onlyUntrackedFilesFound) {
+          return CheckboxValue.Off
+        }
+
+        const onlyTrackedFilesFound = files.every(
+          f => f.status.kind !== AppFileStatusKind.Untracked
+        )
+
+        // show "Mixed" if we have a mixture of tracked and untracked changes
+        return onlyTrackedFilesFound ? CheckboxValue.On : CheckboxValue.Mixed
+      }
+
+      const filteredStatus = WorkingDirectoryStatus.fromFiles(files)
+
+      return getCheckBoxValueFromIncludeAll(filteredStatus.includeAll)
+    }
+  )
+
   private headerRef = createObservableRef<HTMLDivElement>()
   private includeAllCheckBoxRef = React.createRef<Checkbox>()
 
   public constructor(props: IFilterChangesListProps) {
     super(props)
 
-    const groups = [this.createListItems(props.workingDirectory.files)]
+    const listItems = this.createListItems(props.workingDirectory.files)
+    const groups = [listItems]
 
     this.state = {
       filterText: '',
-      filteredItems: new Map<string, IChangesListItem>(),
+      filteredItems: new Map<string, IChangesListItem>(
+        listItems.items.map(i => [i.id, i])
+      ),
       selectedItems: getSelectedItemsFromProps(props),
       focusedRow: null,
       groups,
@@ -349,7 +370,11 @@ export class FilterChangesList extends React.Component<
 
   private onIncludeAllChanged = (event: React.FormEvent<HTMLInputElement>) => {
     const include = event.currentTarget.checked
-    this.props.onSelectAll(include)
+
+    const filteredItemPaths = [...this.state.filteredItems.values()].map(
+      i => i.change.path
+    )
+    filteredItemPaths.map(path => this.props.onIncludeChanged(path, include))
   }
 
   private renderChangedFile = (
@@ -861,18 +886,12 @@ export class FilterChangesList extends React.Component<
 
     const fileCount = workingDirectory.files.length
 
-    const includeAllValue = getIncludeAllValue(
-      workingDirectory,
-      rebaseConflictState
-    )
-
-    const anyFilesSelected =
-      fileCount > 0 && includeAllValue !== CheckboxValue.Off
-
     // Files selected to commit (to be committed) (not selected to see in diff)
     const filesSelected = workingDirectory.files.filter(
       f => f.selection.getSelectionType() !== DiffSelectionType.None
     )
+
+    const anyFilesSelected = filesSelected.length > 0
 
     // When a single file is selected, we use a default commit summary
     // based on the file name and change status.
@@ -1115,9 +1134,10 @@ export class FilterChangesList extends React.Component<
     const totalFilesPlural = files.length === 1 ? 'file' : 'files'
     const selectedChangesDescription = `${selectedChangeCount}/${files.length} changed ${totalFilesPlural} included`
 
-    const includeAllValue = getIncludeAllValue(
+    const includeAllValue = this.getCheckAllValue(
       workingDirectory,
-      rebaseConflictState
+      rebaseConflictState,
+      this.state.filteredItems
     )
 
     const disableAllCheckbox =
