@@ -1,5 +1,13 @@
 {
   "releases": {
+    "3.4.13-beta1": [
+      "[Fixed] Fix Branch List context menu showing pull request option when none exists - #19711. Thanks @DylanDevelops!",
+      "[Fixed] The Thank You banner is announced by VoiceOver - #19734",
+      "[Improved] Have CLI invoke the app directly - #19733",
+      "[Improved] Don't execute rev-parse unless we have to - #19694",
+      "[Removed] Remove the tooltip on the CI status indicator - #19735",
+      "[Removed] Drop support for Atom, invoke editors directly - #19744"
+    ],
     "3.4.12": [
       "[Fixed] Merge branch dialog updates whether a branch can be merged when changing selection - #19730"
     ],
