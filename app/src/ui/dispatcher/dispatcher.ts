@@ -33,6 +33,7 @@ import {
   getCommitsBetweenCommits,
   getBranches,
   getRebaseSnapshot,
+  getRepositoryType,
 } from '../../lib/git'
 import { isGitOnPath } from '../../lib/is-git-on-path'
 import {
@@ -121,7 +122,8 @@ import { UnreachableCommitsTab } from '../history/unreachable-commits-dialog'
 import { sendNonFatalException } from '../../lib/helpers/non-fatal-exception'
 import { SignInResult } from '../../lib/stores/sign-in-store'
 import { ICustomIntegration } from '../../lib/custom-integration'
-import { dirname, isAbsolute } from 'path'
+import { isAbsolute } from 'path'
+import { CLIAction } from '../../lib/cli-action'
 
 /**
  * An error handler function.
@@ -1860,6 +1862,39 @@ export class Dispatcher {
     return repository
   }
 
+  public async dispatchCLIAction(action: CLIAction) {
+    if (action.kind === 'clone-url') {
+      const { branch, url } = action
+
+      if (branch) {
+        await this.openBranchNameFromUrl(url, branch)
+      } else {
+        await this.openOrCloneRepository(url)
+      }
+    } else if (action.kind === 'open-repository') {
+      // user may accidentally provide a folder within the repository
+      // this ensures we use the repository root, if it is actually a repository
+      // otherwise we consider it an untracked repository
+      const path = await getRepositoryType(action.path)
+        .then(t =>
+          t.kind === 'regular' ? t.topLevelWorkingDirectory : action.path
+        )
+        .catch(e => {
+          log.error('Could not determine repository type', e)
+          return action.path
+        })
+
+      const { repositories } = this.appStore.getState()
+      const existingRepository = matchExistingRepository(repositories, path)
+
+      if (existingRepository) {
+        await this.selectRepository(existingRepository)
+      } else {
+        await this.showPopup({ type: PopupType.AddRepository, path })
+      }
+    }
+  }
+
   public async dispatchURLAction(action: URLActionType): Promise<void> {
     switch (action.name) {
       case 'oauth':
@@ -1880,33 +1915,6 @@ export class Dispatcher {
 
       case 'open-repository-from-url':
         this.openRepositoryFromUrl(action)
-        break
-
-      case 'open-repository-from-path':
-        // user may accidentally provide a folder within the repository
-        // this ensures we use the repository root, if it is actually a repository
-        // otherwise we consider it an untracked repository
-        const { repositories } = this.appStore.getState()
-
-        let repo
-        let path = action.path
-
-        while (!(repo = matchExistingRepository(repositories, path))) {
-          const parent = dirname(path)
-          if (parent === path) {
-            break
-          }
-          path = parent
-        }
-
-        if (repo) {
-          await this.selectRepository(repo)
-        } else {
-          await this.showPopup({
-            type: PopupType.AddRepository,
-            path: action.path,
-          })
-        }
         break
 
       default:

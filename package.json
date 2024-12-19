@@ -5,7 +5,7 @@
   },
   "description": "GitHub Desktop build dependencies",
   "scripts": {
-    "cli": "ts-node --require ./app/test/globals.ts --require ./app/src/cli/dev-commands-global.ts app/src/cli/main.ts",
+    "cli": "ts-node app/src/cli/main.ts",
     "check:eslint": "tsc -P eslint-rules/",
     "test:eslint": "jest eslint-rules/tests/*.test.js",
     "test:unit": "cross-env ELECTRON_RUN_AS_NODE=1 NODE_OPTIONS='--max_old_space_size=4096' ./node_modules/.bin/electron ./node_modules/jest/bin/jest --detectOpenHandles --silent --testLocationInResults --config ./app/jest.unit.config.js",
@@ -122,6 +122,7 @@
     "@types/lodash": "^4.14.178",
     "@types/marked": "^4.0.1",
     "@types/memoize-one": "^3.1.1",
+    "@types/minimist": "^1.2.5",
     "@types/mri": "^1.1.0",
     "@types/node": "22.7.4",
     "@types/parse-dds": "^1.0.3",

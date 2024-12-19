@@ -10,7 +10,6 @@ import {
   nativeTheme,
 } from 'electron'
 import * as Fs from 'fs'
-import * as URL from 'url'
 
 import { AppWindow } from './app-window'
 import { buildDefaultMenu, getAllMenuItems } from './menu'
@@ -50,6 +49,8 @@ import {
   showNotification,
 } from 'desktop-notifications'
 import { initializeDesktopNotifications } from './notifications'
+import parseCommandLineArgs from 'minimist'
+import { CLIAction } from '../lib/cli-action'
 
 app.setAppLogsPath()
 enableSourceMaps()
@@ -139,20 +140,18 @@ process.on('uncaughtException', (error: Error) => {
 let handlingSquirrelEvent = false
 if (__WIN32__ && process.argv.length > 1) {
   const arg = process.argv[1]
-
   const promise = handleSquirrelEvent(arg)
+
   if (promise) {
     handlingSquirrelEvent = true
     promise
-      .catch(e => {
-        log.error(`Failed handling Squirrel event: ${arg}`, e)
-      })
-      .then(() => {
-        app.quit()
-      })
-  } else {
-    handlePossibleProtocolLauncherArgs(process.argv)
+      .catch(e => log.error(`Failed handling Squirrel event: ${arg}`, e))
+      .then(() => app.quit())
   }
+}
+
+if (!handlingSquirrelEvent) {
+  handleCommandLineArguments(process.argv)
 }
 
 initializeDesktopNotifications()
@@ -190,7 +189,7 @@ if (!handlingSquirrelEvent) {
       mainWindow.focus()
     }
 
-    handlePossibleProtocolLauncherArgs(args)
+    handleCommandLineArguments(args)
   })
 
   if (isDuplicateInstance) {
@@ -229,53 +228,46 @@ if (__DARWIN__) {
         return
       }
 
-      handleAppURL(
-        `x-github-client://openLocalRepo/${encodeURIComponent(path)}`
-      )
+      // Yeah this isn't technically a CLI action we use it here to indicate
+      // that it's more trusted than a URL action.
+      handleCLIAction({ kind: 'open-repository', path })
     })
   })
 }
 
-/**
- * Attempt to detect and handle any protocol handler arguments passed
- * either via the command line directly to the current process or through
- * IPC from a duplicate instance (see makeSingleInstance)
- *
- * @param args Essentially process.argv, i.e. the first element is the exec
- *             path
- */
-function handlePossibleProtocolLauncherArgs(args: ReadonlyArray<string>) {
-  log.info(`Received possible protocol arguments: ${args.length}`)
+async function handleCommandLineArguments(argv: string[]) {
+  const args = parseCommandLineArgs(argv)
 
-  if (__WIN32__) {
-    // Desktop registers it's protocol handler callback on Windows as
-    // `[executable path] --protocol-launcher "%1"`. Note that extra command
-    // line arguments might be added by Chromium
-    // (https://electronjs.org/docs/api/app#event-second-instance).
-    // At launch Desktop checks for that exact scenario here before doing any
-    // processing. If there's more than one matching url argument because of a
-    // malformed or untrusted url then we bail out.
-
-    const matchingUrls = args.filter(arg => {
-      // sometimes `URL.parse` throws an error
-      try {
-        const url = URL.parse(arg)
-        // i think this `slice` is just removing a trailing `:`
-        return url.protocol && possibleProtocols.has(url.protocol.slice(0, -1))
-      } catch (e) {
-        log.error(`Unable to parse argument as URL: ${arg}`)
-        return false
-      }
-    })
-
-    if (args.includes(protocolLauncherArg) && matchingUrls.length === 1) {
-      handleAppURL(matchingUrls[0])
-    } else {
-      log.error(`Malformed launch arguments received: ${args}`)
-    }
-  } else if (args.length > 1) {
-    handleAppURL(args[1])
+  // Desktop registers it's protocol handler callback on Windows as
+  // `[executable path] --protocol-launcher "%1"`. Note that extra command
+  // line arguments might be added by Chromium
+  // (https://electronjs.org/docs/api/app#event-second-instance).
+  if (__WIN32__ && typeof args['protocol-launcher'] === 'string') {
+    handleAppURL(args['protocol-launcher'])
+    return
   }
+
+  if (typeof args['cli-open'] === 'string') {
+    handleCLIAction({ kind: 'open-repository', path: args['cli-open'] })
+  } else if (typeof args['cli-clone'] === 'string') {
+    handleCLIAction({
+      kind: 'clone-url',
+      url: args['cli-clone'],
+      branch:
+        typeof args['cli-branch'] === 'string' ? args['cli-branch'] : undefined,
+    })
+  }
+
+  return
+}
+
+function handleCLIAction(action: CLIAction) {
+  onDidLoad(window => {
+    // This manual focus call _shouldn't_ be necessary, but is for Chrome on
+    // macOS. See https://github.com/desktop/desktop/issues/973.
+    window.focus()
+    window.sendCLIAction(action)
+  })
 }
 
 /**
