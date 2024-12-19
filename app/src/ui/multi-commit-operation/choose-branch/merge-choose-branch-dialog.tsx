@@ -1,7 +1,7 @@
 import React from 'react'
 import { getAheadBehind, revSymmetricDifference } from '../../../lib/git'
 import { determineMergeability } from '../../../lib/git/merge-tree'
-import { Branch, IAheadBehind } from '../../../models/branch'
+import { Branch } from '../../../models/branch'
 import { ComputedAction } from '../../../models/computed-action'
 import { MergeTreeResult } from '../../../models/merge'
 import { MultiCommitOperationKind } from '../../../models/multi-commit-operation'
@@ -13,19 +13,6 @@ import {
   canStartOperation,
 } from './base-choose-branch-dialog'
 import { truncateWithEllipsis } from '../../../lib/truncate-with-ellipsis'
-import QuickLRU from 'quick-lru'
-import pMemoize from 'p-memoize'
-
-const mergeTreeCache = pMemoize(determineMergeability, {
-  cache: new QuickLRU<string, MergeTreeResult>({ maxSize: 250 }),
-  cacheKey: ([_, ours, theirs]: Parameters<typeof determineMergeability>) =>
-    `${ours.tip.sha} <- ${theirs.tip.sha}`,
-})
-
-const aheadBehindCache = pMemoize(getAheadBehind, {
-  cache: new QuickLRU<string, IAheadBehind | null>({ maxSize: 250 }),
-  cacheKey: ([_, range]: Parameters<typeof getAheadBehind>) => range,
-})
 
 interface IMergeChooseBranchDialogState {
   readonly commitCount: number
@@ -114,7 +101,7 @@ export class MergeChooseBranchDialog extends React.Component<
   private updateStatus = async (branch: Branch) => {
     const { currentBranch, repository } = this.props
 
-    const mergeStatus = await mergeTreeCache(
+    const mergeStatus = await determineMergeability(
       repository,
       currentBranch,
       branch
@@ -142,7 +129,7 @@ export class MergeChooseBranchDialog extends React.Component<
     // Commit count is used in the UI output as well as determining whether the
     // submit button is enabled
     const range = revSymmetricDifference('', branch.name)
-    const aheadBehind = await aheadBehindCache(repository, range)
+    const aheadBehind = await getAheadBehind(repository, range)
     const commitCount = aheadBehind ? aheadBehind.behind : 0
 
     if (this.state.selectedBranch.tip.sha !== branch.tip.sha) {
