@@ -51,7 +51,7 @@ import { hasWritePermission } from '../../models/github-repository'
 import { hasConflictedFiles } from '../../lib/status'
 import { createObservableRef } from '../lib/observable-ref'
 import { TooltipDirection } from '../lib/tooltip'
-import { Popup } from '../../models/popup'
+import { Popup, PopupType } from '../../models/popup'
 import { EOL } from 'os'
 import { TooltippedContent } from '../lib/tooltipped-content'
 import { RepoRulesInfo } from '../../models/repo-rules'
@@ -60,6 +60,7 @@ import { StashDiffViewerId } from '../stashing'
 import { AugmentedSectionFilterList } from '../lib/augmented-filter-list'
 import { IFilterListGroup, IFilterListItem } from '../lib/filter-list'
 import { ClickSource } from '../lib/list'
+import memoizeOne from 'memoize-one'
 
 interface IChangesListItem extends IFilterListItem {
   readonly id: string
@@ -142,6 +143,7 @@ interface IFilterChangesListProps {
   readonly onCreateCommit: (context: ICommitContext) => Promise<boolean>
   readonly onDiscardChanges: (file: WorkingDirectoryFileChange) => void
   readonly askForConfirmationOnDiscardChanges: boolean
+  readonly askForConfirmationOnCommitFilteredChanges: boolean
   readonly focusCommitMessage: boolean
   readonly isShowingModal: boolean
   readonly isShowingFoldout: boolean
@@ -236,7 +238,7 @@ interface IFilterChangesListProps {
 
 interface IFilterChangesListState {
   readonly filterText: string
-  readonly filteredItems: ReadonlyArray<IChangesListItem>
+  readonly filteredItems: Map<string, IChangesListItem>
   readonly selectedItems: ReadonlyArray<IChangesListItem>
   readonly focusedRow: string | null
   readonly groups: ReadonlyArray<IFilterListGroup<IChangesListItem>>
@@ -271,6 +273,31 @@ export class FilterChangesList extends React.Component<
   IFilterChangesListProps,
   IFilterChangesListState
 > {
+  private isCommittingFileHiddenByFilter = memoizeOne(
+    (
+      filterText: string,
+      fileIdsIncludedInCommit: ReadonlyArray<string>,
+      filteredItems: Map<string, IChangesListItem>,
+      fileCount: number
+    ) => {
+      // All possible files are present in the list (empty filter or all matching filter)
+      if (filterText === '' || filteredItems.size === fileCount) {
+        return false
+      }
+
+      // If filtered rows count is 1 and included for commit rows count is 2,
+      // there is no way the included for commit rows are visible regardless of
+      // what they are.
+      if (fileIdsIncludedInCommit.length > this.state.filteredItems.size) {
+        return true
+      }
+
+      // If we can find a file id included in the commit that does not exist in
+      // the filtered items, then we are committing a hidden file.
+      return fileIdsIncludedInCommit.some(fId => !filteredItems.get(fId))
+    }
+  )
+
   private headerRef = createObservableRef<HTMLDivElement>()
   private includeAllCheckBoxRef = React.createRef<Checkbox>()
 
@@ -281,7 +308,7 @@ export class FilterChangesList extends React.Component<
 
     this.state = {
       filterText: '',
-      filteredItems: [],
+      filteredItems: new Map<string, IChangesListItem>(),
       selectedItems: getSelectedItemsFromProps(props),
       focusedRow: null,
       groups,
@@ -842,6 +869,7 @@ export class FilterChangesList extends React.Component<
     const anyFilesSelected =
       fileCount > 0 && includeAllValue !== CheckboxValue.Off
 
+    // Files selected to commit (to be committed) (not selected to see in diff)
     const filesSelected = workingDirectory.files.filter(
       f => f.selection.getSelectionType() !== DiffSelectionType.None
     )
@@ -859,6 +887,15 @@ export class FilterChangesList extends React.Component<
       this.props.repository.gitHubRepository === null ||
       hasWritePermission(this.props.repository.gitHubRepository)
 
+    const showPromptForCommittingFileHiddenByFilter =
+      this.props.askForConfirmationOnCommitFilteredChanges &&
+      this.isCommittingFileHiddenByFilter(
+        this.state.filterText,
+        filesSelected.map(f => f.id),
+        this.state.filteredItems,
+        fileCount
+      )
+
     return (
       <CommitMessage
         onCreateCommit={this.props.onCreateCommit}
@@ -868,6 +905,9 @@ export class FilterChangesList extends React.Component<
         isShowingModal={this.props.isShowingModal}
         isShowingFoldout={this.props.isShowingFoldout}
         anyFilesSelected={anyFilesSelected}
+        showPromptForCommittingFileHiddenByFilter={
+          showPromptForCommittingFileHiddenByFilter
+        }
         anyFilesAvailable={fileCount > 0}
         repository={repository}
         repositoryAccount={repositoryAccount}
@@ -904,9 +944,15 @@ export class FilterChangesList extends React.Component<
         onCommitSpellcheckEnabledChanged={this.onCommitSpellcheckEnabledChanged}
         onStopAmending={this.onStopAmending}
         onShowCreateForkDialog={this.onShowCreateForkDialog}
+        onFilesToCommitNotVisible={this.onFilesToCommitNotVisible}
         accounts={this.props.accounts}
+        onSuccessfulCommitCreated={this.onSuccessfulCommitCreated}
       />
     )
+  }
+
+  private onSuccessfulCommitCreated = () => {
+    this.clearFilter()
   }
 
   private onCoAuthorsUpdated = (coAuthors: ReadonlyArray<Author>) =>
@@ -1032,9 +1078,9 @@ export class FilterChangesList extends React.Component<
   private onFilterListResultsChanged = (
     filteredItems: ReadonlyArray<IChangesListItem>
   ) => {
-    this.setState({ filteredItems })
-    // TBD: Remove when used.
-    console.log(this.state.filteredItems, filteredItems)
+    const filteredSet = new Map<string, IChangesListItem>()
+    filteredItems.forEach(f => filteredSet.set(f.id, f))
+    this.setState({ filteredItems: filteredSet })
   }
 
   private onFileSelectionChanged = (items: ReadonlyArray<IChangesListItem>) => {
@@ -1042,6 +1088,18 @@ export class FilterChangesList extends React.Component<
       this.props.workingDirectory.findFileIndexByID(i.change.id)
     )
     this.props.onFileSelectionChanged(rows)
+  }
+
+  private onFilesToCommitNotVisible = (onCommitAnyway: () => void) => {
+    this.props.dispatcher.showPopup({
+      type: PopupType.ConfirmCommitFilteredChanges,
+      onCommitAnyway,
+      onClearFilter: this.clearFilter,
+    })
+  }
+
+  private clearFilter = () => {
+    this.setState({ filterText: '' })
   }
 
   public render() {

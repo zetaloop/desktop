@@ -63,6 +63,7 @@ interface IChangesSidebarProps {
   readonly gitHubUserStore: GitHubUserStore
   readonly focusCommitMessage: boolean
   readonly askForConfirmationOnDiscardChanges: boolean
+  readonly askForConfirmationOnCommitFilteredChanges: boolean
   readonly accounts: ReadonlyArray<Account>
   readonly isShowingModal: boolean
   readonly isShowingFoldout: boolean
@@ -420,6 +421,9 @@ export class ChangesSidebar extends React.Component<IChangesSidebarProps, {}> {
           onDiscardChanges={this.onDiscardChanges}
           askForConfirmationOnDiscardChanges={
             this.props.askForConfirmationOnDiscardChanges
+          }
+          askForConfirmationOnCommitFilteredChanges={
+            this.props.askForConfirmationOnCommitFilteredChanges
           }
           onDiscardChangesFromFiles={this.onDiscardChangesFromFiles}
           onOpenItem={this.onOpenItem}

@@ -52,6 +52,7 @@ interface IRepositoryViewProps {
   readonly showSideBySideDiff: boolean
   readonly showDiffCheckMarks: boolean
   readonly askForConfirmationOnDiscardChanges: boolean
+  readonly askForConfirmationOnCommitFilteredChanges: boolean
   readonly askForConfirmationOnDiscardStash: boolean
   readonly askForConfirmationOnCheckoutCommit: boolean
   readonly focusCommitMessage: boolean
@@ -249,6 +250,9 @@ export class RepositoryView extends React.Component<
         focusCommitMessage={this.props.focusCommitMessage}
         askForConfirmationOnDiscardChanges={
           this.props.askForConfirmationOnDiscardChanges
+        }
+        askForConfirmationOnCommitFilteredChanges={
+          this.props.askForConfirmationOnCommitFilteredChanges
         }
         accounts={this.props.accounts}
         isShowingModal={this.props.isShowingModal}
