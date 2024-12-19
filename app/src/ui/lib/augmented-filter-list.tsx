@@ -152,7 +152,9 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
   /**
    * Callback to fire when the items in the filter list are updated
    */
-  readonly onFilterListResultsChanged?: (resultCount: number) => void
+  readonly onFilterListResultsChanged?: (
+    filteredItems: ReadonlyArray<T>
+  ) => void
 
   /** Placeholder text for text box. Default is "Filter". */
   readonly placeholderText?: string
@@ -253,20 +255,17 @@ export class AugmentedSectionFilterList<
     prevState: IAugmentedSectionFilterListState<T>
   ) {
     if (this.props.onSelectionChanged) {
-      const oldSelectedItemIds = prevState.selectedRows.map(row =>
-        getItemIdFromRowIndex(prevState.rows, row)
-      )
-      const newSelectedItemIds = this.state.selectedRows.map(row =>
-        getItemIdFromRowIndex(this.state.rows, row)
-      )
+      const oldSelectedItemIds = prevState.selectedRows
+        .map(row => getItemIdFromRowIndex(prevState.rows, row))
+        .filter(i => i !== null)
+      const newSelectedItemIds = this.state.selectedRows
+        .map(row => getItemIdFromRowIndex(this.state.rows, row))
+        .filter(i => i !== null)
 
-      // xor  = exclusive Or; returns the symmetric difference of given arrays
-      // i.e. it will create an array that contains an id that doesn’t exist in
-      // boths arrays indicating that both arrays do not contain the same ids.
-      if (xor(oldSelectedItemIds, newSelectedItemIds).length > 0) {
+      if (!this.hasSameIds(oldSelectedItemIds, newSelectedItemIds)) {
         const propSelectionIds = this.props.selectedItems.map(si => si.id)
 
-        if (xor(newSelectedItemIds, propSelectionIds).length > 0) {
+        if (!this.hasSameIds(newSelectedItemIds, propSelectionIds)) {
           const newSelectedItems = this.state.selectedRows
             .map(row => getItemFromRowIndex(this.state.rows, row))
             .filter(r => r !== null)
@@ -280,12 +279,36 @@ export class AugmentedSectionFilterList<
     }
 
     if (this.props.onFilterListResultsChanged !== undefined) {
-      const itemCount = this.state.rows
+      const oldFilteredIds = prevState.rows
         .flat()
-        .filter(row => row.kind === 'item').length
+        .filter(row => row.kind === 'item')
+        .map(r => r.item.id)
 
-      this.props.onFilterListResultsChanged(itemCount)
+      const currentFilteredItemIds = this.state.rows
+        .flat()
+        .filter(row => row.kind === 'item')
+        .map(r => r.item)
+
+      const currentFilteredIds = currentFilteredItemIds.map(i => i.id)
+
+      if (!this.hasSameIds(oldFilteredIds, currentFilteredIds)) {
+        this.props.onFilterListResultsChanged(currentFilteredItemIds)
+      }
     }
+  }
+
+  private hasSameIds(
+    oldIds: ReadonlyArray<string>,
+    newIds: ReadonlyArray<string>
+  ) {
+    if (oldIds.length !== newIds.length) {
+      return false
+    }
+
+    // xor  = exclusive Or; returns the symmetric difference of given arrays
+    // i.e. it will create an array that contains an id that doesn’t exist in
+    // both arrays. If no empty array, then both arrays contain the same elements.
+    return xor(oldIds, newIds).length === 0
   }
 
   public componentDidMount() {
