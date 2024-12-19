@@ -260,6 +260,9 @@ export class AugmentedSectionFilterList<
         getItemIdFromRowIndex(this.state.rows, row)
       )
 
+      // xor  = exclusive Or; returns the symmetric difference of given arrays
+      // i.e. it will create an array that contains an id that doesn’t exist in
+      // boths arrays indicating that both arrays do not contain the same ids.
       if (xor(oldSelectedItemIds, newSelectedItemIds).length > 0) {
         const propSelectionIds = this.props.selectedItems.map(si => si.id)
 
