@@ -81,7 +81,7 @@ interface ICommitMessageProps {
   readonly anyFilesSelected: boolean
   /** Whether the user can see all the files to commit in the changes list. They
    * may not be able to if the list is filtered */
-  readonly allFilesToCommitNotVisible?: boolean
+  readonly showPromptForCommittingFileHiddenByFilter?: boolean
   readonly isShowingModal: boolean
   readonly isShowingFoldout: boolean
 
@@ -541,7 +541,7 @@ export class CommitMessage extends React.Component<
 
     if (
       options?.warnFilesNotVisible !== false &&
-      this.props.allFilesToCommitNotVisible === true &&
+      this.props.showPromptForCommittingFileHiddenByFilter === true &&
       this.props.onFilesToCommitNotVisible
     ) {
       this.props.onFilesToCommitNotVisible(() =>

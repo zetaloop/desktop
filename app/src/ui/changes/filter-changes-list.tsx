@@ -60,6 +60,7 @@ import { StashDiffViewerId } from '../stashing'
 import { AugmentedSectionFilterList } from '../lib/augmented-filter-list'
 import { IFilterListGroup, IFilterListItem } from '../lib/filter-list'
 import { ClickSource } from '../lib/list'
+import memoizeOne from 'memoize-one'
 
 interface IChangesListItem extends IFilterListItem {
   readonly id: string
@@ -272,6 +273,31 @@ export class FilterChangesList extends React.Component<
   IFilterChangesListProps,
   IFilterChangesListState
 > {
+  private isCommittingFileHiddenByFilter = memoizeOne(
+    (
+      filterText: string,
+      fileIdsIncludedInCommit: ReadonlyArray<string>,
+      filteredItems: Map<string, IChangesListItem>,
+      fileCount: number
+    ) => {
+      // All possible files are present in the list (empty filter or all matching filter)
+      if (filterText === '' || filteredItems.size === fileCount) {
+        return false
+      }
+
+      // If filtered rows count is 1 and included for commit rows count is 2,
+      // there is no way the included for commit rows are visible regardless of
+      // what they are.
+      if (fileIdsIncludedInCommit.length > this.state.filteredItems.size) {
+        return true
+      }
+
+      // If we can find a file id included in the commit that does not exist in
+      // the filtered items, then we are committing a hidden file.
+      return fileIdsIncludedInCommit.some(fId => !filteredItems.get(fId))
+    }
+  )
+
   private headerRef = createObservableRef<HTMLDivElement>()
   private includeAllCheckBoxRef = React.createRef<Checkbox>()
 
@@ -861,10 +887,14 @@ export class FilterChangesList extends React.Component<
       this.props.repository.gitHubRepository === null ||
       hasWritePermission(this.props.repository.gitHubRepository)
 
-    const allFilesToCommitNotVisible =
+    const showPromptForCommittingFileHiddenByFilter =
       this.props.askForConfirmationOnCommitFilteredChanges &&
-      (filesSelected.length > this.state.filteredItems.size ||
-        filesSelected.some(f => !this.state.filteredItems.get(f.id)))
+      this.isCommittingFileHiddenByFilter(
+        this.state.filterText,
+        filesSelected.map(f => f.id),
+        this.state.filteredItems,
+        fileCount
+      )
 
     return (
       <CommitMessage
@@ -875,7 +905,9 @@ export class FilterChangesList extends React.Component<
         isShowingModal={this.props.isShowingModal}
         isShowingFoldout={this.props.isShowingFoldout}
         anyFilesSelected={anyFilesSelected}
-        allFilesToCommitNotVisible={allFilesToCommitNotVisible}
+        showPromptForCommittingFileHiddenByFilter={
+          showPromptForCommittingFileHiddenByFilter
+        }
         anyFilesAvailable={fileCount > 0}
         repository={repository}
         repositoryAccount={repositoryAccount}
