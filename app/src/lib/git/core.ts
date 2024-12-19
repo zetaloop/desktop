@@ -16,6 +16,7 @@ import { merge } from '../merge'
 import { withTrampolineEnv } from '../trampoline/trampoline-environment'
 import { createTailStream } from './create-tail-stream'
 import { createTerminalStream } from '../create-terminal-stream'
+import { kStringMaxLength } from 'buffer'
 
 export const coerceToString = (
   value: string | Buffer,
@@ -207,6 +208,7 @@ export async function git(
   const defaultOptions: IGitExecutionOptions = {
     successExitCodes: new Set([0]),
     expectedErrors: new Set(),
+    maxBuffer: options?.encoding === 'buffer' ? Infinity : kStringMaxLength,
   }
 
   const opts = { ...defaultOptions, ...options }
@@ -257,6 +259,21 @@ export async function git(
         // the operation.
         if (isErrnoException(err)) {
           throw new Error(`Failed to execute ${name}: ${err.code}`)
+        }
+
+        if (isMaxBufferExceededError(err)) {
+          throw new ExecError(
+            `${err.message} for ${name}`,
+            err.stdout,
+            err.stderr,
+            // Dugite stores the original Node error in the cause property, by
+            // passing that along we ensure that all we're doing here is
+            // changing the error message (and capping the stack but that's
+            // okay since we know exactly where this error is coming from).
+            // The null coalescing here is a safety net in case dugite's
+            // behavior changes from underneath us.
+            err.cause ?? err
+          )
         }
 
         throw err
