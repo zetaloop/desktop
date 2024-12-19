@@ -18,7 +18,6 @@ import {
 } from '../../models/repository'
 import { Account } from '../../models/account'
 import { Author, UnknownAuthor } from '../../models/author'
-import { List, ClickSource } from '../lib/list'
 import { Checkbox, CheckboxValue } from '../lib/checkbox'
 import {
   isSafeFileExtension,
@@ -58,6 +57,15 @@ import { TooltippedContent } from '../lib/tooltipped-content'
 import { RepoRulesInfo } from '../../models/repo-rules'
 import { IAheadBehind } from '../../models/branch'
 import { StashDiffViewerId } from '../stashing'
+import { AugmentedSectionFilterList } from '../lib/augmented-filter-list'
+import { IFilterListGroup, IFilterListItem } from '../lib/filter-list'
+import { ClickSource } from '../lib/list'
+
+interface IChangesListItem extends IFilterListItem {
+  readonly id: string
+  readonly text: ReadonlyArray<string>
+  readonly change: WorkingDirectoryFileChange
+}
 
 const RowHeight = 29
 const StashIcon: OcticonSymbolVariant = {
@@ -146,7 +154,7 @@ interface IFilterChangesListProps {
   readonly onChangesListScrolled: (scrollTop: number) => void
 
   /* The scrollTop of the compareList. It is stored to allow for scroll position persistence */
-  readonly changesListScrollTop?: number
+  // TBD: readonly changesListScrollTop?: number
 
   /**
    * Called to open a file in its default application
@@ -227,8 +235,11 @@ interface IFilterChangesListProps {
 }
 
 interface IFilterChangesListState {
+  readonly filterText: string
   readonly selectedRows: ReadonlyArray<number>
-  readonly focusedRow: number | null
+  readonly selectedItem: IChangesListItem | null
+  readonly focusedRow: string | null
+  readonly groups: ReadonlyArray<IFilterListGroup<IChangesListItem>>
 }
 
 function getSelectedRowsFromProps(
@@ -247,6 +258,26 @@ function getSelectedRowsFromProps(
   return selectedRows
 }
 
+function getSelectedItemFromProps(
+  props: IFilterChangesListProps
+): IChangesListItem | null {
+  if (props.selectedFileIDs.length === 0) {
+    return null
+  }
+
+  const file = props.workingDirectory.findFileWithID(props.selectedFileIDs[0])
+
+  if (!file) {
+    return null
+  }
+
+  return {
+    text: [file.path, file.status.kind.toString()],
+    id: file.id,
+    change: file,
+  }
+}
+
 export class FilterChangesList extends React.Component<
   IFilterChangesListProps,
   IFilterChangesListState
@@ -256,10 +287,20 @@ export class FilterChangesList extends React.Component<
 
   public constructor(props: IFilterChangesListProps) {
     super(props)
+
+    const groups = [this.createListItems(props.workingDirectory.files)]
+
     this.state = {
+      filterText: '',
       selectedRows: getSelectedRowsFromProps(props),
+      // TBD: should be selectedItem(s) but section list doesn't support that yet.
+      selectedItem: getSelectedItemFromProps(props),
       focusedRow: null,
+      groups,
     }
+
+    // TBD: remove with selected rows figured out
+    console.log(this.state.selectedRows)
   }
 
   public componentWillReceiveProps(nextProps: IFilterChangesListProps) {
@@ -272,7 +313,26 @@ export class FilterChangesList extends React.Component<
         this.props.workingDirectory.files
       )
     ) {
-      this.setState({ selectedRows: getSelectedRowsFromProps(nextProps) })
+      this.setState({
+        selectedRows: getSelectedRowsFromProps(nextProps),
+        selectedItem: getSelectedItemFromProps(nextProps),
+        groups: [this.createListItems(nextProps.workingDirectory.files)],
+      })
+    }
+  }
+
+  private createListItems(
+    files: ReadonlyArray<WorkingDirectoryFileChange>
+  ): IFilterListGroup<IChangesListItem> {
+    const items = files.map(file => ({
+      text: [file.path, file.status.kind.toString()],
+      id: file.id,
+      change: file,
+    }))
+
+    return {
+      identifier: 'changed-files',
+      items,
     }
   }
 
@@ -281,16 +341,17 @@ export class FilterChangesList extends React.Component<
     this.props.onSelectAll(include)
   }
 
-  private renderRow = (row: number): JSX.Element => {
+  private renderChangedFile = (
+    changeListItem: IChangesListItem
+  ): JSX.Element | null => {
     const {
-      workingDirectory,
       rebaseConflictState,
       isCommitting,
       onIncludeChanged,
       availableWidth,
     } = this.props
 
-    const file = workingDirectory.files[row]
+    const file = changeListItem.change
     const selection = file.selection.getSelectionType()
     const { submoduleStatus } = file.status
 
@@ -336,7 +397,7 @@ export class FilterChangesList extends React.Component<
         availableWidth={availableWidth}
         disableSelection={disableSelection}
         checkboxTooltip={checkboxTooltip}
-        focused={this.state.focusedRow === row}
+        focused={this.state.focusedRow === changeListItem.id}
       />
     )
   }
@@ -708,9 +769,10 @@ export class FilterChangesList extends React.Component<
   }
 
   private onItemContextMenu = (
-    row: number,
+    item: any,
     event: React.MouseEvent<HTMLDivElement>
   ) => {
+    const row = 0 /// TBD;
     const { workingDirectory } = this.props
     const file = workingDirectory.files[row]
 
@@ -754,7 +816,8 @@ export class FilterChangesList extends React.Component<
     }
   }
 
-  private onScroll = (scrollTop: number, clientHeight: number) => {
+  // TBD: make private
+  public onScroll = (scrollTop: number, clientHeight: number) => {
     this.props.onChangesListScrolled(scrollTop)
   }
 
@@ -946,13 +1009,15 @@ export class FilterChangesList extends React.Component<
     )
   }
 
-  private onRowDoubleClick = (row: number) => {
+  // TBD: make private
+  public onRowDoubleClick = (row: number) => {
     const file = this.props.workingDirectory.files[row]
 
     this.props.onOpenItemInExternalEditor(file.path)
   }
 
-  private onRowKeyDown = (
+  // TBD: make private
+  public onRowKeyDown = (
     _row: number,
     event: React.KeyboardEvent<HTMLDivElement>
   ) => {
@@ -970,6 +1035,28 @@ export class FilterChangesList extends React.Component<
 
   public focus() {
     this.includeAllCheckBoxRef.current?.focus()
+  }
+
+  private onChangedFileClick = (
+    item: IChangesListItem,
+    source: ClickSource
+  ) => {
+    const fileIndex = this.props.workingDirectory.findFileIndexByID(
+      item.change.id
+    )
+
+    this.props.onRowClick?.(fileIndex, source)
+  }
+
+  private onFilterTextChanged = (text: string) => {
+    this.setState({ filterText: text })
+  }
+
+  private onFileSelectionChanged = (item: IChangesListItem | null) => {
+    const rows = item
+      ? [this.props.workingDirectory.findFileIndexByID(item.change.id)]
+      : []
+    this.props.onFileSelectionChanged(rows)
   }
 
   public render() {
@@ -1019,28 +1106,30 @@ export class FilterChangesList extends React.Component<
               {selectedChangesDescription}
             </div>
           </div>
-          <List
+          <AugmentedSectionFilterList<IChangesListItem>
             id="changes-list"
-            rowCount={files.length}
             rowHeight={RowHeight}
-            rowRenderer={this.renderRow}
-            selectedRows={this.state.selectedRows}
-            selectionMode="multi"
-            onSelectionChanged={this.props.onFileSelectionChanged}
+            filterText={this.state.filterText}
+            onFilterTextChanged={this.onFilterTextChanged}
+            selectedItem={this.state.selectedItem}
+            renderItem={this.renderChangedFile}
+            onItemClick={this.onChangedFileClick}
+            // selectionMode="multi"...
+            // onRowDoubleClick={this.onRowDoubleClick}
+            // onRowKeyboardFocus={this.onRowFocus}
+            // onRowBlur={this.onRowBlur}
+            // onScroll={this.onScroll}
+            // setScrollTop={this.props.changesListScrollTop}
+            // onRowKeyDown={this.onRowKeyDown}
+            onSelectionChanged={this.onFileSelectionChanged}
+            groups={this.state.groups} //
             invalidationProps={{
               workingDirectory: workingDirectory,
               isCommitting: isCommitting,
               focusedRow: this.state.focusedRow,
             }}
-            onRowClick={this.props.onRowClick}
-            onRowDoubleClick={this.onRowDoubleClick}
-            onRowKeyboardFocus={this.onRowFocus}
-            onRowBlur={this.onRowBlur}
-            onScroll={this.onScroll}
-            setScrollTop={this.props.changesListScrollTop}
-            onRowKeyDown={this.onRowKeyDown}
-            onRowContextMenu={this.onItemContextMenu}
-            ariaLabel={filesDescription}
+            onItemContextMenu={this.onItemContextMenu}
+            // ariaLabel={filesDescription}
           />
         </div>
         {this.renderStashedChanges()}
@@ -1049,12 +1138,14 @@ export class FilterChangesList extends React.Component<
     )
   }
 
-  private onRowFocus = (row: number) => {
-    this.setState({ focusedRow: row })
+  // TBD: Needs private once hooked into list
+  public onRowFocus = (changeListItem: IChangesListItem) => {
+    this.setState({ focusedRow: changeListItem.id })
   }
 
-  private onRowBlur = (row: number) => {
-    if (this.state.focusedRow === row) {
+  // TBD: Needs private once hooked into list
+  public onRowBlur = (changeListItem: IChangesListItem) => {
+    if (this.state.focusedRow === changeListItem.id) {
       this.setState({ focusedRow: null })
     }
   }
