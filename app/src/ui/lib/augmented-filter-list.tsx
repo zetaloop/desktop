@@ -84,6 +84,8 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
    */
   readonly onItemClick?: (item: T, source: ClickSource) => void
 
+  readonly onItemDoubleClick?: (item: T, source: ClickSource) => void
+
   /**
    * This function will be called when the selection changes as a result of a
    * user keyboard or mouse action (i.e. not when props change). This function
@@ -168,6 +170,31 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
     item: T,
     event: React.MouseEvent<HTMLDivElement>
   ) => void
+
+  /** This function will be called only when an item obtains focus via keyboard */
+  readonly onItemKeyboardFocus?: (
+    item: T,
+    event: React.KeyboardEvent<any>
+  ) => void
+
+  /** This function will be called when a row loses focus */
+  readonly onItemBlur?: (
+    item: T,
+    event: React.FocusEvent<HTMLDivElement>
+  ) => void
+
+  readonly onItemKeyDown?: (item: T, event: React.KeyboardEvent<any>) => void
+
+  readonly onScroll?: (scrollTop: number, clientHeight: number) => void
+
+  /**
+   * The number of pixels from the top of the list indicating
+   * where to scroll do on rendering of the list.
+   */
+  readonly setScrollTop?: number
+
+  /** The aria-label attribute for the list component. */
+  readonly ariaLabel?: string
 }
 
 interface IAugmentedSectionFilterListState<T extends IFilterListItem> {
@@ -376,13 +403,19 @@ export class AugmentedSectionFilterList<
           }
           onSelectedRowChanged={this.onSelectedRowChanged}
           onRowClick={this.onRowClick}
+          onRowDoubleClick={this.onRowDoubleClick}
           onRowKeyDown={this.onRowKeyDown}
           onRowContextMenu={this.onRowContextMenu}
+          onRowKeyboardFocus={this.onRowKeyboardFocus}
+          onRowBlur={this.onRowBlur}
           canSelectRow={this.canSelectRow}
           invalidationProps={{
             ...this.props,
             ...this.props.invalidationProps,
           }}
+          onScroll={this.props.onScroll}
+          setScrollTop={this.props.setScrollTop}
+          ariaLabel={this.props.ariaLabel}
         />
       )
     }
@@ -483,6 +516,16 @@ export class AugmentedSectionFilterList<
     }
   }
 
+  private onRowDoubleClick = (index: RowIndexPath, source: ClickSource) => {
+    if (this.props.onItemDoubleClick) {
+      const row = this.state.rows[index.section][index.row]
+
+      if (row.kind === 'item') {
+        this.props.onItemDoubleClick(row.item, source)
+      }
+    }
+  }
+
   private onRowContextMenu = (
     index: RowIndexPath,
     source: React.MouseEvent<HTMLDivElement>
@@ -500,10 +543,54 @@ export class AugmentedSectionFilterList<
     this.props.onItemContextMenu(row.item, source)
   }
 
+  private onRowKeyboardFocus = (
+    index: RowIndexPath,
+    source: React.KeyboardEvent<any>
+  ) => {
+    if (!this.props.onItemKeyboardFocus) {
+      return
+    }
+
+    const row = this.state.rows[index.section][index.row]
+
+    if (row.kind !== 'item') {
+      return
+    }
+
+    this.props.onItemKeyboardFocus(row.item, source)
+  }
+
+  private onRowBlur = (
+    index: RowIndexPath,
+    source: React.FocusEvent<HTMLDivElement>
+  ) => {
+    if (!this.props.onItemBlur) {
+      return
+    }
+
+    const row = this.state.rows[index.section][index.row]
+
+    if (row.kind !== 'item') {
+      return
+    }
+
+    this.props.onItemBlur(row.item, source)
+  }
+
   private onRowKeyDown = (
     indexPath: RowIndexPath,
     event: React.KeyboardEvent<any>
   ) => {
+    const row = this.state.rows[indexPath.section][indexPath.row]
+
+    if (row.kind === 'item' && this.props.onItemKeyDown) {
+      this.props.onItemKeyDown(row.item, event)
+    }
+
+    if (event.defaultPrevented) {
+      return
+    }
+
     const list = this.list
     if (!list) {
       return
