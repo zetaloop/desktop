@@ -1018,9 +1018,10 @@ export class FilterChangesList extends React.Component<
     item: IChangesListItem,
     source: ClickSource
   ) => {
-    const fileIndex = this.props.workingDirectory.files.findIndex(
-      f => f.id === item.change.id
+    const fileIndex = this.props.workingDirectory.findFileIndexByID(
+      item.change.id
     )
+
     this.props.onRowClick?.(fileIndex, source)
   }
 
@@ -1038,7 +1039,7 @@ export class FilterChangesList extends React.Component<
 
   private onFileSelectionChanged = (items: ReadonlyArray<IChangesListItem>) => {
     const rows = items.map(i =>
-      this.props.workingDirectory.files.findIndex(f => f.id === i.change.id)
+      this.props.workingDirectory.findFileIndexByID(i.change.id)
     )
     this.props.onFileSelectionChanged(rows)
   }

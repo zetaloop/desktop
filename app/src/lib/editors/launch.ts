@@ -36,9 +36,7 @@ export async function launchExternalEditor(
   }
 
   try {
-    if (editor.usesShell) {
-      spawn(`"${editorPath}"`, [`"${fullPath}"`], { ...opts, shell: true })
-    } else if (__DARWIN__) {
+    if (__DARWIN__) {
       // In macOS we can use `open`, which will open the right executable file
       // for us, we only need the path to the editor .app folder.
       spawn('open', ['-a', editorPath, fullPath], opts)
@@ -94,14 +92,7 @@ export async function launchCustomExternalEditor(
   const args = expandTargetPathArgument(argv, fullPath)
 
   try {
-    // This logic around `usesShell` is also used in Windows `getAvailableEditors` implementation
-    const usesShell = editorPath.endsWith('.cmd')
-    if (usesShell) {
-      spawnCustomIntegration(editorPath, args, {
-        ...opts,
-        shell: true,
-      })
-    } else if (__DARWIN__ && customEditor.bundleID) {
+    if (__DARWIN__ && customEditor.bundleID) {
       // In macOS we can use `open` if it's an app (i.e. if we have a bundleID),
       // which will open the right executable file for us, we only need the path
       // to the editor .app folder.
