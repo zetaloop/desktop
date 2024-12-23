@@ -348,7 +348,7 @@ export class PathText extends React.PureComponent<
           <Tooltip
             target={this.pathElementRef}
             interactive={true}
-            className="selectable"
+            className="selectable path-text"
           >
             {tooltipText}
           </Tooltip>
