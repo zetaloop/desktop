@@ -421,7 +421,7 @@ export class PushPullButton extends React.Component<
           onResize={this.onResize}
           maximumWidth={this.props.pushPullButtonWidth.max}
           minimumWidth={this.props.pushPullButtonWidth.min}
-          description="推送拉取按钮"
+          description="Push pull button"
         >
           {this.renderButton()}
           <span id="push-pull-button-state">
@@ -543,7 +543,7 @@ export class PushPullButton extends React.Component<
       <ToolbarButton
         {...this.defaultButtonProps()}
         title="发布分支"
-        description="无法发布未初始化的 HEAD 指针"
+        description="无法发布：从未提交"
         icon={octicons.upload}
         disabled={true}
       />
