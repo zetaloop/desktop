@@ -302,7 +302,7 @@ export class PathText extends React.PureComponent<
       .map(
         m => m - (this.state.normalizedPath.length - this.state.fileText.length)
       )
-      .filter(m => m > 0)
+      .filter(m => m >= 0)
 
     const directoryElementText = matchesInDirectoryText ? (
       <HighlightText
