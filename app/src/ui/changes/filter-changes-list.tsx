@@ -60,6 +60,7 @@ import { IFilterListGroup, IFilterListItem } from '../lib/filter-list'
 import { ClickSource } from '../lib/list'
 import memoizeOne from 'memoize-one'
 import { IMatches } from '../../lib/fuzzy-find'
+import { Button } from '../lib/button'
 
 interface IChangesListItem extends IFilterListItem {
   readonly id: string
@@ -213,6 +214,7 @@ interface IFilterChangesListState {
   readonly selectedItems: ReadonlyArray<IChangesListItem>
   readonly focusedRow: string | null
   readonly groups: ReadonlyArray<IFilterListGroup<IChangesListItem>>
+  readonly filterToIncludedCommit: boolean
 }
 
 function getSelectedItemsFromProps(
@@ -332,6 +334,7 @@ export class FilterChangesList extends React.Component<
       selectedItems: getSelectedItemsFromProps(props),
       focusedRow: null,
       groups,
+      filterToIncludedCommit: false,
     }
   }
 
@@ -1148,12 +1151,26 @@ export class FilterChangesList extends React.Component<
       >
         <Checkbox
           ref={this.includeAllCheckBoxRef}
-          label={filesDescription}
           value={includeAllValue}
           onChange={this.onIncludeAllChanged}
           disabled={disableAllCheckbox}
-          ariaDescribedBy="changesDescription"
+          ariaLabelledBy="changes-list-check-all-label"
         />
+
+        <Button
+          onClick={this.onFilterToIncludedInCommit}
+          className={classNames({
+            'included-in-commit-filter-on': this.state.filterToIncludedCommit,
+          })}
+          ariaLabel={
+            this.state.filterToIncludedCommit
+              ? 'Remove "Included in commit" filter'
+              : 'Apply "Included in commit" filter'
+          }
+        >
+          <Octicon symbol={octicons.filter} />
+        </Button>
+        <label id="changes-list-check-all-label"> {filesDescription}</label>
       </div>
     )
   }
@@ -1200,6 +1217,12 @@ export class FilterChangesList extends React.Component<
         {this.renderCommitMessageForm()}
       </>
     )
+  }
+
+  private onFilterToIncludedInCommit = () => {
+    this.setState({
+      filterToIncludedCommit: !this.state.filterToIncludedCommit,
+    })
   }
 
   private onChangedFileFocus = (changeListItem: IChangesListItem) => {
