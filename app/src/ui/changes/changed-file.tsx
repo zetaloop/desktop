@@ -8,6 +8,7 @@ import { WorkingDirectoryFileChange } from '../../models/status'
 import { TooltipDirection } from '../lib/tooltip'
 import { TooltippedContent } from '../lib/tooltipped-content'
 import { AriaLiveContainer } from '../accessibility/aria-live-container'
+import { IMatches } from '../../lib/fuzzy-find'
 
 interface IChangedFileProps {
   readonly file: WorkingDirectoryFileChange
@@ -16,6 +17,8 @@ interface IChangedFileProps {
   readonly disableSelection: boolean
   readonly checkboxTooltip?: string
   readonly focused: boolean
+  /** The characters in the file path to highlight */
+  readonly matches?: IMatches
   readonly onIncludeChanged: (path: string, include: boolean) => void
 }
 
@@ -37,8 +40,14 @@ export class ChangedFile extends React.Component<IChangedFileProps, {}> {
   }
 
   public render() {
-    const { file, availableWidth, disableSelection, checkboxTooltip, focused } =
-      this.props
+    const {
+      file,
+      availableWidth,
+      disableSelection,
+      checkboxTooltip,
+      focused,
+      matches,
+    } = this.props
     const { status, path } = file
     const fileStatus = mapStatus(status)
 
@@ -88,6 +97,7 @@ export class ChangedFile extends React.Component<IChangedFileProps, {}> {
           status={status}
           availableWidth={availablePathWidth}
           ariaHidden={true}
+          matches={matches}
         />
 
         <AriaLiveContainer message={pathScreenReaderMessage} />
