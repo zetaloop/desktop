@@ -28,12 +28,11 @@ const args = parse(process.argv.slice(2), {
 
 const usage = (exitCode = 1): never => {
   process.stderr.write(
-    'GitHub Desktop CLI usage: \n' +
-      '  github                            Open the current directory\n' +
-      '  github open [path]                Open the provided path\n' +
-      '  github clone [-b branch] <url>    Clone the repository by url or name/owner\n' +
-      '                                    (ex torvalds/linux), optionally checking out\n' +
-      '                                    the branch\n'
+    'GitHub Desktop CLI 用法说明: \n' +
+      '  github                            打开当前目录\n' +
+      '  github open [path]                打开一个目录\n' +
+      '  github clone [-b branch] <url>    克隆此 URL 或 name/owner (例如 torvalds/linux)\n' +
+      '                                    所对应的的仓库，也可选择检出特定分支。\n'
   )
   process.exit(exitCode)
 }
