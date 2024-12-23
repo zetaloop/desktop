@@ -59,6 +59,7 @@ import { AugmentedSectionFilterList } from '../lib/augmented-filter-list'
 import { IFilterListGroup, IFilterListItem } from '../lib/filter-list'
 import { ClickSource } from '../lib/list'
 import memoizeOne from 'memoize-one'
+import { IMatches } from '../../lib/fuzzy-find'
 
 interface IChangesListItem extends IFilterListItem {
   readonly id: string
@@ -334,7 +335,7 @@ export class FilterChangesList extends React.Component<
     files: ReadonlyArray<WorkingDirectoryFileChange>
   ): IFilterListGroup<IChangesListItem> {
     const items = files.map(file => ({
-      text: [file.path, file.status.kind.toString()],
+      text: [file.path],
       id: file.id,
       change: file,
     }))
@@ -351,7 +352,8 @@ export class FilterChangesList extends React.Component<
   }
 
   private renderChangedFile = (
-    changeListItem: IChangesListItem
+    changeListItem: IChangesListItem,
+    matches: IMatches
   ): JSX.Element | null => {
     const {
       rebaseConflictState,
@@ -407,6 +409,7 @@ export class FilterChangesList extends React.Component<
         disableSelection={disableSelection}
         checkboxTooltip={checkboxTooltip}
         focused={this.state.focusedRow === changeListItem.id}
+        matches={matches}
       />
     )
   }
