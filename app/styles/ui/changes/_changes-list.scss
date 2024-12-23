@@ -11,6 +11,13 @@
   flex-direction: column;
   min-height: 100px;
 
+  .filter-list .filter-field-row {
+    background-color: var(--box-alt-background-color);
+    padding: var(--spacing);
+    padding-bottom: 0px;
+    margin: 0;
+  }
+
   .header {
     background: var(--box-alt-background-color);
     border-bottom: 1px solid var(--box-border-color);
