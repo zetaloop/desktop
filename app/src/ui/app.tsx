@@ -1582,6 +1582,7 @@ export class App extends React.Component<IAppProps, IAppState> {
             onEditGlobalGitConfig={this.editGlobalGitConfig}
             underlineLinks={this.state.underlineLinks}
             showDiffCheckMarks={this.state.showDiffCheckMarks}
+            canFilterChanges={this.state.canFilterChanges}
           />
         )
       case PopupType.RepositorySettings: {
@@ -3265,6 +3266,7 @@ export class App extends React.Component<IAppProps, IAppState> {
           showCommitLengthWarning={this.state.showCommitLengthWarning}
           onCherryPick={this.startCherryPickWithoutBranch}
           pullRequestSuggestedNextAction={state.pullRequestSuggestedNextAction}
+          canFilterChanges={state.canFilterChanges}
         />
       )
     } else if (selectedState.type === SelectionType.CloningRepository) {
