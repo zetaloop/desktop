@@ -1102,7 +1102,7 @@ export class FilterChangesList extends React.Component<
     this.setState({ filterText: '' })
   }
 
-  public render() {
+  private renderFilterResultsHeader = () => {
     const { workingDirectory, rebaseConflictState, isCommitting } = this.props
     const { files } = workingDirectory
 
@@ -1124,31 +1124,42 @@ export class FilterChangesList extends React.Component<
       files.length === 0 || isCommitting || rebaseConflictState !== null
 
     return (
+      <div
+        className="header"
+        onContextMenu={this.onContextMenu}
+        ref={this.headerRef}
+      >
+        <TooltippedContent
+          tooltip={selectedChangesDescription}
+          direction={TooltipDirection.NORTH}
+          openOnFocus={true}
+        >
+          <Checkbox
+            ref={this.includeAllCheckBoxRef}
+            label={filesDescription}
+            value={includeAllValue}
+            onChange={this.onIncludeAllChanged}
+            disabled={disableAllCheckbox}
+            ariaDescribedBy="changesDescription"
+          />
+        </TooltippedContent>
+        <div className="sr-only" id="changesDescription">
+          {selectedChangesDescription}
+        </div>
+      </div>
+    )
+  }
+
+  public render() {
+    const { workingDirectory, isCommitting } = this.props
+    const { files } = workingDirectory
+
+    const filesPlural = files.length === 1 ? 'file' : 'files'
+    const filesDescription = `${files.length} changed ${filesPlural}`
+
+    return (
       <>
         <div className="changes-list-container file-list">
-          <div
-            className="header"
-            onContextMenu={this.onContextMenu}
-            ref={this.headerRef}
-          >
-            <TooltippedContent
-              tooltip={selectedChangesDescription}
-              direction={TooltipDirection.NORTH}
-              openOnFocus={true}
-            >
-              <Checkbox
-                ref={this.includeAllCheckBoxRef}
-                label={filesDescription}
-                value={includeAllValue}
-                onChange={this.onIncludeAllChanged}
-                disabled={disableAllCheckbox}
-                ariaDescribedBy="changesDescription"
-              />
-            </TooltippedContent>
-            <div className="sr-only" id="changesDescription">
-              {selectedChangesDescription}
-            </div>
-          </div>
           <AugmentedSectionFilterList<IChangesListItem>
             id="changes-list"
             rowHeight={RowHeight}
@@ -1174,6 +1185,7 @@ export class FilterChangesList extends React.Component<
             }}
             onItemContextMenu={this.onItemContextMenu}
             ariaLabel={filesDescription}
+            renderPostFilterRow={this.renderFilterResultsHeader}
           />
         </div>
         {this.renderStashedChanges()}
