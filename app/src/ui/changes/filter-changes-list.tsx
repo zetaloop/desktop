@@ -1175,6 +1175,10 @@ export class FilterChangesList extends React.Component<
     )
   }
 
+  private isIncludedInCommit(item: IChangesListItem) {
+    return item.change.selection.getSelectionType() !== DiffSelectionType.None
+  }
+
   public render() {
     const { workingDirectory, isCommitting } = this.props
     const { files } = workingDirectory
@@ -1203,6 +1207,11 @@ export class FilterChangesList extends React.Component<
             onItemKeyDown={this.onItemKeyDown}
             onSelectionChanged={this.onFileSelectionChanged}
             groups={this.state.groups}
+            filterMethod={
+              this.state.filterToIncludedCommit
+                ? this.isIncludedInCommit
+                : undefined
+            }
             invalidationProps={{
               workingDirectory: workingDirectory,
               isCommitting: isCommitting,

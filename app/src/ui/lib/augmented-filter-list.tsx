@@ -123,6 +123,9 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
   /** The current filter text to use in the form */
   readonly filterText?: string
 
+  /** An optional filter that can be applied in addition of the filter text*/
+  readonly filterMethod?: (item: T) => boolean
+
   /** Called when the filter text is changed by the user */
   readonly onFilterTextChanged?: (text: string) => void
 
@@ -812,16 +815,21 @@ function createStateUpdate<T extends IFilterListItem>(
 ) {
   const rows = new Array<Array<IFilterListRow<T>>>()
   const filter = (props.filterText || '').toLowerCase()
+  const { filterMethod, selectedItems } = props
   const selectedRows = []
   let section = 0
-  const selectedItems = props.selectedItems
   const groupIndices = []
 
   for (const [idx, group] of props.groups.entries()) {
     const groupRows = new Array<IFilterListRow<T>>()
+
+    const itemsToMatch = filterMethod
+      ? group.items.filter(filterMethod)
+      : group.items
+
     const items: ReadonlyArray<IMatch<T>> = filter
-      ? match(filter, group.items, getText)
-      : group.items.map(item => ({
+      ? match(filter, itemsToMatch, getText)
+      : itemsToMatch.map(item => ({
           score: 1,
           matches: { title: [], subtitle: [] },
           item,
