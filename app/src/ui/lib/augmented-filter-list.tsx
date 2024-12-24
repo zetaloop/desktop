@@ -123,7 +123,9 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
   /** The current filter text to use in the form */
   readonly filterText?: string
 
-  /** An optional filter that can be applied in addition of the filter text*/
+  /** An optional filter that can be applied in addition of the filter text */
+  // It is used in the createStateUpdate - so not directly in the component.
+  // eslint-disable-next-line react/no-unused-prop-types
   readonly filterMethod?: (item: T) => boolean
 
   /** Called when the filter text is changed by the user */
