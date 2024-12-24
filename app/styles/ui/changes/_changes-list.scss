@@ -52,14 +52,10 @@
   }
 
   .filter-list {
-    display: block;
-    flex-direction: unset;
-    flex: unset;
-    min-height: 0;
     flex-grow: 1;
-    height: 100%;
-    min-width: 0;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100px;
 
     .filter-list-container {
       height: 100%;
