@@ -7,7 +7,7 @@ import { Checkbox, CheckboxValue } from '../lib/checkbox'
 interface IConfirmCommitFilteredChangesProps {
   readonly onCommitAnyway: () => void
   readonly onDismissed: () => void
-  readonly onClearFilter: () => void
+  readonly showFilesToBeCommitted: () => void
   readonly setConfirmCommitFilteredChanges: (value: boolean) => void
 }
 
@@ -62,9 +62,11 @@ export class ConfirmCommitFilteredChanges extends React.Component<
             destructive={true}
             okButtonText={__DARWIN__ ? 'Commit Anyway' : 'Commit anyway'}
             cancelButtonText={
-              __DARWIN__ ? 'Cancel and Clear Filter' : 'Cancel and clear filter'
+              __DARWIN__
+                ? 'Cancel and Show Hidden Changes'
+                : 'Cancel and show hidden changes'
             }
-            onCancelButtonClick={this.onClearFilter}
+            onCancelButtonClick={this.showFilesToBeCommitted}
           />
         </DialogFooter>
       </Dialog>
@@ -77,8 +79,8 @@ export class ConfirmCommitFilteredChanges extends React.Component<
     this.setState({ askForConfirmationOnCommitFilteredChanges: value })
   }
 
-  private onClearFilter = () => {
-    this.props.onClearFilter()
+  private showFilesToBeCommitted = () => {
+    this.props.showFilesToBeCommitted()
     this.props.onDismissed()
   }
 

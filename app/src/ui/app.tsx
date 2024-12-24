@@ -2492,7 +2492,7 @@ export class App extends React.Component<IAppProps, IAppState> {
           <ConfirmCommitFilteredChanges
             onCommitAnyway={popup.onCommitAnyway}
             onDismissed={onPopupDismissedFn}
-            onClearFilter={popup.onClearFilter}
+            showFilesToBeCommitted={popup.showFilesToBeCommitted}
             setConfirmCommitFilteredChanges={
               this.setConfirmCommitFilteredChanges
             }

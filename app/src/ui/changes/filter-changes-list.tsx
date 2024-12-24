@@ -1118,12 +1118,16 @@ export class FilterChangesList extends React.Component<
     this.props.dispatcher.showPopup({
       type: PopupType.ConfirmCommitFilteredChanges,
       onCommitAnyway,
-      onClearFilter: this.clearFilter,
+      showFilesToBeCommitted: this.showFilesToBeCommitted,
     })
   }
 
   private clearFilter = () => {
     this.setState({ filterText: '' })
+  }
+
+  private showFilesToBeCommitted = () => {
+    this.setState({ filterText: '', filterToIncludedCommit: true })
   }
 
   private renderFilterResultsHeader = () => {
