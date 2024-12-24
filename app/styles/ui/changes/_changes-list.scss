@@ -40,6 +40,19 @@
       &:focus-visible {
         outline-offset: 0px;
       }
+
+      &:hover {
+        color: var(--text-secondary-color);
+        background-color: var(--secondary-button-background);
+      }
+
+      &.included-in-commit-filter-on {
+        color: var(--link-button-color);
+
+        &:hover {
+          color: var(--link-button-hover-color);
+        }
+      }
     }
 
     .checkbox-component {
@@ -65,10 +78,6 @@
         flex-grow: 0;
         flex-shrink: 0;
       }
-    }
-
-    .included-in-commit-filter-on {
-      color: var(--box-selected-active-background-color);
     }
   }
 
