@@ -1193,7 +1193,7 @@ export class FilterChangesList extends React.Component<
 
     return (
       <>
-        <div className="changes-list-container file-list">
+        <div className="changes-list-container file-list filtered-changes-list">
           <AugmentedSectionFilterList<IChangesListItem>
             id="changes-list"
             rowHeight={RowHeight}
