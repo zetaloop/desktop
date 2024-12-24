@@ -1143,6 +1143,10 @@ export class FilterChangesList extends React.Component<
     const disableAllCheckbox =
       files.length === 0 || isCommitting || rebaseConflictState !== null
 
+    const toBeCommittedFilterText = this.state.filterToIncludedCommit
+      ? 'Remove to be committed filter'
+      : 'Only show files to be committed'
+
     return (
       <div
         className="header"
@@ -1162,11 +1166,8 @@ export class FilterChangesList extends React.Component<
           className={classNames({
             'included-in-commit-filter-on': this.state.filterToIncludedCommit,
           })}
-          ariaLabel={
-            this.state.filterToIncludedCommit
-              ? 'Remove "Included in commit" filter'
-              : 'Apply "Included in commit" filter'
-          }
+          ariaLabel={toBeCommittedFilterText}
+          tooltip={toBeCommittedFilterText}
         >
           <Octicon symbol={octicons.filter} />
         </Button>
