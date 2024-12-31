@@ -214,6 +214,10 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
   /** The aria-label attribute for the list component. */
   readonly ariaLabel?: string
 
+  /** A message to be announced after the no results message - Used to pass in
+   * any messaging shown to visual users */
+  readonly postNoResultsMessage?: string
+
   /**
    * This prop defines the behaviour of the selection of items within this list.
    *  - 'single' : (default) single list-item selection. [shift] and [ctrl] have
@@ -357,7 +361,9 @@ export class AugmentedSectionFilterList<
 
     const itemRows = this.state.rows.flat().filter(row => row.kind === 'item')
     const resultsPluralized = itemRows.length === 1 ? 'result' : 'results'
-    const screenReaderMessage = `${itemRows.length} ${resultsPluralized}`
+    const postNoResultsMessage =
+      itemRows.length === 0 ? this.props.postNoResultsMessage : ''
+    const screenReaderMessage = `${itemRows.length} ${resultsPluralized} ${postNoResultsMessage}`
 
     return (
       <AriaLiveContainer

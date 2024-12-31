@@ -1225,11 +1225,42 @@ export class FilterChangesList extends React.Component<
             onItemContextMenu={this.onItemContextMenu}
             ariaLabel={filesDescription}
             renderPostFilterRow={this.renderFilterResultsHeader}
+            renderNoItems={this.renderNoChanges}
+            postNoResultsMessage={this.getNoResultsMessage()}
           />
         </div>
         {this.renderStashedChanges()}
         {this.renderCommitMessageForm()}
       </>
+    )
+  }
+
+  private getNoResultsMessage = () => {
+    if (this.state.filterText === '' && !this.state.filterToIncludedCommit) {
+      return undefined
+    }
+
+    const filterTextMessage = this.state.filterText
+      ? ` matching your filter of '${this.state.filterText}'`
+      : ''
+
+    const includedCommitText = this.state.filterToIncludedCommit
+      ? ' that are to be included in your commit'
+      : ''
+
+    const conjunction = filterTextMessage && includedCommitText ? ' and ' : ''
+
+    return `Sorry, I can't find any changed files${filterTextMessage}${conjunction}
+        ${includedCommitText}.`
+  }
+
+  private renderNoChanges = () => {
+    if (this.state.filterText === '' && !this.state.filterToIncludedCommit) {
+      return null
+    }
+
+    return (
+      <div className="no-changes-in-list">{this.getNoResultsMessage()}</div>
     )
   }
 
