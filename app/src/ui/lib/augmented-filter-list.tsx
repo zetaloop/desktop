@@ -365,9 +365,12 @@ export class AugmentedSectionFilterList<
       itemRows.length === 0 ? this.props.postNoResultsMessage : ''
     const screenReaderMessage = `${itemRows.length} ${resultsPluralized} ${postNoResultsMessage}`
 
+    const tracked = `${this.state.filterValue} ${
+      this.props.filterMethod ? 'fm' : ''
+    }`
     return (
       <AriaLiveContainer
-        trackedUserInput={this.state.filterValue}
+        trackedUserInput={tracked}
         message={screenReaderMessage}
       />
     )
@@ -827,6 +830,7 @@ function createStateUpdate<T extends IFilterListItem>(
   const selectedRows = []
   let section = 0
   const groupIndices = []
+  let filterValueChanged = state?.filterValueChanged ? true : filter.length > 0
 
   for (const [idx, group] of props.groups.entries()) {
     const groupRows = new Array<IFilterListRow<T>>()
@@ -842,6 +846,10 @@ function createStateUpdate<T extends IFilterListItem>(
           matches: { title: [], subtitle: [] },
           item,
         }))
+
+    if (group.items.length !== items.length) {
+      filterValueChanged = true
+    }
 
     if (!items.length) {
       continue
@@ -873,11 +881,6 @@ function createStateUpdate<T extends IFilterListItem>(
     // select the first visible item.
     selectedRows.push(getFirstVisibleRow(rows))
   }
-
-  // Stay true if already set, otherwise become true if the filter has content
-  const filterValueChanged = state?.filterValueChanged
-    ? true
-    : filter.length > 0
 
   return {
     rows: rows,
