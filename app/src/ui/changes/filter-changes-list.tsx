@@ -374,7 +374,7 @@ export class FilterChangesList extends React.Component<
     const filteredItemPaths = [...this.state.filteredItems.values()].map(
       i => i.change.path
     )
-    filteredItemPaths.map(path => this.props.onIncludeChanged(path, include))
+    filteredItemPaths.each(path => this.props.onIncludeChanged(path, include))
   }
 
   private renderChangedFile = (
