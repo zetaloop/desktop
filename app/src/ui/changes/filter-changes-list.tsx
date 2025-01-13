@@ -284,7 +284,7 @@ export class FilterChangesList extends React.Component<
         return getCheckBoxValueFromIncludeAll(workingDirectory.includeAll)
       }
 
-      const files = workingDirectory.files.filter(f => filteredItems.get(f.id))
+      const files = workingDirectory.files.filter(f => filteredItems.has(f.id))
 
       if (files.length === 0) {
         // the current commit will be skipped in the rebase
