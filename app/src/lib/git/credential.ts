@@ -41,7 +41,7 @@ export const formatCredential = (credential: Map<string, string>) => {
     if (v.includes('\n') || v.includes('\0')) {
       throw new Error(`forbidden characters in credential value: ${k}`)
     }
-    lines.push(`${k.replace(/\[\d+\]$/, '[]')}=${v}`)
+    lines.push(`${k.replace(/\[\d+\]$/, '[]')}=${v}\n`)
   }
 
   return lines.join('')
