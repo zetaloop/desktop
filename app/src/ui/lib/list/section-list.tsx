@@ -846,9 +846,14 @@ export class SectionList extends React.Component<
     }
 
     const lastSelection =
-      this.props.selectedRows[this.props.selectedRows.length - 1]
+      direction === 'down'
+        ? this.props.selectedRows[this.props.selectedRows.length - 1]
+        : this.props.selectedRows[0]
 
-    const selectionOrigin = this.props.selectedRows[0]
+    const selectionOrigin =
+      direction === 'down'
+        ? this.props.selectedRows[0]
+        : this.props.selectedRows.at(-1)
 
     const newRow = findNextSelectableRow(
       this.props.rowCount,
@@ -856,7 +861,7 @@ export class SectionList extends React.Component<
       this.canSelectRow
     )
 
-    if (newRow != null) {
+    if (newRow != null && selectionOrigin !== undefined) {
       if (this.props.onSelectionChanged) {
         const newSelection = createSelectionBetween(
           selectionOrigin,
