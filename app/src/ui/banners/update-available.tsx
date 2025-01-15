@@ -84,11 +84,13 @@ export class UpdateAvailable extends React.Component<IUpdateAvailableProps> {
 
       return (
         <span>
-          <RichText
-            className="banner-emoji"
-            text={':tada:'}
-            emoji={this.props.emoji}
-          />
+          <span aria-hidden="true">
+            <RichText
+              className="banner-emoji"
+              text={':tada:'}
+              emoji={this.props.emoji}
+            />
+          </span>
           Exciting new features have been added{version}. See{' '}
           <LinkButton onClick={this.showReleaseNotes}>what's new</LinkButton> or{' '}
           <LinkButton onClick={this.dismissUpdateShowCaseVisibility}>
