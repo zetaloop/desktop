@@ -81,6 +81,7 @@ interface IPreferencesProps {
   readonly onEditGlobalGitConfig: () => void
   readonly underlineLinks: boolean
   readonly showDiffCheckMarks: boolean
+  readonly canFilterChanges: boolean
 }
 
 interface IPreferencesState {
@@ -133,6 +134,8 @@ interface IPreferencesState {
   readonly underlineLinks: boolean
 
   readonly showDiffCheckMarks: boolean
+
+  readonly canFilterChanges: boolean
 }
 
 /**
@@ -190,6 +193,7 @@ export class Preferences extends React.Component<
       isLoadingGitConfig: true,
       underlineLinks: this.props.underlineLinks,
       showDiffCheckMarks: this.props.showDiffCheckMarks,
+      canFilterChanges: this.props.canFilterChanges,
     }
   }
 
@@ -517,6 +521,7 @@ export class Preferences extends React.Component<
             optOutOfUsageTracking={this.state.optOutOfUsageTracking}
             useExternalCredentialHelper={this.state.useExternalCredentialHelper}
             repositoryIndicatorsEnabled={this.state.repositoryIndicatorsEnabled}
+            canFilterChanges={this.state.canFilterChanges}
             onUseWindowsOpenSSHChanged={this.onUseWindowsOpenSSHChanged}
             onOptOutofReportingChanged={this.onOptOutofReportingChanged}
             onUseExternalCredentialHelperChanged={
@@ -525,6 +530,7 @@ export class Preferences extends React.Component<
             onRepositoryIndicatorsEnabledChanged={
               this.onRepositoryIndicatorsEnabledChanged
             }
+            onCanFilterChangesChanged={this.onCanFilterChangesChanged}
           />
         )
         break
@@ -558,6 +564,10 @@ export class Preferences extends React.Component<
     repositoryIndicatorsEnabled: boolean
   ) => {
     this.setState({ repositoryIndicatorsEnabled })
+  }
+
+  private onCanFilterChangesChanged = (canFilterChanges: boolean) => {
+    this.setState({ canFilterChanges })
   }
 
   private onLockFileDeleted = () => {
@@ -827,6 +837,8 @@ export class Preferences extends React.Component<
     dispatcher.setUnderlineLinksSetting(this.state.underlineLinks)
 
     dispatcher.setDiffCheckMarksSetting(this.state.showDiffCheckMarks)
+
+    dispatcher.setCanFilterChanges(this.state.canFilterChanges)
 
     this.props.onDismissed()
   }

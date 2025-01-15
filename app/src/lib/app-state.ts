@@ -371,6 +371,8 @@ export interface IAppState {
   readonly cachedRepoRulesets: ReadonlyMap<number, IAPIRepoRuleset>
 
   readonly underlineLinks: boolean
+
+  readonly canFilterChanges: boolean
 }
 
 export enum FoldoutType {
