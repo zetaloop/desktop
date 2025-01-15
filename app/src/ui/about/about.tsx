@@ -304,12 +304,12 @@ export class About extends React.Component<IAboutProps, IAboutState> {
             </span>{' '}
             ({releaseNotesLink})
           </p>
-          <p className="no-padding">
+          <p className="no-padding terms-and-license">
             <LinkButton onClick={this.props.onShowTermsAndConditions}>
               Terms and Conditions
             </LinkButton>
           </p>
-          <p>
+          <p className="terms-and-license">
             <LinkButton onClick={this.props.onShowAcknowledgements}>
               License and Open Source Notices
             </LinkButton>

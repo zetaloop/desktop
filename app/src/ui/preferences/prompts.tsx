@@ -13,6 +13,7 @@ interface IPromptsPreferencesProps {
   readonly confirmCheckoutCommit: boolean
   readonly confirmForcePush: boolean
   readonly confirmUndoCommit: boolean
+  readonly askForConfirmationOnCommitFilteredChanges: boolean
   readonly showCommitLengthWarning: boolean
   readonly uncommittedChangesStrategy: UncommittedChangesStrategy
   readonly onConfirmDiscardChangesChanged: (checked: boolean) => void
@@ -26,6 +27,7 @@ interface IPromptsPreferencesProps {
   readonly onUncommittedChangesStrategyChanged: (
     value: UncommittedChangesStrategy
   ) => void
+  readonly onAskForConfirmationOnCommitFilteredChanges: (value: boolean) => void
 }
 
 interface IPromptsPreferencesState {
@@ -36,6 +38,7 @@ interface IPromptsPreferencesState {
   readonly confirmCheckoutCommit: boolean
   readonly confirmForcePush: boolean
   readonly confirmUndoCommit: boolean
+  readonly askForConfirmationOnCommitFilteredChanges: boolean
   readonly uncommittedChangesStrategy: UncommittedChangesStrategy
 }
 
@@ -56,6 +59,8 @@ export class Prompts extends React.Component<
       confirmForcePush: this.props.confirmForcePush,
       confirmUndoCommit: this.props.confirmUndoCommit,
       uncommittedChangesStrategy: this.props.uncommittedChangesStrategy,
+      askForConfirmationOnCommitFilteredChanges:
+        this.props.askForConfirmationOnCommitFilteredChanges,
     }
   }
 
@@ -111,6 +116,15 @@ export class Prompts extends React.Component<
 
     this.setState({ confirmUndoCommit: value })
     this.props.onConfirmUndoCommitChanged(value)
+  }
+
+  private onAskForConfirmationOnCommitFilteredChanges = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    const value = event.currentTarget.checked
+
+    this.setState({ askForConfirmationOnCommitFilteredChanges: value })
+    this.props.onAskForConfirmationOnCommitFilteredChanges(value)
   }
 
   private onConfirmRepositoryRemovalChanged = (
@@ -246,6 +260,15 @@ export class Prompts extends React.Component<
                   : CheckboxValue.Off
               }
               onChange={this.onConfirmUndoCommitChanged}
+            />
+            <Checkbox
+              label="Committing changes hidden by filter"
+              value={
+                this.state.askForConfirmationOnCommitFilteredChanges
+                  ? CheckboxValue.On
+                  : CheckboxValue.Off
+              }
+              onChange={this.onAskForConfirmationOnCommitFilteredChanges}
             />
           </div>
         </div>

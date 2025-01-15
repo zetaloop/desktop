@@ -349,7 +349,15 @@ ipcRenderer.on('blur', () => {
 })
 
 ipcRenderer.on('url-action', (_, action) =>
-  dispatcher.dispatchURLAction(action)
+  dispatcher
+    .dispatchURLAction(action)
+    .catch(e => log.error(`URL action ${action.name} failed`, e))
+)
+
+ipcRenderer.on('cli-action', (_, action) =>
+  dispatcher
+    .dispatchCLIAction(action)
+    .catch(e => log.error(`CLI action ${action.kind} failed`, e))
 )
 
 // react-virtualized will use the literal string "grid" as the 'aria-label'

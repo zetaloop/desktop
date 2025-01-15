@@ -81,7 +81,6 @@ other measurement tools.
 When running the app in development mode,
 [React Dev Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
 should automatically install itself on first start when in development mode.
-```
 
 ## The Next Steps
 

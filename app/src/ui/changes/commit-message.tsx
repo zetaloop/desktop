@@ -69,11 +69,19 @@ const addAuthorIcon: OcticonSymbolVariant = {
   ],
 }
 
+interface ICreateCommitOptions {
+  warnUnknownAuthors: boolean
+  warnFilesNotVisible: boolean
+}
+
 interface ICommitMessageProps {
   readonly onCreateCommit: (context: ICommitContext) => Promise<boolean>
   readonly branch: string | null
   readonly commitAuthor: CommitIdentity | null
   readonly anyFilesSelected: boolean
+  /** Whether the user can see all the files to commit in the changes list. They
+   * may not be able to if the list is filtered */
+  readonly showPromptForCommittingFileHiddenByFilter?: boolean
   readonly isShowingModal: boolean
   readonly isShowingFoldout: boolean
 
@@ -161,7 +169,8 @@ interface ICommitMessageProps {
   readonly onCommitSpellcheckEnabledChanged: (enabled: boolean) => void
   readonly onStopAmending: () => void
   readonly onShowCreateForkDialog: () => void
-
+  readonly onFilesToCommitNotVisible?: (onCommitAnyway: () => {}) => void
+  readonly onSuccessfulCommitCreated?: () => void
   readonly accounts: ReadonlyArray<Account>
 }
 
@@ -498,26 +507,24 @@ export class CommitMessage extends React.Component<
       : this.state.summary
   }
 
-  private forceCreateCommit = async () => {
-    return this.createCommit(false)
-  }
-
-  private async createCommit(warnUnknownAuthors: boolean = true) {
+  private async createCommit(options?: ICreateCommitOptions) {
     const { description } = this.state
 
     if (!this.canCommit() && !this.canAmend()) {
       return
     }
 
-    if (warnUnknownAuthors) {
+    if (options?.warnUnknownAuthors !== false) {
       const unknownAuthors = this.props.coAuthors.filter(
         (author): author is UnknownAuthor => !isKnownAuthor(author)
       )
 
       if (unknownAuthors.length > 0) {
-        this.props.onConfirmCommitWithUnknownCoAuthors(
-          unknownAuthors,
-          this.forceCreateCommit
+        this.props.onConfirmCommitWithUnknownCoAuthors(unknownAuthors, () =>
+          this.createCommit({
+            warnUnknownAuthors: false,
+            warnFilesNotVisible: options?.warnFilesNotVisible === true,
+          })
         )
         return
       }
@@ -532,11 +539,26 @@ export class CommitMessage extends React.Component<
       amend: this.props.commitToAmend !== null,
     }
 
+    if (
+      options?.warnFilesNotVisible !== false &&
+      this.props.showPromptForCommittingFileHiddenByFilter === true &&
+      this.props.onFilesToCommitNotVisible
+    ) {
+      this.props.onFilesToCommitNotVisible(() =>
+        this.createCommit({
+          warnUnknownAuthors: options?.warnUnknownAuthors === true,
+          warnFilesNotVisible: false,
+        })
+      )
+      return
+    }
+
     const timer = startTimer('create commit', this.props.repository)
     const commitCreated = await this.props.onCreateCommit(commitContext)
     timer.done()
 
     if (commitCreated) {
+      this.props.onSuccessfulCommitCreated?.()
       this.clearCommitMessage()
     }
   }
