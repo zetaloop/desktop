@@ -1390,7 +1390,7 @@ export class SectionList extends React.Component<
   private get totalHeight() {
     return this.props.rowCount.reduce((total, _count, section) => {
       return total + this.getSectionHeight(section)
-    })
+    }, 0)
   }
 
   private sectionHeight = ({ index }: Index) => {

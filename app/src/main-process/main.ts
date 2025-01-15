@@ -727,18 +727,13 @@ function createWindow() {
       REACT_DEVELOPER_TOOLS,
     } = require('electron-devtools-installer')
 
-    const ChromeLens = {
-      id: 'idikgljglpfilbhaboonnpnnincjhjkd',
-      electron: '>=1.2.1',
-    }
-
     const axeDevTools = {
       id: 'lhdoppojpmngadmnindnejefpokejbdd',
       electron: '>=1.2.1',
       Permissions: ['tabs', 'debugger'],
     }
 
-    const extensions = [REACT_DEVELOPER_TOOLS, ChromeLens, axeDevTools]
+    const extensions = [REACT_DEVELOPER_TOOLS, axeDevTools]
 
     for (const extension of extensions) {
       try {

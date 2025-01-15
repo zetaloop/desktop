@@ -151,6 +151,7 @@ These shells are currently supported:
  - [Alacritty](https://github.com/alacritty/alacritty)
  - [Tabby](https://tabby.sh/)
  - [WezTerm](https://github.com/wez/wezterm)
+ - [Ghostty](https://ghostty.org/)
 
 These are defined in an enum at the top of the file:
 
@@ -241,6 +242,7 @@ These shells are currently supported:
  - [Konsole](https://konsole.kde.org/)
  - [XTerm](http://invisible-island.net/xterm/)
  - [Terminology](https://www.enlightenment.org/docs/apps/terminology.md)
+ - [Ghostty](https://ghostty.org/)
 
 These are defined in an enum at the top of the file:
 
