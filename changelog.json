@@ -1,5 +1,10 @@
 {
   "releases": {
+    "3.4.13-beta2": [
+      "[Added] Add Ghostty shell integration - #19777. Thanks @aelew!",
+      "[Fixed] Mitigates several vulnerabilities related to Git's credential helper protocol - CVE-2024-50349, CVE-2024-52006, CVE-2024-50338, CVE-2024-53263",
+      "[Fixed] No extra new line is prepended to `.gitignore` when adding to a non-existent `.gitignore` file - #19279. Thanks @GWDx!"
+    ],
     "3.4.13-beta1": [
       "[Fixed] Fix Branch List context menu showing pull request option when none exists - #19711. Thanks @DylanDevelops!",
       "[Fixed] The Thank You banner is announced by VoiceOver - #19734",
