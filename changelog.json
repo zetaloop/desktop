@@ -1,7 +1,7 @@
 {
   "releases": {
     "3.4.13": [
-      "[Fixed] Mitigates several vulnerabilities related to Git's credential helper protocol - CVE-2024-50349, CVE-2024-52006, CVE-2024-50338, CVE-2024-53263"
+      "[Fixed] Mitigates several vulnerabilities related to Git's credential helper protocol - CVE-2025-23040, CVE-2024-50349, CVE-2024-52006, CVE-2024-50338, CVE-2024-53263"
     ],
     "3.4.13-beta2": [
       "[Added] Add Ghostty shell integration - #19777. Thanks @aelew!",
