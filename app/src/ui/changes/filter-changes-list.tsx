@@ -1150,8 +1150,8 @@ export class FilterChangesList extends React.Component<
       files.length === 0 || isCommitting || rebaseConflictState !== null
 
     const toBeCommittedFilterText = this.state.filterToIncludedCommit
-      ? 'Remove to be committed filter'
-      : 'Only show files to be committed'
+      ? 'Show files included and not included in the commit'
+      : 'Only show files to be included in the commit'
 
     return (
       <div
