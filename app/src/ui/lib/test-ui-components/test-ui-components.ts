@@ -42,11 +42,6 @@ export function showTestUI(
   switch (name) {
     case 'boomtown':
       return boomtown()
-    case 'test-accessibility-banner':
-      return dispatcher.setBanner({
-        type: BannerType.AccessibilitySettingsBanner,
-        onOpenAccessibilitySettings: () => {},
-      })
     case 'test-app-error':
       return testAppError()
     case 'test-arm64-banner':

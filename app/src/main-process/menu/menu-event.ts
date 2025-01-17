@@ -52,7 +52,6 @@ export type MenuEvent =
  */
 const TestMenuEvents = [
   'boomtown',
-  'test-accessibility-banner',
   'test-app-error',
   'test-arm64-banner',
   'test-confirm-committing-conflicted-files',
