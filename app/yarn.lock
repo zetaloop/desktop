@@ -49,10 +49,10 @@
   dependencies:
     "@floating-ui/dom" "^1.2.7"
 
-"@github/alive-client@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@github/alive-client/-/alive-client-0.0.2.tgz#77ccf103483f87930ca25ee8d69c4ab7b86be53f"
-  integrity sha512-wu4DSxv1rUchaf2Z+NWxYCYhk16k/syXFWCNDhBrriRqjguLrCFclzkOMYf7KqwuYAw1/Xd17WSGjzGOletMIQ==
+"@github/alive-client@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@github/alive-client/-/alive-client-1.2.0.tgz#3ebce7b1aceb7dd9016d5854578564d0b1cdbed5"
+  integrity sha512-J2ntd+Y+kCoir8uV9cifVs0H3SXZCngVRGnAe8DkbFq7Qc1w40WP9LvcUFMh6/YqG81aHrCz+6c6H2SMfADfbw==
   dependencies:
     "@github/multimap" "^1.0.0"
     "@github/stable-socket" "^1.1.0"
