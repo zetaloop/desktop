@@ -375,10 +375,10 @@ dompurify@^2.5.4:
   resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.5.4.tgz#347e91070963b22db31c7c8d0ce9a0a2c3c08746"
   integrity sha512-l5NNozANzaLPPe0XaAwvg3uZcHtDBnziX/HjsY1UcDj1MxTK8Dd0Kv096jyPK5HRzs/XM5IMj20dW8Fk+HnbUA==
 
-dugite@3.0.0-rc6:
-  version "3.0.0-rc6"
-  resolved "https://registry.yarnpkg.com/dugite/-/dugite-3.0.0-rc6.tgz#d42eea858ce3b07027ca22d35e23938b1b68101b"
-  integrity sha512-pGrsXXJwo2R4NUC15IZlhAbx3Uboq628A6ehQuiw2mPY8XLA9Vlgc//wGDuCAvWsFsP+tJnrRJhEFmUdAyAOPg==
+dugite@3.0.0-rc7:
+  version "3.0.0-rc7"
+  resolved "https://registry.yarnpkg.com/dugite/-/dugite-3.0.0-rc7.tgz#4933230655546c602a36883871ab9867f234e104"
+  integrity sha512-pRpykD++1ngFQ6uwmVb0Gdx1wbYhVWxPuJ+Wo3TVOOreRao+r8s3ygckOoyGI6mOfngEFsW++++69ZrvriT6Pw==
   dependencies:
     progress "^2.0.3"
     tar-stream "^3.1.7"
