@@ -1126,7 +1126,7 @@ export class FilterChangesList extends React.Component<
 
     const visibleFiles = this.state.filteredItems.size
     const filesPlural = files.length === 1 ? '文件' : '文件'
-    const filesDescription = `${visibleFiles}/${files.length} 个${filesPlural}改动`
+    const filesDescription = `${visibleFiles}/${files.length}个${filesPlural}改动`
 
     const includeAllValue = this.getCheckAllValue(
       workingDirectory,
@@ -1159,8 +1159,8 @@ export class FilterChangesList extends React.Component<
     const { workingDirectory, isCommitting } = this.props
     const { files } = workingDirectory
 
-    const filesPlural = files.length === 1 ? 'file' : 'files'
-    const filesDescription = `${files.length} changed ${filesPlural}`
+    const filesPlural = files.length === 1 ? '文件' : '文件'
+    const filesDescription = `${files.length}个${filesPlural}改动`
 
     return (
       <>
