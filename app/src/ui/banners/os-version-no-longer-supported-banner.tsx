@@ -25,7 +25,7 @@ export class OSVersionNoLongerSupportedBanner extends React.Component<{
       >
         <Octicon className="alert-icon" symbol={octicons.alert} />
         您的系统版本太低，软件将停止更新。
-        <LinkButton uri="https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/overview/supported-operating-systems">
+        <LinkButton uri="https://docs.github.com/zh/desktop/installing-and-configuring-github-desktop/overview/supported-operating-systems">
           支持的操作系统
         </LinkButton>
       </Banner>
