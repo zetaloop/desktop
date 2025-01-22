@@ -1,5 +1,6 @@
 {
   "releases": {
+    "3.4.15": ["[Fixed] Restore ability to sign in on Windows"],
     "3.4.14": [
       "[Added] Add Ghostty shell integration - #19777. Thanks @aelew!",
       "[Fixed] No extra new line is prepended to `.gitignore` when adding to a non-existent `.gitignore` file - #19279. Thanks @GWDx!",
