@@ -1134,8 +1134,8 @@ export class CommitMessage extends React.Component<
 
     return (
       <>
-        {verb} {this.getFilesToBeCommittedButtonText()}to{' '}
-        <strong>{branch}</strong>
+        {verb}
+        {this.getFilesToBeCommittedButtonText()}到 <strong>{branch}</strong>
       </>
     )
   }
@@ -1150,9 +1150,9 @@ export class CommitMessage extends React.Component<
       return ''
     }
 
-    const pluralizedFile = filesToBeCommittedCount > 1 ? 'files' : 'file'
+    const pluralizedFile = filesToBeCommittedCount > 1 ? '文件' : '文件'
 
-    return `${filesToBeCommittedCount} ${pluralizedFile} `
+    return `${filesToBeCommittedCount}个${pluralizedFile}`
   }
 
   private getCommittingButtonTitle() {
