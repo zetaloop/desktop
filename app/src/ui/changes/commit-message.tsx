@@ -1160,7 +1160,7 @@ export class CommitMessage extends React.Component<
      * as three separate strings "Verb" and "Count" and "to" and even tho
      * visually it was correctly adding spacings, for screen reader users it was
      * not and putting them all to together as one word. */
-    const action = `${verb} ${this.getFilesToBeCommittedButtonText()}to `
+    const action = `${verb}${this.getFilesToBeCommittedButtonText()}到 `
 
     return (
       <>
@@ -1180,9 +1180,9 @@ export class CommitMessage extends React.Component<
       return ''
     }
 
-    const pluralizedFile = filesToBeCommittedCount > 1 ? 'files' : 'file'
+    const pluralizedFile = filesToBeCommittedCount > 1 ? '文件' : '文件'
 
-    return `${filesToBeCommittedCount} ${pluralizedFile} `
+    return `${filesToBeCommittedCount}个${pluralizedFile}`
   }
 
   private getCommittingButtonTitle() {
