@@ -168,10 +168,10 @@ export class Advanced extends React.Component<
 
     return (
       <>
-        <h2>Filter Changes</h2>
+        <h2>文件筛选</h2>
         <div className="advanced-section">
           <Checkbox
-            label={'Filter Changes'}
+            label={'文件改动筛选功能'}
             value={
               this.props.canFilterChanges ? CheckboxValue.On : CheckboxValue.Off
             }
