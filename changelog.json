@@ -3,7 +3,8 @@
     "3.4.16-beta1": [
       "[New] Add support for arm64 version of Git on Windows - #19880. Thanks @dennisameling",
       "[Fixed] Restore ability to sign in on Windows - #19873",
-      "[Fixed] Moving maximized window in windows - #19786. Thanks @ahrm!"
+      "[Fixed] Moving maximized window in windows - #19786. Thanks @ahrm!",
+      "[Improved] Upgrade embedded Git to v2.47.1 on macOS, and to v2.47.2.windows.2 on Windows"
     ],
     "3.4.15": ["[Fixed] Restore ability to sign in on Windows"],
     "3.4.14": [
