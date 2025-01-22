@@ -427,7 +427,7 @@ export type PopupDetail =
   | {
       type: PopupType.ConfirmCommitFilteredChanges
       onCommitAnyway: () => void
-      onClearFilter: () => void
+      showFilesToBeCommitted: () => void
     }
 
 export type Popup = IBasePopup & PopupDetail
