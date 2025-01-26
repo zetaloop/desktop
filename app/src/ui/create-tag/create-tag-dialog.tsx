@@ -96,14 +96,14 @@ export class CreateTag extends React.Component<
       return null
     }
 
-    const title = __DARWIN__ ? '之前的标签' : '之前的标签'
+    const title = __DARWIN__ ? '相关标签' : '相关标签'
     const lastThreeTags = previousTags.slice(-3)
 
     return (
       <>
         <p>{title}</p>
         {lastThreeTags.length === 0 ? (
-          <p>{`找不到 '${tagName}'`}</p>
+          <p>{`未找到与 '${tagName}' 相关的标签`}</p>
         ) : (
           lastThreeTags.map((item: string, index: number) => (
             <Ref key={index}>{item}</Ref>
