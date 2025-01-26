@@ -158,9 +158,9 @@ export class RefNameTextBox extends React.Component<
           id="branch-name-error"
           className="warning-helper-text"
           trackedUserInput={proposedValue}
-          ariaLiveMessage={`Error: ${proposedValue} is not a valid name.`}
+          ariaLiveMessage={`错误：名称 ${proposedValue} 无效。`}
         >
-          <Ref>{proposedValue}</Ref> is not a valid name.
+          名称 <Ref>{proposedValue}</Ref> 无效。
         </InputError>
       )
     }
@@ -178,19 +178,17 @@ export class RefNameTextBox extends React.Component<
   }
 
   private getWarningMessageAsString(sanitizedValue: string): string {
-    return `Warning: Will be ${
-      this.props.warningMessageVerb ?? 'created '
-    } as ${sanitizedValue}. Spaces and invalid characters have been replaced by hyphens.`
+    return `警告：标签将会${
+      this.props.warningMessageVerb ?? '命名'
+    }为 ${sanitizedValue}，空格与无效字符会被替换为横线。`
   }
 
   private renderWarningMessage(sanitizedValue: string) {
     return (
       <>
-        Will be {this.props.warningMessageVerb ?? 'created'} as{' '}
-        <Ref>{sanitizedValue}</Ref>.{' '}
-        <span className="sr-only">
-          Spaces and invalid characters have been replaced by hyphens.
-        </span>
+        标签将会{this.props.warningMessageVerb ?? '命名'}为{' '}
+        <Ref>{sanitizedValue}</Ref>。{' '}
+        <span className="sr-only">空格与无效字符会被替换为横线。</span>
       </>
     )
   }
