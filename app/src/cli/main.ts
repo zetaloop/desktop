@@ -1,13 +1,17 @@
 import { join, resolve } from 'path'
 import parse from 'minimist'
-import { execFile, ExecFileException } from 'child_process'
+import { execFile, spawn } from 'child_process'
 
 const run = (...args: Array<string>) => {
-  function cb(e: ExecFileException | null, stderr: string) {
+  function cb(e: unknown | null, stderr?: string) {
     if (e) {
       console.error(`Error running command ${args}`)
-      console.error(stderr)
-      process.exit(e.code)
+      console.error(stderr ?? `${e}`)
+      process.exit(
+        typeof e === 'object' && 'code' in e && typeof e.code === 'number'
+          ? e.code
+          : 1
+      )
     }
   }
 
@@ -15,7 +19,13 @@ const run = (...args: Array<string>) => {
     execFile('open', ['-n', join(__dirname, '../../..'), '--args', ...args], cb)
   } else if (process.platform === 'win32') {
     const exeName = `GitHubDesktop${__DEV__ ? '-dev' : ''}.exe`
-    execFile(join(__dirname, `../../${exeName}`), args, cb)
+    spawn(join(__dirname, `../../${exeName}`), args, {
+      detached: true,
+      stdio: 'ignore',
+    })
+      .on('error', cb)
+      .on('exit', code => (process.exitCode = code ?? process.exitCode))
+      .unref()
   } else {
     throw new Error('Unsupported platform')
   }
