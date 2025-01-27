@@ -203,7 +203,7 @@ export class AppWindow {
     registerWindowStateChangedEvents(this.window)
     this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'))
 
-    nativeTheme.addListener('updated', (event: string, userInfo: any) => {
+    nativeTheme.addListener('updated', () => {
       ipcWebContents.send(this.window.webContents, 'native-theme-updated')
     })
 
