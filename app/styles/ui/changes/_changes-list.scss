@@ -97,6 +97,11 @@
       height: 100%;
     }
   }
+
+  .no-changes-in-list {
+    text-align: center;
+    padding: var(--spacing-double);
+  }
 }
 
 .stashed-changes-button {

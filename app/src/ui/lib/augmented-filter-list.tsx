@@ -214,6 +214,10 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
   /** The aria-label attribute for the list component. */
   readonly ariaLabel?: string
 
+  /** A message to be announced after the no results message - Used to pass in
+   * any messaging shown to visual users */
+  readonly postNoResultsMessage?: string
+
   /**
    * This prop defines the behaviour of the selection of items within this list.
    *  - 'single' : (default) single list-item selection. [shift] and [ctrl] have
@@ -357,11 +361,16 @@ export class AugmentedSectionFilterList<
 
     const itemRows = this.state.rows.flat().filter(row => row.kind === 'item')
     const resultsPluralized = itemRows.length === 1 ? 'result' : 'results'
-    const screenReaderMessage = `${itemRows.length} ${resultsPluralized}`
+    const postNoResultsMessage =
+      itemRows.length === 0 ? this.props.postNoResultsMessage : ''
+    const screenReaderMessage = `${itemRows.length} ${resultsPluralized} ${postNoResultsMessage}`
 
+    const tracked = `${this.state.filterValue} ${
+      this.props.filterMethod ? 'fm' : ''
+    }`
     return (
       <AriaLiveContainer
-        trackedUserInput={this.state.filterValue}
+        trackedUserInput={tracked}
         message={screenReaderMessage}
       />
     )
@@ -821,6 +830,7 @@ function createStateUpdate<T extends IFilterListItem>(
   const selectedRows = []
   let section = 0
   const groupIndices = []
+  let filterValueChanged = state?.filterValueChanged ? true : filter.length > 0
 
   for (const [idx, group] of props.groups.entries()) {
     const groupRows = new Array<IFilterListRow<T>>()
@@ -836,6 +846,10 @@ function createStateUpdate<T extends IFilterListItem>(
           matches: { title: [], subtitle: [] },
           item,
         }))
+
+    if (group.items.length !== items.length) {
+      filterValueChanged = true
+    }
 
     if (!items.length) {
       continue
@@ -867,11 +881,6 @@ function createStateUpdate<T extends IFilterListItem>(
     // select the first visible item.
     selectedRows.push(getFirstVisibleRow(rows))
   }
-
-  // Stay true if already set, otherwise become true if the filter has content
-  const filterValueChanged = state?.filterValueChanged
-    ? true
-    : filter.length > 0
 
   return {
     rows: rows,
