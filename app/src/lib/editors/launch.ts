@@ -1,4 +1,4 @@
-import { spawn } from 'child_process'
+import { spawn, SpawnOptions } from 'child_process'
 import { pathExists } from '../../ui/lib/path-exists'
 import { ExternalEditorError, FoundEditor } from './shared'
 import {
@@ -10,7 +10,8 @@ import {
 async function launchEditor(
   editorPath: string,
   args: readonly string[],
-  editorName: string
+  editorName: string,
+  spawnAsDarwinApp: boolean
 ) {
   const exists = await pathExists(editorPath)
   const label = __DARWIN__ ? 'Settings' : 'Options'
@@ -22,18 +23,21 @@ async function launchEditor(
   }
 
   return new Promise<void>((resolve, reject) => {
-    // In macOS we can use `open`, which will open the right executable file
-    // for us, we only need the path to the editor .app folder.
-    spawn(editorPath, args, {
+    const opts: SpawnOptions = {
       // Make sure the editor processes are detached from the Desktop app.
       // Otherwise, some editors (like Notepad++) will be killed when the
       // Desktop app is closed.
       detached: true,
       stdio: 'ignore',
-    })
-      .on('error', reject)
-      .on('spawn', resolve)
-      .unref() // Don't wait for editor to exit
+    }
+
+    const child = spawnAsDarwinApp
+      ? spawn('open', ['-a', editorPath, ...args], opts)
+      : spawn(editorPath, args, opts)
+
+    child.on('error', reject)
+    child.on('spawn', resolve)
+    child.unref() // Don't wait for editor to exit
   }).catch((e: unknown) => {
     log.error(
       `Error while launching ${editorName}`,
@@ -54,13 +58,8 @@ async function launchEditor(
  * @param fullPath A folder or file path to pass as an argument when launching the editor.
  * @param editor The external editor to launch.
  */
-export const launchExternalEditor = (fullPath: string, editor: FoundEditor) => {
-  // On macOS we can use `open`, which will open the right executable file
-  // for us, we only need the path to the editor .app folder.
-  return __DARWIN__
-    ? launchEditor('open', ['-a', editor.path, fullPath], `'${editor.editor}'`)
-    : launchEditor(editor.path, [fullPath], `'${editor.editor}'`)
-}
+export const launchExternalEditor = (fullPath: string, editor: FoundEditor) =>
+  launchEditor(editor.path, [fullPath], `'${editor.editor}'`, __DARWIN__)
 
 /**
  * Open a given file or folder in the desired custom external editor.
@@ -77,14 +76,11 @@ export const launchCustomExternalEditor = (
   // Replace instances of RepoPathArgument with fullPath in customEditor.arguments
   const args = expandTargetPathArgument(argv, fullPath)
 
+  // In macOS we can use `open` if it's an app (i.e. if we have a bundleID),
+  // which will open the right executable file for us, we only need the path
+  // to the editor .app folder.
+  const spawnAsDarwinApp = __DARWIN__ && customEditor.bundleID !== undefined
   const editorName = `custom editor at path '${customEditor.path}'`
 
-  if (__DARWIN__ && customEditor.bundleID) {
-    // In macOS we can use `open` if it's an app (i.e. if we have a bundleID),
-    // which will open the right executable file for us, we only need the path
-    // to the editor .app folder.
-    return launchEditor('open', ['-a', customEditor.path, ...args], editorName)
-  } else {
-    return launchEditor(customEditor.path, args, editorName)
-  }
+  return launchEditor(customEditor.path, args, editorName, spawnAsDarwinApp)
 }
