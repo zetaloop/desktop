@@ -117,7 +117,9 @@ export async function validateCustomIntegrationPath(
 
     return { isValid: isExecutableFile || !!bundleID, bundleID }
   } catch (e) {
-    log.error(`Failed to validate path: ${path}`, e)
+    if (e.code !== 'ENOENT') {
+      log.error(`Failed to validate path: ${path}`, e)
+    }
     return { isValid: false }
   }
 }
