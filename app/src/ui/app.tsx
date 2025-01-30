@@ -599,7 +599,7 @@ export class App extends React.Component<IAppProps, IAppState> {
 
     if (isMacOSAndNoLongerSupportedByElectron()) {
       log.error(
-        `Can't check for updates on macOS 10.14 or older. Next available update only supports macOS 10.15 and later`
+        `Can't check for updates on macOS 10.15 or older. Next available update only supports macOS 11.0 and later`
       )
       return
     }
