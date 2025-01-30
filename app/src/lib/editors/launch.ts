@@ -33,6 +33,7 @@ export async function launchExternalEditor(
     // Otherwise, some editors (like Notepad++) will be killed when the
     // Desktop app is closed.
     detached: true,
+    stdio: 'ignore',
   }
 
   try {

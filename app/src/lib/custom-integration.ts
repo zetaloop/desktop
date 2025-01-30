@@ -1,8 +1,7 @@
-import { ChildProcess, SpawnOptions, spawn } from 'child_process'
 import { parseCommandLineArgv } from 'windows-argv-parser'
 import stringArgv from 'string-argv'
 import { promisify } from 'util'
-import { exec } from 'child_process'
+import { exec, spawn, SpawnOptions } from 'child_process'
 import { access, lstat } from 'fs/promises'
 import * as fs from 'fs'
 
@@ -183,15 +182,13 @@ export function migratedCustomIntegration(
  * on Windows, where we need to wrap the command and arguments in quotes when
  * the shell option is enabled.
  *
- * @param command Command to spawn
+ * @param cmd Command to spawn
  * @param args Arguments to pass to the command
  * @param options Options to pass to spawn (optional)
  * @returns The ChildProcess object returned by spawn
  */
-export function spawnCustomIntegration(
-  command: string,
+export const spawnCustomIntegration = (
+  cmd: string,
   args: readonly string[],
-  options?: SpawnOptions
-): ChildProcess {
-  return options ? spawn(command, args, options) : spawn(command, args)
-}
+  opts?: SpawnOptions
+) => spawn(cmd, args, { stdio: 'ignore', detached: true, ...opts })
