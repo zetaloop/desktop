@@ -47,7 +47,7 @@ export class ConfirmCommitFilteredChanges extends React.Component<
             <LinkButton onClick={this.showFilesToBeCommitted}>
               hidden changes
             </LinkButton>{' '}
-            that will be committed . Are you sure you want to commit these
+            that will be committed. Are you sure you want to commit these
             changes?
           </p>
           <Row>
