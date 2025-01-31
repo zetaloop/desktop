@@ -1,7 +1,6 @@
 {
   "releases": {
     "3.4.16-beta2": [
-      "[Improved] Add a count of the files to be committed to the commit submit button - #19922",
       "[Removed] Remove support for macOS 10.15 - #19918"
     ],
     "3.4.16-beta1": [
