@@ -45,9 +45,10 @@ export class ConfirmCommitFilteredChanges extends React.Component<
           <p id="confirm-commit-filtered-changes-message">
             You have a filter applied. There are{' '}
             <LinkButton onClick={this.showFilesToBeCommitted}>
-              changes that will be committed hidden from view
-            </LinkButton>
-            . Are you sure you want to commit these changes?
+              hidden changes
+            </LinkButton>{' '}
+            that will be committed . Are you sure you want to commit these
+            changes?
           </p>
           <Row>
             <Checkbox
