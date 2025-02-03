@@ -1,5 +1,8 @@
 {
   "releases": {
+    "3.4.16": [
+      "[Improved] Prevent upgrading from macOS 10.15 as soon to be unsupported - #19918"
+    ],
     "3.4.16-beta2": [
       "[Improved] Prevent upgrading from macOS 10.15 as soon to be unsupported - #19918"
     ],
