@@ -761,18 +761,17 @@ function createWindow() {
 
     const axeDevTools = {
       id: 'lhdoppojpmngadmnindnejefpokejbdd',
-      electron: '>=1.2.1',
-      Permissions: ['tabs', 'debugger'],
     }
 
     const extensions = [REACT_DEVELOPER_TOOLS, axeDevTools]
 
-    for (const extension of extensions) {
-      try {
-        installExtension(extension, {
-          loadExtensionOptions: { allowFileAccess: true },
-        })
-      } catch (e) {}
+    try {
+      installExtension(extensions, {
+        loadExtensionOptions: { allowFileAccess: true },
+      })
+      console.log('Added Extensions: "React Developer Tools", "axe DevTools"')
+    } catch (e) {
+      console.log('An error occurred while loading extensions: ', e)
     }
   }
 

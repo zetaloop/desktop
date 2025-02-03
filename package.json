@@ -152,10 +152,10 @@
     "@types/webpack": "^5.28.5",
     "@types/webpack-bundle-analyzer": "^4.7.0",
     "@types/webpack-hot-middleware": "^2.25.9",
-    "electron": "32.1.2",
+    "electron": "34.0.1",
     "electron-packager": "^17.1.1",
     "electron-winstaller": "^5.0.0",
-    "eslint-plugin-github": "^4.10.1",
+    "eslint-plugin-github": "^5.1.5",
     "markdownlint-cli": "^0.32.2",
     "reserved-words": "^0.1.2",
     "tsconfig-paths": "^3.9.0"

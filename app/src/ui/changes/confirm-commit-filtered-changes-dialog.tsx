@@ -3,11 +3,12 @@ import { Dialog, DialogContent, DialogFooter } from '../dialog'
 import { Row } from '../lib/row'
 import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
 import { Checkbox, CheckboxValue } from '../lib/checkbox'
+import { LinkButton } from '../lib/link-button'
 
 interface IConfirmCommitFilteredChangesProps {
   readonly onCommitAnyway: () => void
   readonly onDismissed: () => void
-  readonly onClearFilter: () => void
+  readonly showFilesToBeCommitted: () => void
   readonly setConfirmCommitFilteredChanges: (value: boolean) => void
 }
 
@@ -42,8 +43,12 @@ export class ConfirmCommitFilteredChanges extends React.Component<
       >
         <DialogContent>
           <p id="confirm-commit-filtered-changes-message">
-            You have a filter applied. There are changes that will be committed
-            hidden from view. Are you sure you want to commit these changes?
+            You have a filter applied. There are{' '}
+            <LinkButton onClick={this.showFilesToBeCommitted}>
+              hidden changes
+            </LinkButton>{' '}
+            that will be committed. Are you sure you want to commit these
+            changes?
           </p>
           <Row>
             <Checkbox
@@ -61,10 +66,8 @@ export class ConfirmCommitFilteredChanges extends React.Component<
           <OkCancelButtonGroup
             destructive={true}
             okButtonText={__DARWIN__ ? 'Commit Anyway' : 'Commit anyway'}
-            cancelButtonText={
-              __DARWIN__ ? 'Cancel and Clear Filter' : 'Cancel and clear filter'
-            }
-            onCancelButtonClick={this.onClearFilter}
+            cancelButtonText={'Cancel'}
+            onCancelButtonClick={this.props.onDismissed}
           />
         </DialogFooter>
       </Dialog>
@@ -77,8 +80,8 @@ export class ConfirmCommitFilteredChanges extends React.Component<
     this.setState({ askForConfirmationOnCommitFilteredChanges: value })
   }
 
-  private onClearFilter = () => {
-    this.props.onClearFilter()
+  private showFilesToBeCommitted = () => {
+    this.props.showFilesToBeCommitted()
     this.props.onDismissed()
   }
 

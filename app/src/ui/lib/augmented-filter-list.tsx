@@ -123,6 +123,11 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
   /** The current filter text to use in the form */
   readonly filterText?: string
 
+  /** An optional filter that can be applied in addition of the filter text */
+  // It is used in the createStateUpdate - so not directly in the component.
+  // eslint-disable-next-line react/no-unused-prop-types
+  readonly filterMethod?: (item: T) => boolean
+
   /** Called when the filter text is changed by the user */
   readonly onFilterTextChanged?: (text: string) => void
 
@@ -208,6 +213,10 @@ interface IAugmentedSectionFilterListProps<T extends IFilterListItem> {
 
   /** The aria-label attribute for the list component. */
   readonly ariaLabel?: string
+
+  /** A message to be announced after the no results message - Used to pass in
+   * any messaging shown to visual users */
+  readonly postNoResultsMessage?: string
 
   /**
    * This prop defines the behaviour of the selection of items within this list.
@@ -352,11 +361,16 @@ export class AugmentedSectionFilterList<
 
     const itemRows = this.state.rows.flat().filter(row => row.kind === 'item')
     const resultsPluralized = itemRows.length === 1 ? 'result' : 'results'
-    const screenReaderMessage = `${itemRows.length} ${resultsPluralized}`
+    const postNoResultsMessage =
+      itemRows.length === 0 ? this.props.postNoResultsMessage : ''
+    const screenReaderMessage = `${itemRows.length} ${resultsPluralized} ${postNoResultsMessage}`
 
+    const tracked = `${this.state.filterValue} ${
+      this.props.filterMethod ? 'fm' : ''
+    }`
     return (
       <AriaLiveContainer
-        trackedUserInput={this.state.filterValue}
+        trackedUserInput={tracked}
         message={screenReaderMessage}
       />
     )
@@ -812,20 +826,30 @@ function createStateUpdate<T extends IFilterListItem>(
 ) {
   const rows = new Array<Array<IFilterListRow<T>>>()
   const filter = (props.filterText || '').toLowerCase()
+  const { filterMethod, selectedItems } = props
   const selectedRows = []
   let section = 0
-  const selectedItems = props.selectedItems
   const groupIndices = []
+  let filterValueChanged = state?.filterValueChanged ? true : filter.length > 0
 
   for (const [idx, group] of props.groups.entries()) {
     const groupRows = new Array<IFilterListRow<T>>()
+
+    const itemsToMatch = filterMethod
+      ? group.items.filter(filterMethod)
+      : group.items
+
     const items: ReadonlyArray<IMatch<T>> = filter
-      ? match(filter, group.items, getText)
-      : group.items.map(item => ({
+      ? match(filter, itemsToMatch, getText)
+      : itemsToMatch.map(item => ({
           score: 1,
           matches: { title: [], subtitle: [] },
           item,
         }))
+
+    if (group.items.length !== items.length) {
+      filterValueChanged = true
+    }
 
     if (!items.length) {
       continue
@@ -857,11 +881,6 @@ function createStateUpdate<T extends IFilterListItem>(
     // select the first visible item.
     selectedRows.push(getFirstVisibleRow(rows))
   }
-
-  // Stay true if already set, otherwise become true if the filter has content
-  const filterValueChanged = state?.filterValueChanged
-    ? true
-    : filter.length > 0
 
   return {
     rows: rows,

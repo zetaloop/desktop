@@ -60,6 +60,7 @@ import { IFilterListGroup, IFilterListItem } from '../lib/filter-list'
 import { ClickSource } from '../lib/list'
 import memoizeOne from 'memoize-one'
 import { IMatches } from '../../lib/fuzzy-find'
+import { Button } from '../lib/button'
 
 interface IChangesListItem extends IFilterListItem {
   readonly id: string
@@ -213,6 +214,7 @@ interface IFilterChangesListState {
   readonly selectedItems: ReadonlyArray<IChangesListItem>
   readonly focusedRow: string | null
   readonly groups: ReadonlyArray<IFilterListGroup<IChangesListItem>>
+  readonly filterToIncludedCommit: boolean
 }
 
 function getSelectedItemsFromProps(
@@ -332,6 +334,7 @@ export class FilterChangesList extends React.Component<
       selectedItems: getSelectedItemsFromProps(props),
       focusedRow: null,
       groups,
+      filterToIncludedCommit: false,
     }
   }
 
@@ -1117,12 +1120,16 @@ export class FilterChangesList extends React.Component<
     this.props.dispatcher.showPopup({
       type: PopupType.ConfirmCommitFilteredChanges,
       onCommitAnyway,
-      onClearFilter: this.clearFilter,
+      showFilesToBeCommitted: this.showFilesToBeCommitted,
     })
   }
 
   private clearFilter = () => {
     this.setState({ filterText: '' })
+  }
+
+  private showFilesToBeCommitted = () => {
+    this.setState({ filterText: '', filterToIncludedCommit: true })
   }
 
   private renderFilterResultsHeader = () => {
@@ -1142,6 +1149,10 @@ export class FilterChangesList extends React.Component<
     const disableAllCheckbox =
       files.length === 0 || isCommitting || rebaseConflictState !== null
 
+    const toBeCommittedFilterText = this.state.filterToIncludedCommit
+      ? 'Show files included and not included in the commit'
+      : 'Only show files to be included in the commit'
+
     return (
       <div
         className="header"
@@ -1150,14 +1161,29 @@ export class FilterChangesList extends React.Component<
       >
         <Checkbox
           ref={this.includeAllCheckBoxRef}
-          label={filesDescription}
           value={includeAllValue}
           onChange={this.onIncludeAllChanged}
           disabled={disableAllCheckbox}
-          ariaDescribedBy="changesDescription"
+          ariaLabelledBy="changes-list-check-all-label"
         />
+
+        <Button
+          onClick={this.onFilterToIncludedInCommit}
+          className={classNames({
+            'included-in-commit-filter-on': this.state.filterToIncludedCommit,
+          })}
+          ariaLabel={toBeCommittedFilterText}
+          tooltip={toBeCommittedFilterText}
+        >
+          <Octicon symbol={octicons.filter} />
+        </Button>
+        <label id="changes-list-check-all-label"> {filesDescription}</label>
       </div>
     )
+  }
+
+  private isIncludedInCommit(item: IChangesListItem) {
+    return item.change.selection.getSelectionType() !== DiffSelectionType.None
   }
 
   public render() {
@@ -1169,7 +1195,7 @@ export class FilterChangesList extends React.Component<
 
     return (
       <>
-        <div className="changes-list-container file-list">
+        <div className="changes-list-container file-list filtered-changes-list">
           <AugmentedSectionFilterList<IChangesListItem>
             id="changes-list"
             rowHeight={RowHeight}
@@ -1188,6 +1214,11 @@ export class FilterChangesList extends React.Component<
             onItemKeyDown={this.onItemKeyDown}
             onSelectionChanged={this.onFileSelectionChanged}
             groups={this.state.groups}
+            filterMethod={
+              this.state.filterToIncludedCommit
+                ? this.isIncludedInCommit
+                : undefined
+            }
             invalidationProps={{
               workingDirectory: workingDirectory,
               isCommitting: isCommitting,
@@ -1196,12 +1227,49 @@ export class FilterChangesList extends React.Component<
             onItemContextMenu={this.onItemContextMenu}
             ariaLabel={filesDescription}
             renderPostFilterRow={this.renderFilterResultsHeader}
+            renderNoItems={this.renderNoChanges}
+            postNoResultsMessage={this.getNoResultsMessage()}
           />
         </div>
         {this.renderStashedChanges()}
         {this.renderCommitMessageForm()}
       </>
     )
+  }
+
+  private getNoResultsMessage = () => {
+    if (this.state.filterText === '' && !this.state.filterToIncludedCommit) {
+      return undefined
+    }
+
+    const filterTextMessage = this.state.filterText
+      ? ` matching your filter of '${this.state.filterText}'`
+      : ''
+
+    const includedCommitText = this.state.filterToIncludedCommit
+      ? ' that are to be included in your commit'
+      : ''
+
+    const conjunction = filterTextMessage && includedCommitText ? ' and ' : ''
+
+    return `Sorry, I can't find any changed files${filterTextMessage}${conjunction}
+        ${includedCommitText}.`
+  }
+
+  private renderNoChanges = () => {
+    if (this.state.filterText === '' && !this.state.filterToIncludedCommit) {
+      return null
+    }
+
+    return (
+      <div className="no-changes-in-list">{this.getNoResultsMessage()}</div>
+    )
+  }
+
+  private onFilterToIncludedInCommit = () => {
+    this.setState({
+      filterToIncludedCommit: !this.state.filterToIncludedCommit,
+    })
   }
 
   private onChangedFileFocus = (changeListItem: IChangesListItem) => {
