@@ -1,5 +1,8 @@
 {
   "releases": {
+    "3.4.16": [
+      "[Improved] Prevent upgrading from macOS 10.15 as soon to be unsupported - #19918"
+    ],
     "3.4.15": ["[Fixed] Restore ability to sign in on Windows"],
     "3.4.14": [
       "[Added] Add Ghostty shell integration - #19777. Thanks @aelew!",
