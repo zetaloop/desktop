@@ -1,5 +1,11 @@
 {
   "releases": {
+    "3.4.17-beta1": [
+      "[Fixed] Prevent crash when attempting to launch external editor with insufficient permissions - #19929",
+      "[Fixed] Running the Desktop CLI on Windows no longer waits for Desktop to exit before exiting itself - #19916",
+      "[Improved] Upgrade Electron to v34.0.1 - #19919",
+      "[Removed] Remove support for macOS 10.15 - #19919"
+    ],
     "3.4.16": [
       "[Improved] Prevent upgrading from macOS 10.15 as soon to be unsupported - #19918"
     ],
