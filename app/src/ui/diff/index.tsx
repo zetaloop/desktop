@@ -181,7 +181,7 @@ export class Diff extends React.Component<IDiffProps, IDiffState> {
         <img src={NoDiffImage} className="blankslate-image" alt="" />
         <div className="description">
           <p>文件差异大小超过默认限制。</p>
-          <p>你仍可以选择显示，但可能比较卡顿。</p>
+          <p>你仍可以选择显示差异，但可能比较卡顿。</p>
         </div>
         <Button onClick={this.showLargeDiff}>
           {__DARWIN__ ? '显示差异' : '显示差异'}
