@@ -4,6 +4,7 @@ import { Row } from './row'
 import { Account } from '../../models/account'
 import { Select } from './select'
 import { GitEmailNotFoundWarning } from './git-email-not-found-warning'
+import { getStealthEmailForUser } from '../../lib/email'
 
 const OtherEmailSelectValue = 'Other'
 
@@ -120,8 +121,24 @@ export class GitConfigUserForm extends React.Component<
       return null
     }
 
+    const { dotComAccount } = this.props
+
     const dotComEmails =
       dotComAccount?.emails.filter(x => x.verified).map(e => e.email) ?? []
+
+    if (dotComAccount) {
+      const { id, login, endpoint } = dotComAccount
+      const stealthEmail = getStealthEmailForUser(id, login, endpoint)
+
+      if (
+        !dotComEmails
+          .map(x => x.toLowerCase())
+          .includes(stealthEmail.toLowerCase())
+      ) {
+        dotComEmails.push(stealthEmail)
+      }
+    }
+
     const enterpriseEmails =
       this.props.enterpriseAccount?.emails
         .filter(x => x.verified)
