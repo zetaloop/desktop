@@ -633,7 +633,8 @@ export class CommitMessage extends React.Component<
         : undefined
 
     const repositoryAccount = this.props.repositoryAccount
-    const accountEmails = repositoryAccount?.emails.map(e => e.email) ?? []
+    const accountEmails =
+      repositoryAccount?.emails.filter(e => e.verified).map(e => e.email) ?? []
     const email = commitAuthor?.email
 
     let warningType: CommitMessageAvatarWarningType = 'none'
