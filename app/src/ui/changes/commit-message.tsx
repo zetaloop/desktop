@@ -30,7 +30,11 @@ import {
   CommitMessageAvatarWarningType,
 } from './commit-message-avatar'
 import { getDotComAPIEndpoint } from '../../lib/api'
-import { isAttributableEmailFor, lookupPreferredEmail } from '../../lib/email'
+import {
+  getStealthEmailForUser,
+  isAttributableEmailFor,
+  lookupPreferredEmail,
+} from '../../lib/email'
 import { setGlobalConfigValue } from '../../lib/git/config'
 import { Popup, PopupType } from '../../models/popup'
 import { RepositorySettingsTab } from '../repository-settings/repository-settings'
@@ -55,6 +59,7 @@ import { RepoRulesetsForBranchLink } from '../repository-rules/repo-rulesets-for
 import { RepoRulesMetadataFailureList } from '../repository-rules/repo-rules-failure-list'
 import { formatCommitMessage } from '../../lib/format-commit-message'
 import { useRepoRulesLogic } from '../../lib/helpers/repo-rules'
+import { isDotCom } from '../../lib/endpoint-capabilities'
 
 const addAuthorIcon: OcticonSymbolVariant = {
   w: 18,
@@ -635,6 +640,20 @@ export class CommitMessage extends React.Component<
     const repositoryAccount = this.props.repositoryAccount
     const accountEmails =
       repositoryAccount?.emails.filter(e => e.verified).map(e => e.email) ?? []
+
+    if (repositoryAccount && isDotCom(repositoryAccount.endpoint)) {
+      const { id, login, endpoint } = repositoryAccount
+      const stealthEmail = getStealthEmailForUser(id, login, endpoint)
+
+      if (
+        !accountEmails
+          .map(x => x.toLowerCase())
+          .includes(stealthEmail.toLowerCase())
+      ) {
+        accountEmails.push(stealthEmail)
+      }
+    }
+
     const email = commitAuthor?.email
 
     let warningType: CommitMessageAvatarWarningType = 'none'
