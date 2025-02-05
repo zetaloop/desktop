@@ -121,9 +121,11 @@ export class GitConfigUserForm extends React.Component<
     }
 
     const dotComEmails =
-      this.props.dotComAccount?.emails.map(e => e.email) ?? []
+      dotComAccount?.emails.filter(x => x.verified).map(e => e.email) ?? []
     const enterpriseEmails =
-      this.props.enterpriseAccount?.emails.map(e => e.email) ?? []
+      this.props.enterpriseAccount?.emails
+        .filter(x => x.verified)
+        .map(e => e.email) ?? []
 
     // When the user signed in both accounts, show a suffix to differentiate
     // the origin of each email address
