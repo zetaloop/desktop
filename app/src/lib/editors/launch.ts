@@ -14,10 +14,11 @@ async function launchEditor(
   spawnAsDarwinApp: boolean
 ) {
   const exists = await pathExists(editorPath)
-  const label = __DARWIN__ ? 'Settings' : 'Options'
+  const label = __DARWIN__ ? '设置' : '设置'
   if (!exists) {
     throw new ExternalEditorError(
-      `Could not find executable for ${editorName} at path '${editorPath}'. Please open ${label} and select an available editor.`,
+      `找不到 ${editorName} 的可执行文件 '${editorPath}'。请打开${label}选择一个可用的编辑器。` // 去除中文间多余空格
+        .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2'),
       { openPreferences: true }
     )
   }
@@ -45,8 +46,10 @@ async function launchEditor(
     )
     throw new ExternalEditorError(
       e && typeof e === 'object' && 'code' in e && e.code === 'EACCES'
-        ? `GitHub Desktop doesn't have the proper permissions to start ${editorName}. Please open ${label} and try another editor.`
-        : `Something went wrong while trying to start ${editorName}. Please open ${label} and try another editor.`,
+        ? `GitHub Desktop 没有权限启动 ${editorName}。可以尝试打开${label}换一个编辑器。` // 去除中文间多余空格
+            .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
+        : `启动 ${editorName} 时出现错误。可以尝试打开${label}换一个编辑器。` // 去除中文间多余空格
+            .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2'),
       { openPreferences: true }
     )
   })
@@ -80,7 +83,7 @@ export const launchCustomExternalEditor = (
   // which will open the right executable file for us, we only need the path
   // to the editor .app folder.
   const spawnAsDarwinApp = __DARWIN__ && customEditor.bundleID !== undefined
-  const editorName = `custom editor at path '${customEditor.path}'`
+  const editorName = `自定义编辑器 '${customEditor.path}'`
 
   return launchEditor(customEditor.path, args, editorName, spawnAsDarwinApp)
 }
