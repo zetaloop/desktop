@@ -86,7 +86,7 @@ export class CommitDragElement extends React.Component<
           <>
             {copyToPlus}
             <span>
-              <span className="copy-to">复制到</span>
+              <span className="copy-to">摘取到</span>
               <span className="branch-name">
                 {currentDropTarget.branchName}
               </span>
@@ -114,7 +114,7 @@ export class CommitDragElement extends React.Component<
         }
 
         const pluralized =
-          currentDropTarget.data.commits.length === 1 ? '提交' : '提交'
+          currentDropTarget.data.commits.length === 1 ? '这个提交' : '这些提交'
         toolTipContents = (
           <>
             <span>{`移动${pluralized}到此处`}</span>
