@@ -7,7 +7,7 @@ import { BaseRebase } from './base-rebase'
 import { RebaseChooseBranchDialog } from './choose-branch/rebase-choose-branch-dialog'
 
 export abstract class Rebase extends BaseRebase {
-  protected conflictDialogOperationPrefix = '重构操作'
+  protected conflictDialogOperationPrefix = '重构'
   protected rebaseKind = MultiCommitOperationKind.Rebase
 
   protected onBeginOperation = () => {

@@ -100,8 +100,8 @@ export abstract class BaseMultiCommitOperation extends React.Component<IMultiCom
 
     const operationDescription = (
       <>
-        {targetBranch !== null ? <strong>{targetBranch.name}</strong> : null} 的
         {operationPrefix}
+        {targetBranch !== null ? <strong>{targetBranch.name}</strong> : null}
       </>
     )
 
