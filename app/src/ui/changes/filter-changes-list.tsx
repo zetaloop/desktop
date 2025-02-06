@@ -1145,8 +1145,8 @@ export class FilterChangesList extends React.Component<
       files.length === 0 || isCommitting || rebaseConflictState !== null
 
     const toBeCommittedFilterText = this.state.filterToIncludedCommit
-      ? 'Show files included and not included in the commit'
-      : 'Only show files to be included in the commit'
+      ? '显示所有改动'
+      : '只显示已勾选要提交的改动'
 
     return (
       <div
@@ -1238,17 +1238,18 @@ export class FilterChangesList extends React.Component<
     }
 
     const filterTextMessage = this.state.filterText
-      ? ` matching your filter of '${this.state.filterText}'`
+      ? `符合筛选条件 '${this.state.filterText}' `
       : ''
 
     const includedCommitText = this.state.filterToIncludedCommit
-      ? ' that are to be included in your commit'
+      ? '已勾选要提交'
       : ''
 
-    const conjunction = filterTextMessage && includedCommitText ? ' and ' : ''
+    const conjunction = filterTextMessage && includedCommitText ? '并且' : ''
+    const de = filterTextMessage || includedCommitText ? '的' : ''
 
-    return `Sorry, I can't find any changed files${filterTextMessage}${conjunction}
-        ${includedCommitText}.`
+    return `找不到${filterTextMessage}${conjunction}
+        ${includedCommitText}${de}文件改动。`
   }
 
   private renderNoChanges = () => {
