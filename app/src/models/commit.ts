@@ -4,7 +4,7 @@ import { GitAuthor } from './git-author'
 
 /** Shortens a given SHA. */
 export function shortenSHA(sha: string) {
-  return sha.slice(0, 9)
+  return sha.slice(0, 7)
 }
 
 /** Grouping of information required to create a commit */
