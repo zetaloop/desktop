@@ -252,6 +252,10 @@ export class MenuPane extends React.Component<IMenuPaneProps> {
     const className = classNames('menu-pane', this.props.className)
 
     return (
+      /**
+       * This a11y linter is a false-positive as the mousedown and keydown
+       * listeners facilitate navigating the menu with the keyboard.
+       */
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
         className={className}

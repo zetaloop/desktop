@@ -1,3 +1,8 @@
+/**
+ * This a11y linter is a false-positive as the element is a drop target
+ * facilitating our drag and drop functionality for reordering, squashing, and
+ * cherry-picking.
+ */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import * as React from 'react'
 import { Commit } from '../../models/commit'
