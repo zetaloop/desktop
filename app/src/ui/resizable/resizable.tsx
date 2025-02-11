@@ -206,6 +206,7 @@ export class Resizable extends React.Component<
           onMouseDown={this.handleDragStart}
           onDoubleClick={this.props.onReset}
           className="resize-handle"
+          aria-label="Resize handle"
         />
         <AriaLiveContainer
           message={this.state.resizeMessage}
