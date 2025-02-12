@@ -1,5 +1,10 @@
 {
   "releases": {
+    "3.4.17-beta2": [
+      "[Fixed] Opening autocomplete inputs no longer causes a crash due to resize observer error - #19997",
+      "[Improved] Improve tooltip for unknown co-authors - #19992",
+      "[Improved] The length of shortened SHAs are consistently 9 characters - #19902. Thanks @molnarriso!"
+    ],
     "3.4.17-beta1": [
       "[Fixed] Prevent crash when attempting to launch external editor with insufficient permissions - #19929",
       "[Fixed] Running the Desktop CLI on Windows no longer waits for Desktop to exit before exiting itself - #19916",
