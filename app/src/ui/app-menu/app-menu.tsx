@@ -211,13 +211,6 @@ export class AppMenu extends React.Component<IAppMenuProps, {}> {
     }
   }
 
-  private onKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (!event.defaultPrevented && event.key === 'Escape') {
-      event.preventDefault()
-      this.props.onClose({ type: 'keyboard', event })
-    }
-  }
-
   private renderMenuPane(depth: number, menu: IMenu): JSX.Element {
     // If the menu doesn't have an id it's the root menu
     const key = menu.id || '@'
@@ -245,12 +238,7 @@ export class AppMenu extends React.Component<IAppMenuProps, {}> {
     const menus = this.props.state
     const panes = menus.map((m, depth) => this.renderMenuPane(depth, m))
 
-    return (
-      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-      <div id="app-menu-foldout" onKeyDown={this.onKeyDown}>
-        {panes}
-      </div>
-    )
+    return <div id="app-menu-foldout">{panes}</div>
   }
 
   public componentWillUnmount() {
