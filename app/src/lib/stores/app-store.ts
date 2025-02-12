@@ -342,6 +342,7 @@ import {
   ICustomIntegration,
   migratedCustomIntegration,
 } from '../custom-integration'
+import { updateStore } from '../../ui/lib/update-store'
 
 const LastSelectedRepositoryIDKey = 'last-selected-repository-id'
 
@@ -914,6 +915,10 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.apiRepositoriesStore.onDidUpdate(() => this.emitUpdate())
     this.apiRepositoriesStore.onDidError(error => this.emitError(error))
+
+    // updateStore is a global, App.tsx handles most of it but we carry the
+    // UpdateState in the AppState so we need to emit whenever it updates.
+    updateStore.onDidChange(() => this.emitUpdate())
   }
 
   /** Load the emoji from disk. */
