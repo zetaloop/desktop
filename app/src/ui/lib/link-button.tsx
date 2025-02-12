@@ -54,13 +54,14 @@ export class LinkButton extends React.Component<ILinkButtonProps, {}> {
     const { title } = this.props
 
     return (
-      // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
       <a
         ref={this.anchorRef}
         className={className}
         href={href}
         onMouseOver={this.props.onMouseOver}
         onMouseOut={this.props.onMouseOut}
+        onFocus={this.props.onMouseOver}
+        onBlur={this.props.onMouseOut}
         onClick={this.onClick}
         tabIndex={this.props.tabIndex}
         aria-label={this.props.ariaLabel}
