@@ -9,8 +9,7 @@ import {
   DefaultDialogFooter,
 } from '../dialog'
 import { LinkButton } from '../lib/link-button'
-import { updateStore, IUpdateState, UpdateStatus } from '../lib/update-store'
-import { Disposable } from 'event-kit'
+import { IUpdateState, UpdateStatus } from '../lib/update-store'
 import { Loading } from '../lib/loading'
 import { RelativeTime } from '../relative-time'
 import { assertNever } from '../../lib/fatal-error'
@@ -52,9 +51,8 @@ interface IAboutProps {
 
   /** A function to call when the user wants to see Terms and Conditions. */
   readonly onShowTermsAndConditions: () => void
-}
+  readonly onQuitAndInstall: () => void
 
-interface IAboutState {
   readonly updateState: IUpdateState
 }
 
@@ -62,51 +60,19 @@ interface IAboutState {
  * A dialog that presents information about the
  * running application such as name and version.
  */
-export class About extends React.Component<IAboutProps, IAboutState> {
-  private updateStoreEventHandle: Disposable | null = null
-
-  public constructor(props: IAboutProps) {
-    super(props)
-
-    this.state = {
-      updateState: updateStore.state,
-    }
-  }
-
-  private onUpdateStateChanged = (updateState: IUpdateState) => {
-    this.setState({ updateState })
-  }
-
-  public componentDidMount() {
-    this.updateStoreEventHandle = updateStore.onDidChange(
-      this.onUpdateStateChanged
-    )
-    this.setState({ updateState: updateStore.state })
-  }
-
-  public componentWillUnmount() {
-    if (this.updateStoreEventHandle) {
-      this.updateStoreEventHandle.dispose()
-      this.updateStoreEventHandle = null
-    }
-  }
-
-  private onQuitAndInstall = () => {
-    updateStore.quitAndInstallUpdate()
-  }
-
+export class About extends React.Component<IAboutProps> {
   private renderUpdateButton() {
     if (__RELEASE_CHANNEL__ === 'development') {
       return null
     }
 
-    const updateStatus = this.state.updateState.status
+    const updateStatus = this.props.updateState.status
 
     switch (updateStatus) {
       case UpdateStatus.UpdateReady:
         return (
           <Row>
-            <Button onClick={this.onQuitAndInstall}>
+            <Button onClick={this.props.onQuitAndInstall}>
               Quit and Install Update
             </Button>
           </Row>
@@ -160,7 +126,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
   }
 
   private renderUpdateNotAvailable() {
-    const lastCheckedDate = this.state.updateState.lastSuccessfulCheck
+    const lastCheckedDate = this.props.updateState.lastSuccessfulCheck
 
     // This case is rendered as an error
     if (!lastCheckedDate) {
@@ -197,7 +163,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
       )
     }
 
-    const updateState = this.state.updateState
+    const updateState = this.props.updateState
 
     switch (updateState.status) {
       case UpdateStatus.CheckingForUpdates:
@@ -239,7 +205,7 @@ export class About extends React.Component<IAboutProps, IAboutState> {
       )
     }
 
-    if (!this.state.updateState.lastSuccessfulCheck) {
+    if (!this.props.updateState.lastSuccessfulCheck) {
       return (
         <DialogError>
           Couldn't determine the last time an update check was performed. You
