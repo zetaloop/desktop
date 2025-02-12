@@ -62,6 +62,11 @@ export const isMacOSSequoia = memoizeOne(
     systemVersionLessThan('16.0')
 )
 
+/** We're currently running macOS and it is macOS Sonoma or later. */
+export const isMacOSSonomaOrLater = memoizeOne(
+  () => __DARWIN__ && systemVersionGreaterThanOrEqualTo('14.0')
+)
+
 /** We're currently running macOS and it is macOS Catalina or earlier. */
 export const isMacOSCatalinaOrEarlier = memoizeOne(
   () => __DARWIN__ && systemVersionLessThan('10.16')
