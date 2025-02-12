@@ -43,6 +43,13 @@ export class LinkButton extends React.Component<ILinkButtonProps, {}> {
 
   public render() {
     const href = this.props.uri || ''
+    /**
+     * If this component is to open something external like a link, it should
+     * have the role of link as is default by the <a> tag. If this component is
+     * to be used as a button, it should have the role of button. Otherwise,
+     * screen readers may be confused by the results of the click.
+     * */
+    const role = this.props.uri === undefined ? 'button' : undefined
     const className = classNames('link-button-component', this.props.className)
     const { title } = this.props
 
@@ -57,6 +64,7 @@ export class LinkButton extends React.Component<ILinkButtonProps, {}> {
         onClick={this.onClick}
         tabIndex={this.props.tabIndex}
         aria-label={this.props.ariaLabel}
+        role={role}
       >
         {title && <Tooltip target={this.anchorRef}>{title}</Tooltip>}
         {this.props.children}
