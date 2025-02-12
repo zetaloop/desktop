@@ -54,6 +54,12 @@ interface IAboutProps {
   readonly onQuitAndInstall: () => void
 
   readonly updateState: IUpdateState
+
+  /**
+   * A flag to indicate whether the About dialog should ignore that
+   * it's running in development mode. Used exclusively by the AboutTestDialog
+   */
+  readonly allowDevelopment?: boolean
 }
 
 /**
@@ -61,8 +67,15 @@ interface IAboutProps {
  * running application such as name and version.
  */
 export class About extends React.Component<IAboutProps> {
+  private get canCheckForUpdates() {
+    return (
+      __RELEASE_CHANNEL__ !== 'development' ||
+      this.props.allowDevelopment === true
+    )
+  }
+
   private renderUpdateButton() {
-    if (__RELEASE_CHANNEL__ === 'development') {
+    if (!this.canCheckForUpdates) {
       return null
     }
 
@@ -154,7 +167,7 @@ export class About extends React.Component<IAboutProps> {
       return null
     }
 
-    if (__RELEASE_CHANNEL__ === 'development') {
+    if (!this.canCheckForUpdates) {
       return (
         <p>
           The application is currently running in development and will not
@@ -189,7 +202,7 @@ export class About extends React.Component<IAboutProps> {
       return null
     }
 
-    if (__RELEASE_CHANNEL__ === 'development') {
+    if (!this.canCheckForUpdates) {
       return null
     }
 

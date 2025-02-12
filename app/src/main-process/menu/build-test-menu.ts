@@ -137,6 +137,10 @@ export function buildTestMenu() {
           label: 'Octicons',
           click: emit('test-icons'),
         },
+        {
+          label: 'About dialog (test mode)',
+          click: emit('test-about-dialog'),
+        },
       ],
     },
     {

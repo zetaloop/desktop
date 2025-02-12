@@ -1094,6 +1094,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       underlineLinks: this.underlineLinks,
       showDiffCheckMarks: this.showDiffCheckMarks,
       canFilterChanges: this.canFilterChanges,
+      updateState: updateStore.state,
     }
   }
 
