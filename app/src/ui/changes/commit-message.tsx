@@ -1148,9 +1148,11 @@ export class CommitMessage extends React.Component<
       return verb
     }
 
+    const action = `${verb} ${this.getFilesToBeCommittedButtonText()}to `
+
     return (
       <>
-        {verb} {this.getFilesToBeCommittedButtonText()}to{' '}
+        {action}
         <strong>{branch}</strong>
       </>
     )
