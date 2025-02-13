@@ -50,6 +50,7 @@ import { RepoRulesInfo } from '../models/repo-rules'
 import { IAPIRepoRuleset } from './api'
 import { ICustomIntegration } from './custom-integration'
 import { Emoji } from './emoji'
+import { IUpdateState } from '../ui/lib/update-store'
 
 export enum SelectionType {
   Repository,
@@ -373,6 +374,7 @@ export interface IAppState {
   readonly underlineLinks: boolean
 
   readonly canFilterChanges: boolean
+  readonly updateState: IUpdateState
 }
 
 export enum FoldoutType {

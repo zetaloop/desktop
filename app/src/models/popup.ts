@@ -96,6 +96,7 @@ export enum PopupType {
   UnknownAuthors = 'UnknownAuthors',
   TestIcons = 'TestIcons',
   ConfirmCommitFilteredChanges = 'ConfirmCommitFilteredChanges',
+  TestAbout = 'TestAbout',
 }
 
 interface IBasePopup {
@@ -428,6 +429,9 @@ export type PopupDetail =
       type: PopupType.ConfirmCommitFilteredChanges
       onCommitAnyway: () => void
       showFilesToBeCommitted: () => void
+    }
+  | {
+      type: PopupType.TestAbout
     }
 
 export type Popup = IBasePopup & PopupDetail
