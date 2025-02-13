@@ -4,7 +4,7 @@ import { DialogHeader } from './header'
 import { createUniqueId, releaseUniqueId } from '../lib/id-pool'
 import { getTitleBarHeight } from '../window/title-bar'
 import { isTopMostDialog } from './is-top-most'
-import { isMacOSSonoma, isMacOSVentura } from '../../lib/get-os'
+import { isMacOSSonomaOrLater, isMacOSVentura } from '../../lib/get-os'
 import { sendDialogDidOpen } from '../main-process-proxy'
 
 /**
@@ -826,7 +826,7 @@ export class Dialog extends React.Component<DialogProps, IDialogState> {
       }
     }
 
-    if (isMacOSSonoma() && this.props.role !== 'alertdialog') {
+    if (isMacOSSonomaOrLater() && this.props.role !== 'alertdialog') {
       // macOS Sonoma introduced a regression in that: For role of 'dialog', the
       // aria-labelledby is not announced. However, if the dialog has a child
       // with a role of header (aka h* elemeent) it will be announced as long as
