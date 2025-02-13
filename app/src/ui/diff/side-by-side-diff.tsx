@@ -602,6 +602,11 @@ export class SideBySideDiff extends React.Component<
     })
 
     return (
+      /**
+       * This a11y linter is a false-positive as the mousedown facilitates our
+       * drag selection functionality and the keydown facilitates our select all
+       * keyboard shortcut.
+       */
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
         className={containerClassName}

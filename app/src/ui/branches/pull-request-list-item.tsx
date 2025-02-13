@@ -127,6 +127,10 @@ export class PullRequestListItem extends React.Component<
     })
 
     return (
+      /**
+       * This a11y linter is a false-positive as the element is a drop target
+       * facilitating our drag and drop functionality for cherry-picking.
+       */
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
         className={className}

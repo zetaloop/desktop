@@ -765,6 +765,10 @@ export class SideBySideDiffRow extends React.Component<
     }`
 
     return (
+      /**
+       * This a11y linter is a false-positive as the mousedown facilitates our
+       * drag selection functionality.
+       */
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
         id={wrapperID}
