@@ -77,7 +77,6 @@ export class VerticalSegmentedControl<T extends Key> extends React.Component<
   IVerticalSegmentedControlProps<T>,
   IVerticalSegmentedControlState
 > {
-  private listRef: HTMLUListElement | null = null
   private formRef: HTMLFormElement | null = null
 
   public constructor(props: IVerticalSegmentedControlProps<T>) {
@@ -174,18 +173,8 @@ export class VerticalSegmentedControl<T extends Key> extends React.Component<
     }
   }
 
-  private onListRef = (ref: HTMLUListElement | null) => {
-    this.listRef = ref
-  }
-
   private onFieldsetRef = (ref: HTMLFieldSetElement | null) => {
     this.formRef = ref ? ref.form : null
-  }
-
-  private onLegendClick = () => {
-    if (this.listRef) {
-      this.listRef.focus()
-    }
   }
 
   public render() {
@@ -194,8 +183,7 @@ export class VerticalSegmentedControl<T extends Key> extends React.Component<
     }
 
     const label = this.props.label ? (
-      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
-      <legend onClick={this.onLegendClick}>{this.props.label}</legend>
+      <legend>{this.props.label}</legend>
     ) : undefined
 
     const selectedIndex = this.findSelectedIndex(this.props.items)
@@ -208,7 +196,6 @@ export class VerticalSegmentedControl<T extends Key> extends React.Component<
       <fieldset className="vertical-segmented-control" ref={this.onFieldsetRef}>
         {label}
         <ul
-          ref={this.onListRef}
           id={this.state.listId}
           className="vertical-segmented-control"
           tabIndex={0}
