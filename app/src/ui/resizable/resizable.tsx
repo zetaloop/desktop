@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import * as React from 'react'
 import { clamp } from '../../lib/clamp'
 import { AriaLiveContainer } from '../accessibility/aria-live-container'
@@ -202,10 +201,12 @@ export class Resizable extends React.Component<
         ref={this.onResizableRef}
       >
         {this.props.children}
-        <div
+        <button
+          tabIndex={-1}
           onMouseDown={this.handleDragStart}
           onDoubleClick={this.props.onReset}
           className="resize-handle"
+          aria-label="Resize handle"
         />
         <AriaLiveContainer
           message={this.state.resizeMessage}
