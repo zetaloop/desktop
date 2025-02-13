@@ -1347,13 +1347,11 @@ export class CommitMessage extends React.Component<
     const { placeholder, isCommitting, commitSpellcheckEnabled } = this.props
 
     return (
-      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
       <div
         role="group"
         aria-label="Create commit"
         className={className}
         onContextMenu={this.onContextMenu}
-        onKeyDown={this.onKeyDown}
       >
         <div className={summaryClassName}>
           {this.renderAvatar()}
