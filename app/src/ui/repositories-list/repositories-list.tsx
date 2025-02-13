@@ -279,11 +279,20 @@ export class RepositoriesList extends React.Component<
         className="new-repository-button"
         onClick={this.onNewRepositoryButtonClick}
         ariaExpanded={this.state.newRepositoryMenuExpanded}
+        onKeyDown={this.onNewRepositoryButtonKeyDown}
       >
         Add
         <Octicon symbol={octicons.triangleDown} />
       </Button>
     )
+  }
+
+  private onNewRepositoryButtonKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>
+  ) => {
+    if (event.key === 'ArrowDown') {
+      this.onNewRepositoryButtonClick()
+    }
   }
 
   private renderNoItems = () => {
