@@ -1,7 +1,7 @@
 {
   "releases": {
     "3.4.17-beta3": [
-      "[Fixed] Dialogs now announce their titles on macOS Sequoia for VoiceOver users - #20009",
+      "[Fixed] Dialogs announce their titles on macOS Sequoia for VoiceOver users - #20009",
       "[Fixed] The commit button words are separated by spaces for screen reader users - #20011",
       "[Improved] Announce update progress in about dialog - #20018",
       "[Improved] Buttons with dropdown carrot that trigger context menus can be opened with down arrow - #20007",
