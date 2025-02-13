@@ -115,7 +115,7 @@ export const isAttributableEmailFor = (account: Account, email: string) => {
   const needle = email.toLowerCase()
 
   return (
-    emails.some(({ email }) => email.toLowerCase() === needle) ||
+    emails.some(e => e.verified && e.email.toLowerCase() === needle) ||
     getStealthEmailForUser(id, login, endpoint).toLowerCase() === needle ||
     getLegacyStealthEmailForUser(login, endpoint).toLowerCase() === needle
   )
