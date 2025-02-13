@@ -1148,9 +1148,16 @@ export class CommitMessage extends React.Component<
       return verb
     }
 
+    /** N.B. For screen reader users, this string literal is important! This was
+     * moved into a string literal because when it was JSX it was interpreted
+     * as three separate strings "Verb" and "Count" and "to" and even tho
+     * visually it was correctly adding spacings, for screen reader users it was
+     * not and putting them all to together as one word. */
+    const action = `${verb} ${this.getFilesToBeCommittedButtonText()}to `
+
     return (
       <>
-        {verb} {this.getFilesToBeCommittedButtonText()}to{' '}
+        {action}
         <strong>{branch}</strong>
       </>
     )
