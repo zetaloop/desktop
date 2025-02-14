@@ -107,7 +107,7 @@ export class About extends React.Component<IAboutProps> {
         return (
           <Row>
             <Button onClick={this.props.onQuitAndInstall}>
-              Quit and Install Update
+              退出并安装更新
             </Button>
           </Row>
         )
@@ -147,21 +147,16 @@ export class About extends React.Component<IAboutProps> {
     }
 
     if (!this.canCheckForUpdates) {
-      return (
-        <p>
-          The application is currently running in development and will not
-          receive any updates.
-        </p>
-      )
+      return <p>开发版本不接收更新</p>
     }
 
     const { status, lastSuccessfulCheck } = this.props.updateState
 
     switch (status) {
       case UpdateStatus.CheckingForUpdates:
-        return <UpdateInfo message="Checking for updates…" loading={true} />
+        return <UpdateInfo message="正在检查更新…" loading={true} />
       case UpdateStatus.UpdateAvailable:
-        return <UpdateInfo message="Downloading update…" loading={true} />
+        return <UpdateInfo message="正在下载更新…" loading={true} />
       case UpdateStatus.UpdateNotAvailable:
         if (!lastSuccessfulCheck) {
           return null
@@ -169,7 +164,7 @@ export class About extends React.Component<IAboutProps> {
 
         const richMessage = (
           <>
-            You have the latest version (last checked{' '}
+            已是最新版本 (检查于
             <RelativeTime date={lastSuccessfulCheck} />)
           </>
         )
@@ -181,14 +176,12 @@ export class About extends React.Component<IAboutProps> {
 
         return (
           <UpdateInfo
-            message={`You have the latest version (last checked ${absoluteDate})`}
+            message={`已是最新版本（检查于${absoluteDate}）`}
             richMessage={richMessage}
           />
         )
       case UpdateStatus.UpdateReady:
-        return (
-          <UpdateInfo message="An update has been downloaded and is ready to be installed." />
-        )
+        return <UpdateInfo message="更新已准备就绪" />
       case UpdateStatus.UpdateNotChecked:
         return null
       default:
