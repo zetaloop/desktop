@@ -138,7 +138,7 @@ export function buildTestMenu() {
           click: emit('test-icons'),
         },
         {
-          label: 'About dialog (test mode)',
+          label: '关于（测试模式）',
           click: emit('test-about-dialog'),
         },
       ],
