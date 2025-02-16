@@ -6,6 +6,9 @@
 
 [GitHub Desktop](https://desktop.github.com/) 是一个开源的 GitHub 客户端，基于 [Electron](https://www.electronjs.org/) 技术，使用 [React](https://reactjs.org/) 框架，以 [TypeScript](https://www.typescriptlang.org) 编写。
 
+汉化版基于原版源码，将界面元素和控制逻辑修改为中文，而后重新构建发布。<br>
+此方法与文本替换补丁相比，汉化更加彻底。
+
 <picture>
   <source
     srcset="https://user-images.githubusercontent.com/634063/202742848-63fa1488-6254-49b5-af7c-96a6b50ea8af.png"
@@ -43,9 +46,9 @@
 ### 旧的版本
 可在 [GitHub 发行版](https://github.com/zetaloop/desktop/releases) 下载中文版旧版。旧版本将会在安装后尝试自动更新到最新版本。
 
-### 社区发布版
+### 社区发布版（英文原版）
 
-可以使用一些社区维护的包管理器来安装 GitHub Desktop **英文原版**：
+可以使用一些社区维护的包管理器来安装 GitHub Desktop 英文原版：
  - Windows 用户可以用 [winget](https://docs.microsoft.com/en-us/windows/package-manager/winget/) `c:\> winget install github-desktop` 或者 [Chocolatey](https://chocolatey.org/) `c:\> choco install github-desktop`
  - macOS 用户可以用 [Homebrew](https://brew.sh/) `$ brew install --cask github`
 
@@ -55,10 +58,15 @@
 
 [阅读我们的设计理念](https://github.com/zetaloop/Desktop/blob/development/docs/process/what-is-desktop.md)，了解 GitHub Desktop 软件的开发重心和目标用户。
 
+对于该汉化版，我的翻译理念是，尽可能让用户更好理解如何使用它。不会追求符合原文、符合惯例。
+
+如果您觉得有些译文不好、不符合您的习惯、~~译者简直是大坏蛋~~，欢迎 [创建议题](https://github.com/zetaloop/desktop/issues/new/choose) 告诉我 :3
+
 ## 使用时遇到问题
 
 > [!NOTE]
-> 这里是指 GitHub Desktop 原版软件的程序问题，如果有翻译问题请直接联系 Zetaloop。
+> 如要向官方反馈程序问题，请使用 **英文原版** 来复现。<br>
+> 下列说明均为英文原版相关说明。如有翻译问题请联系 zetaloop。
 
 注意：参与此项目时需要遵守 [GitHub Desktop 行为准则](https://github.com/desktop/desktop/blob/development/CODE_OF_CONDUCT.md)。
 
