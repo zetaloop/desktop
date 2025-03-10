@@ -52,7 +52,7 @@ export class Accounts extends React.Component<IAccountsProps, {}> {
     }
 
     const accountTypeLabel =
-      type === SignInType.DotCom ? 'GitHub.com' : 'GitHub Enterprise'
+      type === SignInType.DotCom ? 'GitHub.com' : 'GitHub 企业版'
 
     const accounts = [
       ...(this.props.dotComAccount ? [this.props.dotComAccount] : []),
