@@ -88,7 +88,7 @@ export class GitEmailNotFoundWarning extends React.Component<IGitEmailNotFoundWa
     if (this.props.accounts.length === 1) {
       const accountType =
         this.props.accounts[0].endpoint === getDotComAPIEndpoint()
-          ? 'GitHub'
+          ? 'GitHub '
           : 'GitHub 企业版'
 
       return `您的 ${accountType}账号`

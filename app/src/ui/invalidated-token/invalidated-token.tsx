@@ -18,7 +18,7 @@ interface IInvalidatedTokenProps {
  */
 export class InvalidatedToken extends React.Component<IInvalidatedTokenProps> {
   public render() {
-    const accountTypeSuffix = this.isEnterpriseAccount ? ' 企业版' : ''
+    const accountTypeSuffix = this.isEnterpriseAccount ? ' 企业版' : ' '
 
     return (
       <Dialog

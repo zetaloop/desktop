@@ -95,15 +95,9 @@ export class RebaseChooseBranchDialog extends React.Component<
         : false
 
     return selectedBranchIsCurrentBranch
-<<<<<<< HEAD
-      ? 'You are not able to rebase this branch onto itself.'
-      : !areCommitsToRebase
-      ? 'There are no commits on the current branch to rebase.'
-=======
       ? '无法将该分支重构在自己身上。'
-      : !currentBranchIsBehindSelectedBranch
-      ? '当前分支已与所选分支同步。'
->>>>>>> 90fd5b7521 (更新重构提示)
+      : !areCommitsToRebase
+      ? '当前分支没有提交可以重构。'
       : undefined
   }
 
@@ -165,55 +159,20 @@ export class RebaseChooseBranchDialog extends React.Component<
     baseBranch: Branch,
     commitsToRebase: number
   ) {
-<<<<<<< HEAD
     if (commitsToRebase <= 0) {
       return (
         <>
-          This branch is up to date with{` `}
-=======
-    // The current branch is behind the base branch
-    if (commitsBehindCount > 0 && commitsAheadCount <= 0) {
-      const pluralized = commitsBehindCount === 1 ? '个提交' : '个提交'
-      return (
-        <>
-          从 <strong>{baseBranch.name}</strong> 快进合并
-          <strong>{`${commitsBehindCount}${pluralized}`}</strong>到{' '}
->>>>>>> 90fd5b7521 (更新重构提示)
-          <strong>{currentBranch.name}</strong>
+          该分支已与 <strong>{currentBranch.name}</strong> 保持同步
         </>
       )
     }
 
-<<<<<<< HEAD
-    const pluralized = commitsToRebase === 1 ? 'commit' : 'commits'
+    const pluralized = commitsToRebase === 1 ? '个提交' : '个提交'
     return (
       <>
-        This will update <strong>{currentBranch.name}</strong>
-        {` by applying its `}
-        <strong>{` ${commitsToRebase} ${pluralized}`}</strong>
-        {` on top of `}
-        <strong>{baseBranch.name}</strong>
-=======
-    // The current branch is behind and ahead of the base branch
-    if (commitsBehindCount > 0 && commitsAheadCount > 0) {
-      const pluralized = commitsAheadCount === 1 ? '个提交' : '个提交'
-      return (
-        <>
-          把 <strong>{currentBranch.name}</strong> 所做的
-          <strong>{`${commitsAheadCount}${pluralized}`}</strong>以{' '}
-          <strong>{baseBranch.name}</strong> 为基础重新构造
-        </>
-      )
-    }
-
-    // The current branch is a direct child of the base branch
-    // Condition: commitsBehindCount <= 0 && commitsAheadCount >= 0
-    return (
-      <>
-        <strong>{currentBranch.name}</strong>
-        {` `}
-        分支已与 <strong>{baseBranch.name} 保持同步</strong>
->>>>>>> 90fd5b7521 (更新重构提示)
+        把 <strong>{currentBranch.name}</strong> 所做的{' '}
+        <strong>{`${commitsToRebase}${pluralized}`}</strong> 以{' '}
+        <strong>{baseBranch.name}</strong> 为基础重新构造
       </>
     )
   }

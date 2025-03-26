@@ -180,7 +180,7 @@ export class MergeChooseBranchDialog extends React.Component<
     if (commitCount === 0) {
       return (
         <React.Fragment>
-          {`分支已与 `}
+          {`该分支已与 `}
           <strong>{branch.name}</strong>
           {` 保持同步`}
         </React.Fragment>

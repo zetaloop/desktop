@@ -267,12 +267,14 @@ export class ConfigureGitUser extends React.Component<
     }
 
     const accountTypeSuffix =
-      account.endpoint === getDotComAPIEndpoint() ? '' : ' 企业版'
+      account.endpoint === getDotComAPIEndpoint()
+        ? ' GitHub '
+        : ' GitHub 企业版'
 
     return (
       <div>
         <RadioButton
-          label={`使用我的 GitHub ${accountTypeSuffix}用户名和邮箱`}
+          label={`使用我的${accountTypeSuffix}用户名和邮箱`}
           checked={this.state.useGitHubAuthorInfo}
           onSelected={this.onUseGitHubInfoSelected}
           value="github-account"
