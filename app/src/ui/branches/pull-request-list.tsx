@@ -145,7 +145,7 @@ export class PullRequestList extends React.Component<
   }
 
   private getListAriaLabel = () => {
-    return `Pull requests in ${this.getRepositoryName()}`
+    return `${this.getRepositoryName()} 仓库的拉取请求列表`
   }
 
   public render() {
