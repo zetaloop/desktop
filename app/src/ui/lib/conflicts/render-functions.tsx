@@ -26,10 +26,11 @@ export function renderAllResolved() {
 export function renderShellLink(openThisRepositoryInShell: () => void) {
   return (
     <div>
+      您可以{' '}
       <LinkButton onClick={openThisRepositoryInShell}>
-        在终端中操作 Git
+        打开终端来操作 Git
       </LinkButton>
-      ，打开编辑器，或者手动解决冲突。
+      ，或者在编辑器中解决冲突，也可关闭此弹窗稍后再处理。
     </div>
   )
 }
