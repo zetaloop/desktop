@@ -439,9 +439,9 @@ export class FilterChangesList extends React.Component<
       isCommitting || rebaseConflictState !== null || isUncommittableSubmodule
 
     const checkboxTooltip = isUncommittableSubmodule
-      ? '子模块内的改动需要先提交到子模块，才能一起提交到仓库。子模块内的改动尚未提交。'
+      ? '子模块内的改动需要先在子模块内提交，才能一起提交到仓库。子模块内的改动尚未提交。'
       : isPartiallyCommittableSubmodule
-      ? '子模块内的改动需要先提交到子模块，才能一起提交到仓库。子模块内还有一些改动尚未提交。'
+      ? '子模块内的改动需要先在子模块内提交，才能一起提交到仓库。子模块内还有一些改动尚未提交。'
       : undefined
 
     return (
@@ -684,7 +684,7 @@ export class FilterChangesList extends React.Component<
       items.push({
         label: __DARWIN__
           ? '忽略该文件（.gitignore）' // 译：有必要保留（.gitignore）这个提示，因为 Git 忽略规则还有本地的
-          : '忽略该文件（.gitignore）', // 没错我差点直接删掉
+          : '忽略该文件（.gitignore）', // 差点直接删掉hhh
         action: () => this.props.onIgnoreFile(path),
         enabled,
       })
@@ -852,17 +852,18 @@ export class FilterChangesList extends React.Component<
     const fileName = basename(firstFile.path)
 
     switch (firstFile.status.kind) {
+      // DesktopCN: 请保留英文的提交摘要
       case AppFileStatusKind.New:
       case AppFileStatusKind.Untracked:
-        return `创建 ${fileName}`
+        return `Create ${fileName}`
       case AppFileStatusKind.Deleted:
-        return `删除 ${fileName}`
+        return `Delete ${fileName}`
       default:
         // TODO:
         // this doesn't feel like a great message for AppFileStatus.Copied or
         // AppFileStatus.Renamed but without more insight (and whether this
         // affects other parts of the flow) we can just default to this for now
-        return `更新 ${fileName}`
+        return `Update ${fileName}`
     }
   }
 
@@ -1246,11 +1247,11 @@ export class FilterChangesList extends React.Component<
         onClickOutside={this.closeFilterOptions}
       >
         <div className="filter-popover-header">
-          <h3 id="filter-options-header">Filter Options</h3>
+          <h3 id="filter-options-header">筛选选项</h3>
           <button
             className="close"
             onClick={this.closeFilterOptions}
-            aria-label="Close"
+            aria-label="关闭"
           >
             <Octicon symbol={octicons.x} />
           </button>
@@ -1263,7 +1264,7 @@ export class FilterChangesList extends React.Component<
                 : CheckboxValue.Off
             }
             onChange={this.onFilterToIncludedInCommit}
-            label={`Included in commit (${checkedFilesThatAreVisibleCount})`}
+            label={`只显示已勾选要提交的改动（${checkedFilesThatAreVisibleCount}个）`}
           />
         </div>
       </Popover>
@@ -1271,8 +1272,8 @@ export class FilterChangesList extends React.Component<
   }
 
   private renderFilterBox = () => {
-    const buttonTextLabel = `Filter Options ${
-      this.props.includedChangesInCommitFilter ? '(1 applied)' : ''
+    const buttonTextLabel = `筛选选项${
+      this.props.includedChangesInCommitFilter ? '（已启用1项）' : ''
     }`
 
     return (
@@ -1306,7 +1307,7 @@ export class FilterChangesList extends React.Component<
           ref={this.onTextBoxRef}
           displayClearButton={true}
           autoFocus={true}
-          placeholder={'Filter'}
+          placeholder={'筛选'}
           className="filter-list-filter-field"
           onValueChanged={this.onFilterTextChanged}
           onKeyDown={this.onFilterKeyDown}
@@ -1394,10 +1395,10 @@ export class FilterChangesList extends React.Component<
     return (
       <div className="hidden-changes-warning" id="hidden-changes-warning">
         <Octicon symbol={octicons.alert} />
-        <span className="sr-only">Warning:</span>
-        <span>Hidden changes will be committed. </span>
+        <span className="sr-only">警告:</span>
+        <span>已隐藏的改动也会被提交。</span>
         <LinkButton onClick={this.showFilesToBeCommitted}>
-          Adjust the filters to see all {filesSelected.length} changes
+          显示全部{filesSelected.length}个改动
         </LinkButton>
       </div>
     )
@@ -1412,17 +1413,17 @@ export class FilterChangesList extends React.Component<
     }
 
     const filterTextMessage = this.props.filterText
-      ? ` matching your filter of '${this.props.filterText}'`
+      ? `符合筛选条件 '${this.props.filterText}' `
       : ''
 
     const includedCommitText = this.props.includedChangesInCommitFilter
-      ? ' that are to be included in your commit'
+      ? '已勾选要提交'
       : ''
 
-    const conjunction = filterTextMessage && includedCommitText ? ' and ' : ''
+    const conjunction = filterTextMessage && includedCommitText ? '并且' : ''
+    const de = filterTextMessage || includedCommitText ? '的' : ''
 
-    return `Sorry, I can't find any changed files${filterTextMessage}${conjunction}
-        ${includedCommitText}.`
+    return `找不到${filterTextMessage}${conjunction}${includedCommitText}${de}文件改动。`
   }
 
   private renderNoChanges = () => {
