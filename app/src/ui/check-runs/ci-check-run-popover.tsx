@@ -263,7 +263,7 @@ export class CICheckRunPopover extends React.PureComponent<
 
     const valueMap = getCheckStatusCountMap(checkRuns)
 
-    const ariaLabel = `完成度图。${
+    const ariaLabel = `完成度指示图。${
       valueMap.get(APICheckStatus.Completed) ?? 0
     }个已完成，${valueMap.get(APICheckStatus.InProgress) ?? 0}个运行中，${
       valueMap.get(APICheckStatus.Queued) ?? 0
