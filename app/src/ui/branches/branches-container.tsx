@@ -350,7 +350,7 @@ export class BranchesContainer extends React.Component<
     // Thus, it doesn't have to be an actual branch name.
     dragAndDropManager.emitEnterDropTarget({
       type: DropTargetType.Branch,
-      branchName: 'a new branch',
+      branchName: '新分支',
     })
   }
 
