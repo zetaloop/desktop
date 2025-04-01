@@ -132,7 +132,7 @@ export class SubmoduleDiff extends React.Component<ISubmoduleDiffProps> {
   }
 
   private renderCommitSHA(sha: string, which?: '旧' | '新') {
-    const whichInfix = which === undefined ? '' : ` ${which}`
+    const whichInfix = which === undefined ? '' : `${which}`
 
     return (
       <>
