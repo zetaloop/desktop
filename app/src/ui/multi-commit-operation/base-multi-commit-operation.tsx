@@ -100,8 +100,8 @@ export abstract class BaseMultiCommitOperation extends React.Component<IMultiCom
 
     const operationDescription = (
       <>
-        {targetBranch !== null ? <strong>{targetBranch.name}</strong> : null} 的
-        {operationPrefix}
+        {operationPrefix}{' '}
+        {targetBranch !== null ? <strong>{targetBranch.name}</strong> : null}
       </>
     )
 
@@ -205,7 +205,7 @@ export abstract class BaseMultiCommitOperation extends React.Component<IMultiCom
             ourBranch={ourBranch}
             theirBranch={theirBranch}
             manualResolutions={manualResolutions}
-            headerTitle={`继续${operationDetail.kind}前请先解决冲突`}
+            headerTitle={`请先解决冲突后继续${operationDetail.kind}`}
             submitButton={submit}
             abortButton={abort}
             onSubmit={this.onContinueAfterConflicts}
