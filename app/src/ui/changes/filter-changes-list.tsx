@@ -683,8 +683,8 @@ export class FilterChangesList extends React.Component<
       const enabled = Path.basename(path) !== GitIgnoreFileName
       items.push({
         label: __DARWIN__
-          ? '忽略该文件（.gitignore）' // 译：有必要保留（.gitignore）这个提示，因为 Git 忽略规则还有本地的
-          : '忽略该文件（.gitignore）', // 差点直接删掉hhh
+          ? '忽略该文件（.gitignore）' // 译：请保留（.gitignore）这个提示，因为 Git 忽略规则还有本地的
+          : '忽略该文件（.gitignore）',
         action: () => this.props.onIgnoreFile(path),
         enabled,
       })
