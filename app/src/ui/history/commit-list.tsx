@@ -354,9 +354,9 @@ export class CommitList extends React.Component<
     }
 
     if (numUnpushedTags > 0) {
-      return `该提交具有${numUnpushedTags}个标签${
+      return `该提交将会推送${numUnpushedTags}个标签${
         numUnpushedTags > 1 ? '' : ''
-      }要推送`
+      }`
     }
 
     return undefined
