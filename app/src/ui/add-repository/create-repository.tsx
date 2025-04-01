@@ -454,10 +454,10 @@ export class CreateRepository extends React.Component<
       <InputWarning
         id="repo-sanitized-name-warning"
         trackedUserInput={this.state.name}
-        ariaLiveMessage={`仓库将会命名为 ${sanitizedName}，空格与无效字符会被替换为横线。`}
+        ariaLiveMessage={`仓库将会命名为 ${sanitizedName}，空格与无效字符会被替换成横线。`}
       >
         <p>仓库将会命名为 {sanitizedName}</p>
-        <span className="sr-only">空格与无效字符会被替换为横线。</span>
+        <span className="sr-only">空格与无效字符会被替换成横线。</span>
       </InputWarning>
     )
   }
