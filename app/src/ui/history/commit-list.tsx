@@ -216,24 +216,24 @@ export class CommitList extends React.Component<
         return
       }
 
-      const plural = keyboardReorderData.commits.length === 1 ? '' : 's'
+      const plural = keyboardReorderData.commits.length === 1 ? '' : ''
 
       if (insertionIndexPath !== null) {
         const { row } = insertionIndexPath
 
         const insertionPoint =
           row < this.props.commitSHAs.length
-            ? `before commit ${row + 1}`
-            : `after commit ${row}`
+            ? `在提交${row + 1}前`
+            : `在提交${row}后`
 
         this.setState({
-          reorderingMessage: `Press Enter to insert the selected commit${plural} ${insertionPoint} or Escape to cancel.`,
+          reorderingMessage: `按回车键${insertionPoint}插入所选的提交${plural}，或按 Esc 键取消。`,
         })
         return
       }
 
       this.setState({
-        reorderingMessage: `Use the Up and Down arrow keys to choose a new location for the selected commit${plural}, then press Enter to confirm or Escape to cancel.`,
+        reorderingMessage: `按上下方向键选择插入位置，然后按回车键确定，或按 Esc 键取消。`,
       })
     },
     500
@@ -498,7 +498,7 @@ export class CommitList extends React.Component<
       <div id="commit-list" className={classes} ref={this.containerRef}>
         {this.renderReorderCommitsHint()}
         <List
-          ariaLabel="Commits"
+          ariaLabel="提交列表"
           role={this.props.isInformationalView === true ? 'list' : 'listbox'}
           ref={this.listRef}
           rowCount={commitSHAs.length}
