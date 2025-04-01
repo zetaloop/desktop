@@ -205,7 +205,7 @@ export class Integrations extends React.Component<
     return (
       <Select
         label={enableCustomIntegration() ? undefined : label}
-        aria-label="External editor"
+        aria-label="编辑器"
         value={
           useCustomEditor
             ? CustomIntegrationValue
@@ -291,7 +291,7 @@ export class Integrations extends React.Component<
     return (
       <Select
         label={enableCustomIntegration() ? undefined : '终端'}
-        aria-label="Shell"
+        aria-label="终端"
         value={useCustomShell ? CustomIntegrationValue : selectedShell}
         onChange={this.onSelectedShellChanged}
       >

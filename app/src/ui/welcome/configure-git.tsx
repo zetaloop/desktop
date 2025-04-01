@@ -14,7 +14,7 @@ interface IConfigureGitProps {
 export class ConfigureGit extends React.Component<IConfigureGitProps, {}> {
   public render() {
     return (
-      <section id="configure-git" aria-label="Configure Git">
+      <section id="configure-git" aria-label="配置 Git">
         <h1 className="welcome-title">配置 Git</h1>
         <p className="welcome-text">
           用于标记您的提交。如果您发布提交，任何人都可以看到这个信息。

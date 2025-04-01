@@ -28,7 +28,7 @@ export class Start extends React.Component<IStartProps, {}> {
     return (
       <section
         id="start"
-        aria-label="Welcome to GitHub Desktop"
+        aria-label="欢迎使用 GitHub Desktop"
         aria-describedby="start-description"
       >
         <div className="start-content">

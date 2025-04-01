@@ -24,10 +24,7 @@ export class SignInEnterprise extends React.Component<
     }
 
     return (
-      <section
-        id="sign-in-enterprise"
-        aria-label="Sign in to your GitHub Enterprise"
-      >
+      <section id="sign-in-enterprise" aria-label="登录 GitHub 企业版">
         <h1 className="welcome-title">登录 GitHub 企业版</h1>
 
         <SignIn signInState={state} dispatcher={this.props.dispatcher}>

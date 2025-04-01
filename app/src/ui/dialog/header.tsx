@@ -68,7 +68,7 @@ export class DialogHeader extends React.Component<IDialogHeaderProps, {}> {
       <button
         className="close"
         onClick={this.onCloseButtonClick}
-        aria-label="Close"
+        aria-label="关闭"
       >
         <Octicon symbol={octicons.x} />
       </button>

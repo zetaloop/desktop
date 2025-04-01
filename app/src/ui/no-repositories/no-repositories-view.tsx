@@ -94,7 +94,7 @@ export class NoRepositoriesView extends React.Component<
   public render() {
     return (
       <UiView id="no-repositories">
-        <section aria-label="Let's get started!">
+        <section aria-label="让我们开启旅程吧！">
           <header>
             <h1>让我们开启旅程吧！</h1>
             <p>添加一个仓库到 GitHub Desktop，开始协作</p>
