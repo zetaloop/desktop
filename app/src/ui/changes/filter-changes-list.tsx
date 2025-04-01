@@ -852,7 +852,7 @@ export class FilterChangesList extends React.Component<
     const fileName = basename(firstFile.path)
 
     switch (firstFile.status.kind) {
-      // DesktopCN: 请保留英文的提交摘要
+      // Desktop-CN: 这里是提交的默认摘要，需保持英文
       case AppFileStatusKind.New:
       case AppFileStatusKind.Untracked:
         return `Create ${fileName}`

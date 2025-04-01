@@ -736,17 +736,18 @@ export class ChangesList extends React.Component<
     const fileName = basename(firstFile.path)
 
     switch (firstFile.status.kind) {
+      // Desktop-CN: 这里是提交的默认摘要，需保持英文
       case AppFileStatusKind.New:
       case AppFileStatusKind.Untracked:
-        return `创建 ${fileName}`
+        return `Create ${fileName}`
       case AppFileStatusKind.Deleted:
-        return `删除 ${fileName}`
+        return `Delete ${fileName}`
       default:
         // TODO:
         // this doesn't feel like a great message for AppFileStatus.Copied or
         // AppFileStatus.Renamed but without more insight (and whether this
         // affects other parts of the flow) we can just default to this for now
-        return `更新 ${fileName}`
+        return `Update ${fileName}`
     }
   }
 
