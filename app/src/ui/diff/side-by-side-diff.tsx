@@ -1380,7 +1380,7 @@ export class SideBySideDiff extends React.Component<
     this.expandHunk(diff.hunks[hunkIndex], kind)
 
     this.ariaLiveChangeSignal = !this.ariaLiveChangeSignal
-    this.setState({ ariaLiveMessage: 'Expanded' })
+    this.setState({ ariaLiveMessage: '已展开' })
   }
 
   private onClickHunk = (hunkStartLine: number, select: boolean) => {
@@ -1512,7 +1512,7 @@ export class SideBySideDiff extends React.Component<
     this.ariaLiveChangeSignal = !this.ariaLiveChangeSignal
     this.setState({
       diff: updatedDiff,
-      ariaLiveMessage: 'Expanded',
+      ariaLiveMessage: '已展开',
     })
   }
 

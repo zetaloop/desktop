@@ -305,7 +305,7 @@ const renderConflictedFileWithConflictMarkers: React.FunctionComponent<{
           onClick={onDropdownClick}
           onKeyDown={onDropdownKeyDown}
           className="small-button button-group-item arrow-menu"
-          ariaLabel="File resolution options"
+          ariaLabel="解决文件冲突选项"
           ariaHaspopup="menu"
           ariaExpanded={props.isFileResolutionOptionsMenuOpen}
         >
