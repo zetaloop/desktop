@@ -8,12 +8,12 @@
 
 <picture>
   <source
-    srcset="https://user-images.githubusercontent.com/634063/202742848-63fa1488-6254-49b5-af7c-96a6b50ea8af.png"
+    srcset="https://github.com/user-attachments/assets/558a42a5-d41a-4790-94db-b5f943025ee7"
     media="(prefers-color-scheme: dark)"
   />
   <img
     width="1072"
-    src="https://user-images.githubusercontent.com/634063/202742985-bb3b3b94-8aca-404a-8d8a-fd6a6f030672.png"
+    src="https://github.com/user-attachments/assets/a90d5aef-620d-49ab-9a72-3cd6e15a95ee"
     alt="GitHub Desktop 软件截图，其中显示了两位协作者正在查看和准备提交一些改动"
   />
 </picture>
