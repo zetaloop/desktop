@@ -877,10 +877,8 @@ export class CommitMessage extends React.Component<
     const noFilesSelected = this.props.filesSelected.length === 0
 
     const ariaLabel =
-      'Generate commit message with Copilot' +
-      (noFilesSelected
-        ? '. Files must be selected to generate a commit message.'
-        : '')
+      '用 Copilot 生成提交消息' +
+      (noFilesSelected ? '。请先选择要提交的文件。' : '')
 
     return (
       <>
@@ -1342,7 +1340,7 @@ export class CommitMessage extends React.Component<
     const loading =
       isCommitting || isGeneratingCommitMessage ? <Loading /> : undefined
     const generatingCommitDetailsMessage = isGeneratingCommitMessage
-      ? 'Generating commit details…'
+      ? '正在生成提交消息…'
       : null
     const tooltip =
       generatingCommitDetailsMessage ?? this.getButtonTooltip(buttonEnabled)
