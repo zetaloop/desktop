@@ -554,7 +554,7 @@ export class CreateBranch extends React.Component<
         },
         {
           title: currentBranchName,
-          description: '当前检出的分支。在此基础上进一步开发。',
+          description: '当前检出分支。在此基础上进一步开发。',
           key: StartPoint.CurrentBranch,
         },
       ]
@@ -598,12 +598,12 @@ export class CreateBranch extends React.Component<
       const items = [
         {
           title: upstreamDefaultBranch.name,
-          description: '上游的默认分支。开始制作一些新的东西。',
+          description: '上游默认分支。开始制作一些新的东西。',
           key: StartPoint.UpstreamDefaultBranch,
         },
         {
           title: currentBranchName,
-          description: '当前检出的分支。在此基础上进一步开发。',
+          description: '当前检出分支。在此基础上进一步开发。',
           key: StartPoint.CurrentBranch,
         },
       ]
