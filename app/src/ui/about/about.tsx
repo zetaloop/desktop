@@ -288,8 +288,8 @@ export class About extends React.Component<IAboutProps> {
               </LinkButton>
             </p>
             <p className="terms-and-license">
-              <LinkButton uri="https://gh.io/copilot-for-desktop-transparency">
-                Responsible use of Copilot in GitHub Desktop
+              <LinkButton uri="https://docs.github.com/zh/copilot/responsible-use-of-github-copilot-features/responsible-use-of-github-copilot-in-github-desktop">
+                Copilot 使用规范
               </LinkButton>
             </p>
           </div>
