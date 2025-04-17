@@ -877,7 +877,7 @@ export class CommitMessage extends React.Component<
 
     const ariaLabel =
       '用 Copilot 生成提交消息' +
-      (noFilesSelected ? '。请先选择要提交的文件。' : '')
+      (noFilesSelected ? '，请勾选要提交的文件' : '')
 
     return (
       <>

@@ -38,7 +38,7 @@ export class GenerateCommitMessageOverrideWarning extends React.Component<IGener
       >
         <DialogContent>
           <p id="generate-commit-message-override-warning-body">
-            AI 生成的提交消息会覆盖现有内容。
+            AI 生成的提交消息将会覆盖现有内容。
           </p>
         </DialogContent>
         <DialogFooter>
