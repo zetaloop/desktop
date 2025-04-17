@@ -133,9 +133,7 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
         <>
           <p>{e.message}</p>
           <p>
-            <LinkButton uri={copilotPlansURL}>
-              Upgrade to increase your limit.
-            </LinkButton>
+            <LinkButton uri={copilotPlansURL}>升级可享受更高额度。</LinkButton>
           </p>
         </>
       )
@@ -146,7 +144,7 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
 
   private getTitle(error: Error) {
     if (isCopilotExceededQuotaError(error)) {
-      return 'Quota exceeded'
+      return '额度用尽'
     }
 
     switch (getDugiteError(error)) {
