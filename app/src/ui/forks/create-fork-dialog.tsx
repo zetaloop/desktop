@@ -77,7 +77,7 @@ export class CreateForkDialog extends React.Component<
   public render() {
     return (
       <Dialog
-        title="是否分叉该仓库？"
+        title="是否复刻该仓库？"
         onDismissed={this.props.onDismissed}
         onSubmit={this.state.error ? undefined : this.onSubmit}
         dismissDisabled={this.state.loading}
@@ -121,13 +121,13 @@ function renderCreateForkDialogContent(
           <strong>
             {`${account.login}/${repository.gitHubRepository.name}`}
           </strong>
-          {` 创建一个分叉仓库来继续操作吗？`}
+          {` 创建一个复刻仓库来继续操作吗？`}
         </p>
       </DialogContent>
       <DialogFooter>
         <OkCancelButtonGroup
           destructive={true}
-          okButtonText={__DARWIN__ ? '分叉' : '分叉'}
+          okButtonText={__DARWIN__ ? '复刻' : '复刻'}
           okButtonDisabled={loading}
           cancelButtonDisabled={loading}
         />
@@ -147,7 +147,7 @@ function renderCreateForkDialogError(
       <>
         {`请尝试 `}
         <LinkButton uri={repository.gitHubRepository.htmlURL}>
-          在 GitHub 上手动分叉
+          在 GitHub 上手动复刻
         </LinkButton>
         。
       </>
@@ -156,7 +156,7 @@ function renderCreateForkDialogError(
     <>
       <DialogContent>
         <div>
-          {`分叉 `}
+          {`复刻仓库 `}
           <strong>
             {`${account.login}/${repository.gitHubRepository.name}`}
           </strong>

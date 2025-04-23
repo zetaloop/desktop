@@ -35,7 +35,7 @@ export function buildTestMenu() {
       click: emit('test-discarded-changes-will-be-unrecoverable'),
     },
     {
-      label: '是否分叉该仓库？',
+      label: '是否复刻该仓库？',
       click: emit('test-do-you-want-fork-this-repository'),
     },
     {
