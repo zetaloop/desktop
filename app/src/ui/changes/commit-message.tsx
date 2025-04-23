@@ -1082,7 +1082,7 @@ export class CommitMessage extends React.Component<
         <CommitWarning icon={CommitWarningIcon.Warning}>
           您没有 <strong>{repository.name}</strong> 的写入权限。是否需要{' '}
           <LinkButton onClick={this.props.onShowCreateForkDialog}>
-            创建仓库复刻
+            复刻此仓库
           </LinkButton>
           ？
         </CommitWarning>
