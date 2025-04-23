@@ -76,14 +76,14 @@ export class ChooseForkSettings extends React.Component<
     return (
       <Dialog
         id="fork-settings"
-        title="您计划如何使用该复刻仓库？"
+        title="您计划如何使用该复刻？"
         onSubmit={this.onSubmit}
         onDismissed={this.props.onDismissed}
       >
         <DialogContent>
           <Row>
             <VerticalSegmentedControl
-              label="这是一个复刻分叉仓库，您计划如何使用它？"
+              label="这是一个复刻仓库，您计划如何使用它？"
               items={items}
               selectedKey={this.state.forkContributionTarget}
               onSelectionChanged={this.onSelectionChanged}
