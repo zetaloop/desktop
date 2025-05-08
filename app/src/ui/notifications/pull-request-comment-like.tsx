@@ -117,7 +117,8 @@ export abstract class PullRequestCommentLike extends React.Component<IPullReques
             <LinkButton uri={user.html_url} className="author">
               {user.login}
             </LinkButton>{' '}
-            {eventVerb}了您的拉取请求{' '}
+            {eventVerb}
+            {eventVerb === '要求您修改' ? '' : '了'}您的拉取请求{' '}
             <LinkButton uri={externalURL} className="submission-date">
               {relativeReviewDate}
             </LinkButton>
