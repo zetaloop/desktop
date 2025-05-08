@@ -228,7 +228,7 @@ export class CICheckRunPopover extends React.PureComponent<
       <div className="loading-check-runs">
         <img src={BlankSlateImage} className="blankslate-image" alt="" />
         <div className="title">请稍等</div>
-        <div className="call-to-action">检查信息马上就到！</div>
+        <div className="call-to-action">正在加载检查数据</div>
       </div>
     )
   }
