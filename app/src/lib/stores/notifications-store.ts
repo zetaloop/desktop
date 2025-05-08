@@ -265,7 +265,9 @@ export class NotificationsStore {
     }
 
     const reviewVerb = getVerbForPullRequestReview(review)
-    const title = `@${review.user.login} ${reviewVerb}{'' if reviewVerb === '要求您修改' else '了'}您的拉取请求`
+    const title = `@${review.user.login} ${reviewVerb}${
+      reviewVerb === '要求您修改' ? '' : '了'
+    }您的拉取请求`
     const body = `${pullRequest.title} #${
       pullRequest.pullRequestNumber
     }\n${truncateWithEllipsis(review.body, 50)}`
