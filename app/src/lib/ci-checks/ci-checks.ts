@@ -147,7 +147,7 @@ function getCheckRunShortDescription(
   }
 
   const preposition =
-    conclusion === APICheckConclusion.Success ? '运行' : '运行'
+    conclusion === APICheckConclusion.Success ? '用时' : '用时'
 
   if (durationMs !== undefined && durationMs > 0) {
     return `${adjective}，${preposition}${formatPreciseDuration(durationMs)}`
