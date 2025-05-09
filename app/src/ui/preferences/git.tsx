@@ -68,7 +68,7 @@ export class Git extends React.Component<IGitProps> {
           <LinkButton onClick={this.props.onEditGlobalGitConfig}>
             修改您的全局 Git 配置文件
           </LinkButton>
-          .
+          。
         </p>
       </div>
     )
