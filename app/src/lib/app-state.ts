@@ -376,6 +376,8 @@ export interface IAppState {
   readonly updateState: IUpdateState
 
   readonly commitMessageGenerationDisclaimerLastSeen: number | null
+  readonly copilotUseCommitHistoryStyle: boolean
+  readonly copilotCustomStyle: string
 }
 
 export enum FoldoutType {

@@ -1577,6 +1577,10 @@ export class App extends React.Component<IAppProps, IAppState> {
             onEditGlobalGitConfig={this.editGlobalGitConfig}
             underlineLinks={this.state.underlineLinks}
             showDiffCheckMarks={this.state.showDiffCheckMarks}
+            copilotUseCommitHistoryStyle={
+              this.state.copilotUseCommitHistoryStyle
+            }
+            copilotCustomStyle={this.state.copilotCustomStyle}
           />
         )
       case PopupType.RepositorySettings: {

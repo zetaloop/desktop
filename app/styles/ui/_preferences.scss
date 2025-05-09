@@ -120,6 +120,12 @@
     }
   }
 
+  .copilot-settings-component {
+    .git-settings-description {
+      margin-top: var(--spacing);
+    }
+  }
+
   .git-settings-description {
     margin-top: var(--spacing-double);
     font-size: var(--font-size-sm);

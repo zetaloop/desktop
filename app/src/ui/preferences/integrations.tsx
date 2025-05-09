@@ -8,6 +8,8 @@ import { suggestedExternalEditor } from '../../lib/editors/shared'
 import { CustomIntegrationForm } from './custom-integration-form'
 import { ICustomIntegration } from '../../lib/custom-integration'
 import { enableCustomIntegration } from '../../lib/feature-flag'
+import { Checkbox, CheckboxValue } from '../lib/checkbox'
+import { TextBox } from '../lib/text-box'
 
 const CustomIntegrationValue = 'other'
 
@@ -26,6 +28,10 @@ interface IIntegrationsPreferencesProps {
   readonly onCustomEditorChanged: (customEditor: ICustomIntegration) => void
   readonly onUseCustomShellChanged: (useCustomShell: boolean) => void
   readonly onCustomShellChanged: (customShell: ICustomIntegration) => void
+  readonly copilotUseCommitHistoryStyle: boolean
+  readonly onCopilotUseCommitHistoryStyleChanged: (value: boolean) => void
+  readonly copilotCustomStyle: string
+  readonly onCopilotCustomStyleChanged: (value: string) => void
 }
 
 interface IIntegrationsPreferencesState {
@@ -35,6 +41,8 @@ interface IIntegrationsPreferencesState {
   readonly customEditor: ICustomIntegration
   readonly useCustomShell: boolean
   readonly customShell: ICustomIntegration
+  readonly copilotUseCommitHistoryStyle: boolean
+  readonly copilotCustomStyle: string
 }
 
 export class Integrations extends React.Component<
@@ -54,6 +62,8 @@ export class Integrations extends React.Component<
       customEditor: this.props.customEditor,
       useCustomShell: this.props.useCustomShell,
       customShell: this.props.customShell,
+      copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
+      copilotCustomStyle: this.props.copilotCustomStyle,
     }
   }
 
@@ -88,6 +98,8 @@ export class Integrations extends React.Component<
       useCustomShell: nextProps.useCustomShell,
       customShell: nextProps.customShell,
       customEditor: nextProps.customEditor,
+      copilotUseCommitHistoryStyle: nextProps.copilotUseCommitHistoryStyle,
+      copilotCustomStyle: nextProps.copilotCustomStyle,
     })
   }
 
@@ -179,6 +191,19 @@ export class Integrations extends React.Component<
       this.props.onSelectedShellChanged(parsedValue)
       this.props.onUseCustomShellChanged(false)
     }
+  }
+
+  private onCopilotUseCommitHistoryStyleChanged = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    const checked = event.currentTarget.checked
+    this.setState({ copilotUseCommitHistoryStyle: checked })
+    this.props.onCopilotUseCommitHistoryStyleChanged(checked)
+  }
+
+  private onCopilotCustomStyleChanged = (value: string) => {
+    this.setState({ copilotCustomStyle: value })
+    this.props.onCopilotCustomStyleChanged(value)
   }
 
   private renderExternalEditor() {
@@ -349,6 +374,42 @@ export class Integrations extends React.Component<
     this.props.onCustomShellChanged(customShell)
   }
 
+  private renderCopilotSettings() {
+    const copilotHistoryDescId = 'copilot-history-description'
+    const copilotCustomStyleDescId = 'copilot-custom-style-description'
+    return (
+      <div className="copilot-settings-component">
+        <h2>GitHub Copilot</h2>
+        <Checkbox
+          label="参考最近的提交历史"
+          value={
+            this.state.copilotUseCommitHistoryStyle
+              ? CheckboxValue.On
+              : CheckboxValue.Off
+          }
+          onChange={this.onCopilotUseCommitHistoryStyleChanged}
+          ariaDescribedBy={copilotHistoryDescId}
+        />
+        <p id={copilotHistoryDescId} className="git-settings-description">
+          生成提交消息时参考最近五条提交内容。
+        </p>
+        <TextBox
+          label="自定义提交消息风格"
+          value={this.state.copilotCustomStyle}
+          onValueChanged={this.onCopilotCustomStyleChanged}
+          placeholder="例如：采用简洁的 Conventional Commits 风格，使用中文"
+          ariaDescribedBy={copilotCustomStyleDescId}
+        />
+        <p id={copilotCustomStyleDescId} className="git-settings-description">
+          生成提交消息时采用此处要求的风格。
+        </p>
+        <p className="git-settings-description">
+          此为 GitHub Desktop 汉化版的增强功能，与原版无关。
+        </p>
+      </div>
+    )
+  }
+
   public render() {
     if (!enableCustomIntegration()) {
       return (
@@ -377,6 +438,7 @@ export class Integrations extends React.Component<
           <Row>{this.renderSelectedShell()}</Row>
           {this.state.useCustomShell && this.renderCustomShell()}
         </fieldset>
+        {this.renderCopilotSettings()}
       </DialogContent>
     )
   }
