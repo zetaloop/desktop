@@ -896,7 +896,7 @@ export class CommitMessage extends React.Component<
         >
           <Octicon symbol={octicons.copilot} />
           {this.props.shouldShowGenerateCommitMessageCallOut && (
-            <span className="call-to-action-bubble">New</span>
+            <span className="call-to-action-bubble">新功能</span>
           )}
         </Button>
       </>
