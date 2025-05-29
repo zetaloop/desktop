@@ -4019,4 +4019,18 @@ export class Dispatcher {
   public toggleChangesFilterVisibility() {
     this.appStore._toggleChangesFilterVisibility()
   }
+
+  public async setCopilotUseCommitHistoryStyle(
+    copilotUseCommitHistoryStyle: boolean
+  ): Promise<void> {
+    await this.appStore._setCopilotUseCommitHistoryStyle(
+      copilotUseCommitHistoryStyle
+    )
+  }
+
+  public async setCopilotCustomStyle(
+    copilotCustomStyle: string
+  ): Promise<void> {
+    await this.appStore._setCopilotCustomStyle(copilotCustomStyle)
+  }
 }

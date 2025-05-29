@@ -80,6 +80,8 @@ interface IPreferencesProps {
   readonly onEditGlobalGitConfig: () => void
   readonly underlineLinks: boolean
   readonly showDiffCheckMarks: boolean
+  readonly copilotUseCommitHistoryStyle: boolean
+  readonly copilotCustomStyle: string
 }
 
 interface IPreferencesState {
@@ -113,6 +115,8 @@ interface IPreferencesState {
   readonly selectedExternalEditor: string | null
   readonly availableShells: ReadonlyArray<Shell>
   readonly selectedShell: Shell
+  readonly copilotUseCommitHistoryStyle: boolean
+  readonly copilotCustomStyle: string
 
   /**
    * If unable to save Git configuration values (name, email)
@@ -189,6 +193,8 @@ export class Preferences extends React.Component<
       isLoadingGitConfig: true,
       underlineLinks: this.props.underlineLinks,
       showDiffCheckMarks: this.props.showDiffCheckMarks,
+      copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
+      copilotCustomStyle: this.props.copilotCustomStyle,
     }
   }
 
@@ -256,6 +262,8 @@ export class Preferences extends React.Component<
       useCustomShell: this.props.useCustomShell,
       customShell: this.props.customShell ?? DefaultCustomIntegration,
       isLoadingGitConfig: false,
+      copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
+      copilotCustomStyle: this.props.copilotCustomStyle,
     })
   }
 
@@ -414,6 +422,14 @@ export class Preferences extends React.Component<
             onCustomEditorChanged={this.onCustomEditorChanged}
             onUseCustomShellChanged={this.onUseCustomShellChanged}
             onCustomShellChanged={this.onCustomShellChanged}
+            copilotUseCommitHistoryStyle={
+              this.state.copilotUseCommitHistoryStyle
+            }
+            onCopilotUseCommitHistoryStyleChanged={
+              this.onCopilotUseCommitHistoryStyleChanged
+            }
+            copilotCustomStyle={this.state.copilotCustomStyle}
+            onCopilotCustomStyleChanged={this.onCopilotCustomStyleChanged}
           />
         )
         break
@@ -683,6 +699,14 @@ export class Preferences extends React.Component<
     this.props.dispatcher.setSelectedTabSize(tabSize)
   }
 
+  private onCopilotUseCommitHistoryStyleChanged = (value: boolean) => {
+    this.setState({ copilotUseCommitHistoryStyle: value })
+  }
+
+  private onCopilotCustomStyleChanged = (value: string) => {
+    this.setState({ copilotCustomStyle: value })
+  }
+
   private renderFooter() {
     const hasDisabledError = this.state.disallowedCharactersMessage != null
 
@@ -825,6 +849,11 @@ export class Preferences extends React.Component<
     dispatcher.setUnderlineLinksSetting(this.state.underlineLinks)
 
     dispatcher.setDiffCheckMarksSetting(this.state.showDiffCheckMarks)
+
+    dispatcher.setCopilotUseCommitHistoryStyle(
+      this.state.copilotUseCommitHistoryStyle
+    )
+    dispatcher.setCopilotCustomStyle(this.state.copilotCustomStyle)
 
     this.props.onDismissed()
   }

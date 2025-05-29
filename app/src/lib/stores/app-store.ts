@@ -145,6 +145,7 @@ import {
   getAuthorIdentity,
   getChangedFiles,
   getCommitDiff,
+  getCommits,
   getMergeBase,
   getRemotes,
   getWorkingDirectoryDiff,
@@ -234,6 +235,8 @@ import {
   getObject,
   setObject,
   getFloatNumber,
+  getString,
+  setString,
 } from '../local-storage'
 import { ExternalEditorError, suggestedExternalEditor } from '../editors/shared'
 import { ApiRepositoriesStore } from './api-repositories-store'
@@ -611,6 +614,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   private underlineLinks: boolean = underlineLinksDefault
 
+  private copilotUseCommitHistoryStyle: boolean
+  private copilotCustomStyle: string
+
   private commitMessageGenerationDisclaimerLastSeen: number | null = null
   private commitMessageGenerationButtonClicked: boolean = false
 
@@ -630,6 +636,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
     private readonly notificationsStore: NotificationsStore
   ) {
     super()
+
+    this.copilotUseCommitHistoryStyle = getBoolean(
+      'copilot-enable-commit-history-style',
+      false
+    )
+    this.copilotCustomStyle = getString('copilot-custom-commit-style', '')
 
     this.showWelcomeFlow = !hasShownWelcomeFlow()
 
@@ -1113,6 +1125,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
       commitMessageGenerationButtonClicked:
         this.commitMessageGenerationButtonClicked,
       showChangesFilter: this.showChangesFilter,
+      copilotUseCommitHistoryStyle: this.copilotUseCommitHistoryStyle,
+      copilotCustomStyle: this.copilotCustomStyle,
     }
   }
 
@@ -2339,6 +2353,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.commitMessageGenerationDisclaimerLastSeen =
       getNumber(commitMessageGenerationDisclaimerLastSeenKey) ?? null
+
+    this.copilotUseCommitHistoryStyle = getBoolean(
+      'copilot-enable-commit-history-style',
+      false
+    )
+    this.copilotCustomStyle = getString('copilot-custom-commit-style', '')
 
     this.commitMessageGenerationButtonClicked = getBoolean(
       commitMessageGenerationButtonClickedKey,
@@ -5477,9 +5497,47 @@ export class AppStore extends TypedBaseStore<IAppState> {
         return false
       }
 
+      const promptPrefixParts: string[] = []
+
+      if (this.copilotCustomStyle && this.copilotCustomStyle.trim() !== '') {
+        promptPrefixParts.push(
+          `// Custom style instruction: ${this.copilotCustomStyle.trim()}`
+        )
+      }
+
+      if (this.copilotUseCommitHistoryStyle) {
+        try {
+          const recentCommits: ReadonlyArray<Commit> = await getCommits(
+            repository,
+            undefined,
+            5
+          )
+
+          if (recentCommits.length > 0) {
+            const historyExamples = recentCommits
+              .map(commit => `- ${commit.summary}`)
+              .join('\n')
+            promptPrefixParts.push(
+              `// Recent commits for your reference:\n${historyExamples}`
+            )
+          }
+        } catch (error) {
+          log.error('Failed to get recent commits for Copilot style:', error)
+          promptPrefixParts.push(
+            '// Recent commits for your reference:\n// (Could not fetch recent commits)'
+          )
+        }
+      }
+
+      let finalDiffContent = diff
+      if (promptPrefixParts.length > 0) {
+        const prefixComment = promptPrefixParts.join('\n')
+        finalDiffContent = `${prefixComment}\n\n${diff}`
+      }
+
       const api = API.fromAccount(account)
       try {
-        const response = await api.getDiffChangesCommitMessage(diff)
+        const response = await api.getDiffChangesCommitMessage(finalDiffContent)
 
         this._setCommitMessage(repository, {
           summary: response.title,
@@ -8292,6 +8350,25 @@ export class AppStore extends TypedBaseStore<IAppState> {
       setBoolean(showDiffCheckMarksKey, showDiffCheckMarks)
       this.emitUpdate()
     }
+  }
+
+  public async _setCopilotUseCommitHistoryStyle(
+    copilotUseCommitHistoryStyle: boolean
+  ): Promise<void> {
+    await setBoolean(
+      'copilot-enable-commit-history-style',
+      copilotUseCommitHistoryStyle
+    )
+    this.copilotUseCommitHistoryStyle = copilotUseCommitHistoryStyle
+    this.emitUpdate()
+  }
+
+  public async _setCopilotCustomStyle(
+    copilotCustomStyle: string
+  ): Promise<void> {
+    await setString('copilot-custom-commit-style', copilotCustomStyle)
+    this.copilotCustomStyle = copilotCustomStyle
+    this.emitUpdate()
   }
 
   public _setChangesListFilterText(repository: Repository, filterText: string) {

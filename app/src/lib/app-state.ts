@@ -381,6 +381,11 @@ export interface IAppState {
 
   /** Whether the changes filter is shown */
   readonly showChangesFilter: boolean
+
+  /** Custom Copilot settings */
+  readonly copilotUseCommitHistoryStyle: boolean
+
+  readonly copilotCustomStyle: string
 }
 
 export enum FoldoutType {
