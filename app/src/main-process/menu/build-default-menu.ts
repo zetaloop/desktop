@@ -214,10 +214,8 @@ export function buildDefaultMenu({
         ? [
             {
               label: __DARWIN__
-                ? `${isChangesFilterVisible ? 'Hide' : 'Show'} Changes Filter`
-                : `${
-                    isChangesFilterVisible ? 'Hide' : 'Show'
-                  } Toggle Chan&ges Filter`,
+                ? `${isChangesFilterVisible ? '隐藏' : '显示'}改动筛选器`
+                : `${isChangesFilterVisible ? '隐藏' : '显示'}改动筛选器`,
               id: 'toggle-changes-filter',
               accelerator: 'CmdOrCtrl+L',
               click: emit('toggle-changes-filter'),
