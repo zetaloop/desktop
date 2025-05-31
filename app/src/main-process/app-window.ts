@@ -6,6 +6,8 @@ import {
   autoUpdater,
   nativeTheme,
 } from 'electron'
+import { exec } from 'child_process'
+import * as fs from 'fs'
 import { shell } from '../lib/app-shell'
 import { Emitter, Disposable } from 'event-kit'
 import { encodePathAsUrl } from '../lib/path'
@@ -419,12 +421,57 @@ export class AppWindow {
       )
     })
 
-    autoUpdater.on('update-downloaded', () => {
+    autoUpdater.on('update-downloaded', async (event, updateURL) => {
       this.isDownloadingUpdate = false
       ipcWebContents.send(
         this.window.webContents,
         'auto-updater-update-downloaded'
       )
+      if (__DARWIN__) {
+        // zetaloop/desktop: Apply xattr fix for unsigned updates on macOS.
+        // This feature is a minor addition and should fail silently if any step encounters an error.
+        const homeDir = app.getPath('home')
+        const updaterCacheDirName = 'com.github.GitHubClient.Shiplt'
+        const updatesBaseDir = path.join(
+          homeDir,
+          'Library',
+          'Caches',
+          updaterCacheDirName
+        )
+        const appNameFileName = `${app.getName()}.app` // e.g., "GitHub Desktop.app"
+
+        try {
+          // Check if base directory exists, proceed silently if not.
+          await fs.promises.access(updatesBaseDir)
+          const entries = await fs.promises.readdir(updatesBaseDir, {
+            withFileTypes: true,
+          })
+
+          for (const entry of entries) {
+            if (entry.isDirectory() && entry.name.startsWith('update.')) {
+              const potentialAppPath = path.join(
+                updatesBaseDir,
+                entry.name,
+                appNameFileName
+              )
+              try {
+                // Check if AppName.app exists in this subdir, proceed silently if not.
+                await fs.promises.access(potentialAppPath)
+                const command = `xattr -rd com.apple.quarantine "${potentialAppPath}"`
+                exec(command, (error, _stdout, _stderr) => {
+                  if (error) {
+                    // Silently ignore xattr execution errors.
+                  }
+                })
+              } catch (e) {
+                // Silently ignore if app not in this specific update.* directory.
+              }
+            }
+          }
+        } catch (err: any) {
+          // Silently ignore any errors during the process (e.g., directory not found).
+        }
+      }
     })
   }
 
