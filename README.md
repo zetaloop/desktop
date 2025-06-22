@@ -1,3 +1,5 @@
+> 等我一周后考试完再更新ww
+
 > [!TIP]
 > This is the community Chinese localized version of GitHub Desktop, please visit [desktop/desktop](https://github.com/desktop/desktop).<br>
 > 这是 GitHub Desktop 的社区汉化版，原版请访问 [desktop/desktop](https://github.com/desktop/desktop)。
