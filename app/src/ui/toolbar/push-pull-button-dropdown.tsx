@@ -81,7 +81,7 @@ export class PushPullButtonDropDown extends React.Component<IPushPullButtonDropD
           .askForConfirmationOnForcePush ? null : (
           <div className="warning">
             <span className="warning-title">警告：</span>
-            强制推送将会重写远程历史记录。正在使用该分支的人们必须得重置他们的本地分支才能匹配远程历史记录了，这可能会造成一些麻烦。
+            强制推送将会重写远程历史记录。其他人需要重置本地分支才能匹配这个分支的远程历史记录，这可能会造成一些麻烦。
           </div>
         )
         return {
