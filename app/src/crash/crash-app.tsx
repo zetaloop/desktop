@@ -152,7 +152,7 @@ export class CrashApp extends React.Component<ICrashAppProps, ICrashAppState> {
       return (
         <p>
           GitHub Desktop
-          遇到了一个灾难性的错误，导致无法启动。此问题已报告给开发团队。但如果您反复遇到这个错误，请在{' '}
+          遇到了一个灾难性的错误，导致无法启动。此问题已发送给开发团队。但如果您反复遇到这个错误，请在{' '}
           <LinkButton uri={issuesUri}>GitHub Desktop 的问题跟踪器</LinkButton>{' '}
           中报告此问题。
         </p>
@@ -161,7 +161,7 @@ export class CrashApp extends React.Component<ICrashAppProps, ICrashAppState> {
       return (
         <p>
           GitHub Desktop
-          遇到了一个无法恢复的错误，需要重新启动。此问题已报告给开发团队。但如果您反复遇到这个错误，请在{' '}
+          遇到了一个无法恢复的错误，需要重新启动。此问题已发送给开发团队。但如果您反复遇到这个错误，请在{' '}
           <LinkButton uri={issuesUri}>GitHub Desktop 的问题跟踪器</LinkButton>{' '}
           中报告此问题。
         </p>
