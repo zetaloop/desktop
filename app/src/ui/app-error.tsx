@@ -163,7 +163,7 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
       const { gitContext } = error.metadata
       switch (gitContext?.kind) {
         case 'create-repository':
-          return `Failed creating repository`
+          return `仓库创建失败`
       }
     }
 
