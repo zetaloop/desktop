@@ -1934,10 +1934,7 @@ export class API {
       console.error(
         `Copilot request failed with status ${response.status}: ${internalError}`
       )
-      throw new CopilotError(
-        'Something went wrong. Please, try again later.',
-        response.status
-      )
+      throw new CopilotError('发生了错误，请等待一会儿再试。', response.status)
     }
 
     const text = await response.text()
