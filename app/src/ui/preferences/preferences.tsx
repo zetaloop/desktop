@@ -83,6 +83,7 @@ interface IPreferencesProps {
   readonly showDiffCheckMarks: boolean
   readonly copilotUseCommitHistoryStyle: boolean
   readonly copilotCustomStyle: string
+  readonly copilotDiffTruncationLimit: number
 }
 
 interface IPreferencesState {
@@ -119,6 +120,7 @@ interface IPreferencesState {
   readonly selectedShell: Shell
   readonly copilotUseCommitHistoryStyle: boolean
   readonly copilotCustomStyle: string
+  readonly copilotDiffTruncationLimit: number
 
   /**
    * If unable to save Git configuration values (name, email)
@@ -198,6 +200,7 @@ export class Preferences extends React.Component<
       showDiffCheckMarks: this.props.showDiffCheckMarks,
       copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
       copilotCustomStyle: this.props.copilotCustomStyle,
+      copilotDiffTruncationLimit: this.props.copilotDiffTruncationLimit,
     }
   }
 
@@ -268,6 +271,7 @@ export class Preferences extends React.Component<
       isLoadingGitConfig: false,
       copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
       copilotCustomStyle: this.props.copilotCustomStyle,
+      copilotDiffTruncationLimit: this.props.copilotDiffTruncationLimit,
     })
   }
 
@@ -434,6 +438,10 @@ export class Preferences extends React.Component<
             }
             copilotCustomStyle={this.state.copilotCustomStyle}
             onCopilotCustomStyleChanged={this.onCopilotCustomStyleChanged}
+            copilotDiffTruncationLimit={this.state.copilotDiffTruncationLimit}
+            onCopilotDiffTruncationLimitChanged={
+              this.onCopilotDiffTruncationLimitChanged
+            }
           />
         )
         break
@@ -721,6 +729,10 @@ export class Preferences extends React.Component<
     this.setState({ copilotCustomStyle: value })
   }
 
+  private onCopilotDiffTruncationLimitChanged = (value: number) => {
+    this.setState({ copilotDiffTruncationLimit: value })
+  }
+
   private renderFooter() {
     const hasDisabledError = this.state.disallowedCharactersMessage != null
 
@@ -871,6 +883,9 @@ export class Preferences extends React.Component<
       this.state.copilotUseCommitHistoryStyle
     )
     dispatcher.setCopilotCustomStyle(this.state.copilotCustomStyle)
+    dispatcher.setCopilotDiffTruncationLimit(
+      this.state.copilotDiffTruncationLimit
+    )
 
     this.props.onDismissed()
   }
