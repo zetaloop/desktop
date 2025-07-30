@@ -1330,7 +1330,7 @@ export class FilterChangesList extends React.Component<
       <div className="no-changes-filtered">
         <img src={BlankSlateImage} className="blankslate-image" alt="" />
 
-        <div className="title">没有任何文件符合当前的筛选条件</div>
+        <div className="title">找不到符合条件的文件改动</div>
 
         <div className="subtitle">
           {getNoResultsMessage(this.props.fileListFilter)}
