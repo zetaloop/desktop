@@ -5537,7 +5537,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
       if (this.copilotCustomStyle && this.copilotCustomStyle.trim() !== '') {
         promptPrefixParts.push(
-          `// Custom style instruction: ${this.copilotCustomStyle.trim()}`
+          '// BEGIN CUSTOM INSTRUCTIONS\n' +
+            this.copilotCustomStyle.trim() +
+            '\n// END CUSTOM INSTRUCTIONS'
         )
       }
 
@@ -5551,16 +5553,23 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
           if (recentCommits.length > 0) {
             const historyExamples = recentCommits
-              .map(commit => `- ${commit.summary}`)
-              .join('\n')
+              .map(
+                commit =>
+                  `- ${commit.summary}${
+                    commit.body ? `\n\n${commit.body}` : ''
+                  }`
+              )
+              .join('\n---\n')
             promptPrefixParts.push(
-              `// Recent commits for your reference:\n${historyExamples}`
+              '// BEGIN RECENT COMMITS\n' +
+                historyExamples +
+                '\n// END RECENT COMMITS'
             )
           }
         } catch (error) {
           log.error('Failed to get recent commits for Copilot style:', error)
           promptPrefixParts.push(
-            '// Recent commits for your reference:\n// (Could not fetch recent commits)'
+            '// BEGIN RECENT COMMITS\n// (Could not fetch recent commits)\n// END RECENT COMMITS'
           )
         }
       }
