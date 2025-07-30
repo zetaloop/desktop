@@ -173,7 +173,7 @@ export class ChangesListFilterOptions extends React.Component<
                 : CheckboxValue.Off
             }
             onChange={this.onFilterToIncludedInCommit}
-            label={`要提交的文件（${includedFilesCount}个）`}
+            label={`要提交的（${includedFilesCount}个）`}
           />
           <Checkbox
             value={
@@ -182,7 +182,7 @@ export class ChangesListFilterOptions extends React.Component<
                 : CheckboxValue.Off
             }
             onChange={this.onFilterExcludedFiles}
-            label={`不提交的文件（${excludedFilesCount}个）`}
+            label={`不提交的（${excludedFilesCount}个）`}
           />
           <Checkbox
             value={
@@ -191,7 +191,7 @@ export class ChangesListFilterOptions extends React.Component<
                 : CheckboxValue.Off
             }
             onChange={this.onFilterNewFiles}
-            label={`新增的文件（${newFilesCount}个）`}
+            label={`新增（${newFilesCount}个）`}
           />
           <Checkbox
             value={
@@ -200,7 +200,7 @@ export class ChangesListFilterOptions extends React.Component<
                 : CheckboxValue.Off
             }
             onChange={this.onFilterModifiedFiles}
-            label={`修改的文件（${modifiedFilesCount}个）`}
+            label={`修改（${modifiedFilesCount}个）`}
           />
           <Checkbox
             value={
@@ -209,7 +209,7 @@ export class ChangesListFilterOptions extends React.Component<
                 : CheckboxValue.Off
             }
             onChange={this.onFilterDeletedFiles}
-            label={`删除的文件（${deletedFilesCount}个）`}
+            label={`删除（${deletedFilesCount}个）`}
           />
         </div>
         {filtersActive && (

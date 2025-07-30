@@ -84,27 +84,27 @@ export function getNoResultsMessage(
   const activeFilters: string[] = []
 
   if (filters.filterText) {
-    activeFilters.push(` "${filters.filterText}" `)
+    activeFilters.push(`"${filters.filterText}"`)
   }
 
   if (filters.isIncludedInCommit) {
-    activeFilters.push('要提交的文件')
+    activeFilters.push('要提交')
   }
 
   if (filters.isExcludedFromCommit) {
-    activeFilters.push('不提交的文件')
+    activeFilters.push('不提交')
   }
 
   if (filters.isNewFile) {
-    activeFilters.push('新增的文件')
+    activeFilters.push('是新增')
   }
 
   if (filters.isModifiedFile) {
-    activeFilters.push('修改的文件')
+    activeFilters.push('是修改')
   }
 
   if (filters.isDeletedFile) {
-    activeFilters.push('删除的文件')
+    activeFilters.push('是删除')
   }
 
   if (activeFilters.length === 0) {
@@ -122,7 +122,7 @@ export function getNoResultsMessage(
     const otherFilters = activeFilters.slice(0, -1)
     filterList = `${otherFilters.join('、')}、${lastFilter}`
   }
-  return `找不到符合以下条件的文件改动：${filterList}`
+  return `需要同时符合以下条件：${filterList}`
 }
 
 /**
