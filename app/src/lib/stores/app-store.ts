@@ -462,6 +462,10 @@ const commitMessageGenerationDisclaimerLastSeenKey =
 const commitMessageGenerationButtonClickedKey =
   'commit-message-generation-button-clicked'
 
+const copilotUseCommitHistoryStyleKey = 'copilot-enable-commit-history-style'
+const copilotCustomStyleKey = 'copilot-custom-commit-style'
+const copilotDiffTruncationLimitKey = 'copilot-diff-truncation-limit'
+
 export const showChangesFilterKey = 'show-changes-filter'
 export const showChangesFilterDefault = true
 
@@ -617,6 +621,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   private copilotUseCommitHistoryStyle: boolean
   private copilotCustomStyle: string
+  private copilotDiffTruncationLimit: number
 
   private commitMessageGenerationDisclaimerLastSeen: number | null = null
   private commitMessageGenerationButtonClicked: boolean = false
@@ -639,10 +644,14 @@ export class AppStore extends TypedBaseStore<IAppState> {
     super()
 
     this.copilotUseCommitHistoryStyle = getBoolean(
-      'copilot-enable-commit-history-style',
+      copilotUseCommitHistoryStyleKey,
       false
     )
-    this.copilotCustomStyle = getString('copilot-custom-commit-style', '')
+    this.copilotCustomStyle = getString(copilotCustomStyleKey, '')
+    this.copilotDiffTruncationLimit = getNumber(
+      copilotDiffTruncationLimitKey,
+      0
+    )
 
     this.showWelcomeFlow = !hasShownWelcomeFlow()
 
@@ -1128,6 +1137,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       showChangesFilter: this.showChangesFilter,
       copilotUseCommitHistoryStyle: this.copilotUseCommitHistoryStyle,
       copilotCustomStyle: this.copilotCustomStyle,
+      copilotDiffTruncationLimit: this.copilotDiffTruncationLimit,
     }
   }
 
@@ -2356,10 +2366,14 @@ export class AppStore extends TypedBaseStore<IAppState> {
       getNumber(commitMessageGenerationDisclaimerLastSeenKey) ?? null
 
     this.copilotUseCommitHistoryStyle = getBoolean(
-      'copilot-enable-commit-history-style',
+      copilotUseCommitHistoryStyleKey,
       false
     )
-    this.copilotCustomStyle = getString('copilot-custom-commit-style', '')
+    this.copilotCustomStyle = getString(copilotCustomStyleKey, '')
+    this.copilotDiffTruncationLimit = getNumber(
+      copilotDiffTruncationLimitKey,
+      0
+    )
 
     this.commitMessageGenerationButtonClicked = getBoolean(
       commitMessageGenerationButtonClickedKey,
@@ -5558,9 +5572,16 @@ export class AppStore extends TypedBaseStore<IAppState> {
       }
 
       let finalDiffContent = diff
+      const limit = this.copilotDiffTruncationLimit
+      if (limit > 0 && finalDiffContent.length > limit) {
+        finalDiffContent = finalDiffContent.substring(0, limit)
+        finalDiffContent +=
+          '\n// ... (diff truncated to ' + limit + ' characters)\n'
+      }
+
       if (promptPrefixParts.length > 0) {
         const prefixComment = promptPrefixParts.join('\n')
-        finalDiffContent = `${prefixComment}\n\n${diff}`
+        finalDiffContent = `${prefixComment}\n\n${finalDiffContent}`
       }
 
       const api = API.fromAccount(account)
@@ -8384,7 +8405,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     copilotUseCommitHistoryStyle: boolean
   ): Promise<void> {
     await setBoolean(
-      'copilot-enable-commit-history-style',
+      copilotUseCommitHistoryStyleKey,
       copilotUseCommitHistoryStyle
     )
     this.copilotUseCommitHistoryStyle = copilotUseCommitHistoryStyle
@@ -8394,8 +8415,14 @@ export class AppStore extends TypedBaseStore<IAppState> {
   public async _setCopilotCustomStyle(
     copilotCustomStyle: string
   ): Promise<void> {
-    await setString('copilot-custom-commit-style', copilotCustomStyle)
+    await setString(copilotCustomStyleKey, copilotCustomStyle)
     this.copilotCustomStyle = copilotCustomStyle
+    this.emitUpdate()
+  }
+
+  public async _setCopilotDiffTruncationLimit(limit: number): Promise<void> {
+    await setNumber(copilotDiffTruncationLimitKey, limit)
+    this.copilotDiffTruncationLimit = limit
     this.emitUpdate()
   }
 

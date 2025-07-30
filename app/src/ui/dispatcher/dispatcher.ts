@@ -4058,4 +4058,8 @@ export class Dispatcher {
   ): Promise<void> {
     await this.appStore._setCopilotCustomStyle(copilotCustomStyle)
   }
+
+  public async setCopilotDiffTruncationLimit(limit: number): Promise<void> {
+    await this.appStore._setCopilotDiffTruncationLimit(limit)
+  }
 }
