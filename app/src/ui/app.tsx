@@ -1604,6 +1604,7 @@ export class App extends React.Component<IAppProps, IAppState> {
               this.state.copilotUseCommitHistoryStyle
             }
             copilotCustomStyle={this.state.copilotCustomStyle}
+            copilotDiffTruncationLimit={this.state.copilotDiffTruncationLimit}
           />
         )
       case PopupType.RepositorySettings: {

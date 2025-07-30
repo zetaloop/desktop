@@ -389,6 +389,8 @@ export interface IAppState {
   readonly copilotUseCommitHistoryStyle: boolean
 
   readonly copilotCustomStyle: string
+
+  readonly copilotDiffTruncationLimit: number
 }
 
 export enum FoldoutType {
