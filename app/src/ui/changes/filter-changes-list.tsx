@@ -1306,7 +1306,7 @@ export class FilterChangesList extends React.Component<
       <div className="hidden-changes-warning" id="hidden-changes-warning">
         <Octicon symbol={octicons.alert} />
         <span className="sr-only">警告:</span>
-        <span>已隐藏的改动也会被提交。</span>
+        <span>一些要提交的文件改动被隐藏了。</span>
         <LinkButton onClick={this.showFilesToBeCommitted}>
           显示全部{filesSelected.length}个改动
         </LinkButton>
@@ -1330,7 +1330,7 @@ export class FilterChangesList extends React.Component<
       <div className="no-changes-filtered">
         <img src={BlankSlateImage} className="blankslate-image" alt="" />
 
-        <div className="title">No files match your current filters</div>
+        <div className="title">没有任何文件符合当前的筛选条件</div>
 
         <div className="subtitle">
           {getNoResultsMessage(this.props.fileListFilter)}
@@ -1341,7 +1341,7 @@ export class FilterChangesList extends React.Component<
             className="clear-filters-button"
             onClick={this.onClearAllFilters}
           >
-            Clear filters
+            清除筛选
           </Button>
         )}
       </div>
