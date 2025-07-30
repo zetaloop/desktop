@@ -84,27 +84,27 @@ export function getNoResultsMessage(
   const activeFilters: string[] = []
 
   if (filters.filterText) {
-    activeFilters.push(`"${filters.filterText}"`)
+    activeFilters.push(` "${filters.filterText}" `)
   }
 
   if (filters.isIncludedInCommit) {
-    activeFilters.push('Included in commit')
+    activeFilters.push('要提交的文件')
   }
 
   if (filters.isExcludedFromCommit) {
-    activeFilters.push('Excluded from commit')
+    activeFilters.push('不提交的文件')
   }
 
   if (filters.isNewFile) {
-    activeFilters.push('New files')
+    activeFilters.push('新增的文件')
   }
 
   if (filters.isModifiedFile) {
-    activeFilters.push('Modified files')
+    activeFilters.push('修改的文件')
   }
 
   if (filters.isDeletedFile) {
-    activeFilters.push('Deleted files')
+    activeFilters.push('删除的文件')
   }
 
   if (activeFilters.length === 0) {
@@ -116,13 +116,13 @@ export function getNoResultsMessage(
   if (activeFilters.length === 1) {
     filterList = activeFilters[0]
   } else if (activeFilters.length === 2) {
-    filterList = `${activeFilters[0]} and ${activeFilters[1]}`
+    filterList = `${activeFilters[0]}、${activeFilters[1]}`
   } else {
     const lastFilter = activeFilters[activeFilters.length - 1]
     const otherFilters = activeFilters.slice(0, -1)
-    filterList = `${otherFilters.join(', ')}, and ${lastFilter}`
+    filterList = `${otherFilters.join('、')}、${lastFilter}`
   }
-  return `Sorry, I can't find any changed files matching the following filters: ${filterList}`
+  return `找不到符合以下条件的文件改动：${filterList}`
 }
 
 /**
