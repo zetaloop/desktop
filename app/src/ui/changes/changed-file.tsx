@@ -68,15 +68,15 @@ export class ChangedFile extends React.Component<IChangedFileProps, {}> {
 
     const includedText =
       this.props.include === true
-        ? '包含'
+        ? '将会提交'
         : this.props.include === undefined
-        ? '部分包含'
-        : '不包含'
+        ? '将会部分提交'
+        : '不会提交'
 
-    const pathScreenReaderMessage = `${includedText} ${mapStatus(
+    const pathScreenReaderMessage = `${includedText}这个${mapStatus(
       status,
       true
-    )}的 ${path}`
+    )}的 ${path} 文件`
 
     return (
       <div className="file">
