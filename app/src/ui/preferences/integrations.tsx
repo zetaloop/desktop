@@ -32,6 +32,8 @@ interface IIntegrationsPreferencesProps {
   readonly onCopilotUseCommitHistoryStyleChanged: (value: boolean) => void
   readonly copilotCustomStyle: string
   readonly onCopilotCustomStyleChanged: (value: string) => void
+  readonly copilotDiffTruncationLimit: number
+  readonly onCopilotDiffTruncationLimitChanged: (value: number) => void
 }
 
 interface IIntegrationsPreferencesState {
@@ -43,6 +45,7 @@ interface IIntegrationsPreferencesState {
   readonly customShell: ICustomIntegration
   readonly copilotUseCommitHistoryStyle: boolean
   readonly copilotCustomStyle: string
+  readonly copilotDiffTruncationLimit: number
 }
 
 export class Integrations extends React.Component<
@@ -64,6 +67,7 @@ export class Integrations extends React.Component<
       customShell: this.props.customShell,
       copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
       copilotCustomStyle: this.props.copilotCustomStyle,
+      copilotDiffTruncationLimit: this.props.copilotDiffTruncationLimit,
     }
   }
 
@@ -100,6 +104,7 @@ export class Integrations extends React.Component<
       customEditor: nextProps.customEditor,
       copilotUseCommitHistoryStyle: nextProps.copilotUseCommitHistoryStyle,
       copilotCustomStyle: nextProps.copilotCustomStyle,
+      copilotDiffTruncationLimit: nextProps.copilotDiffTruncationLimit,
     })
   }
 
@@ -204,6 +209,14 @@ export class Integrations extends React.Component<
   private onCopilotCustomStyleChanged = (value: string) => {
     this.setState({ copilotCustomStyle: value })
     this.props.onCopilotCustomStyleChanged(value)
+  }
+
+  private onCopilotDiffTruncationLimitChanged = (
+    event: React.FormEvent<HTMLSelectElement>
+  ) => {
+    const value = parseInt(event.currentTarget.value, 10)
+    this.setState({ copilotDiffTruncationLimit: value })
+    this.props.onCopilotDiffTruncationLimitChanged(value)
   }
 
   private renderExternalEditor() {
@@ -377,9 +390,27 @@ export class Integrations extends React.Component<
   private renderCopilotSettings() {
     const copilotHistoryDescId = 'copilot-history-description'
     const copilotCustomStyleDescId = 'copilot-custom-style-description'
+    const copilotDiffTruncationLimitDescId =
+      'copilot-diff-truncation-limit-description'
+    const truncationOptions = [
+      { value: 0, label: '无限制' },
+      { value: 100000, label: '100k' },
+      { value: 200000, label: '200k' },
+      { value: 300000, label: '300k' },
+      { value: 400000, label: '400k' },
+      { value: 500000, label: '500k' },
+      { value: 600000, label: '600k' },
+      { value: 700000, label: '700k' },
+      { value: 800000, label: '800k' },
+      { value: 900000, label: '900k' },
+      { value: 1000000, label: '1000k' },
+    ]
     return (
       <div className="copilot-settings-component">
         <h2>GitHub Copilot</h2>
+        <p className="git-settings-description">
+          此为 GitHub Desktop 汉化版的增强功能，与原版无关。
+        </p>
         <Checkbox
           label="参考最近的提交历史"
           value={
@@ -403,8 +434,23 @@ export class Integrations extends React.Component<
         <p id={copilotCustomStyleDescId} className="git-settings-description">
           生成提交消息时采用此处要求的风格。
         </p>
-        <p className="git-settings-description">
-          此为 GitHub Desktop 汉化版的增强功能，与原版无关。
+        <Select
+          label="读取字数限制"
+          value={this.state.copilotDiffTruncationLimit.toString()}
+          onChange={this.onCopilotDiffTruncationLimitChanged}
+          aria-describedby={copilotDiffTruncationLimitDescId}
+        >
+          {truncationOptions.map(o => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </Select>
+        <p
+          id={copilotDiffTruncationLimitDescId}
+          className="git-settings-description"
+        >
+          限制生成提交消息时读取的改动内容字符数。
         </p>
       </div>
     )
