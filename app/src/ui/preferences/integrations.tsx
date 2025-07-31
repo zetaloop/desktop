@@ -450,7 +450,7 @@ export class Integrations extends React.Component<
           id={copilotDiffTruncationLimitDescId}
           className="git-settings-description"
         >
-          限制生成提交消息时读取的改动内容字符数。
+          生成提交消息时最多读取的改动字符数，超出的部分会被忽略。
         </p>
       </div>
     )
