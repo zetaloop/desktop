@@ -83,15 +83,16 @@ export function buildDefaultMenu({
         },
         separator,
         {
+          label: '服务',
           role: 'services',
           submenu: [],
         },
         separator,
-        { role: 'hide' },
-        { role: 'hideOthers' },
-        { role: 'unhide' },
+        { label: '隐藏 GitHub Desktop', role: 'hide' },
+        { label: '隐藏其他', role: 'hideOthers' },
+        { label: '全部显示', role: 'unhide' },
         separator,
-        { role: 'quit' },
+        { label: '退出 GitHub Desktop', role: 'quit' },
       ],
     })
   }
@@ -477,13 +478,14 @@ export function buildDefaultMenu({
 
   if (__DARWIN__) {
     template.push({
+      label: '窗口',
       role: 'window',
       submenu: [
-        { role: 'minimize' },
-        { role: 'zoom' },
-        { role: 'close' },
+        { label: '最小化', role: 'minimize' },
+        { label: '缩放', role: 'zoom' },
+        { label: '关闭窗口', role: 'close' },
         separator,
-        { role: 'front' },
+        { label: '全部置于顶层', role: 'front' },
       ],
     })
   }
@@ -556,6 +558,7 @@ export function buildDefaultMenu({
 
   if (__DARWIN__) {
     template.push({
+      label: '帮助',
       role: 'help',
       submenu: helpItems,
     })
