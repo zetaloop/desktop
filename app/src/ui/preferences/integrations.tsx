@@ -409,7 +409,7 @@ export class Integrations extends React.Component<
       <div className="copilot-settings-component">
         <h2>GitHub Copilot</h2>
         <p className="git-settings-description">
-          此为 GitHub Desktop 汉化版的增强功能，与原版无关。
+          以下调整选项是汉化版的增强功能。
         </p>
         <Checkbox
           label="参考最近的提交历史"
@@ -425,7 +425,7 @@ export class Integrations extends React.Component<
           生成提交消息时参考最近五条提交内容。
         </p>
         <TextBox
-          label="自定义提交消息风格"
+          label="自定义提交风格"
           value={this.state.copilotCustomStyle}
           onValueChanged={this.onCopilotCustomStyleChanged}
           placeholder="例如：采用简洁的 Conventional Commits 风格，使用中文"
