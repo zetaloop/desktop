@@ -76,7 +76,7 @@ export class DiscardChangesRetryDialog extends React.Component<
       <DialogFooter>
         <OkCancelButtonGroup
           okButtonText={__DARWIN__ ? '永久删除' : '永久删除'}
-          okButtonTitle={`文件会被永久删除，这些改动将无法恢复。`}
+          okButtonTitle={`文件会被永久删除，这些改动将无法恢复`}
           cancelButtonText="取消"
           destructive={true}
         />
