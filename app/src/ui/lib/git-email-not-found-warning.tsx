@@ -48,7 +48,7 @@ export class GitEmailNotFoundWarning extends React.Component<IGitEmailNotFoundWa
 
   private buildScreenReaderMessage(isAttributableEmail: boolean) {
     const verb = !isAttributableEmail ? '不符合' : '符合'
-    const info = !isAttributableEmail ? '您的提交将会被错误归属。' : ''
+    const info = !isAttributableEmail ? '您的提交将会被归属为其他作者。' : ''
     return `该邮箱地址${verb}${this.getAccountTypeDescription()}。${info}`
   }
 
@@ -86,7 +86,7 @@ export class GitEmailNotFoundWarning extends React.Component<IGitEmailNotFoundWa
   private getAccountTypeDescription() {
     if (this.props.accounts.length === 1) {
       const accountType = isDotComAccount(this.props.accounts[0])
-        ? 'GitHub'
+        ? 'GitHub '
         : 'GitHub 企业版'
 
       return `您的 ${accountType}账号`
