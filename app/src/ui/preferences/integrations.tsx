@@ -236,8 +236,9 @@ export class Integrations extends React.Component<
           <span>
             没有可用的编辑器。
             <LinkButton uri={suggestedExternalEditor.url}>
-              装个 {suggestedExternalEditor.name}？
+              装个 {suggestedExternalEditor.name}
             </LinkButton>
+            ？
           </span>
         </div>
       )
@@ -280,8 +281,9 @@ export class Integrations extends React.Component<
           <span>
             需要一个编辑器？
             <LinkButton uri={suggestedExternalEditor.url}>
-              装个 {suggestedExternalEditor.name} 吧。
+              装个 {suggestedExternalEditor.name} 吧
             </LinkButton>
+            。
           </span>
         </div>
       </Row>
