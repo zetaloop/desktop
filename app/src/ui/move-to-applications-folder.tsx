@@ -44,13 +44,10 @@ export class MoveToApplicationsFolder extends React.Component<
       >
         <DialogContent>
           <p>
-            您当前在 "应用程序" 文件夹外运行了 GitHub
-            Desktop。这可能导致一些运行问题，比如无法登录。
+            您当前在应用程序文件夹外运行了 GitHub
+            Desktop，这可能导致无法登录等问题。
           </p>
-          <p>
-            需要现在将 GitHub Desktop 移动到 "应用程序"
-            文件夹吗？软件将会重新打开。
-          </p>
+          <p>需要帮您移到应用程序文件夹里吗？软件将会重新打开。</p>
           <div>
             <Checkbox
               label="不再显示"
@@ -72,8 +69,8 @@ export class MoveToApplicationsFolder extends React.Component<
     return (
       <DialogFooter>
         <OkCancelButtonGroup
-          okButtonText="移动并重启软件"
-          okButtonTitle='请将 GitHub Desktop 移动到 "应用程序" 文件夹并重新运行软件。'
+          okButtonText="立刻移动"
+          okButtonTitle="把 GitHub Desktop 移动到应用程序文件夹并重新打开"
           cancelButtonText="以后再说"
           onCancelButtonClick={this.onNotNow}
         />
