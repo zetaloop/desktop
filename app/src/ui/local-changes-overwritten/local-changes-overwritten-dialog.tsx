@@ -114,7 +114,7 @@ export class LocalChangesOverwrittenDialog extends React.Component<
       <DialogFooter>
         <OkCancelButtonGroup
           okButtonText={__DARWIN__ ? '暂存并继续' : '暂存并继续'}
-          okButtonTitle="把当前未提交的改动保存到一个暂存区，您可稍后恢复这些改动。"
+          okButtonTitle="把当前未提交的改动保存到一个暂存区，您可稍后恢复这些改动"
           cancelButtonText="关闭"
         />
       </DialogFooter>
