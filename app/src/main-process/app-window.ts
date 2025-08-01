@@ -57,7 +57,9 @@ export class AppWindow {
       width: savedWindowState.width,
       height: savedWindowState.height,
       minWidth: this.minWidth,
-      minHeight: this.minHeight,
+      minHeight: 576, // originally 660 but I changed to 576.
+      // 因为我真的他喵有一个高 864px、缩放 150%、等效高度 576px 的副屏，
+      // 我把这个窗口扔到副屏上，它会放不下、让我难受一天，所以它就得是 576px。
       show: false,
       // This fixes subpixel aliasing on Windows
       // See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972
