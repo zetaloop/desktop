@@ -248,7 +248,7 @@ export class OpenPullRequestDialog extends React.Component<IOpenPullRequestDialo
     const viewCreate = currentBranchHasPullRequest ? '查看' : ' 创建'
     const buttonTitle = `在 GitHub${
       isEnterprise ? ' 企业版' : ' '
-    }上${viewCreate}拉取请求。`
+    }上${viewCreate}拉取请求`
 
     const okButton = (
       <>
