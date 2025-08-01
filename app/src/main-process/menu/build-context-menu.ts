@@ -30,10 +30,25 @@ function getEditMenuItems(): ReadonlyArray<MenuItem> {
     paste: '粘贴',
     delete: '删除',
     selectall: '全选',
+    substitutions: '替换',
+    speech: '语音',
+    showsubstitutions: '显示替换',
+    togglesmartquotes: '智能引号',
+    togglesmartdashes: '智能破折号',
+    toggletextreplacement: '文本替换',
+    startspeaking: '开始朗读',
+    stopspeaking: '停止朗读',
   }
   for (const item of items) {
     if (item.role && item.role in labelMap) {
       item.label = labelMap[item.role as keyof typeof labelMap]
+    }
+    if (item.submenu) {
+      for (const subItem of item.submenu.items) {
+        if (subItem.role && subItem.role in labelMap) {
+          subItem.label = labelMap[subItem.role as keyof typeof labelMap]
+        }
+      }
     }
   }
 
