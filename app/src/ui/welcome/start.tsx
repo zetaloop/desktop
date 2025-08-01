@@ -69,7 +69,7 @@ export class Start extends React.Component<IStartProps, {}> {
           </div>
           <div className="skip-action-container">
             <p className="welcome-text">
-              GitHub 新用户吗？{' '}
+              想成为 GitHub 新用户吗？{' '}
               <LinkButton
                 uri={CreateAccountURL}
                 className="create-account-link"
