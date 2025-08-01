@@ -30,25 +30,33 @@ function getEditMenuItems(): ReadonlyArray<MenuItem> {
     paste: '粘贴',
     delete: '删除',
     selectall: '全选',
-    substitutions: '替换',
-    speech: '语音',
-    showsubstitutions: '显示替换',
-    togglesmartquotes: '智能引号',
-    togglesmartdashes: '智能破折号',
-    toggletextreplacement: '文本替换',
-    startspeaking: '开始朗读',
-    stopspeaking: '停止朗读',
   }
-  for (const item of items) {
+  for (const [index, item] of items.entries()) {
     if (item.role && item.role in labelMap) {
       item.label = labelMap[item.role as keyof typeof labelMap]
-    }
-    if (item.submenu) {
-      for (const subItem of item.submenu.items) {
-        if (subItem.role && subItem.role in labelMap) {
-          subItem.label = labelMap[subItem.role as keyof typeof labelMap]
-        }
-      }
+    } else if (item.label && item.label === 'Substitutions') {
+      items[index] = Menu.buildFromTemplate([
+        {
+          label: '替换',
+          submenu: [
+            { label: '显示替换', role: 'showSubstitutions' },
+            { type: 'separator' },
+            { label: '智能引号', role: 'toggleSmartQuotes' },
+            { label: '智能破折号', role: 'toggleSmartDashes' },
+            { label: '文本替换', role: 'toggleTextReplacement' },
+          ],
+        },
+      ]).items[0]
+    } else if (item.label && item.label === 'Speech') {
+      items[index] = Menu.buildFromTemplate([
+        {
+          label: '语音',
+          submenu: [
+            { label: '开始朗读', role: 'startSpeaking' },
+            { label: '停止朗读', role: 'stopSpeaking' },
+          ],
+        },
+      ]).items[0]
     }
   }
 
