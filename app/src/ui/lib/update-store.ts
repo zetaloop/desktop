@@ -216,6 +216,21 @@ class UpdateStore {
 
     this.userInitiatedUpdate = !inBackground
 
+    // Desktop-CN: Fix macOS update behavior
+    // Squirrel macOS expects a 204 response when no update is available.
+    // Since we serve static json via GitHub Pages, we pre-check the version,
+    // and if it matches the current version, we skip Squirrel.
+    // This is to prevent the app from infinitely downloading the same update.
+    if (__DARWIN__) {
+      const response = await fetch(updatesUrl)
+      if (response.ok) {
+        const data = await response.json()
+        if (data.version === getVersion()) {
+          return
+        }
+      }
+    }
+
     const error = await checkForUpdates(updatesUrl)
 
     if (error !== undefined) {
