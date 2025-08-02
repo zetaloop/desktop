@@ -30,7 +30,9 @@
 | macOS (Intel)   | GitHubDesktop-macOS-x64.zip     | 旧款mac        |
 | Linux           | 暂未汉化                        |                |
 
-_Linux 可以试试这些英文版：[`shiftkey/desktop`](https://github.com/shiftkey/desktop), [`pol-rivero/github-desktop-plus`](https://github.com/pol-rivero/github-desktop-plus)_
+\* macOS 安装后如提示损坏，请运行 `xattr -rd com.apple.quarantine "GitHub Desktop.app"`。
+
+\* Linux 可以试试这些英文版：[shiftkey/desktop](https://github.com/shiftkey/desktop)、[pol-rivero/github-desktop-plus](https://github.com/pol-rivero/github-desktop-plus)
 
 ## 特色
 
