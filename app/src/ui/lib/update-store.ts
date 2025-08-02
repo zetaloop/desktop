@@ -222,10 +222,12 @@ class UpdateStore {
     // and if it matches the current version, we skip Squirrel.
     // This is to prevent the app from infinitely downloading the same update.
     if (__DARWIN__) {
+      this.onCheckingForUpdate()
       const response = await fetch(updatesUrl)
       if (response.ok) {
         const data = await response.json()
         if (data.version === getVersion()) {
+          this.onUpdateNotAvailable()
           return
         }
       }
