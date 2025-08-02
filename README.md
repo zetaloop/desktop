@@ -1,12 +1,10 @@
-> 等我一周后考试完再更新ww
-
 > [!TIP]
 > This is the community Chinese localized version of GitHub Desktop, please visit [desktop/desktop](https://github.com/desktop/desktop).<br>
 > 这是 GitHub Desktop 的社区汉化版，原版请访问 [desktop/desktop](https://github.com/desktop/desktop)。
 
 # GitHub Desktop 中文版
 
-[GitHub Desktop](https://desktop.github.com/) 是一个开源的 GitHub 客户端，基于 [Electron](https://www.electronjs.org/) 技术，使用 [React](https://reactjs.org/) 框架，以 [TypeScript](https://www.typescriptlang.org) 编写。
+一个开源的基于 [Electron](https://www.electronjs.org/) 的 Git 客户端。
 
 <picture>
   <source
@@ -22,73 +20,48 @@
 
 ## 安装
 
-[**前往 GitHub 发行版**](https://github.com/zetaloop/desktop/releases/latest) 下载对应系统的中文版安装包：
+请前往 [**最新发行版**](https://github.com/zetaloop/desktop/releases/latest) 中下载中文版安装包。
 
- - macOS --> `GitHubDesktop-macOS-x64.zip`
- - macOS (Apple Silicon) --> `GitHubDesktop-macOS-arm64.zip`
- - Windows --> `GitHubDesktop-Windows-x64.exe`
- - Windows 为所有用户安装 --> `GitHubDesktop-Windows-x64.msi`
+| 系统            | 下载哪个安装包                  | 说明           |
+| --------------- | ------------------------------- | -------------- |
+| Windows (x64)   | GitHubDesktop-Windows-x64.exe   | 一般请下载这个 |
+| Windows (ARM64) | GitHubDesktop-Windows-arm64.exe |                |
+| macOS (M)       | GitHubDesktop-macOS-arm64.zip   | 新款mac        |
+| macOS (Intel)   | GitHubDesktop-macOS-x64.zip     | 旧款mac        |
+| Linux           | 暂未汉化                        |                |
 
-暂未支持 Linux 系统，但是有第三方维护的分支可供使用，见 [社区发布版](https://github.com/zetaloop/Desktop#社区发布版) 一节。
+_Linux 可以试试这些英文版：[`shiftkey/desktop`](https://github.com/shiftkey/desktop), [`pol-rivero/github-desktop-plus`](https://github.com/pol-rivero/github-desktop-plus)_
 
-### Beta 测试版
+## 特色
 
-想要更早体验到新功能和问题修复吗？[安装 Beta 测试版](https://github.com/zetaloop/desktop/releases) 即可提前体验开发中的早期版本：
+彻底的简中汉化，深入到
+- 日期时间
+- 报错内容
+- 文档链接（改为官方中文版）
+- 图片素材
+- 无障碍读屏文本
+- Git 命令行输出替换
+- Electron 右键菜单替换
+- 命令行工具汉化和 UTF8 编码问题修复
 
- - macOS --> `GitHubDesktop-macOS-x64.zip`
- - macOS (Apple Silicon) --> `GitHubDesktop-macOS-arm64.zip`
- - Windows --> `GitHubDesktop-Windows-x64.exe`
- - Windows 为所有用户安装 --> `GitHubDesktop-Windows-x64.msi`
+增强特性
+- GitHub Copilot
+  - 非 GitHub 仓库也能使用
+  - 参考最近提交内容
+  - 自定义提示词
+  - 限制最大读取字数
+- 基于 GitHub Pages 的自动更新渠道
+- CI 自动构建
 
-查看 [测试版更新日志](https://desktop.github.com/release-notes/?env=beta)。
+## 自动更新
 
-### 旧的版本
-可在 [GitHub 发行版](https://github.com/zetaloop/desktop/releases) 下载中文版旧版。旧版本将会在安装后尝试自动更新到最新版本。
+Windows：支持自动更新，服务器为 [zetaloop/desktop-metadata](https://github.com/zetaloop/desktop-metadata)。
+macOS：支持自动更新，目前由于签名原因暂时无法成功安装。
+Linux：不支持，也许以后会开个软件包仓库。
 
-### 社区发布版
+## 问题
 
-可以使用一些社区维护的包管理器来安装 GitHub Desktop **英文原版**：
- - Windows 用户可以用 [winget](https://docs.microsoft.com/en-us/windows/package-manager/winget/) `c:\> winget install github-desktop` 或者 [Chocolatey](https://chocolatey.org/) `c:\> choco install github-desktop`
- - macOS 用户可以用 [Homebrew](https://brew.sh/) `$ brew install --cask github`
-
-各 Linux 发行版的安装包可在 [`shiftkey/desktop`](https://github.com/shiftkey/desktop) 分支中下载。
-
-## GitHub Desktop 适合我吗？这款软件的开发重心是什么？
-
-[阅读我们的设计理念](https://github.com/zetaloop/Desktop/blob/development/docs/process/what-is-desktop.md)，了解 GitHub Desktop 软件的开发重心和目标用户。
-
-## 使用时遇到问题
-
-> [!NOTE]
-> 这里是指 GitHub Desktop 原版软件的程序问题，如果有翻译问题请直接联系 Zetaloop。
-
-注意：参与此项目时需要遵守 [GitHub Desktop 行为准则](https://github.com/desktop/desktop/blob/development/CODE_OF_CONDUCT.md)。
-
-首先，请在 [打开的议题](https://github.com/desktop/desktop/issues?q=is%3Aopen) 和 [关闭的议题](https://github.com/desktop/desktop/issues?q=is%3Aclosed) 中搜索，看看你的问题是否已经有人反馈过，或者刚修复。
-
-也可在 [已知问题列表](https://github.com/desktop/desktop/blob/development/docs/known-issues.md) 中查看我们正在跟踪的问题，它可能已经有解决方法了。
-
-如果没有找到和你一样的问题，请 [创建议题](https://github.com/desktop/desktop/issues/new/choose)，选择合适的模板，并提供足够的信息以便我们进一步调查。
-
-## 我反馈的问题一直没修复，我该怎么办？
-
-如果议题发出之后几天没人回复，你可以在议题中友好地 “@” 提醒一下维护者，但是不要超过两次。维护者们时间与资源有限，而分析一个问题可能又困难又耗时。我们会尽力为你指明方向，但无法保证能够深入研究每一个问题。
-
-## 如何为 GitHub Desktop 做出贡献？
-
-阅读 [`CONTRIBUTING.md`](./.github/CONTRIBUTING.md) 来了解如何配置并熟悉项目代码。[文档](docs/) 文件夹里还有更多相关文档可供参考。
-
-如果你在寻找任务，可以查看带有 [help wanted（请求帮助）](https://github.com/desktop/desktop/issues?q=is%3Aissue+is%3Aopen+label%3A%22help%20wanted%22) 标签的议题。
-
-## 编译 Desktop
-
-阅读 [`setup.md`](./docs/contributing/setup.md) 来了解如何配置 Desktop 的开发环境。
-
-## 更多资源
-
-访问 [desktop.github.com](https://desktop.github.com) 官网获取更多关于 GitHub Desktop 的产品信息。
-
-查看 [入门文档](https://docs.github.com/zh-cn/desktop/overview/getting-started-with-github-desktop) 了解如何安装、登录和配置 GitHub Desktop。
+如果您发现有翻译文本造成误解，或者有功能异常的，请开启 Issue，或者邮箱联系。
 
 ## 许可证
 
