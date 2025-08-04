@@ -64,7 +64,7 @@ function packageOSX() {
   console.log(`Downloading and replacing Squirrel.framework for ${arch}...`)
   cp.execSync(`curl -L -o /tmp/squirrel.zip ${squirrelUrl}`)
   rmSync(squirrelPath, { recursive: true, force: true })
-  cp.execSync(`unzip -q /tmp/squirrel.zip -d ${frameworkPath}`)
+  cp.execSync(`unzip -q /tmp/squirrel.zip -d "${frameworkPath}"`)
   rmSync('/tmp/squirrel.zip', { force: true })
 
   console.log('Packaging for macOS…')
