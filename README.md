@@ -57,8 +57,10 @@
 
 ## 自动更新
 
-Windows：支持自动更新，服务器为 [zetaloop/desktop-metadata](https://github.com/zetaloop/desktop-metadata)。<br>
-macOS：支持自动更新，目前由于签名原因暂时无法成功安装。<br>
+更新服务器 [zetaloop/desktop-metadata](https://github.com/zetaloop/desktop-metadata) (GitHub Pages)
+
+Windows：支持自动更新。<br>
+macOS：支持自动更新。（签名问题已解决，下个版本开始支持）<br>
 Linux：不支持，也许以后会开个软件包仓库。
 
 ## 问题
