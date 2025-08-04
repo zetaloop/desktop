@@ -61,10 +61,11 @@ function packageOSX() {
   const frameworkPath = `${distPath}/${productName}.app/Contents/Frameworks`
   const squirrelPath = `${frameworkPath}/Squirrel.framework`
 
-  console.log(`Downloading and replacing Squirrel.framework for ${arch}...`)
+  console.log(`Downloading patched Squirrel.framework for ${arch}...`)
   cp.execSync(`curl -L -o /tmp/squirrel.zip ${squirrelUrl}`)
+  console.log('Replacing Squirrel.framework…')
   rmSync(squirrelPath, { recursive: true, force: true })
-  cp.execSync(`unzip -q /tmp/squirrel.zip -d "${frameworkPath}"`)
+  cp.execSync(`unzip /tmp/squirrel.zip -d "${frameworkPath}"`)
   rmSync('/tmp/squirrel.zip', { force: true })
 
   console.log('Packaging for macOS…')
