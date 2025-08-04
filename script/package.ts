@@ -64,6 +64,7 @@ function packageOSX() {
   console.log(`Downloading and replacing Squirrel.framework for ${arch}...`)
   rmSync(squirrelPath, { recursive: true, force: true })
   cp.execSync(`curl -L ${squirrelUrl} | ditto -x -k - "${frameworkPath}"`)
+  cp.execSync('sleep 1') // Prevent log interleaving
 
   console.log('Packaging for macOS…')
   cp.execSync(
