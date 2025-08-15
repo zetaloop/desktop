@@ -167,5 +167,4 @@ const renderChangesIndicator = () => {
   )
 }
 
-export const commitGrammar = (commitNum: number) =>
-  `${commitNum} commit${commitNum > 1 ? 's' : ''}` // english is hard
+export const commitGrammar = (commitNum: number) => `${commitNum}个提交` // english is hard // 笑死
