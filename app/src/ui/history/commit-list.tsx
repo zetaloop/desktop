@@ -533,7 +533,7 @@ export class CommitList extends React.Component<
       <div className="commit-list-item-tooltip list-item-tooltip">
         {authorList}
         <div>
-          <div className="label">日期：</div>
+          <div className="label">时间：</div>
           {absoluteDate}
         </div>
         {showUnpushedIndicator ? (
