@@ -179,11 +179,11 @@ export class RepositoriesList extends React.Component<
     }
 
     return (
-      'The currently checked out branch is' +
-      (behind ? ` ${commitGrammar(behind)} behind ` : '') +
-      (behind && ahead ? 'and' : '') +
-      (ahead ? ` ${commitGrammar(ahead)} ahead of ` : '') +
-      'its tracked branch.'
+      '当前分支比它的跟踪分支' +
+      (behind ? `落后${commitGrammar(behind)}` : '') +
+      (behind && ahead ? '、' : '') +
+      (ahead ? `领先${commitGrammar(ahead)}` : '') +
+      '。'
     )
   }
 
@@ -198,7 +198,7 @@ export class RepositoriesList extends React.Component<
     const aheadBehindTooltip = this.getAheadBehindTooltip(aheadBehind)
     const hasChanges = changedFilesCount > 0
     const uncommittedChangesTooltip = hasChanges
-      ? `There are uncommitted changes in this repository.`
+      ? `仓库里有未提交的改动。`
       : null
 
     const ahead = aheadBehind?.ahead ?? 0
@@ -207,12 +207,12 @@ export class RepositoriesList extends React.Component<
     return (
       <div className="repository-list-item-tooltip list-item-tooltip">
         <div>
-          <div className="label">Full Name: </div>
+          <div className="label">全名：</div>
           {realName}
           {alias && <> ({alias})</>}
         </div>
         <div>
-          <div className="label">Path: </div>
+          <div className="label">路径：</div>
           {repository.path}
         </div>
         {aheadBehindTooltip && (

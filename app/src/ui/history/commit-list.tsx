@@ -467,7 +467,7 @@ export class CommitList extends React.Component<
 
   private renderExpandedAuthor(user: IAvatarUser): string | JSX.Element {
     if (!user) {
-      return 'Unknown user'
+      return '未知用户'
     }
 
     if (user.name) {
@@ -529,7 +529,7 @@ export class CommitList extends React.Component<
       <div className="commit-list-item-tooltip list-item-tooltip">
         {authorList}
         <div>
-          <div className="label">Date: </div>
+          <div className="label">日期：</div>
           {absoluteDate}
         </div>
         {showUnpushedIndicator ? (
