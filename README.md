@@ -36,7 +36,7 @@
 
 ## 特色
 
-彻底的简中汉化，深入到
+更彻底的汉化，深入到
 - 日期时间
 - 报错内容
 - 文档链接（改为官方中文版）
@@ -54,13 +54,14 @@
   - 限制最大读取字数
 - 基于 GitHub Pages 的自动更新渠道
 - CI 自动构建
+- macOS 版本修改了 Squirrel 来支持自动更新
 
 ## 自动更新
 
 更新服务器 [zetaloop/desktop-metadata](https://github.com/zetaloop/desktop-metadata) (GitHub Pages)
 
 Windows：支持自动更新。<br>
-macOS：支持自动更新。（签名问题已解决，下个版本开始支持）<br>
+macOS：支持自动更新。（3.5.3-beta1 开始已实装）<br>
 Linux：不支持，也许以后会开个软件包仓库。
 
 ## 问题
