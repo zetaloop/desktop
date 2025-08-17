@@ -206,21 +206,27 @@ export class RepositoriesList extends React.Component<
       // desktop-cn: make it looks slightly better
       <div className="repository-list-item-tooltip list-item-tooltip">
         <div>
-          <div className="label min-w-[35px]">名称：</div>
+          <div className="label" style={{ minWidth: 35 }}>
+            名称：
+          </div>
           {realName}
           {alias && <> ({alias})</>}
         </div>
         <div>
-          <div className="label min-w-[35px]">路径：</div>
+          <div className="label" style={{ minWidth: 35 }}>
+            路径：
+          </div>
           {repository.path}
         </div>
         {aheadBehindTooltip && (
           <div>
-            <div className="label min-w-[35px]">
+            <div className="label" style={{ minWidth: 35 }}>
               <div
-                className={`ahead-behind align-text-bottom ${
-                  ahead > 0 && behind > 0 ? 'p-0' : ''
-                }`}
+                className="ahead-behind"
+                style={{
+                  verticalAlign: 'text-bottom',
+                  padding: ahead > 0 && behind > 0 ? 0 : undefined,
+                }}
               >
                 {ahead > 0 && <Octicon symbol={octicons.arrowUp} />}
                 {behind > 0 && <Octicon symbol={octicons.arrowDown} />}
@@ -231,7 +237,7 @@ export class RepositoriesList extends React.Component<
         )}
         {uncommittedChangesTooltip && (
           <div>
-            <div className="label min-w-[35px]">
+            <div className="label" style={{ minWidth: 35 }}>
               <span className="change-indicator-wrapper">
                 <Octicon symbol={octicons.dotFill} />
               </span>
