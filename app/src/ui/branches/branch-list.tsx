@@ -328,12 +328,16 @@ export class BranchList extends React.Component<
       // desktop-cn: make it looks slightly better
       <div className="branches-list-item-tooltip list-item-tooltip">
         <div>
-          <div className="label min-w-[35px]">名称：</div>
+          <div className="label" style={{ minWidth: 35 }}>
+            名称：
+          </div>
           {name}
         </div>
         {absoluteDate && (
           <div>
-            <div className="label min-w-[35px]">时间：</div>
+            <div className="label" style={{ minWidth: 35 }}>
+              时间：
+            </div>
             {absoluteDate}
           </div>
         )}
