@@ -5545,7 +5545,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
           const recentCommits: ReadonlyArray<Commit> = await getCommits(
             repository,
             undefined,
-            5
+            10
           )
 
           if (recentCommits.length > 0) {
