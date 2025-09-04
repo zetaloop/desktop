@@ -424,7 +424,7 @@ export class Integrations extends React.Component<
           ariaDescribedBy={copilotHistoryDescId}
         />
         <p id={copilotHistoryDescId} className="git-settings-description">
-          生成提交消息时参考最近五条提交内容。
+          生成提交消息时参考最近十条提交内容。
         </p>
         <TextBox
           label="自定义提交风格"
