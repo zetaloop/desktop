@@ -907,10 +907,9 @@ export class CommitMessage extends React.Component<
     const noChangesAvailable = !commitToAmend && noFilesSelected
 
     const ariaLabel = isGeneratingCommitMessage
-      ? "Generating commit details…'"
+      ? "正在生成提交消息…'"
       : '用 Copilot 生成提交消息' +
-        (noChangesAvailable
-          ? '，请勾选要提交的文件' : '')
+        (noChangesAvailable ? '，请勾选要提交的文件' : '')
 
     const showSeparator = this.isCoAuthorInputEnabled
 
@@ -929,9 +928,7 @@ export class CommitMessage extends React.Component<
           }
         >
           <AriaLiveContainer
-            message={
-              isGeneratingCommitMessage ? 'Generating commit details…' : ''
-            }
+            message={isGeneratingCommitMessage ? '正在生成提交消息…' : ''}
           />
           <Octicon symbol={octicons.copilot} />
           {shouldShowGenerateCommitMessageCallOut && (
