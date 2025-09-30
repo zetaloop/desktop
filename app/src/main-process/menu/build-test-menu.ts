@@ -93,7 +93,7 @@ export function buildTestMenu() {
       click: emit('test-update-existing-git-lfs-filters'),
     },
     {
-      label: '上游已存在',
+      label: '上游不匹配',
       click: emit('test-upstream-already-exists'),
     }
   )
