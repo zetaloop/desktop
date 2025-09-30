@@ -32,7 +32,7 @@ export class UpstreamAlreadyExists extends React.Component<IUpstreamAlreadyExist
       this.props.repository.gitHubRepository
     )
     const parent = forceUnwrap(
-      '仓库需要有一个复刻父仓库，才能添加上游远程',
+      '仓库需要有一个复刻来源仓库，才能添加上游远程',
       gitHubRepository.parent
     )
     const parentName = parent.fullName
@@ -40,30 +40,31 @@ export class UpstreamAlreadyExists extends React.Component<IUpstreamAlreadyExist
     const replacementURL = parent.cloneURL
     return (
       <Dialog
-        title={__DARWIN__ ? '上游已存在' : '上游已存在'}
+        title={__DARWIN__ ? '上游不匹配' : '上游不匹配'}
         onDismissed={this.props.onDismissed}
         onSubmit={this.onUpdate}
         type="warning"
       >
         <DialogContent>
           <p>
-            仓库 <Ref>{name}</Ref> 是 <Ref>{parentName}</Ref> 的复刻，但其{' '}
-            <Ref>{UpstreamRemoteName}</Ref> 上游远程却已经指向了其他仓库。
+            本仓库 <Ref>{name}</Ref> 在 GitHub 上复刻自 <Ref>{parentName}</Ref>{' '}
+            仓库，但本地配置的 <Ref>{UpstreamRemoteName}</Ref>{' '}
+            远程地址却指向其他仓库。
           </p>
           <ul>
             <li>
-              当前上游: <Ref>{existingURL}</Ref>
+              当前上游地址: <Ref>{existingURL}</Ref>
             </li>
             <li>
-              复刻来源: <Ref>{replacementURL}</Ref>
+              复刻来源仓库: <Ref>{replacementURL}</Ref>
             </li>
           </ul>
-          <p>您想把该仓库的上游改为复刻来源吗？</p>
+          <p>您想把本仓库的上游地址更新为复刻来源仓库吗？</p>
         </DialogContent>
         <DialogFooter>
           <OkCancelButtonGroup
             destructive={true}
-            okButtonText="更新上游"
+            okButtonText="更新上游地址"
             cancelButtonText="忽略"
             onCancelButtonClick={this.onIgnore}
           />
