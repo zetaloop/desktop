@@ -148,7 +148,7 @@ export class RebaseChooseBranchDialog extends React.Component<
   }
 
   private renderLoadingRebaseMessage() {
-    return <>正在自动检查重构可行性…</>
+    return <>正在检查重构冲突…</>
   }
 
   private renderInvalidRebaseMessage() {

@@ -169,7 +169,7 @@ export class MergeChooseBranchDialog extends React.Component<
   }
 
   private renderLoadingMergeMessage() {
-    return <>正在自动检查合并可行性...</>
+    return <>正在检查合并冲突...</>
   }
 
   private renderCleanMergeMessage(
