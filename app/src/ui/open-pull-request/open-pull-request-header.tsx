@@ -105,13 +105,13 @@ export class OpenPullRequestDialogHeader extends React.Component<IOpenPullReques
           />
         </div>
         <div className="lines-added-deleted">
-          <div className="sr-only">Lines changed:</div>
+          <div className="sr-only">改动行数：</div>
           <span aria-hidden="true" className="lines-added">
-            {linesAdded} added lines
+            添加 {linesAdded} 行
           </span>
           <span>, </span>
           <span aria-hidden="true" className="lines-deleted">
-            {linesDeleted} removed lines
+            删除 {linesDeleted} 行
           </span>
         </div>
       </DialogHeader>
