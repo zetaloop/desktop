@@ -51,11 +51,11 @@ export class GenerateCommitMessageOverrideWarning extends React.Component<
       >
         <DialogContent>
           <Row id="generate-commit-message-override-warning-body">
-            用 AI 生成的提交消息覆盖现有内容。
+            用 AI 生成的提交消息覆盖现有消息内容。
           </Row>
           <Row>
             <Checkbox
-              label="Do not show this message again"
+              label="不再显示"
               value={
                 this.state.confirmCommitMessageOverride
                   ? CheckboxValue.Off
