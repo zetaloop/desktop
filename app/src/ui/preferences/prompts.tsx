@@ -290,7 +290,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmUndoCommitChanged}
             />
             <Checkbox
-              label="Overriding commit message with generated message"
+              label="生成提交消息覆盖现有消息内容"
               value={
                 this.state.confirmCommitMessageOverride
                   ? CheckboxValue.On
