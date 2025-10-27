@@ -34,7 +34,7 @@ export class RepoRulesMetadataFailureList extends React.Component<IRepoRulesMeta
         totalFails === 1 ? '一条' : '一些'
       }允许绕过，请谨慎操作！`
     } else {
-      endText = '.'
+      endText = '。'
     }
 
     return (
