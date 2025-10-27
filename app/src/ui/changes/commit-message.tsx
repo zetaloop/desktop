@@ -846,9 +846,7 @@ export class CommitMessage extends React.Component<
     const noChangesAvailable = !commitToAmend && noFilesSelected
 
     return {
-      label: __DARWIN__
-        ? 'Generate Commit Message with Copilot'
-        : 'Generate commit message with Copilot',
+      label: __DARWIN__ ? '用 Copilot 生成提交消息' : '用 Copilot 生成提交消息',
       action: () => {
         const { commitMessage } = this.state
         onGenerateCommitMessage(
