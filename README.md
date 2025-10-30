@@ -48,7 +48,6 @@
 
 增强特性
 - GitHub Copilot
-  - 非 GitHub 仓库也能使用
   - 参考最近提交内容
   - 自定义提示词
   - 限制最大读取字数
@@ -61,7 +60,7 @@
 更新服务器 [zetaloop/desktop-metadata](https://github.com/zetaloop/desktop-metadata) (GitHub Pages)
 
 Windows：支持自动更新。<br>
-macOS：支持自动更新。（3.5.3-beta1 开始已实装）<br>
+macOS：支持自动更新。<br>
 Linux：不支持，也许以后会开个软件包仓库。
 
 ## 问题
