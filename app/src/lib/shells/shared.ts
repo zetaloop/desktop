@@ -126,9 +126,9 @@ export async function launchCustomShell(
   // platform-specific build targets.
   const exists = await pathExists(customShell.path)
   if (!exists) {
-    const label = __DARWIN__ ? 'Settings' : 'Options'
+    const label = __DARWIN__ ? '设置' : '设置'
     throw new ShellError(
-      `Could not find executable for custom shell at path '${customShell.path}'.  Please open ${label} and select an available shell.`
+      `找不到自定义终端的可执行文件 '${customShell.path}'。请打开${label}并选择一个可用的终端。`
     )
   }
 
