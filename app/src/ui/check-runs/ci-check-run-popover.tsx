@@ -53,6 +53,9 @@ export function getCombinedStatusSummary(
 
   const descriptionCN = description === 'step' ? '步骤' : '检查'
   const pluralize = statusHolders.length > 1 ? descriptionCN : descriptionCN
+  if (conclusions.length === 0) {
+    return `尚无${pluralize}`
+  }
   return `在这些${pluralize}中，${toSentence(conclusions)}`
 }
 
