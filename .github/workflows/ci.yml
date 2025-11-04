@@ -85,12 +85,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, windows-2022]
+        os: [macos-26, windows-2025]
         arch: [x64, arm64]
         include:
-          - os: macos-13
+          - os: macos-26
             friendlyName: macOS
-          - os: windows-2022
+          - os: windows-2025
             friendlyName: Windows
     timeout-minutes: 60
     environment: ${{ inputs.environment }}
@@ -154,7 +154,7 @@ jobs:
           Invoke-WebRequest -Uri https://www.nuget.org/api/v2/package/Microsoft.Trusted.Signing.Client/1.0.52 -OutFile $acsZip -Verbose
           Expand-Archive $acsZip -Destination $acsDir -Force -Verbose
           # Replace ancient signtool in electron-winstall with one that supports ACS
-          Copy-Item -Path "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\*" -Include signtool.exe,signtool.exe.manifest,Microsoft.Windows.Build.Signing.mssign32.dll.manifest,mssign32.dll,Microsoft.Windows.Build.Signing.wintrust.dll.manifest,wintrust.dll,Microsoft.Windows.Build.Appx.AppxSip.dll.manifest,AppxSip.dll,Microsoft.Windows.Build.Appx.AppxPackaging.dll.manifest,AppxPackaging.dll,Microsoft.Windows.Build.Appx.OpcServices.dll.manifest,OpcServices.dll -Destination "node_modules\electron-winstaller\vendor" -Verbose
+          Copy-Item -Path "C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\*" -Include signtool.exe,signtool.exe.manifest,Microsoft.Windows.Build.Signing.mssign32.dll.manifest,mssign32.dll,Microsoft.Windows.Build.Signing.wintrust.dll.manifest,wintrust.dll,Microsoft.Windows.Build.Appx.AppxSip.dll.manifest,AppxSip.dll,Microsoft.Windows.Build.Appx.AppxPackaging.dll.manifest,AppxPackaging.dll,Microsoft.Windows.Build.Appx.OpcServices.dll.manifest,OpcServices.dll -Destination "node_modules\electron-winstaller\vendor" -Verbose
       - name: Package production app
         run: yarn package
         env:
