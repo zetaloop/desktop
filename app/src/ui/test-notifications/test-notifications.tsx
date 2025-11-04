@@ -646,7 +646,7 @@ export class TestNotifications extends React.Component<
       <TestNotificationItemRowContent
         dispatcher={this.props.dispatcher}
         html_url={comment.html_url}
-        linkButtonDescription={`Open in browser: ${comment.body}`}
+        linkButtonDescription={`在浏览器中打开: ${comment.body}`}
         leftAccessory={this.renderReviewStateIcon('COMMENTED')}
       >
         {comment.body}
@@ -663,7 +663,7 @@ export class TestNotifications extends React.Component<
       <TestNotificationItemRowContent
         dispatcher={this.props.dispatcher}
         html_url={review.html_url}
-        linkButtonDescription={`Open in browser: ${review.body}`}
+        linkButtonDescription={`在浏览器中打开: ${review.body}`}
         leftAccessory={this.renderReviewStateIcon(review.state)}
       >
         {review.body || <i>审核无内容</i>}
@@ -694,7 +694,7 @@ export class TestNotifications extends React.Component<
       <TestNotificationItemRowContent
         dispatcher={this.props.dispatcher}
         html_url={htmlURL}
-        linkButtonDescription={`Open pull request #${pullRequest.pullRequestNumber} in browser`}
+        linkButtonDescription={`在浏览器中打开拉取请求 #${pullRequest.pullRequestNumber}`}
         leftAccessory={this.renderPullRequestStateIcon(pullRequest)}
       >
         <b>
