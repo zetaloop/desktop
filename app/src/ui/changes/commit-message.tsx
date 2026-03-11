@@ -1606,13 +1606,13 @@ export class CommitMessage extends React.Component<
 
     const text =
       hookName === 'pre-auto-gc' && status === 'finished'
-        ? 'Optimizing repository…'
+        ? '正在优化仓库…'
         : status === 'started'
-        ? `${hookName} hook running…`
+        ? `正在运行挂钩 ${hookName}…`
         : status === 'finished'
-        ? `${hookName} hook finished`
+        ? `挂钩 ${hookName} 结束`
         : status === 'failed'
-        ? `${hookName} hook failed`
+        ? `挂钩 ${hookName} 运行失败`
         : assertNever(status, `Unknown hook status: ${status}`)
 
     const cn = classNames('commit-progress', {
@@ -1622,7 +1622,7 @@ export class CommitMessage extends React.Component<
       <div className={cn}>
         <div className="description">{text}</div>
         {onShowCommitProgress && (
-          <Button tooltip="Show commit progress" onClick={onShowCommitProgress}>
+          <Button tooltip="显示提交进度" onClick={onShowCommitProgress}>
             <Octicon symbol={octicons.terminal} />
           </Button>
         )}

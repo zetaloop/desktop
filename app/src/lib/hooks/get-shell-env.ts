@@ -54,15 +54,13 @@ export const getShellEnv = async (
         const startMatch = stdout.match(startRe)
 
         if (!startMatch || startMatch.index === undefined) {
-          return reject(
-            new Error('could not find start marker in shell output')
-          )
+          return reject(new Error('命令行输出中找不到开始标记'))
         }
 
         const lastEndMatch = [...stdout.matchAll(endRe)].at(-1)
 
         if (!lastEndMatch) {
-          return reject(new Error('could not find end marker in shell output'))
+          return reject(new Error('命令行输出中找不到结束标记'))
         }
 
         const matches = stdout
@@ -82,9 +80,7 @@ export const getShellEnv = async (
 
     child.on('close', (code, signal) => {
       if (code !== 0) {
-        return reject(
-          new Error(`child exited with code ${code} and signal ${signal}`)
-        )
+        return reject(new Error(`子进程以代号 ${code} 信号 ${signal} 退出`))
       }
     })
   })
