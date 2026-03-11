@@ -81,7 +81,7 @@ export const createHooksProxy = (
     const abortController = new AbortController()
     const abort = () => abortController.abort()
 
-    await writeline(conn.stderr, `Running ${hookName} hook...`)
+    await writeline(conn.stderr, `正在运行挂钩 ${hookName}...`)
     onHookProgress?.({ hookName, status: 'started', abort })
 
     // GIT_ vars are considered safe to pass to hooks unless explicitly excluded
@@ -98,7 +98,7 @@ export const createHooksProxy = (
 
     if (abortController.signal.aborted) {
       debug(`${hookName}: aborted before execution`)
-      await exitWithError(conn, `hook ${hookName} aborted`)
+      await exitWithError(conn, `挂钩 ${hookName} 已终止`)
       return
     }
 
@@ -120,19 +120,19 @@ export const createHooksProxy = (
     const shellEnv = await getShellEnv(proxyCwd)
 
     if (shellEnv.kind === 'failure') {
-      let errMsg = `Failed to load shell environment for hook ${hookName}.`
+      let errMsg = `无法加载挂钩 ${hookName} 的 shell 环境。`
       debug(errMsg)
 
       if (shellEnv.shellKind) {
         const friendlyName = shellFriendlyNames[shellEnv.shellKind]
         if (shellEnv.shellKind === 'git-bash') {
-          errMsg += `\n${friendlyName} not found. Please ensure Git for Windows is installed and added to your PATH.`
+          errMsg += `\n找不到 ${friendlyName}。请检查是否已安装 Git for Windows 并正确配置了 PATH 环境变量。`
         } else {
-          errMsg += `\n${friendlyName} not found. Please ensure it's installed and added to your PATH.`
+          errMsg += `\n找不到 ${friendlyName}。请检查是否已安装它并正确配置了 PATH 环境变量。`
         }
       }
 
-      errMsg += '\n\nConfigure the shell to use in Preferences > Git > Hooks.'
+      errMsg += '\n\n前往 设置 > Git > 挂钩 来选择要使用的 shell。'
 
       return exitWithError(conn, errMsg)
     }
@@ -160,11 +160,11 @@ export const createHooksProxy = (
       conn.stdin.pipe(child.stdin).on('error', reject)
     })
 
-    const dur = `after ${((Date.now() - startTime) / 1000).toFixed(2)}s`
-    const prefix = `${hookName} hook`
+    const dur = `经过${((Date.now() - startTime) / 1000).toFixed(2)}秒后`
+    const prefix = `挂钩 ${hookName} `
     const terminationMessage = signal
-      ? `${prefix} killed by signal ${signal} ${dur}`
-      : `${prefix} ${code ? `failed with code ${code}` : 'done'} ${dur}`
+      ? `${prefix}${dur}收到 ${signal} 信号而终止`
+      : `${prefix}${dur}${code ? `以代号 ${code} 失败` : '完成'}`
 
     debug(terminationMessage)
 
@@ -191,7 +191,7 @@ export const createHooksProxy = (
     await writeline(conn.stderr, terminationMessage)
 
     if (ignoreError) {
-      await writeline(conn.stderr, `${hookName} hook failure ignored by user`)
+      await writeline(conn.stderr, `忽略挂钩 ${hookName} 失败`)
     }
 
     const exitCode = ignoreError ? 0 : code ?? 1

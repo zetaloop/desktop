@@ -40,7 +40,7 @@ export const shellFriendlyNames: Readonly<
   'git-bash': 'Git Bash',
   pwsh: 'PowerShell Core',
   powershell: 'Windows PowerShell',
-  cmd: 'Command Prompt',
+  cmd: '命令提示符',
 }
 
 export const setGitHookEnvShell = (shell: string) =>
