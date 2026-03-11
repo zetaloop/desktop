@@ -59,7 +59,7 @@ export async function updateSubmodulesAfterOperation<T extends Progress>(
   progressCallback({
     kind: progressKind,
     title,
-    description: 'Updating submodules',
+    description: '正在更新子模块',
     value: 0,
     // Add the target or remote field based on the progress kind
     ...(progressKind === 'checkout'
@@ -82,7 +82,8 @@ export async function updateSubmodulesAfterOperation<T extends Progress>(
 
         return {
           kind: 'context',
-          text: `Updating submodules: ${line}`,
+          text: `正在更新子模块: ${line}`,
+          text_: `Updating submodules: ${line}`,
           // Math taken from https://math.stackexchange.com/a/2323106
           // We do this to fake a progress that slows down as we process more
           // events, as we don't know how many submodules there are upfront, or
@@ -116,7 +117,7 @@ export async function updateSubmodulesAfterOperation<T extends Progress>(
   progressCallback({
     kind: progressKind,
     title,
-    description: 'Submodules updated',
+    description: '已更新子模块',
     value: 1,
     ...(progressKind === 'checkout'
       ? { target: targetOrRemote }
