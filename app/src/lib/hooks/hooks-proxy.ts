@@ -191,7 +191,7 @@ export const createHooksProxy = (
     await writeline(conn.stderr, terminationMessage)
 
     if (ignoreError) {
-      await writeline(conn.stderr, `忽略挂钩 ${hookName} 失败`)
+      await writeline(conn.stderr, `已忽略挂钩 ${hookName} 的失败`)
     }
 
     const exitCode = ignoreError ? 0 : code ?? 1
