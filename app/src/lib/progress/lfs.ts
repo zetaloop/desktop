@@ -1,5 +1,5 @@
 import { getTempFilePath } from '../file-system'
-import { IGitProgress, IGitProgressInfo, IGitOutput } from './git'
+import { IGitProgress, IGitProgressInfo, IGitOutput, translateLn } from './git'
 import { formatBytes } from '../../ui/lib/bytes'
 import { open } from 'fs/promises'
 
@@ -51,10 +51,14 @@ export class GitLFSProgressParser {
 
   /** Parse the progress line. */
   public parse(line: string): IGitProgress | IGitOutput {
-    //! TODO: LFS message translation <- 我还没用过 LFS，到时候试试再说
     const matches = line.match(LFSProgressLineRe)
     if (!matches || matches.length !== 7) {
-      return { kind: 'context', percent: 0, text: line, text_: line }
+      return {
+        kind: 'context',
+        percent: 0,
+        text: translateLn(line),
+        text_: line,
+      }
     }
 
     const direction = matches[1]
@@ -68,7 +72,12 @@ export class GitLFSProgressParser {
       isNaN(fileTransferred) ||
       isNaN(fileSize)
     ) {
-      return { kind: 'context', percent: 0, text: line, text_: line }
+      return {
+        kind: 'context',
+        percent: 0,
+        text: translateLn(line),
+        text_: line,
+      }
     }
 
     this.files.set(fileName, {

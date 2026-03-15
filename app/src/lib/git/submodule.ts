@@ -4,7 +4,11 @@ import { git, IGitStringExecutionOptions } from './core'
 import { Repository } from '../../models/repository'
 import { SubmoduleEntry } from '../../models/submodule'
 import { pathExists } from '../../ui/lib/path-exists'
-import { executionOptionsWithProgress, IGitOutput } from '../progress'
+import {
+  executionOptionsWithProgress,
+  IGitOutput,
+  translateLn,
+} from '../progress'
 import {
   envForRemoteOperation,
   getFallbackUrlForProxyResolve,
@@ -82,7 +86,7 @@ export async function updateSubmodulesAfterOperation<T extends Progress>(
 
         return {
           kind: 'context',
-          text: `正在更新子模块: ${line}`,
+          text: `正在更新子模块: ${translateLn(line)}`,
           text_: `Updating submodules: ${line}`,
           // Math taken from https://math.stackexchange.com/a/2323106
           // We do this to fake a progress that slows down as we process more
