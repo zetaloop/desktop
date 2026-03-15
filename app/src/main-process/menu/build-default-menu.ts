@@ -444,7 +444,7 @@ export function buildDefaultMenu({
     },
     separator,
     {
-      label: __DARWIN__ ? 'GitHub 对比' : '&GitHub 对比',
+      label: __DARWIN__ ? 'GitHub 对比分支' : 'GitHub 对比分支',
       id: 'compare-on-github',
       accelerator: 'CmdOrCtrl+Shift+C',
       click: emit('compare-on-github'),
