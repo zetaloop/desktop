@@ -354,7 +354,7 @@ export function buildDefaultMenu({
         click: emit('open-external-editor'),
       },
       {
-        label: __DARWIN__ ? 'Open With…' : 'Open &with…',
+        label: __DARWIN__ ? '选择编辑器打开…' : '选择编辑器打开…',
         id: 'open-with-external-editor',
         accelerator: 'CmdOrCtrl+Shift+Alt+A',
         click: emit('open-with-external-editor'),
