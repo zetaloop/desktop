@@ -38,7 +38,7 @@ export function generateBranchContextMenuItems(
 
   if (onViewBranchOnGitHub !== undefined) {
     items.push({
-      label: 'View Branch on GitHub',
+      label: '前往 GitHub 查看分支',
       action: () => onViewBranchOnGitHub(),
     })
   }
