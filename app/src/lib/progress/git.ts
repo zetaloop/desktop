@@ -219,11 +219,16 @@ export class GitProgressParser implements IGitProgressParser {
     // strip out any control characters that may be present. IGitProgress
     // is supposed to be readable text that can be used in tooltips and such.
     const text = stripVTControlCharacters(line)
+    const translatedText = translateLn(text)
     const progress = parse(text)
 
     if (!progress) {
       return {
-        kind: 'context', text, percent: this.lastPercent, text_: line, }
+        kind: 'context',
+        text: translatedText,
+        percent: this.lastPercent,
+        text_: line,
+      }
     }
 
     let percent = 0
@@ -246,7 +251,11 @@ export class GitProgressParser implements IGitProgressParser {
     }
 
     return {
-      kind: 'context', text, percent: this.lastPercent, text_: line, }
+      kind: 'context',
+      text: translatedText,
+      percent: this.lastPercent,
+      text_: line,
+    }
   }
 }
 
@@ -342,22 +351,30 @@ export function parse(line: string): IGitProgressInfo | null {
   }
 }
 
-function translateLn(line: string): string {
+export function translateLn(line: string): string {
   // Translate Git message to Chinese
   // Ref: git/git/po/zh_CN.po, and realworld test
-  line = line.replace('remote: ', '远程端：')
+  line = line.replace('Cloning into bare repository', '正在克隆到裸仓库')
+  line = line.replace('remote: ', '远程端: ')
   line = line.replace('Cloning into', '正在克隆到')
   line = line.replace('Enumerating objects', '正在枚举对象')
   line = line.replace('Counting objects', '正在计算对象数量')
+  line = line.replace('Compressing objects by path', '正在按路径压缩对象')
   line = line.replace('Compressing objects', '正在压缩对象')
   line = line.replace('Writing objects', '正在发送对象')
   line = line.replace('Receiving objects', '正在接收对象')
   line = line.replace('Indexing objects', '正在索引对象')
   line = line.replace('Resolving deltas', '正在分析差异')
   line = line.replace('Checking out files', '正在检出文件')
+  line = line.replace('Downloading LFS objects', '正在下载 LFS 对象')
+  line = line.replace('Uploading LFS objects', '正在上传 LFS 对象')
+  line = line.replace('Checking out LFS objects', '正在检出 LFS 对象')
+  line = line.replace('Filtering content', '正在过滤内容')
   line = line.replace('Updating files', '正在更新文件')
+  line = line.replace('Submodule path', '子模块路径')
   line = line.replace('Submodule', '子模块')
   line = line.replace('registered for path', '已注册至路径')
+  line = line.replace(': checked out ', ': 已检出 ')
   line = line.replace(', done.', ', 完成.')
   line = line.replace(
     /, completed with (\d+) local object[s]?/,
