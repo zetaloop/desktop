@@ -160,7 +160,7 @@ export const createHooksProxy = (
       conn.stdin.pipe(child.stdin).on('error', reject)
     })
 
-    const dur = `经过${((Date.now() - startTime) / 1000).toFixed(2)}秒后`
+    const dur = `经过 ${((Date.now() - startTime) / 1000).toFixed(2)} 秒后`
     const prefix = `挂钩 ${hookName} `
     const terminationMessage = signal
       ? `${prefix}${dur}收到 ${signal} 信号而终止`
