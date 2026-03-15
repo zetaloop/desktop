@@ -182,7 +182,7 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
         case 'create-repository':
           return `仓库创建失败`
         case 'commit':
-          return `Commit failed`
+          return `提交失败`
       }
     }
 
