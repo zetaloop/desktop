@@ -77,7 +77,7 @@ export class Git extends React.Component<IGitProps> {
     return (
       <>
         <Checkbox
-          label="Load Git hook environment variables from shell"
+          label="从 Shell 加载挂钩环境变量"
           ariaDescribedBy="git-hooks-env-description"
           value={
             this.props.enableGitHookEnv ? CheckboxValue.On : CheckboxValue.Off
@@ -85,18 +85,15 @@ export class Git extends React.Component<IGitProps> {
           onChange={this.onEnableGitHookEnvChanged}
         />
         <p id="git-hooks-env-description" className="git-settings-description">
-          When enabled, GitHub Desktop will attempt to load environment
-          variables from your shell when executing Git hooks. This is useful if
-          your Git hooks depend on environment variables set in your shell
-          configuration files, a common practice for version managers such as
-          nvm, rbenv, asdf, etc.
+          执行挂钩时尝试加载 Shell 环境变量。如果您的挂钩依赖于通过 Shell
+          配置文件设置的环境变量（如 nvm、rbenv、asdf 等）则需开启它。
         </p>
 
         {this.props.enableGitHookEnv && __WIN32__ && (
           <>
             <Select
               className="git-hook-shell-select"
-              label={'Shell to use when loading environment'}
+              label={'加载环境变量用的 Shell'}
               value={this.props.selectedShell}
               onChange={this.onSelectedShellChanged}
             >
@@ -114,7 +111,7 @@ export class Git extends React.Component<IGitProps> {
         {this.props.enableGitHookEnv && (
           <>
             <Checkbox
-              label="Cache Git hook environment variables"
+              label="缓存环境变量"
               ariaDescribedBy="git-hooks-cache-description"
               onChange={this.onCacheGitHookEnvChanged}
               value={
@@ -128,8 +125,7 @@ export class Git extends React.Component<IGitProps> {
               id="git-hooks-cache-description"
               className="git-settings-description"
             >
-              Cache hook environment variables to improve performance. Disable
-              if your hooks rely on frequently changing environment variables.
+              开启缓存可以提升性能。但如果您的挂钩依赖于经常变动的环境变量，请关闭缓存。
             </div>
           </>
         )}
@@ -144,9 +140,9 @@ export class Git extends React.Component<IGitProps> {
           selectedIndex={this.selectedTabIndex}
           onTabClicked={this.onTabClicked}
         >
-          <span>Author</span>
-          <span>Default branch</span>
-          <span>Hooks</span>
+          <span>作者</span>
+          <span>默认分支</span>
+          <span>挂钩</span>
         </TabBar>
         <div className="git-preferences-content">{this.renderCurrentTab()}</div>
       </DialogContent>
