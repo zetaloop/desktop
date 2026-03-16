@@ -10,6 +10,7 @@ import { ICustomIntegration } from '../../lib/custom-integration'
 import { enableCustomIntegration } from '../../lib/feature-flag'
 import { Checkbox, CheckboxValue } from '../lib/checkbox'
 import { TextBox } from '../lib/text-box'
+import { TabBar } from '../tab-bar'
 
 const CustomIntegrationValue = 'other'
 
@@ -46,6 +47,7 @@ interface IIntegrationsPreferencesState {
   readonly copilotUseCommitHistoryStyle: boolean
   readonly copilotCustomStyle: string
   readonly copilotDiffTruncationLimit: number
+  readonly selectedTabIndex: number
 }
 
 export class Integrations extends React.Component<
@@ -68,6 +70,7 @@ export class Integrations extends React.Component<
       copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
       copilotCustomStyle: this.props.copilotCustomStyle,
       copilotDiffTruncationLimit: this.props.copilotDiffTruncationLimit,
+      selectedTabIndex: 0,
     }
   }
 
@@ -217,6 +220,10 @@ export class Integrations extends React.Component<
     const value = parseInt(event.currentTarget.value, 10)
     this.setState({ copilotDiffTruncationLimit: value })
     this.props.onCopilotDiffTruncationLimitChanged(value)
+  }
+
+  private onTabClicked = (selectedTabIndex: number) => {
+    this.setState({ selectedTabIndex })
   }
 
   private renderExternalEditor() {
@@ -458,19 +465,19 @@ export class Integrations extends React.Component<
     )
   }
 
-  public render() {
+  private renderGeneralSettings() {
     if (!enableCustomIntegration()) {
       return (
-        <DialogContent>
+        <>
           <h2>默认应用</h2>
           <Row>{this.renderExternalEditor()}</Row>
           <Row>{this.renderSelectedShell()}</Row>
-        </DialogContent>
+        </>
       )
     }
 
     return (
-      <DialogContent>
+      <>
         <fieldset>
           <legend>
             <h2>{__DARWIN__ ? '编辑器' : '编辑器'}</h2>
@@ -486,7 +493,33 @@ export class Integrations extends React.Component<
           <Row>{this.renderSelectedShell()}</Row>
           {this.state.useCustomShell && this.renderCustomShell()}
         </fieldset>
-        {this.renderCopilotSettings()}
+      </>
+    )
+  }
+
+  private renderCurrentTab() {
+    if (this.state.selectedTabIndex === 0) {
+      return this.renderGeneralSettings()
+    } else if (this.state.selectedTabIndex === 1) {
+      return this.renderCopilotSettings()
+    }
+
+    return null
+  }
+
+  public render() {
+    return (
+      <DialogContent className="integrations-preferences">
+        <TabBar
+          selectedIndex={this.state.selectedTabIndex}
+          onTabClicked={this.onTabClicked}
+        >
+          <span>通用</span>
+          <span>Copilot</span>
+        </TabBar>
+        <div className="integrations-preferences-content">
+          {this.renderCurrentTab()}
+        </div>
       </DialogContent>
     )
   }
