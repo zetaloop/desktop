@@ -15,6 +15,14 @@
     }
   }
 
+  .dialog-content.integrations-preferences {
+    padding: 0;
+
+    .integrations-preferences-content {
+      padding: var(--spacing-double);
+    }
+  }
+
   .preferences-container {
     display: flex;
     .tab-container {
