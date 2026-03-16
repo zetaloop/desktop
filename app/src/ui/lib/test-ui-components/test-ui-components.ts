@@ -173,9 +173,7 @@ export function showTestUI(
 
   function testAppError() {
     return dispatcher.postError(
-      new Error(
-        '错误测试 - 使用默认错误处理方式 ' + crypto.randomUUID()
-      )
+      new Error('错误测试 - 使用默认错误处理方式 ' + crypto.randomUUID())
     )
   }
 
