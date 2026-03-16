@@ -1,6 +1,7 @@
 import { join, resolve } from 'path'
 import parse from 'minimist'
 import { execFile, spawn } from 'child_process'
+import 'windows-argv-parser' // Imported for its side effect of enabling UTF-8 console output on Windows.
 
 const run = (...args: Array<string>) => {
   function cb(e: unknown | null, stderr?: string) {
