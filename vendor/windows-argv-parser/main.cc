@@ -111,6 +111,11 @@ Napi::Value ParseCommandLineArgv(const Napi::CallbackInfo& info) {
 #endif
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
+#ifdef _WIN32
+  SetConsoleCP(CP_UTF8);
+  SetConsoleOutputCP(CP_UTF8);
+#endif
+
   exports.Set("parseCommandLineArgv", Napi::Function::New(env, ParseCommandLineArgv));
   return exports;
 }
