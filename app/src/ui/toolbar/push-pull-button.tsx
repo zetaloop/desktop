@@ -538,18 +538,6 @@ export class PushPullButton extends React.Component<
     )
   }
 
-  private unbornRepositoryButton() {
-    return (
-      <ToolbarButton
-        {...this.defaultButtonProps()}
-        title="发布分支"
-        description="无法发布：从未提交"
-        icon={octicons.upload}
-        disabled={true}
-      />
-    )
-  }
-
   private detachedHeadButton(rebaseInProgress: boolean) {
     const description = rebaseInProgress
       ? '正在重构'
