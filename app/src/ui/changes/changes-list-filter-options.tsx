@@ -159,7 +159,7 @@ export class ChangesListFilterOptions extends React.Component<
         onClickOutside={this.closeFilterOptions}
       >
         <div className="filter-popover-header">
-          <h3 id="filter-options-header">筛选选项</h3>
+          <h3 id="filter-options-header">筛选设置</h3>
           <button
             className="close"
             onClick={this.closeFilterOptions}
@@ -233,7 +233,7 @@ export class ChangesListFilterOptions extends React.Component<
       this.props.fileListFilter
     )
     const hasActiveFilters = activeFiltersCount > 0
-    const buttonTextLabel = `筛选选项${
+    const buttonTextLabel = `筛选设置${
       hasActiveFilters ? `（已启用${activeFiltersCount}项）` : ''
     }`
 
