@@ -20,22 +20,16 @@ export function parseCopilotCommitMessage(
   try {
     parsed = JSON.parse(jsonStr)
   } catch {
-    throw new Error(
-      'Copilot returned invalid JSON for commit message generation'
-    )
+    throw new Error('Copilot 返回了无效的 JSON')
   }
 
   if (!isRecord(parsed)) {
-    throw new Error(
-      'Copilot returned an invalid commit message payload: expected an object'
-    )
+    throw new Error('Copilot 返回了无效的提交消息载荷: 类型需要为 object')
   }
 
   const title = parsed.title
   if (typeof title !== 'string' || title.trim().length === 0) {
-    throw new Error(
-      'Copilot returned an invalid commit message payload: "title" must be a non-empty string'
-    )
+    throw new Error('Copilot 返回了无效的提交消息载荷: "title" 字符串不得为空')
   }
 
   const description = parsed.description
@@ -48,7 +42,7 @@ export function parseCopilotCommitMessage(
 
   if (typeof description !== 'string') {
     throw new Error(
-      'Copilot returned an invalid commit message payload: "description" must be a string when provided'
+      'Copilot 返回了无效的提交消息载荷: "description" 必须是字符串'
     )
   }
 
