@@ -1074,8 +1074,8 @@ export class CommitMessage extends React.Component<
       type: 'checkbox',
       checked: this.props.signOffCommits,
       label: __DARWIN__
-        ? 'Add Signed-off-by Trailer'
-        : 'Add Signed-off-by trailer',
+        ? '添加 Signed-off-by 署名尾注'
+        : '添加 Signed-off-by 署名尾注',
       action: () => {
         this.props.onUpdateCommitOptions(this.props.repository, {
           signOffCommits: !this.props.signOffCommits,
@@ -1087,7 +1087,7 @@ export class CommitMessage extends React.Component<
       items.push({
         type: 'checkbox',
         checked: this.props.allowEmptyCommit,
-        label: __DARWIN__ ? 'Allow Empty Commit' : 'Allow empty commit',
+        label: __DARWIN__ ? '允许空白提交' : '允许空白提交',
         action: () => {
           this.props.onUpdateCommitOptions(this.props.repository, {
             allowEmptyCommit: !this.props.allowEmptyCommit,
