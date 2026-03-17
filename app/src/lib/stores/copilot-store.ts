@@ -103,9 +103,7 @@ export class CopilotStore {
    */
   private async createClient(repositoryPath: string): Promise<CopilotClient> {
     if (this.currentAccount === null || !this.currentAccount.token) {
-      throw new Error(
-        'Cannot create Copilot client: No GitHub.com account available'
-      )
+      throw new Error('无法创建 Copilot 客户端: 没有 GitHub.com 账号')
     }
 
     // This relies on the fact that Copilot CLI is bundled with the app, but not
@@ -183,7 +181,7 @@ export class CopilotStore {
       const response = await session.sendAndWait({ prompt: diff }, 30000)
 
       if (!response || !response.data.content) {
-        throw new Error('No response from Copilot')
+        throw new Error('Copilot 未作回应')
       }
 
       return parseCopilotCommitMessage(response.data.content)
