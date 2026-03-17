@@ -62,11 +62,11 @@ export class GenerateCommitMessageOverrideWarning extends React.Component<
           {this.props.showCopilotInstructionsTip ? (
             <Row>
               <p id="generate-commit-message-override-warning-tip">
-                Tip: You can use{' '}
-                <LinkButton uri="https://gh.io/desktop-copilot-custom-instructions">
-                  Copilot Instructions
+                提示: 您可使用{' '}
+                <LinkButton uri="https://docs.github.com/zh/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions">
+                  Copilot 指令
                 </LinkButton>{' '}
-                to customize how commit messages are generated.
+                来调整提交消息的风格。
               </p>
             </Row>
           ) : null}
