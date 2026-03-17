@@ -88,23 +88,23 @@ export function getNoResultsMessage(
   }
 
   if (filters.isIncludedInCommit) {
-    activeFilters.push('要提交')
+    activeFilters.push('将要提交')
   }
 
   if (filters.isExcludedFromCommit) {
-    activeFilters.push('不提交')
+    activeFilters.push('不要提交')
   }
 
   if (filters.isNewFile) {
-    activeFilters.push('是新增')
+    activeFilters.push('属于新增')
   }
 
   if (filters.isModifiedFile) {
-    activeFilters.push('是修改')
+    activeFilters.push('属于修改')
   }
 
   if (filters.isDeletedFile) {
-    activeFilters.push('是删除')
+    activeFilters.push('属于删除')
   }
 
   if (activeFilters.length === 0) {
