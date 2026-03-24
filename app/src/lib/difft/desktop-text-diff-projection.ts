@@ -580,6 +580,17 @@ function buildDiffLines(
     }
 
     if (hasOld && hasNew) {
+      const oldInlineRanges = getInlineChangedRanges(
+        oldLine,
+        chunkIndex.lhs,
+        oldContent
+      )
+      const newInlineRanges = getInlineChangedRanges(
+        newLine,
+        chunkIndex.rhs,
+        newContent
+      )
+
       lines.push(
         new DiffLine(
           `-${oldContent}`,
@@ -588,7 +599,7 @@ function buildDiffLines(
           oldLine + 1,
           null,
           false,
-          getInlineChangedRanges(oldLine, chunkIndex.lhs)
+          oldInlineRanges
         )
       )
       lines.push(
@@ -599,7 +610,7 @@ function buildDiffLines(
           null,
           newLine + 1,
           false,
-          getInlineChangedRanges(newLine, chunkIndex.rhs)
+          newInlineRanges
         )
       )
       continue
@@ -684,7 +695,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function getInlineChangedRanges(
   lineNumber: number,
-  sideIndex: ReadonlyMap<number, IDifftSide>
+  sideIndex: ReadonlyMap<number, IDifftSide>,
+  lineContent: string
 ): ReadonlyArray<readonly [number, number]> | undefined {
   const side = sideIndex.get(lineNumber)
   if (side === undefined || side.changes.length === 0) {
@@ -699,9 +711,37 @@ function getInlineChangedRanges(
       change.end !== undefined &&
       change.end > change.start
     ) {
-      ranges.push([change.start, change.end - change.start] as const)
+      const start = utf16IndexFromUtf8ByteOffset(lineContent, change.start)
+      const end = utf16IndexFromUtf8ByteOffset(lineContent, change.end)
+
+      if (end > start) {
+        ranges.push([start, end - start] as const)
+      }
     }
   }
 
   return ranges.length > 0 ? ranges : undefined
+}
+
+function utf16IndexFromUtf8ByteOffset(
+  text: string,
+  byteOffset: number
+): number {
+  if (byteOffset <= 0) {
+    return 0
+  }
+
+  let utf8Offset = 0
+  let utf16Offset = 0
+
+  for (const char of text) {
+    if (utf8Offset >= byteOffset) {
+      break
+    }
+
+    utf8Offset += Buffer.byteLength(char, 'utf8')
+    utf16Offset += char.length
+  }
+
+  return utf16Offset
 }
