@@ -4115,4 +4115,11 @@ export class Dispatcher {
   public async setCopilotDiffTruncationLimit(limit: number): Promise<void> {
     await this.appStore._setCopilotDiffTruncationLimit(limit)
   }
+
+  public async setEnableDifftastic(
+    enableDifftastic: boolean,
+    repository: Repository | null
+  ): Promise<void> {
+    await this.appStore._setEnableDifftastic(enableDifftastic, repository)
+  }
 }

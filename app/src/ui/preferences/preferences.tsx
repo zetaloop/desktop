@@ -117,6 +117,7 @@ interface IPreferencesProps {
   readonly copilotUseCommitHistoryStyle: boolean
   readonly copilotCustomStyle: string
   readonly copilotDiffTruncationLimit: number
+  readonly enableDifftastic: boolean
 }
 
 interface IPreferencesState {
@@ -154,6 +155,7 @@ interface IPreferencesState {
   readonly copilotUseCommitHistoryStyle: boolean
   readonly copilotCustomStyle: string
   readonly copilotDiffTruncationLimit: number
+  readonly enableDifftastic: boolean
 
   /**
    * If unable to save Git configuration values (name, email)
@@ -256,6 +258,7 @@ export class Preferences extends React.Component<
       copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
       copilotCustomStyle: this.props.copilotCustomStyle,
       copilotDiffTruncationLimit: this.props.copilotDiffTruncationLimit,
+      enableDifftastic: this.props.enableDifftastic,
     }
   }
 
@@ -332,6 +335,7 @@ export class Preferences extends React.Component<
       copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
       copilotCustomStyle: this.props.copilotCustomStyle,
       copilotDiffTruncationLimit: this.props.copilotDiffTruncationLimit,
+      enableDifftastic: this.props.enableDifftastic,
     })
   }
 
@@ -530,6 +534,8 @@ export class Preferences extends React.Component<
             onCopilotDiffTruncationLimitChanged={
               this.onCopilotDiffTruncationLimitChanged
             }
+            enableDifftastic={this.state.enableDifftastic}
+            onEnableDifftasticChanged={this.onEnableDifftasticChanged}
           />
         )
         break
@@ -892,6 +898,10 @@ export class Preferences extends React.Component<
     this.setState({ copilotDiffTruncationLimit: value })
   }
 
+  private onEnableDifftasticChanged = (value: boolean) => {
+    this.setState({ enableDifftastic: value })
+  }
+
   private renderFooter() {
     const hasDisabledError = this.state.disallowedCharactersMessage != null
 
@@ -1079,6 +1089,13 @@ export class Preferences extends React.Component<
     dispatcher.setCopilotDiffTruncationLimit(
       this.state.copilotDiffTruncationLimit
     )
+
+    if (this.state.enableDifftastic !== this.props.enableDifftastic) {
+      await dispatcher.setEnableDifftastic(
+        this.state.enableDifftastic,
+        this.props.repository
+      )
+    }
 
     this.props.onDismissed()
   }

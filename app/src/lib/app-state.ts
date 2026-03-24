@@ -414,6 +414,10 @@ export interface IAppState {
   readonly copilotCustomStyle: string
 
   readonly copilotDiffTruncationLimit: number
+
+  readonly enableDifftastic: boolean
+
+  readonly isDifftOnPath: boolean
 }
 
 export enum FoldoutType {
