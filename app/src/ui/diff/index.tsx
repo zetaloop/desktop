@@ -244,7 +244,7 @@ export class Diff extends React.Component<IDiffProps, IDiffState> {
         return <div className="panel empty">文件存在冲突，必须去命令行解决</div>
       }
 
-      if (this.props.hideWhitespaceInDiff) {
+      if (this.props.hideWhitespaceInDiff || diff.renderedByDifft) {
         return <div className="panel empty">只有空白字符改动</div>
       }
 
