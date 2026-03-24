@@ -35,6 +35,8 @@ interface IIntegrationsPreferencesProps {
   readonly onCopilotCustomStyleChanged: (value: string) => void
   readonly copilotDiffTruncationLimit: number
   readonly onCopilotDiffTruncationLimitChanged: (value: number) => void
+  readonly enableDifftastic: boolean
+  readonly onEnableDifftasticChanged: (value: boolean) => void
 }
 
 interface IIntegrationsPreferencesState {
@@ -47,6 +49,7 @@ interface IIntegrationsPreferencesState {
   readonly copilotUseCommitHistoryStyle: boolean
   readonly copilotCustomStyle: string
   readonly copilotDiffTruncationLimit: number
+  readonly enableDifftastic: boolean
   readonly selectedTabIndex: number
 }
 
@@ -70,6 +73,7 @@ export class Integrations extends React.Component<
       copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
       copilotCustomStyle: this.props.copilotCustomStyle,
       copilotDiffTruncationLimit: this.props.copilotDiffTruncationLimit,
+      enableDifftastic: this.props.enableDifftastic,
       selectedTabIndex: 0,
     }
   }
@@ -108,6 +112,7 @@ export class Integrations extends React.Component<
       copilotUseCommitHistoryStyle: nextProps.copilotUseCommitHistoryStyle,
       copilotCustomStyle: nextProps.copilotCustomStyle,
       copilotDiffTruncationLimit: nextProps.copilotDiffTruncationLimit,
+      enableDifftastic: nextProps.enableDifftastic,
     })
   }
 
@@ -220,6 +225,14 @@ export class Integrations extends React.Component<
     const value = parseInt(event.currentTarget.value, 10)
     this.setState({ copilotDiffTruncationLimit: value })
     this.props.onCopilotDiffTruncationLimitChanged(value)
+  }
+
+  private onEnableDifftasticChanged = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    const checked = event.currentTarget.checked
+    this.setState({ enableDifftastic: checked })
+    this.props.onEnableDifftasticChanged(checked)
   }
 
   private onTabClicked = (selectedTabIndex: number) => {
@@ -401,6 +414,7 @@ export class Integrations extends React.Component<
     const copilotCustomStyleDescId = 'copilot-custom-style-description'
     const copilotDiffTruncationLimitDescId =
       'copilot-diff-truncation-limit-description'
+    const enableDifftasticDescId = 'enable-difftastic-description'
     const truncationOptions = [
       { value: 0, label: '无限制' },
       { value: 100000, label: '100k' },
@@ -460,6 +474,17 @@ export class Integrations extends React.Component<
           className="git-settings-description"
         >
           生成提交消息时最多读取的改动字符数，超出的部分会被忽略。
+        </p>
+        <Checkbox
+          label="启用 difftastic"
+          value={
+            this.state.enableDifftastic ? CheckboxValue.On : CheckboxValue.Off
+          }
+          onChange={this.onEnableDifftasticChanged}
+          ariaDescribedBy={enableDifftasticDescId}
+        />
+        <p id={enableDifftasticDescId} className="git-settings-description">
+          保存后会重新加载当前改动区域的 diff 数据。
         </p>
       </div>
     )

@@ -478,6 +478,7 @@ const commitMessageGenerationButtonClickedKey =
 const copilotUseCommitHistoryStyleKey = 'copilot-enable-commit-history-style'
 const copilotCustomStyleKey = 'copilot-custom-commit-style'
 const copilotDiffTruncationLimitKey = 'copilot-diff-truncation-limit'
+const enableDifftasticKey = 'enable-difftastic'
 
 export const showChangesFilterKey = 'show-changes-filter'
 export const showChangesFilterDefault = true
@@ -637,6 +638,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private copilotUseCommitHistoryStyle: boolean
   private copilotCustomStyle: string
   private copilotDiffTruncationLimit: number
+  private enableDifftastic: boolean
 
   private commitMessageGenerationDisclaimerLastSeen: number | null = null
   private commitMessageGenerationButtonClicked: boolean = false
@@ -668,6 +670,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       copilotDiffTruncationLimitKey,
       0
     )
+    this.enableDifftastic = getBoolean(enableDifftasticKey, false)
 
     this.showWelcomeFlow = !hasShownWelcomeFlow()
 
@@ -1158,6 +1161,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       copilotUseCommitHistoryStyle: this.copilotUseCommitHistoryStyle,
       copilotCustomStyle: this.copilotCustomStyle,
       copilotDiffTruncationLimit: this.copilotDiffTruncationLimit,
+      enableDifftastic: this.enableDifftastic,
     }
   }
 
@@ -8658,6 +8662,24 @@ export class AppStore extends TypedBaseStore<IAppState> {
     await setNumber(copilotDiffTruncationLimitKey, limit)
     this.copilotDiffTruncationLimit = limit
     this.emitUpdate()
+  }
+
+  public async _setEnableDifftastic(
+    enableDifftastic: boolean,
+    repository: Repository | null
+  ): Promise<void> {
+    await setBoolean(enableDifftasticKey, enableDifftastic)
+    this.enableDifftastic = enableDifftastic
+
+    if (repository === null) {
+      this.emitUpdate()
+      return
+    }
+
+    return this.refreshChangesSection(repository, {
+      includingStatus: true,
+      clearPartialState: true,
+    })
   }
 
   public _updateFileListFilter(
