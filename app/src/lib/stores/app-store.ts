@@ -363,6 +363,7 @@ import {
 import { updateStore } from '../../ui/lib/update-store'
 import { BypassReasonType } from '../../ui/secret-scanning/bypass-push-protection-dialog'
 import { getRepoHooks } from '../hooks/get-repo-hooks'
+import { isDifftOnPath } from '../is-difft-on-path'
 
 const LastSelectedRepositoryIDKey = 'last-selected-repository-id'
 
@@ -478,6 +479,7 @@ const commitMessageGenerationButtonClickedKey =
 const copilotUseCommitHistoryStyleKey = 'copilot-enable-commit-history-style'
 const copilotCustomStyleKey = 'copilot-custom-commit-style'
 const copilotDiffTruncationLimitKey = 'copilot-diff-truncation-limit'
+const enableDifftasticKey = 'enable-difftastic'
 
 export const showChangesFilterKey = 'show-changes-filter'
 export const showChangesFilterDefault = true
@@ -637,6 +639,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private copilotUseCommitHistoryStyle: boolean
   private copilotCustomStyle: string
   private copilotDiffTruncationLimit: number
+  private enableDifftastic: boolean
+  private isDifftOnPath: boolean = false
 
   private commitMessageGenerationDisclaimerLastSeen: number | null = null
   private commitMessageGenerationButtonClicked: boolean = false
@@ -668,6 +672,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       copilotDiffTruncationLimitKey,
       0
     )
+    this.enableDifftastic = getBoolean(enableDifftasticKey, false)
 
     this.showWelcomeFlow = !hasShownWelcomeFlow()
 
@@ -1158,6 +1163,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
       copilotUseCommitHistoryStyle: this.copilotUseCommitHistoryStyle,
       copilotCustomStyle: this.copilotCustomStyle,
       copilotDiffTruncationLimit: this.copilotDiffTruncationLimit,
+      enableDifftastic: this.enableDifftastic,
+      isDifftOnPath: this.isDifftOnPath,
     }
   }
 
@@ -2324,6 +2331,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.updateSelectedExternalEditor(
       await this.lookupSelectedExternalEditor()
     ).catch(e => log.error('Failed resolving current editor at startup', e))
+
+    this.isDifftOnPath = await isDifftOnPath()
 
     const shellValue = localStorage.getItem(shellKey)
     this.selectedShell = shellValue ? parseShell(shellValue) : DefaultShell
@@ -8658,6 +8667,24 @@ export class AppStore extends TypedBaseStore<IAppState> {
     await setNumber(copilotDiffTruncationLimitKey, limit)
     this.copilotDiffTruncationLimit = limit
     this.emitUpdate()
+  }
+
+  public async _setEnableDifftastic(
+    enableDifftastic: boolean,
+    repository: Repository | null
+  ): Promise<void> {
+    await setBoolean(enableDifftasticKey, enableDifftastic)
+    this.enableDifftastic = enableDifftastic
+
+    if (repository === null) {
+      this.emitUpdate()
+      return
+    }
+
+    return this.refreshChangesSection(repository, {
+      includingStatus: true,
+      clearPartialState: true,
+    })
   }
 
   public _updateFileListFilter(
