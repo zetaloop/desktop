@@ -699,6 +699,8 @@ export async function convertDiff(
     lineEndingsChange,
     maxLineNumber: diff.maxLineNumber,
     hasHiddenBidiChars: diff.hasHiddenBidiChars,
+    renderedByDifft: false,
+    renderedByDifftLanguage: null,
   }
 }
 
@@ -864,6 +866,8 @@ async function buildDiff(
       lineEndingsChange,
       maxLineNumber: diff.maxLineNumber,
       hasHiddenBidiChars: diff.hasHiddenBidiChars,
+      renderedByDifft: false,
+      renderedByDifftLanguage: null,
     }
 
     return largeTextDiff
@@ -914,7 +918,12 @@ async function buildDiff(
     return convertedDiff
   }
 
-  return { ...projected.diff, lineEndingsChange }
+  return {
+    ...projected.diff,
+    lineEndingsChange,
+    renderedByDifft: true,
+    renderedByDifftLanguage: projected.metadata.language,
+  }
 }
 
 function getBlobOrEmptyDifftSource(

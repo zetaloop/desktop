@@ -5,12 +5,20 @@ import { Repository } from '../../models/repository'
 import { PopupType } from '../../models/popup'
 import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
 import { ErrorWithMetadata } from '../../lib/error-with-metadata'
+import {
+  IDiff,
+  getDifftRenderedLanguage,
+  isDifftRenderedDiff,
+} from '../../models/diff'
+import { Octicon } from '../octicons'
+import * as octicons from '../octicons/octicons.generated'
 
 interface IStashDiffHeaderProps {
   readonly stashEntry: IStashEntry
   readonly repository: Repository
   readonly dispatcher: Dispatcher
   readonly askForConfirmationOnDiscardStash: boolean
+  readonly diff: IDiff | null
 }
 
 interface IStashDiffHeaderState {
@@ -42,6 +50,7 @@ export class StashDiffHeader extends React.Component<
       <div className="header">
         <h3>暂存的改动</h3>
         <div className="row">
+          {this.renderDifftIndicator()}
           <OkCancelButtonGroup
             okButtonText="恢复"
             okButtonDisabled={isRestoring || isDiscarding}
@@ -58,6 +67,26 @@ export class StashDiffHeader extends React.Component<
           </div>
         </div>
       </div>
+    )
+  }
+
+  private renderDifftIndicator() {
+    if (!isDifftRenderedDiff(this.props.diff)) {
+      return null
+    }
+
+    const language = getDifftRenderedLanguage(this.props.diff)
+    const title =
+      language === null
+        ? '当前差异由 Difftastic 渲染'
+        : `当前差异由 Difftastic 渲染（${language}）`
+
+    return (
+      <Octicon
+        symbol={octicons.zap}
+        className="status difft-rendered-indicator"
+        title={title}
+      />
     )
   }
 

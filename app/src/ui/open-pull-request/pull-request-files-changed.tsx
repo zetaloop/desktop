@@ -1,6 +1,11 @@
 import * as React from 'react'
 import * as Path from 'path'
-import { IDiff, ImageDiffType } from '../../models/diff'
+import {
+  IDiff,
+  ImageDiffType,
+  getDifftRenderedLanguage,
+  isDifftRenderedDiff,
+} from '../../models/diff'
 import { Repository } from '../../models/repository'
 import { CommittedFileChange } from '../../models/status'
 import { SeamlessDiffSwitcher } from '../diff/seamless-diff-switcher'
@@ -25,6 +30,8 @@ import { clamp } from '../../lib/clamp'
 import { getDotComAPIEndpoint } from '../../lib/api'
 import { createCommitURL } from '../../lib/commit-url'
 import { DiffOptions } from '../diff/diff-options'
+import { Octicon } from '../octicons'
+import * as octicons from '../octicons/octicons.generated'
 
 interface IPullRequestFilesChangedProps {
   readonly repository: Repository
@@ -238,19 +245,34 @@ export class PullRequestFilesChanged extends React.Component<
   }
 
   private renderHeader() {
-    const { hideWhitespaceInDiff } = this.props
+    const { hideWhitespaceInDiff, diff } = this.props
     const { showSideBySideDiff } = this.state
+    const difftLanguage = getDifftRenderedLanguage(diff)
+    const difftTitle =
+      difftLanguage === null
+        ? '当前差异由 Difftastic 渲染'
+        : `当前差异由 Difftastic 渲染（${difftLanguage}）`
+
     return (
       <div className="files-changed-header">
         <div className="commits-displayed">将被拉取过去的提交</div>
-        <DiffOptions
-          isInteractiveDiff={false}
-          hideWhitespaceChanges={hideWhitespaceInDiff}
-          onHideWhitespaceChangesChanged={this.onHideWhitespaceInDiffChanged}
-          showSideBySideDiff={showSideBySideDiff}
-          onShowSideBySideDiffChanged={this.onShowSideBySideDiffChanged}
-          onDiffOptionsOpened={this.onDiffOptionsOpened}
-        />
+        <div className="row">
+          {isDifftRenderedDiff(diff) ? (
+            <Octicon
+              symbol={octicons.zap}
+              className="status difft-rendered-indicator"
+              title={difftTitle}
+            />
+          ) : null}
+          <DiffOptions
+            isInteractiveDiff={false}
+            hideWhitespaceChanges={hideWhitespaceInDiff}
+            onHideWhitespaceChangesChanged={this.onHideWhitespaceInDiffChanged}
+            showSideBySideDiff={showSideBySideDiff}
+            onShowSideBySideDiffChanged={this.onShowSideBySideDiffChanged}
+            onDiffOptionsOpened={this.onDiffOptionsOpened}
+          />
+        </div>
       </div>
     )
   }

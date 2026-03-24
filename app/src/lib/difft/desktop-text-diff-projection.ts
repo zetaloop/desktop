@@ -114,6 +114,8 @@ export function projectDifftTextDiff(
         hunks: [],
         maxLineNumber: 0,
         hasHiddenBidiChars: false,
+        renderedByDifft: false,
+        renderedByDifftLanguage: null,
       },
       metadata: {
         language: null,
@@ -139,6 +141,8 @@ export function projectDifftTextDiff(
       hunks,
       maxLineNumber: getLargestLineNumber([...hunks]),
       hasHiddenBidiChars: HiddenBidiCharsRegex.test(text),
+      renderedByDifft: false,
+      renderedByDifftLanguage: null,
     },
     metadata: {
       language: file.language,

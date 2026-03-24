@@ -208,6 +208,8 @@ export class Diff extends React.Component<IDiffProps, IDiffState> {
       lineEndingsChange: diff.lineEndingsChange,
       maxLineNumber: diff.maxLineNumber,
       hasHiddenBidiChars: diff.hasHiddenBidiChars,
+      renderedByDifft: diff.renderedByDifft,
+      renderedByDifftLanguage: diff.renderedByDifftLanguage,
     }
 
     return this.renderTextDiff(textDiff)

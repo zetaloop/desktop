@@ -459,6 +459,8 @@ export function textDiffEquals(
   if (
     x.text === y.text &&
     x.kind === y.kind &&
+    x.renderedByDifft === y.renderedByDifft &&
+    x.renderedByDifftLanguage === y.renderedByDifftLanguage &&
     x.hasHiddenBidiChars === y.hasHiddenBidiChars &&
     x.lineEndingsChange === y.lineEndingsChange &&
     x.hunks.length === y.hunks.length
