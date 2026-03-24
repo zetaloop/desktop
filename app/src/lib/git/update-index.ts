@@ -1,11 +1,19 @@
 import { git } from './core'
 import { Repository } from '../../models/repository'
-import { DiffSelectionType } from '../../models/diff'
+import { DiffSelectionType, ILargeTextDiff, ITextDiff } from '../../models/diff'
 import { applyPatchToIndex } from './apply'
 import {
   WorkingDirectoryFileChange,
   AppFileStatusKind,
 } from '../../models/status'
+
+interface IStageFilesOptions {
+  readonly partialDiffsByFileID?: ReadonlyMap<
+    string,
+    ITextDiff | ILargeTextDiff
+  >
+  readonly requireDisplayedDiffForPartial?: boolean
+}
 
 interface IUpdateIndexOptions {
   /**
@@ -108,12 +116,13 @@ async function updateIndex(
  */
 export async function stageFiles(
   repository: Repository,
-  files: ReadonlyArray<WorkingDirectoryFileChange>
+  files: ReadonlyArray<WorkingDirectoryFileChange>,
+  options: IStageFilesOptions = {}
 ): Promise<void> {
-  const normal = []
-  const oldRenamed = []
-  const partial = []
-  const deletedFiles = []
+  const normal: Array<string> = []
+  const oldRenamed: Array<string> = []
+  const partial: Array<WorkingDirectoryFileChange> = []
+  const deletedFiles: Array<string> = []
 
   for (const file of files) {
     if (file.selection.getSelectionType() === DiffSelectionType.All) {
@@ -164,6 +173,11 @@ export async function stageFiles(
   // We don't care about renamed or not here since applyPatchToIndex
   // has logic to support that scenario.
   for (const file of partial) {
-    await applyPatchToIndex(repository, file)
+    await applyPatchToIndex(
+      repository,
+      file,
+      options.partialDiffsByFileID?.get(file.id),
+      options.requireDisplayedDiffForPartial === true
+    )
   }
 }
