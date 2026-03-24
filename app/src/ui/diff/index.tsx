@@ -210,6 +210,7 @@ export class Diff extends React.Component<IDiffProps, IDiffState> {
       hasHiddenBidiChars: diff.hasHiddenBidiChars,
       renderedByDifft: diff.renderedByDifft,
       renderedByDifftLanguage: diff.renderedByDifftLanguage,
+      difftRenderFailure: diff.difftRenderFailure,
     }
 
     return this.renderTextDiff(textDiff)

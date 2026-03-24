@@ -3,6 +3,7 @@ import * as Path from 'path'
 import {
   IDiff,
   ImageDiffType,
+  getDifftRenderFailure,
   getDifftRenderedLanguage,
   isDifftRenderedDiff,
 } from '../../models/diff'
@@ -247,20 +248,28 @@ export class PullRequestFilesChanged extends React.Component<
   private renderHeader() {
     const { hideWhitespaceInDiff, diff } = this.props
     const { showSideBySideDiff } = this.state
+    const difftFailure = getDifftRenderFailure(diff)
     const difftLanguage = getDifftRenderedLanguage(diff)
     const difftTitle =
-      difftLanguage === null
-        ? '当前差异由 Difftastic 渲染'
-        : `当前差异由 Difftastic 渲染（${difftLanguage}）`
+      difftFailure !== null
+        ? `差异使用 Difftastic 渲染失败：${difftFailure}`
+        : difftLanguage === null
+        ? '差异使用 Difftastic 渲染'
+        : `差异使用 Difftastic 渲染：${difftLanguage}`
+
+    const difftIndicatorClassName =
+      difftFailure === null
+        ? 'status difft-rendered-indicator difft-rendered-indicator-success'
+        : 'status difft-rendered-indicator difft-rendered-indicator-failure'
 
     return (
       <div className="files-changed-header">
         <div className="commits-displayed">将被拉取过去的提交</div>
         <div className="row">
-          {isDifftRenderedDiff(diff) ? (
+          {isDifftRenderedDiff(diff) || difftFailure !== null ? (
             <Octicon
               symbol={octicons.zap}
-              className="status difft-rendered-indicator"
+              className={difftIndicatorClassName}
               title={difftTitle}
             />
           ) : null}

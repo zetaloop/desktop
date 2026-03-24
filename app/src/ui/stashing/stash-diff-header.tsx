@@ -7,6 +7,7 @@ import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
 import { ErrorWithMetadata } from '../../lib/error-with-metadata'
 import {
   IDiff,
+  getDifftRenderFailure,
   getDifftRenderedLanguage,
   isDifftRenderedDiff,
 } from '../../models/diff'
@@ -71,23 +72,25 @@ export class StashDiffHeader extends React.Component<
   }
 
   private renderDifftIndicator() {
-    if (!isDifftRenderedDiff(this.props.diff)) {
+    const failure = getDifftRenderFailure(this.props.diff)
+    if (!isDifftRenderedDiff(this.props.diff) && failure === null) {
       return null
     }
 
     const language = getDifftRenderedLanguage(this.props.diff)
     const title =
-      language === null
-        ? '当前差异由 Difftastic 渲染'
-        : `当前差异由 Difftastic 渲染（${language}）`
+      failure !== null
+        ? `差异使用 Difftastic 渲染失败：${failure}`
+        : language === null
+        ? '差异使用 Difftastic 渲染'
+        : `差异使用 Difftastic 渲染：${language}`
 
-    return (
-      <Octicon
-        symbol={octicons.zap}
-        className="status difft-rendered-indicator"
-        title={title}
-      />
-    )
+    const className =
+      failure === null
+        ? 'status difft-rendered-indicator difft-rendered-indicator-success'
+        : 'status difft-rendered-indicator difft-rendered-indicator-failure'
+
+    return <Octicon symbol={octicons.zap} className={className} title={title} />
   }
 
   private onDiscardClick = async () => {

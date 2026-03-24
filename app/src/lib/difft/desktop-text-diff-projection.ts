@@ -48,6 +48,7 @@ export interface IDifftTextDiffMetadata {
   readonly language: string | null
   readonly languageKind: DifftLanguageKind
   readonly status: DifftStatus | null
+  readonly fallbackReason: string | null
 }
 
 interface IDifftChunkIndex {
@@ -116,11 +117,13 @@ export function projectDifftTextDiff(
         hasHiddenBidiChars: false,
         renderedByDifft: false,
         renderedByDifftLanguage: null,
+        difftRenderFailure: null,
       },
       metadata: {
         language: null,
         languageKind: 'unknown',
         status: null,
+        fallbackReason: null,
       },
     }
   }
@@ -143,11 +146,13 @@ export function projectDifftTextDiff(
       hasHiddenBidiChars: HiddenBidiCharsRegex.test(text),
       renderedByDifft: false,
       renderedByDifftLanguage: null,
+      difftRenderFailure: null,
     },
     metadata: {
       language: file.language,
       languageKind: classifyLanguage(file.language),
       status: file.status,
+      fallbackReason: getFallbackReason(file.language),
     },
   }
 }
@@ -215,6 +220,18 @@ function classifyLanguage(language: string | null): DifftLanguageKind {
   }
 
   return 'structural'
+}
+
+function getFallbackReason(language: string | null): string | null {
+  if (
+    language === null ||
+    !language.startsWith('Text (') ||
+    !language.endsWith(')')
+  ) {
+    return null
+  }
+
+  return language.slice('Text ('.length, -1)
 }
 
 function parseStatus(value: unknown): DifftStatus | null {

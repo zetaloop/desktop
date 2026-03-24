@@ -61,6 +61,7 @@ async function prepareDiff(
     hasHiddenBidiChars: diff.hasHiddenBidiChars,
     renderedByDifft: false,
     renderedByDifftLanguage: null,
+    difftRenderFailure: null,
   }
 
   const resultDiff = getTextDiffWithBottomDummyHunk(

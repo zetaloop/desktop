@@ -60,6 +60,7 @@ interface ITextDiffData {
   readonly hasHiddenBidiChars: boolean
   readonly renderedByDifft: boolean
   readonly renderedByDifftLanguage: string | null
+  readonly difftRenderFailure: string | null
 }
 
 export interface ITextDiff extends ITextDiffData {
@@ -138,5 +139,11 @@ export function isDifftRenderedDiff(diff: IDiff | null): boolean {
 export function getDifftRenderedLanguage(diff: IDiff | null): string | null {
   return diff?.kind === DiffType.Text || diff?.kind === DiffType.LargeText
     ? diff.renderedByDifftLanguage
+    : null
+}
+
+export function getDifftRenderFailure(diff: IDiff | null): string | null {
+  return diff?.kind === DiffType.Text || diff?.kind === DiffType.LargeText
+    ? diff.difftRenderFailure
     : null
 }

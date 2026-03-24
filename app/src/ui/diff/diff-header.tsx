@@ -4,6 +4,7 @@ import { AppFileStatus } from '../../models/status'
 import {
   IDiff,
   DiffType,
+  getDifftRenderFailure,
   getDifftRenderedLanguage,
   isDifftRenderedDiff,
 } from '../../models/diff'
@@ -76,22 +77,24 @@ export class DiffHeader extends React.Component<IDiffHeaderProps, {}> {
   }
 
   private renderDifftIndicator() {
-    if (!isDifftRenderedDiff(this.props.diff)) {
+    const failure = getDifftRenderFailure(this.props.diff)
+    if (!isDifftRenderedDiff(this.props.diff) && failure === null) {
       return null
     }
 
     const language = getDifftRenderedLanguage(this.props.diff)
     const title =
-      language === null
+      failure !== null
+        ? `差异使用 Difftastic 渲染失败：${failure}`
+        : language === null
         ? '差异使用 Difftastic 渲染'
         : `差异使用 Difftastic 渲染：${language}`
 
-    return (
-      <Octicon
-        symbol={octicons.zap}
-        className="status difft-rendered-indicator"
-        title={title}
-      />
-    )
+    const className =
+      failure === null
+        ? 'status difft-rendered-indicator difft-rendered-indicator-success'
+        : 'status difft-rendered-indicator difft-rendered-indicator-failure'
+
+    return <Octicon symbol={octicons.zap} className={className} title={title} />
   }
 }
