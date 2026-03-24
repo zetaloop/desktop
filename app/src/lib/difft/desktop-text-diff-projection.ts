@@ -306,7 +306,8 @@ function buildHunks(
       chunkIndex,
       oldLines,
       newLines,
-      header
+      header,
+      linesConsumed
     )
 
     if (lines.length === 1) {
@@ -481,7 +482,8 @@ function buildDiffLines(
   chunkIndex: IDifftChunkIndex,
   oldLines: ReadonlyArray<string>,
   newLines: ReadonlyArray<string>,
-  header: DiffHunkHeader
+  header: DiffHunkHeader,
+  linesConsumed: number
 ): ReadonlyArray<DiffLine> {
   const lines = new Array<DiffLine>()
   lines.push(
@@ -494,7 +496,7 @@ function buildDiffLines(
     )
   )
 
-  let diffLineNumber = 1
+  let diffLineNumber = linesConsumed
 
   for (const [oldLine, newLine] of rows) {
     const oldContent = getLineContent(oldLine, oldLines, chunkIndex.lhs)

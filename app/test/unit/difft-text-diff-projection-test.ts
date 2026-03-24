@@ -178,4 +178,92 @@ describe('projectDifftTextDiff', () => {
       message: 'Expected a single difft file payload but received 2',
     })
   })
+
+  it('preserves absolute original diff line numbers across multiple hunks', () => {
+    const result = projectDifftTextDiff({
+      payload: {
+        status: 'changed',
+        aligned_lines: [
+          [0, 0],
+          [1, 1],
+          [2, 2],
+          [3, 3],
+          [4, 4],
+          [5, 5],
+          [6, 6],
+          [7, 7],
+          [8, 8],
+          [9, 9],
+        ],
+        chunks: [
+          [
+            {
+              lhs: {
+                line_number: 1,
+                changes: [{ content: 'before one' }],
+              },
+              rhs: {
+                line_number: 1,
+                changes: [{ content: 'after one' }],
+              },
+            },
+          ],
+          [
+            {
+              lhs: {
+                line_number: 8,
+                changes: [{ content: 'before two' }],
+              },
+              rhs: {
+                line_number: 8,
+                changes: [{ content: 'after two' }],
+              },
+            },
+          ],
+        ],
+      },
+      oldText: [
+        'context 1',
+        'before one',
+        'context 3',
+        'context 4',
+        'context 5',
+        'context 6',
+        'context 7',
+        'context 8',
+        'before two',
+        'context 10',
+      ].join('\n'),
+      newText: [
+        'context 1',
+        'after one',
+        'context 3',
+        'context 4',
+        'context 5',
+        'context 6',
+        'context 7',
+        'context 8',
+        'after two',
+        'context 10',
+      ].join('\n'),
+    })
+
+    assert.equal(result.kind, 'success')
+    if (result.kind !== 'success') {
+      return
+    }
+
+    const [firstHunk, secondHunk] = result.diff.hunks
+    assert.ok(firstHunk)
+    assert.ok(secondHunk)
+    assert.deepEqual(
+      firstHunk.lines.map(line => line.originalLineNumber),
+      [1, 1, 2, 3, 4, 5, 6]
+    )
+    assert.deepEqual(
+      secondHunk.lines.map(line => line.originalLineNumber),
+      [1, 8, 9, 10, 11, 12, 13]
+    )
+    assert.equal(secondHunk.unifiedDiffStart, firstHunk.lines.length)
+  })
 })
