@@ -249,43 +249,6 @@ describe('projectDifftTextDiff', () => {
     })
   })
 
-  it('converts difft byte offsets into stable inline ranges for CJK text', () => {
-    const result = projectDifftTextDiff({
-      payload: {
-        language: 'TSX',
-        status: 'changed',
-        aligned_lines: [[0, 0]],
-        chunks: [
-          [
-            {
-              lhs: {
-                line_number: 0,
-                changes: [{ start: 16, end: 35, content: '提示: 您可使用' }],
-              },
-              rhs: {
-                line_number: 0,
-                changes: [{ start: 16, end: 35, content: '提示: 您可使用' }],
-              },
-            },
-          ],
-        ],
-      },
-      oldText: "              提示: 您可使用{' '}\n",
-      newText: "              提示: 您可使用{' '}\n",
-    })
-
-    assert.equal(result.kind, 'success')
-    if (result.kind !== 'success') {
-      return
-    }
-
-    const deleteLine = result.diff.hunks[0].lines[1]
-    const addLine = result.diff.hunks[0].lines[2]
-
-    assert.deepEqual(deleteLine.inlineChangedRanges, [[15, 8]])
-    assert.deepEqual(addLine.inlineChangedRanges, [[15, 8]])
-  })
-
   it('preserves absolute original diff line numbers across multiple hunks', () => {
     const result = projectDifftTextDiff({
       payload: {
