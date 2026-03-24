@@ -7,6 +7,7 @@ import {
 } from '../../helpers/repositories'
 import { Repository } from '../../../src/models/repository'
 import {
+  applyPatchToIndex,
   checkPatch,
   getWorkingDirectoryDiff,
   discardChangesFromSelection,
@@ -23,13 +24,84 @@ import {
   DiffSelection,
   DiffSelectionType,
   ITextDiff,
+  DiffType,
 } from '../../../src/models/diff'
 import { findInteractiveDiffRange } from '../../../src/ui/diff/diff-explorer'
-import { readFile } from 'fs/promises'
+import { readFile, writeFile } from 'fs/promises'
 import * as Path from 'path'
 import { structuredPatch } from 'diff'
 
 describe('git/apply', () => {
+  describe('applyPatchToIndex()', () => {
+    it('fails when a provided displayed diff no longer matches the working directory', async t => {
+      const testRepoPath = await setupFixtureRepository(t, 'repo-with-changes')
+      const repository = new Repository(testRepoPath, -1, null, false)
+
+      const filePath = 'modified-file.md'
+      const originalDiffFile = new WorkingDirectoryFileChange(
+        filePath,
+        { kind: AppFileStatusKind.Modified },
+        DiffSelection.fromInitialSelection(DiffSelectionType.None)
+      )
+      const originalDiff = await getWorkingDirectoryDiff(
+        repository,
+        originalDiffFile
+      )
+
+      assert.equal(originalDiff.kind, DiffType.Text)
+      const textDiff = originalDiff as ITextDiff
+
+      const hunkRange = findInteractiveDiffRange(textDiff.hunks, 16)
+      assert(hunkRange !== null)
+
+      const selection = DiffSelection.fromInitialSelection(
+        DiffSelectionType.None
+      ).withRangeSelection(
+        hunkRange.from,
+        hunkRange.to - hunkRange.from + 1,
+        true
+      )
+
+      const selectedFile = new WorkingDirectoryFileChange(
+        filePath,
+        { kind: AppFileStatusKind.Modified },
+        selection
+      )
+
+      const fileContents = await readFile(
+        Path.join(repository.path, filePath),
+        'utf8'
+      )
+      const mutatedContents = fileContents.replace(
+        'nisl eget hendrerit vestibulum. Curabitur ornare id neque ac tristique. Cras in',
+        'nisl eget hendrerit vestibulum. Curabitur ornare id neque ac tristique. Updated'
+      )
+
+      assert.notEqual(mutatedContents, fileContents)
+
+      await writeFile(Path.join(repository.path, filePath), mutatedContents)
+
+      await assert.rejects(
+        applyPatchToIndex(repository, selectedFile, textDiff, true),
+        /displayed diff/
+      )
+
+      const stagedDiffAfterFailure = await exec(
+        ['diff', '--cached', '--', filePath],
+        repository.path
+      )
+      assert.equal(stagedDiffAfterFailure.stdout, '')
+
+      await applyPatchToIndex(repository, selectedFile)
+
+      const stagedDiffAfterReload = await exec(
+        ['diff', '--cached', '--', filePath],
+        repository.path
+      )
+      assert.match(stagedDiffAfterReload.stdout, /Updated/)
+    })
+  })
+
   describe('checkPatch()', () => {
     describe('on related repository without conflicts', () => {
       it('returns true', async t => {
