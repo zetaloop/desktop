@@ -905,6 +905,15 @@ async function buildDiff(
     return convertedDiff
   }
 
+  if (
+    projected.metadata.languageKind === 'plain-text' ||
+    projected.metadata.languageKind === 'plain-text-fallback' ||
+    projected.metadata.status === 'created' ||
+    projected.metadata.status === 'deleted'
+  ) {
+    return convertedDiff
+  }
+
   return { ...projected.diff, lineEndingsChange }
 }
 

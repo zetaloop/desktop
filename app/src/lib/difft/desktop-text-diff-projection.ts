@@ -12,6 +12,13 @@ import { getHunkHeaderExpansionType } from '../../ui/diff/text-diff-expansion'
 
 type DifftStatus = 'unchanged' | 'created' | 'deleted' | 'changed'
 
+export type DifftLanguageKind =
+  | 'structural'
+  | 'plain-text'
+  | 'plain-text-fallback'
+  | 'binary'
+  | 'unknown'
+
 const DefaultContextLineCount = 3
 
 interface IDifftChange {
@@ -31,9 +38,16 @@ interface IDifftChunkEntry {
 }
 
 interface IDifftFile {
+  readonly language: string | null
   readonly status: DifftStatus | null
   readonly alignedLines: ReadonlyArray<readonly [number | null, number | null]>
   readonly chunks: ReadonlyArray<ReadonlyArray<IDifftChunkEntry>>
+}
+
+export interface IDifftTextDiffMetadata {
+  readonly language: string | null
+  readonly languageKind: DifftLanguageKind
+  readonly status: DifftStatus | null
 }
 
 interface IDifftChunkIndex {
@@ -59,6 +73,7 @@ export type DifftTextDiffProjectionResult =
   | {
       readonly kind: 'success'
       readonly diff: ITextDiff
+      readonly metadata: IDifftTextDiffMetadata
     }
   | {
       readonly kind: 'failure'
@@ -100,6 +115,11 @@ export function projectDifftTextDiff(
         maxLineNumber: 0,
         hasHiddenBidiChars: false,
       },
+      metadata: {
+        language: null,
+        languageKind: 'unknown',
+        status: null,
+      },
     }
   }
 
@@ -119,6 +139,11 @@ export function projectDifftTextDiff(
       hunks,
       maxLineNumber: getLargestLineNumber([...hunks]),
       hasHiddenBidiChars: HiddenBidiCharsRegex.test(text),
+    },
+    metadata: {
+      language: file.language,
+      languageKind: classifyLanguage(file.language),
+      status: file.status,
     },
   }
 }
@@ -157,10 +182,35 @@ function parseDifftFile(value: unknown): IDifftFile | null {
   }
 
   return {
+    language: parseLanguage(value.language),
     status: parseStatus(value.status),
     alignedLines: parseAlignedLines(value.aligned_lines),
     chunks: parseChunks(value.chunks),
   }
+}
+
+function parseLanguage(value: unknown): string | null {
+  return typeof value === 'string' ? value : null
+}
+
+function classifyLanguage(language: string | null): DifftLanguageKind {
+  if (language === null) {
+    return 'unknown'
+  }
+
+  if (language === 'Binary') {
+    return 'binary'
+  }
+
+  if (language === 'Text') {
+    return 'plain-text'
+  }
+
+  if (language.startsWith('Text (')) {
+    return 'plain-text-fallback'
+  }
+
+  return 'structural'
 }
 
 function parseStatus(value: unknown): DifftStatus | null {

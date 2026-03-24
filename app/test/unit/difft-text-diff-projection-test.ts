@@ -179,6 +179,76 @@ describe('projectDifftTextDiff', () => {
     })
   })
 
+  it('surfaces structural language metadata for accepted difft results', () => {
+    const result = projectDifftTextDiff({
+      payload: {
+        language: 'TSX',
+        status: 'changed',
+        aligned_lines: [[0, 0]],
+        chunks: [],
+      },
+      oldText: 'const before = 1\n',
+      newText: 'const after = 1\n',
+    })
+
+    assert.equal(result.kind, 'success')
+    if (result.kind !== 'success') {
+      return
+    }
+
+    assert.deepEqual(result.metadata, {
+      language: 'TSX',
+      languageKind: 'structural',
+      status: 'changed',
+    })
+  })
+
+  it('classifies plain text fallback metadata from difft language output', () => {
+    const result = projectDifftTextDiff({
+      payload: {
+        language:
+          'Text (2 TypeScript parse error(s), exceeded DFT_PARSE_ERROR_LIMIT)',
+        status: 'changed',
+        aligned_lines: [[0, 0]],
+        chunks: [],
+      },
+      oldText: 'before\n',
+      newText: 'after\n',
+    })
+
+    assert.equal(result.kind, 'success')
+    if (result.kind !== 'success') {
+      return
+    }
+
+    assert.equal(result.metadata.languageKind, 'plain-text-fallback')
+    assert.equal(
+      result.metadata.language,
+      'Text (2 TypeScript parse error(s), exceeded DFT_PARSE_ERROR_LIMIT)'
+    )
+  })
+
+  it('preserves created status metadata for later git fallback decisions', () => {
+    const result = projectDifftTextDiff({
+      payload: {
+        language: 'TypeScript',
+        status: 'created',
+      },
+      newText: 'export const x = 1\n',
+    })
+
+    assert.equal(result.kind, 'success')
+    if (result.kind !== 'success') {
+      return
+    }
+
+    assert.deepEqual(result.metadata, {
+      language: 'TypeScript',
+      languageKind: 'structural',
+      status: 'created',
+    })
+  })
+
   it('preserves absolute original diff line numbers across multiple hunks', () => {
     const result = projectDifftTextDiff({
       payload: {
