@@ -131,6 +131,7 @@ export class StashDiffViewer extends React.PureComponent<IStashDiffViewerProps> 
           stashEntry={stashEntry}
           repository={repository}
           dispatcher={dispatcher}
+          diff={stashedFileDiff}
           askForConfirmationOnDiscardStash={
             this.props.askForConfirmationOnDiscardStash
           }
