@@ -929,6 +929,18 @@
       position: relative;
       align-self: center;
       flex-shrink: 0;
+
+      &.difft-rendered-indicator {
+        margin-right: var(--spacing-half);
+
+        &.difft-rendered-indicator-success {
+          color: var(--status-success-color);
+        }
+
+        &.difft-rendered-indicator-failure {
+          color: var(--status-error-color);
+        }
+      }
     }
 
     .line-endings {

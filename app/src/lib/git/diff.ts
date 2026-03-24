@@ -699,6 +699,9 @@ export async function convertDiff(
     lineEndingsChange,
     maxLineNumber: diff.maxLineNumber,
     hasHiddenBidiChars: diff.hasHiddenBidiChars,
+    renderedByDifft: false,
+    renderedByDifftLanguage: null,
+    difftRenderFailure: null,
   }
 }
 
@@ -864,6 +867,9 @@ async function buildDiff(
       lineEndingsChange,
       maxLineNumber: diff.maxLineNumber,
       hasHiddenBidiChars: diff.hasHiddenBidiChars,
+      renderedByDifft: false,
+      renderedByDifftLanguage: null,
+      difftRenderFailure: null,
     }
 
     return largeTextDiff
@@ -892,7 +898,7 @@ async function buildDiff(
 
   const difftResult = await invokeDifft(difftTextSnapshot)
   if (difftResult.kind === 'failure') {
-    return convertedDiff
+    return { ...convertedDiff, difftRenderFailure: difftResult.message }
   }
 
   const projected = projectDifftTextDiff({
@@ -902,7 +908,7 @@ async function buildDiff(
   })
 
   if (projected.kind === 'failure') {
-    return convertedDiff
+    return { ...convertedDiff, difftRenderFailure: projected.message }
   }
 
   if (
@@ -911,10 +917,19 @@ async function buildDiff(
     projected.metadata.status === 'created' ||
     projected.metadata.status === 'deleted'
   ) {
-    return convertedDiff
+    return {
+      ...convertedDiff,
+      difftRenderFailure: projected.metadata.fallbackReason,
+    }
   }
 
-  return { ...projected.diff, lineEndingsChange }
+  return {
+    ...projected.diff,
+    lineEndingsChange,
+    renderedByDifft: true,
+    renderedByDifftLanguage: projected.metadata.language,
+    difftRenderFailure: null,
+  }
 }
 
 function getBlobOrEmptyDifftSource(

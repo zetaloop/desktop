@@ -12,8 +12,25 @@
     border-bottom: var(--base-border);
     display: flex;
 
+    .row {
+      display: flex;
+      align-items: center;
+    }
+
     .commits-displayed {
       flex-grow: 1;
+    }
+
+    .difft-rendered-indicator {
+      margin-right: var(--spacing-half);
+
+      &.difft-rendered-indicator-success {
+        color: var(--status-success-color);
+      }
+
+      &.difft-rendered-indicator-failure {
+        color: var(--status-error-color);
+      }
     }
   }
 

@@ -1,10 +1,17 @@
 import * as React from 'react'
 import { PathLabel } from '../lib/path-label'
 import { AppFileStatus } from '../../models/status'
-import { IDiff, DiffType } from '../../models/diff'
+import {
+  IDiff,
+  DiffType,
+  getDifftRenderFailure,
+  getDifftRenderedLanguage,
+  isDifftRenderedDiff,
+} from '../../models/diff'
 import { Octicon, iconForStatus } from '../octicons'
 import { mapStatus } from '../../lib/status'
 import { DiffOptions } from './diff-options'
+import * as octicons from '../octicons/octicons.generated'
 
 interface IDiffHeaderProps {
   readonly path: string
@@ -39,6 +46,8 @@ export class DiffHeader extends React.Component<IDiffHeaderProps, {}> {
 
         {this.renderDiffOptions()}
 
+        {this.renderDifftIndicator()}
+
         <Octicon
           symbol={iconForStatus(status)}
           className={'status status-' + fileStatus.toLowerCase()}
@@ -65,5 +74,27 @@ export class DiffHeader extends React.Component<IDiffHeaderProps, {}> {
         onDiffOptionsOpened={this.props.onDiffOptionsOpened}
       />
     )
+  }
+
+  private renderDifftIndicator() {
+    const failure = getDifftRenderFailure(this.props.diff)
+    if (!isDifftRenderedDiff(this.props.diff) && failure === null) {
+      return null
+    }
+
+    const language = getDifftRenderedLanguage(this.props.diff)
+    const title =
+      failure !== null
+        ? `差异使用 Difftastic 渲染失败：${failure}`
+        : language === null
+        ? '差异使用 Difftastic 渲染'
+        : `差异使用 Difftastic 渲染：${language}`
+
+    const className =
+      failure === null
+        ? 'status difft-rendered-indicator difft-rendered-indicator-success'
+        : 'status difft-rendered-indicator difft-rendered-indicator-failure'
+
+    return <Octicon symbol={octicons.zap} className={className} title={title} />
   }
 }
