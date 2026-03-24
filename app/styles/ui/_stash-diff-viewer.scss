@@ -23,6 +23,18 @@
       display: flex;
       align-items: center;
       margin-top: var(--spacing);
+
+      .difft-rendered-indicator {
+        margin-right: var(--spacing-half);
+
+        &.difft-rendered-indicator-success {
+          color: var(--status-success-color);
+        }
+
+        &.difft-rendered-indicator-failure {
+          color: var(--status-error-color);
+        }
+      }
     }
 
     .button-group {
