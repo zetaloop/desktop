@@ -498,19 +498,17 @@ export class Integrations extends React.Component<
           ariaDescribedBy={enableDifftasticDescId}
         />
         <p id={enableDifftasticDescId} className="git-settings-description">
-          Difftastic
-          是一个基于代码语法结构的差异引擎，启用后将会用它来分析文件差异。
+          Difftastic 是一个基于代码语法结构的差异引擎，改用它来分析文件差异。
         </p>
         <p className="git-settings-description">
-          您需要自己通过 Scoop、Homebrew 等方式安装
-          <LinkButton uri={DifftasticDocsUrl}>Difftastic</LinkButton>
-          ，未安装则不生效。
+          您需要自己通过 Scoop、Homebrew 等方式安装{' '}
+          <LinkButton uri={DifftasticDocsUrl}>Difftastic</LinkButton>。
         </p>
         <p className="git-settings-description">
-          这是实验性功能，做着玩的不保证能用。某些功能（例如选择特定几行改动）可能会有问题。
+          这是实验性功能，做着玩的不保证能用。某些功能（例如选择特定几行、仅格式化的改动等）可能会出问题。
         </p>
         <p className="git-settings-description">
-          顺便一提您也可以试试
+          顺便一提您也可以试试{' '}
           <LinkButton uri={MergirafUrl}>Mergiraf</LinkButton>
           ，它是一个基于语法结构的合并引擎。
         </p>
