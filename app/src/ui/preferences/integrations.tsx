@@ -13,6 +13,8 @@ import { TextBox } from '../lib/text-box'
 import { TabBar } from '../tab-bar'
 
 const CustomIntegrationValue = 'other'
+const DifftasticDocsUrl = 'https://difftastic.wilfred.me.uk/'
+const MergirafUrl = 'https://mergiraf.org/'
 
 interface IIntegrationsPreferencesProps {
   readonly availableEditors: ReadonlyArray<string>
@@ -35,6 +37,8 @@ interface IIntegrationsPreferencesProps {
   readonly onCopilotCustomStyleChanged: (value: string) => void
   readonly copilotDiffTruncationLimit: number
   readonly onCopilotDiffTruncationLimitChanged: (value: number) => void
+  readonly enableDifftastic: boolean
+  readonly onEnableDifftasticChanged: (value: boolean) => void
 }
 
 interface IIntegrationsPreferencesState {
@@ -47,6 +51,7 @@ interface IIntegrationsPreferencesState {
   readonly copilotUseCommitHistoryStyle: boolean
   readonly copilotCustomStyle: string
   readonly copilotDiffTruncationLimit: number
+  readonly enableDifftastic: boolean
   readonly selectedTabIndex: number
 }
 
@@ -70,6 +75,7 @@ export class Integrations extends React.Component<
       copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
       copilotCustomStyle: this.props.copilotCustomStyle,
       copilotDiffTruncationLimit: this.props.copilotDiffTruncationLimit,
+      enableDifftastic: this.props.enableDifftastic,
       selectedTabIndex: 0,
     }
   }
@@ -108,6 +114,7 @@ export class Integrations extends React.Component<
       copilotUseCommitHistoryStyle: nextProps.copilotUseCommitHistoryStyle,
       copilotCustomStyle: nextProps.copilotCustomStyle,
       copilotDiffTruncationLimit: nextProps.copilotDiffTruncationLimit,
+      enableDifftastic: nextProps.enableDifftastic,
     })
   }
 
@@ -220,6 +227,14 @@ export class Integrations extends React.Component<
     const value = parseInt(event.currentTarget.value, 10)
     this.setState({ copilotDiffTruncationLimit: value })
     this.props.onCopilotDiffTruncationLimitChanged(value)
+  }
+
+  private onEnableDifftasticChanged = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    const checked = event.currentTarget.checked
+    this.setState({ enableDifftastic: checked })
+    this.props.onEnableDifftasticChanged(checked)
   }
 
   private onTabClicked = (selectedTabIndex: number) => {
@@ -465,6 +480,42 @@ export class Integrations extends React.Component<
     )
   }
 
+  private renderDifftasticSettings() {
+    const enableDifftasticDescId = 'enable-difftastic-description'
+
+    return (
+      <div className="copilot-settings-component">
+        <h2>Difftastic</h2>
+        <p className="git-settings-description">
+          以下调整选项是汉化版的增强功能。
+        </p>
+        <Checkbox
+          label="使用 Difftastic 渲染差异"
+          value={
+            this.state.enableDifftastic ? CheckboxValue.On : CheckboxValue.Off
+          }
+          onChange={this.onEnableDifftasticChanged}
+          ariaDescribedBy={enableDifftasticDescId}
+        />
+        <p id={enableDifftasticDescId} className="git-settings-description">
+          Difftastic 是一个基于代码语法结构的差异引擎，改用它来分析文件差异。
+        </p>
+        <p className="git-settings-description">
+          您需要自己通过 Scoop、Homebrew 等方式安装{' '}
+          <LinkButton uri={DifftasticDocsUrl}>Difftastic</LinkButton>。
+        </p>
+        <p className="git-settings-description">
+          这是实验性功能，做着玩的不保证能用。某些功能（例如选择特定几行、仅格式化的改动等）可能会出问题。
+        </p>
+        <p className="git-settings-description">
+          顺便一提您也可以试试{' '}
+          <LinkButton uri={MergirafUrl}>Mergiraf</LinkButton>
+          ，它是一个基于语法结构的合并引擎。
+        </p>
+      </div>
+    )
+  }
+
   private renderGeneralSettings() {
     if (!enableCustomIntegration()) {
       return (
@@ -502,6 +553,8 @@ export class Integrations extends React.Component<
       return this.renderGeneralSettings()
     } else if (this.state.selectedTabIndex === 1) {
       return this.renderCopilotSettings()
+    } else if (this.state.selectedTabIndex === 2) {
+      return this.renderDifftasticSettings()
     }
 
     return null
@@ -516,6 +569,7 @@ export class Integrations extends React.Component<
         >
           <span>通用</span>
           <span>Copilot</span>
+          <span>Difftastic</span>
         </TabBar>
         <div className="integrations-preferences-content">
           {this.renderCurrentTab()}

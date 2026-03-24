@@ -1600,6 +1600,7 @@ export class App extends React.Component<IAppProps, IAppState> {
             }
             copilotCustomStyle={this.state.copilotCustomStyle}
             copilotDiffTruncationLimit={this.state.copilotDiffTruncationLimit}
+            enableDifftastic={this.state.enableDifftastic}
           />
         )
       case PopupType.RepositorySettings: {
