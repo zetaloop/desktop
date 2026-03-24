@@ -13,6 +13,8 @@ import { TextBox } from '../lib/text-box'
 import { TabBar } from '../tab-bar'
 
 const CustomIntegrationValue = 'other'
+const DifftasticDocsUrl = 'https://difftastic.wilfred.me.uk/'
+const MergirafUrl = 'https://mergiraf.org/'
 
 interface IIntegrationsPreferencesProps {
   readonly availableEditors: ReadonlyArray<string>
@@ -414,7 +416,6 @@ export class Integrations extends React.Component<
     const copilotCustomStyleDescId = 'copilot-custom-style-description'
     const copilotDiffTruncationLimitDescId =
       'copilot-diff-truncation-limit-description'
-    const enableDifftasticDescId = 'enable-difftastic-description'
     const truncationOptions = [
       { value: 0, label: '无限制' },
       { value: 100000, label: '100k' },
@@ -475,8 +476,21 @@ export class Integrations extends React.Component<
         >
           生成提交消息时最多读取的改动字符数，超出的部分会被忽略。
         </p>
+      </div>
+    )
+  }
+
+  private renderDifftasticSettings() {
+    const enableDifftasticDescId = 'enable-difftastic-description'
+
+    return (
+      <div className="copilot-settings-component">
+        <h2>Difftastic</h2>
+        <p className="git-settings-description">
+          以下调整选项是汉化版的增强功能。
+        </p>
         <Checkbox
-          label="启用 difftastic"
+          label="使用 Difftastic 渲染差异"
           value={
             this.state.enableDifftastic ? CheckboxValue.On : CheckboxValue.Off
           }
@@ -484,7 +498,21 @@ export class Integrations extends React.Component<
           ariaDescribedBy={enableDifftasticDescId}
         />
         <p id={enableDifftasticDescId} className="git-settings-description">
-          保存后会重新加载当前改动区域的 diff 数据。
+          Difftastic
+          是一个基于代码语法结构的差异引擎，启用后将会用它来分析文件差异。
+        </p>
+        <p className="git-settings-description">
+          您需要自己通过 Scoop、Homebrew 等方式安装
+          <LinkButton uri={DifftasticDocsUrl}>Difftastic</LinkButton>
+          ，未安装则不生效。
+        </p>
+        <p className="git-settings-description">
+          这是实验性功能，做着玩的不保证能用。某些功能（例如选择特定几行改动）可能会有问题。
+        </p>
+        <p className="git-settings-description">
+          顺便一提您也可以试试
+          <LinkButton uri={MergirafUrl}>Mergiraf</LinkButton>
+          ，它是一个基于语法结构的合并引擎。
         </p>
       </div>
     )
@@ -527,6 +555,8 @@ export class Integrations extends React.Component<
       return this.renderGeneralSettings()
     } else if (this.state.selectedTabIndex === 1) {
       return this.renderCopilotSettings()
+    } else if (this.state.selectedTabIndex === 2) {
+      return this.renderDifftasticSettings()
     }
 
     return null
@@ -541,6 +571,7 @@ export class Integrations extends React.Component<
         >
           <span>通用</span>
           <span>Copilot</span>
+          <span>Difftastic</span>
         </TabBar>
         <div className="integrations-preferences-content">
           {this.renderCurrentTab()}
