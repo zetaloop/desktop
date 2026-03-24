@@ -36,6 +36,7 @@ import {
   DiffType,
   ImageDiffType,
   ITextDiff,
+  ILargeTextDiff,
 } from '../../models/diff'
 import { FetchType } from '../../models/fetch'
 import {
@@ -651,6 +652,10 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private copilotDiffTruncationLimit: number
   private enableDifftastic: boolean
   private isDifftOnPath: boolean = false
+  private readonly displayedWorkingDirectoryDiffs = new Map<
+    number,
+    Map<string, ITextDiff | ILargeTextDiff>
+  >()
 
   private commitMessageGenerationDisclaimerLastSeen: number | null = null
   private commitMessageGenerationButtonClicked: boolean = false
@@ -2755,6 +2760,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
       conflictState: updateConflictState(state, status, this.statsStore),
     }))
 
+    this.pruneDisplayedWorkingDirectoryDiffs(
+      repository,
+      this.repositoryStateCache.get(repository).changesState.workingDirectory
+        .files
+    )
+
     this.updateMultiCommitOperationConflictsIfFound(repository)
     await this.initializeMultiCommitOperationIfConflictsFound(
       repository,
@@ -3194,6 +3205,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
       return
     }
 
+    if (diff.kind === DiffType.Text || diff.kind === DiffType.LargeText) {
+      this.updateDisplayedWorkingDirectoryDiff(repository, selectedFileID, diff)
+    } else {
+      this.removeDisplayedWorkingDirectoryDiff(repository, selectedFileID)
+    }
+
     const selectableLines = new Set<number>()
     if (diff.kind === DiffType.Text || diff.kind === DiffType.LargeText) {
       // The diff might have changed dramatically since last we loaded it.
@@ -3414,6 +3431,10 @@ export class AppStore extends TypedBaseStore<IAppState> {
     })
 
     const gitStore = this.gitStoreCache.get(repository)
+    const requireDisplayedDiffForPartial =
+      this.enableDifftastic &&
+      this.isDifftOnPath &&
+      !this.hideWhitespaceInChangesDiff
 
     return this.withIsCommitting(repository, async () => {
       const result = await gitStore.performFailableOperation(
@@ -3433,6 +3454,10 @@ export class AppStore extends TypedBaseStore<IAppState> {
             noVerify: state.skipCommitHooks,
             signOff: state.signOffCommits,
             allowEmpty: state.allowEmptyCommit,
+            partialDiffsByFileID: requireDisplayedDiffForPartial
+              ? this.displayedWorkingDirectoryDiffs.get(repository.id)
+              : undefined,
+            requireDisplayedDiffForPartial,
           }).catch(err => (aborted ? undefined : Promise.reject(err)))
         },
         { gitContext: { kind: 'commit' }, repository }
@@ -6464,6 +6489,63 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   public _recordLaunchStats(stats: ILaunchStats): Promise<void> {
     return this.statsStore.recordLaunchStats(stats)
+  }
+
+  private updateDisplayedWorkingDirectoryDiff(
+    repository: Repository,
+    fileID: string,
+    diff: ITextDiff | ILargeTextDiff
+  ) {
+    let repositoryDiffs = this.displayedWorkingDirectoryDiffs.get(repository.id)
+    if (repositoryDiffs === undefined) {
+      repositoryDiffs = new Map<string, ITextDiff | ILargeTextDiff>()
+      this.displayedWorkingDirectoryDiffs.set(repository.id, repositoryDiffs)
+    }
+
+    repositoryDiffs.set(fileID, diff)
+  }
+
+  private removeDisplayedWorkingDirectoryDiff(
+    repository: Repository,
+    fileID: string
+  ) {
+    const repositoryDiffs = this.displayedWorkingDirectoryDiffs.get(
+      repository.id
+    )
+
+    if (repositoryDiffs === undefined) {
+      return
+    }
+
+    repositoryDiffs.delete(fileID)
+
+    if (repositoryDiffs.size === 0) {
+      this.displayedWorkingDirectoryDiffs.delete(repository.id)
+    }
+  }
+
+  private pruneDisplayedWorkingDirectoryDiffs(
+    repository: Repository,
+    files: ReadonlyArray<WorkingDirectoryFileChange>
+  ) {
+    const repositoryDiffs = this.displayedWorkingDirectoryDiffs.get(
+      repository.id
+    )
+
+    if (repositoryDiffs === undefined) {
+      return
+    }
+
+    const fileIDs = new Set(files.map(file => file.id))
+    for (const fileID of repositoryDiffs.keys()) {
+      if (!fileIDs.has(fileID)) {
+        repositoryDiffs.delete(fileID)
+      }
+    }
+
+    if (repositoryDiffs.size === 0) {
+      this.displayedWorkingDirectoryDiffs.delete(repository.id)
+    }
   }
 
   public async _appendIgnoreRule(
