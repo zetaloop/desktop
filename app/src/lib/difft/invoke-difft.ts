@@ -20,6 +20,7 @@ export type DifftInvocationResult =
   | {
       readonly kind: 'failure'
       readonly reason: DifftInvocationFailureReason
+      readonly message: string
     }
 
 export interface IDifftInvocationInput {
@@ -64,6 +65,7 @@ export async function invokeDifft(
       return {
         kind: 'failure',
         reason: isTimedOutError(error) ? 'timed-out' : 'process-failed',
+        message: getInvocationFailureMessage(error),
       }
     }
   } finally {
@@ -87,7 +89,11 @@ function parseDifftOutput(stdout: string): DifftInvocationResult {
   const trimmed = stdout.trim()
 
   if (trimmed.length === 0) {
-    return { kind: 'failure', reason: 'parse-failed' }
+    return {
+      kind: 'failure',
+      reason: 'parse-failed',
+      message: '无法解析 difft JSON 输出',
+    }
   }
 
   try {
@@ -95,7 +101,11 @@ function parseDifftOutput(stdout: string): DifftInvocationResult {
   } catch {
     const lines = trimmed.split(/\r?\n/).filter(line => line.trim().length > 0)
     if (lines.length === 0) {
-      return { kind: 'failure', reason: 'parse-failed' }
+      return {
+        kind: 'failure',
+        reason: 'parse-failed',
+        message: '无法解析 difft JSON 输出',
+      }
     }
 
     try {
@@ -104,9 +114,35 @@ function parseDifftOutput(stdout: string): DifftInvocationResult {
         payload: lines.map(line => JSON.parse(line)),
       }
     } catch {
-      return { kind: 'failure', reason: 'parse-failed' }
+      return {
+        kind: 'failure',
+        reason: 'parse-failed',
+        message: '无法解析 difft JSON 输出',
+      }
     }
   }
+}
+
+function getInvocationFailureMessage(error: unknown): string {
+  if (typeof error !== 'object' || error === null) {
+    return 'Difftastic 执行失败'
+  }
+
+  if ('stderr' in error && typeof error.stderr === 'string') {
+    const stderr = error.stderr.trim()
+    if (stderr.length > 0) {
+      return stderr
+    }
+  }
+
+  if ('message' in error && typeof error.message === 'string') {
+    const message = error.message.trim()
+    if (message.length > 0) {
+      return message
+    }
+  }
+
+  return 'Difftastic 执行失败'
 }
 
 function isTimedOutError(error: unknown): boolean {
