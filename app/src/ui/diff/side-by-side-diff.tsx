@@ -1913,38 +1913,37 @@ function getModifiedRows(
   const diffTokensBefore = new Array<ILineTokens | undefined>()
   const diffTokensAfter = new Array<ILineTokens | undefined>()
 
-  // To match the behavior of github.com, we only highlight differences between
-  // lines on hunks that have the same number of added and deleted lines.
-  const shouldDisplayDiffInChunk = addedLines.length === deletedLines.length
+  const pairedModifiedLineCount = Math.min(
+    addedLines.length,
+    deletedLines.length
+  )
 
-  if (shouldDisplayDiffInChunk) {
-    for (let i = 0; i < deletedLines.length; i++) {
-      const addedLine = addedLines[i]
-      const deletedLine = deletedLines[i]
+  for (let i = 0; i < pairedModifiedLineCount; i++) {
+    const addedLine = addedLines[i]
+    const deletedLine = deletedLines[i]
 
-      const beforeRanges = deletedLine.line.inlineChangedRanges
-      const afterRanges = addedLine.line.inlineChangedRanges
+    const beforeRanges = deletedLine.line.inlineChangedRanges
+    const afterRanges = addedLine.line.inlineChangedRanges
 
-      if (beforeRanges !== undefined && afterRanges !== undefined) {
-        diffTokensBefore[i] = inlineRangesToLineTokens(
-          beforeRanges,
-          'diff-delete-inner'
-        )
-        diffTokensAfter[i] = inlineRangesToLineTokens(
-          afterRanges,
-          'diff-add-inner'
-        )
-      } else if (
-        addedLine.line.content.length < MaxIntraLineDiffStringLength &&
-        deletedLine.line.content.length < MaxIntraLineDiffStringLength
-      ) {
-        const { before, after } = getDiffTokens(
-          deletedLine.line.content,
-          addedLine.line.content
-        )
-        diffTokensBefore[i] = before
-        diffTokensAfter[i] = after
-      }
+    if (beforeRanges !== undefined && afterRanges !== undefined) {
+      diffTokensBefore[i] = inlineRangesToLineTokens(
+        beforeRanges,
+        'diff-delete-inner'
+      )
+      diffTokensAfter[i] = inlineRangesToLineTokens(
+        afterRanges,
+        'diff-add-inner'
+      )
+    } else if (
+      addedLine.line.content.length < MaxIntraLineDiffStringLength &&
+      deletedLine.line.content.length < MaxIntraLineDiffStringLength
+    ) {
+      const { before, after } = getDiffTokens(
+        deletedLine.line.content,
+        addedLine.line.content
+      )
+      diffTokensBefore[i] = before
+      diffTokensAfter[i] = after
     }
   }
 
