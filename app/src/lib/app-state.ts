@@ -397,6 +397,8 @@ export interface IAppState {
   readonly copilotDiffTruncationLimit: number
 
   readonly enableDifftastic: boolean
+
+  readonly isDifftOnPath: boolean
 }
 
 export enum FoldoutType {

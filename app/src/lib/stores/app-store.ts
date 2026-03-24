@@ -363,6 +363,7 @@ import {
 import { updateStore } from '../../ui/lib/update-store'
 import { BypassReasonType } from '../../ui/secret-scanning/bypass-push-protection-dialog'
 import { getRepoHooks } from '../hooks/get-repo-hooks'
+import { isDifftOnPath } from '../is-difft-on-path'
 
 const LastSelectedRepositoryIDKey = 'last-selected-repository-id'
 
@@ -639,6 +640,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private copilotCustomStyle: string
   private copilotDiffTruncationLimit: number
   private enableDifftastic: boolean
+  private isDifftOnPath: boolean = false
 
   private commitMessageGenerationDisclaimerLastSeen: number | null = null
   private commitMessageGenerationButtonClicked: boolean = false
@@ -1162,6 +1164,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       copilotCustomStyle: this.copilotCustomStyle,
       copilotDiffTruncationLimit: this.copilotDiffTruncationLimit,
       enableDifftastic: this.enableDifftastic,
+      isDifftOnPath: this.isDifftOnPath,
     }
   }
 
@@ -2328,6 +2331,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.updateSelectedExternalEditor(
       await this.lookupSelectedExternalEditor()
     ).catch(e => log.error('Failed resolving current editor at startup', e))
+
+    this.isDifftOnPath = await isDifftOnPath()
 
     const shellValue = localStorage.getItem(shellKey)
     this.selectedShell = shellValue ? parseShell(shellValue) : DefaultShell
