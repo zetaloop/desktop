@@ -16,6 +16,8 @@ const DefaultContextLineCount = 3
 
 interface IDifftChange {
   readonly content: string
+  readonly start?: number
+  readonly end?: number
 }
 
 interface IDifftSide {
@@ -251,7 +253,13 @@ function parseChanges(value: unknown): ReadonlyArray<IDifftChange> {
       return []
     }
 
-    return [{ content: item.content }]
+    return [
+      {
+        content: item.content,
+        start: parseNumber(item.start) ?? undefined,
+        end: parseNumber(item.end) ?? undefined,
+      },
+    ]
   })
 }
 
@@ -522,7 +530,9 @@ function buildDiffLines(
           DiffLineType.Delete,
           ++diffLineNumber,
           oldLine + 1,
-          null
+          null,
+          false,
+          getInlineChangedRanges(oldLine, chunkIndex.lhs)
         )
       )
       lines.push(
@@ -531,7 +541,9 @@ function buildDiffLines(
           DiffLineType.Add,
           ++diffLineNumber,
           null,
-          newLine + 1
+          newLine + 1,
+          false,
+          getInlineChangedRanges(newLine, chunkIndex.rhs)
         )
       )
       continue
@@ -612,4 +624,28 @@ function parseNumber(value: unknown): number | null {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
+}
+
+function getInlineChangedRanges(
+  lineNumber: number,
+  sideIndex: ReadonlyMap<number, IDifftSide>
+): ReadonlyArray<readonly [number, number]> | undefined {
+  const side = sideIndex.get(lineNumber)
+  if (side === undefined || side.changes.length === 0) {
+    return undefined
+  }
+
+  const ranges: Array<readonly [number, number]> = []
+
+  for (const change of side.changes) {
+    if (
+      change.start !== undefined &&
+      change.end !== undefined &&
+      change.end > change.start
+    ) {
+      ranges.push([change.start, change.end - change.start] as const)
+    }
+  }
+
+  return ranges.length > 0 ? ranges : undefined
 }

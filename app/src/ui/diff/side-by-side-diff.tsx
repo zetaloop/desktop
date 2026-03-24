@@ -1878,6 +1878,17 @@ function getDiffRowsFromHunk(
   return rows
 }
 
+function inlineRangesToLineTokens(
+  ranges: ReadonlyArray<readonly [number, number]>,
+  tokenClass: string
+): ILineTokens {
+  const tokens: ILineTokens = {}
+  for (const [offset, length] of ranges) {
+    tokens[offset] = { length, token: tokenClass }
+  }
+  return tokens
+}
+
 function getModifiedRows(
   addedOrDeletedLines: ReadonlyArray<ModifiedLine>,
   showSideBySideDiff: boolean
@@ -1911,7 +1922,19 @@ function getModifiedRows(
       const addedLine = addedLines[i]
       const deletedLine = deletedLines[i]
 
-      if (
+      const beforeRanges = deletedLine.line.inlineChangedRanges
+      const afterRanges = addedLine.line.inlineChangedRanges
+
+      if (beforeRanges !== undefined && afterRanges !== undefined) {
+        diffTokensBefore[i] = inlineRangesToLineTokens(
+          beforeRanges,
+          'diff-delete-inner'
+        )
+        diffTokensAfter[i] = inlineRangesToLineTokens(
+          afterRanges,
+          'diff-add-inner'
+        )
+      } else if (
         addedLine.line.content.length < MaxIntraLineDiffStringLength &&
         deletedLine.line.content.length < MaxIntraLineDiffStringLength
       ) {
