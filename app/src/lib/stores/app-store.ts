@@ -1898,13 +1898,16 @@ export class AppStore extends TypedBaseStore<IAppState> {
             repository,
             file,
             this.orderShasByHistory(repository, shas),
-            this.hideWhitespaceInHistoryDiff
+            this.hideWhitespaceInHistoryDiff,
+            false,
+            this.enableDifftastic && this.isDifftOnPath
           )
         : await getCommitDiff(
             repository,
             file,
             shas[0],
-            this.hideWhitespaceInHistoryDiff
+            this.hideWhitespaceInHistoryDiff,
+            this.enableDifftastic && this.isDifftOnPath
           )
 
     const stateAfterLoad = this.repositoryStateCache.get(repository)
@@ -3140,7 +3143,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
     const diff = await getWorkingDirectoryDiff(
       repository,
       selectedFileBeforeLoad,
-      this.hideWhitespaceInChangesDiff
+      this.hideWhitespaceInChangesDiff,
+      this.enableDifftastic && this.isDifftOnPath
     )
 
     const stateAfterLoad = this.repositoryStateCache.get(repository)
@@ -3349,7 +3353,13 @@ export class AppStore extends TypedBaseStore<IAppState> {
       return
     }
 
-    const diff = await getCommitDiff(repository, file, file.commitish)
+    const diff = await getCommitDiff(
+      repository,
+      file,
+      file.commitish,
+      false,
+      this.enableDifftastic && this.isDifftOnPath
+    )
 
     const stateAfterLoad = this.repositoryStateCache.get(repository)
     const changesStateAfterLoad = stateAfterLoad.changesState
@@ -8505,7 +8515,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
             baseBranch.name,
             currentBranch.name,
             this.hideWhitespaceInPullRequestDiff,
-            commitSHAs[0]
+            commitSHAs[0],
+            this.enableDifftastic && this.isDifftOnPath
           )
         )) ?? null
 
