@@ -83,8 +83,8 @@ export class DiffHeader extends React.Component<IDiffHeaderProps, {}> {
     const language = getDifftRenderedLanguage(this.props.diff)
     const title =
       language === null
-        ? '当前差异由 Difftastic 渲染'
-        : `当前差异由 Difftastic 渲染（${language}）`
+        ? '差异使用 Difftastic 渲染'
+        : `差异使用 Difftastic 渲染：${language}`
 
     return (
       <Octicon
