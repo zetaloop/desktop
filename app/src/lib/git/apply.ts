@@ -1,10 +1,18 @@
 import { GitError as DugiteError } from 'dugite'
+import { readFile } from 'fs/promises'
+import * as Path from 'path'
 import { git } from './core'
 import {
   WorkingDirectoryFileChange,
   AppFileStatusKind,
 } from '../../models/status'
-import { DiffType, ITextDiff, DiffSelection } from '../../models/diff'
+import {
+  DiffType,
+  ITextDiff,
+  ILargeTextDiff,
+  DiffSelection,
+  DiffLineType,
+} from '../../models/diff'
 import { Repository, WorkingTree } from '../../models/repository'
 import { getWorkingDirectoryDiff } from './diff'
 import { formatPatch, formatPatchToDiscardChanges } from '../patch-formatter'
@@ -12,8 +20,22 @@ import { assertNever } from '../fatal-error'
 
 export async function applyPatchToIndex(
   repository: Repository,
-  file: WorkingDirectoryFileChange
+  file: WorkingDirectoryFileChange,
+  displayedDiff?: ITextDiff | ILargeTextDiff,
+  requireDisplayedDiff: boolean = false
 ): Promise<void> {
+  if (displayedDiff !== undefined) {
+    await assertDisplayedDiffMatchesWorkingDirectory(
+      repository,
+      file,
+      displayedDiff
+    )
+  } else if (requireDisplayedDiff) {
+    throw new Error(
+      `Could not stage selected changes because the displayed diff is unavailable for ${file.path}`
+    )
+  }
+
   // If the file was a rename we have to recreate that rename since we've
   // just blown away the index. Think of this block of weird looking commands
   // as running `git mv`.
@@ -58,7 +80,8 @@ export async function applyPatchToIndex(
     '-',
   ]
 
-  const diff = await getWorkingDirectoryDiff(repository, file)
+  const diff =
+    displayedDiff ?? (await getWorkingDirectoryDiff(repository, file))
 
   if (diff.kind !== DiffType.Text && diff.kind !== DiffType.LargeText) {
     const { kind } = diff
@@ -82,6 +105,118 @@ export async function applyPatchToIndex(
   await git(applyArgs, repository.path, 'applyPatchToIndex', { stdin: patch })
 
   return Promise.resolve()
+}
+
+interface IWorkingDirectoryTextSnapshot {
+  readonly lines: ReadonlyArray<string>
+  readonly hasTrailingNewline: boolean
+}
+
+async function assertDisplayedDiffMatchesWorkingDirectory(
+  repository: Repository,
+  file: WorkingDirectoryFileChange,
+  diff: ITextDiff | ILargeTextDiff
+) {
+  const snapshot = await readWorkingDirectorySnapshot(repository, file)
+
+  if (file.status.kind === AppFileStatusKind.Deleted) {
+    if (snapshot !== null) {
+      throw new Error(
+        `Could not stage selected changes because ${file.path} no longer matches the displayed diff`
+      )
+    }
+
+    return
+  }
+
+  if (snapshot === null) {
+    throw new Error(
+      `Could not stage selected changes because ${file.path} no longer matches the displayed diff`
+    )
+  }
+
+  for (const hunk of diff.hunks) {
+    const expectedNewLines = new Array<string>()
+    let lastLineHasNoTrailingNewline = false
+
+    for (const line of hunk.lines) {
+      switch (line.type) {
+        case DiffLineType.Hunk:
+        case DiffLineType.Delete:
+          break
+
+        case DiffLineType.Context:
+        case DiffLineType.Add:
+          expectedNewLines.push(line.text.substring(1))
+          lastLineHasNoTrailingNewline = line.noTrailingNewLine
+          break
+
+        default:
+          assertNever(line.type, `Unsupported line type ${line.type}`)
+      }
+    }
+
+    const startIndex = Math.max(hunk.header.newStartLine - 1, 0)
+    const actualNewLines = snapshot.lines.slice(
+      startIndex,
+      startIndex + expectedNewLines.length
+    )
+
+    if (actualNewLines.length !== expectedNewLines.length) {
+      throw new Error(
+        `Could not stage selected changes because ${file.path} no longer matches the displayed diff`
+      )
+    }
+
+    for (let i = 0; i < expectedNewLines.length; i++) {
+      if (actualNewLines[i] !== expectedNewLines[i]) {
+        throw new Error(
+          `Could not stage selected changes because ${file.path} no longer matches the displayed diff`
+        )
+      }
+    }
+
+    if (lastLineHasNoTrailingNewline) {
+      const hunkEndsAtEOF =
+        startIndex + expectedNewLines.length === snapshot.lines.length
+      if (!hunkEndsAtEOF || snapshot.hasTrailingNewline) {
+        throw new Error(
+          `Could not stage selected changes because ${file.path} no longer matches the displayed diff`
+        )
+      }
+    }
+  }
+}
+
+async function readWorkingDirectorySnapshot(
+  repository: Repository,
+  file: WorkingDirectoryFileChange
+): Promise<IWorkingDirectoryTextSnapshot | null> {
+  const path = Path.join(repository.path, file.path)
+
+  try {
+    const contents = await readFile(path, 'utf8')
+    return {
+      lines: splitLines(contents),
+      hasTrailingNewline: /(?:\r\n|\n|\r)$/.test(contents),
+    }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return null
+    }
+
+    throw error
+  }
+}
+
+function splitLines(text: string): ReadonlyArray<string> {
+  if (text.length === 0) {
+    return []
+  }
+
+  const lines = text.split(/\r\n|\n|\r/)
+  const hasTrailingNewline = /(?:\r\n|\n|\r)$/.test(text)
+  return hasTrailingNewline ? lines.slice(0, -1) : lines
 }
 
 /**
