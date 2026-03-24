@@ -122,6 +122,11 @@ export function projectDifftTextDiff(
         languageKind: 'unknown',
         status: null,
       },
+      metadata: {
+        language: null,
+        languageKind: 'unknown',
+        status: null,
+      },
     }
   }
 
@@ -143,6 +148,11 @@ export function projectDifftTextDiff(
       hasHiddenBidiChars: HiddenBidiCharsRegex.test(text),
       renderedByDifft: false,
       renderedByDifftLanguage: null,
+    },
+    metadata: {
+      language: file.language,
+      languageKind: classifyLanguage(file.language),
+      status: file.status,
     },
     metadata: {
       language: file.language,
