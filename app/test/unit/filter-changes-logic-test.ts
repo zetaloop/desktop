@@ -304,8 +304,8 @@ describe('filter-changes-logic', () => {
       }
 
       const message = getNoResultsMessage(filters)
-      assert(message?.includes('Included in commit'))
-      assert(message?.includes('New files'))
+      assert(message?.includes('将要提交'))
+      assert(message?.includes('属于新增'))
     })
 
     it('should format three or more filters with commas and and', () => {

@@ -74,7 +74,8 @@ describe('GitProgressParser', () => {
 
     assert.deepStrictEqual(result, {
       title: 'remote: Counting objects',
-      text: 'remote: Counting objects: 167587',
+      text: '远程端: 正在计算对象数量: 167587',
+      text_: 'remote: Counting objects: 167587',
       value: 167587,
       done: false,
       percent: undefined,
@@ -87,7 +88,8 @@ describe('GitProgressParser', () => {
 
     assert.deepStrictEqual(result, {
       title: 'remote: Counting objects',
-      text: 'remote: Counting objects: 167587, done.',
+      text: '远程端: 正在计算对象数量: 167587, 完成.',
+      text_: 'remote: Counting objects: 167587, done.',
       value: 167587,
       done: true,
       percent: undefined,
@@ -100,7 +102,8 @@ describe('GitProgressParser', () => {
 
     assert.deepStrictEqual(result, {
       title: 'remote: Compressing objects',
-      text: 'remote: Compressing objects:  72% (16/22)',
+      text: '远程端: 正在压缩对象:  72% (16/22)',
+      text_: 'remote: Compressing objects:  72% (16/22)',
       value: 16,
       done: false,
       percent: 72,
@@ -113,7 +116,8 @@ describe('GitProgressParser', () => {
 
     assert.deepStrictEqual(result, {
       title: 'remote: Compressing objects',
-      text: 'remote: Compressing objects: 100% (22/22), done.',
+      text: '远程端: 正在压缩对象: 100% (22/22), 完成.',
+      text_: 'remote: Compressing objects: 100% (22/22), done.',
       value: 22,
       done: true,
       percent: 100,
@@ -128,7 +132,8 @@ describe('GitProgressParser', () => {
 
     assert.deepStrictEqual(result, {
       title: 'Receiving objects',
-      text: 'Receiving objects:  99% (166741/167587), 267.24 MiB | 2.40 MiB/s',
+      text: '正在接收对象:  99% (166741/167587), 267.24 MiB | 2.40 MiB/s',
+      text_: 'Receiving objects:  99% (166741/167587), 267.24 MiB | 2.40 MiB/s',
       value: 166741,
       done: false,
       percent: 99,
@@ -143,7 +148,9 @@ describe('GitProgressParser', () => {
 
     assert.deepStrictEqual(result, {
       title: 'Receiving objects',
-      text: 'Receiving objects: 100% (167587/167587), 279.67 MiB | 2.43 MiB/s, done.',
+      text: '正在接收对象: 100% (167587/167587), 279.67 MiB | 2.43 MiB/s, 完成.',
+      text_:
+        'Receiving objects: 100% (167587/167587), 279.67 MiB | 2.43 MiB/s, done.',
       value: 167587,
       done: true,
       percent: 100,
