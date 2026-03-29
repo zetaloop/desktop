@@ -173,10 +173,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-14-xlarge
+          - os: macos-26
             friendlyName: macOS
             arch: arm64
-          - os: windows-2022
+          - os: windows-2025
             friendlyName: Windows
             arch: x64
     timeout-minutes: 60
