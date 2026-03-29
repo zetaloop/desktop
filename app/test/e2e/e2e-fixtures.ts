@@ -140,9 +140,7 @@ export async function dismissMoveToApplicationsDialog(page: Page) {
     return
   }
 
-  const btn = page.locator(
-    'button:has-text("Not Now"), button:has-text("Not now")'
-  )
+  const btn = page.locator('button:has-text("以后再说")')
   if (await btn.isVisible({ timeout: 2000 }).catch(() => false)) {
     await btn.click()
     await btn.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {})
