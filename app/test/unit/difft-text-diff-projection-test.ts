@@ -200,6 +200,7 @@ describe('projectDifftTextDiff', () => {
       language: 'TSX',
       languageKind: 'structural',
       status: 'changed',
+      fallbackReason: null,
     })
   })
 
@@ -246,6 +247,7 @@ describe('projectDifftTextDiff', () => {
       language: 'TypeScript',
       languageKind: 'structural',
       status: 'created',
+      fallbackReason: null,
     })
   })
 
