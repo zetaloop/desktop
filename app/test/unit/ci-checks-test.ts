@@ -18,7 +18,7 @@ describe('getCheckRunsGroupedByActionWorkflowNameAndEvent', () => {
     assert(groupNames.includes('test2'))
   })
 
-  it('groups any check run without an actions workflow name into Other', () => {
+  it('groups any check run without an actions workflow name into 其他', () => {
     const checkRuns = [
       buildMockCheckRun('1', '', 'test1'),
       buildMockCheckRun('1', ''),
@@ -26,10 +26,10 @@ describe('getCheckRunsGroupedByActionWorkflowNameAndEvent', () => {
     const groups = getCheckRunsGroupedByActionWorkflowNameAndEvent(checkRuns)
     const groupNames = [...groups.keys()]
     assert(groupNames.includes('test1'))
-    assert(groupNames.includes('Other'))
+    assert(groupNames.includes('其他'))
   })
 
-  it('groups any check run without an actions workflow name with an app name of "GitHub Code Scanning" into "Code scanning results"', () => {
+  it('groups any check run without an actions workflow name with an app name of "GitHub Code Scanning" into "代码扫描结果"', () => {
     const checkRuns = [
       buildMockCheckRun('1', '', 'test1'),
       buildMockCheckRun('1', ''),
@@ -38,8 +38,8 @@ describe('getCheckRunsGroupedByActionWorkflowNameAndEvent', () => {
     const groups = getCheckRunsGroupedByActionWorkflowNameAndEvent(checkRuns)
     const groupNames = [...groups.keys()]
     assert(groupNames.includes('test1'))
-    assert(groupNames.includes('Other'))
-    assert(groupNames.includes('Code scanning results'))
+    assert(groupNames.includes('其他'))
+    assert(groupNames.includes('代码扫描结果'))
   })
 
   it('groups by actions event type if more than one event type', () => {
