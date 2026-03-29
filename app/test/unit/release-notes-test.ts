@@ -70,7 +70,7 @@ describe('release-notes', () => {
       assert.equal(result.latestVersion, '1.0.11')
       // the generated date here is local time, so it might either be the 5th or 6th
       // let's just test it's showing the right month and year instead
-      assert(result.datePublished.includes('December'))
+      assert(result.datePublished.includes('12月'))
       assert(result.datePublished.includes('2017'))
       assert.equal(result.bugfixes.length, 8)
       assert.equal(result.enhancements.length, 12)
@@ -115,7 +115,7 @@ describe('release-notes', () => {
       assert.equal(result.latestVersion, '1.0.10')
       // the generated date here is local time, so it might either be the 5th or 6th
       // let's just test it's showing the right month and year instead
-      assert(result.datePublished.includes('December'))
+      assert(result.datePublished.includes('12月'))
       assert(result.datePublished.includes('2017'))
       assert.equal(result.bugfixes.length, 10)
       assert.equal(result.enhancements.length, 16)
@@ -142,7 +142,7 @@ describe('release-notes', () => {
       assert.equal(result.latestVersion, '1.0.9')
       // the generated date here is local time, so it might either be the 5th or 6th
       // let's just test it's showing the right month and year instead
-      assert(result.datePublished.includes('November'))
+      assert(result.datePublished.includes('11月'))
       assert(result.datePublished.includes('2017'))
       assert.equal(result.bugfixes.length, 4)
       assert.equal(result.enhancements.length, 4)
