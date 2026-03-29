@@ -84,7 +84,7 @@ describe('git/tag', () => {
 
       await assert.rejects(
         createTag(repository, 'my-new-tag', 'HEAD'),
-        /already exists/i
+        /同名标签已存在。/
       )
     })
   })
