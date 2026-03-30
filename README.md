@@ -51,6 +51,7 @@
   - 参考最近提交内容
   - 自定义提示词
   - 限制最大读取字数
+- 可以接入 Difftastic
 - 基于 GitHub Pages 的自动更新渠道
 - CI 自动构建
 - macOS 版本修改了 Squirrel 来支持自动更新
