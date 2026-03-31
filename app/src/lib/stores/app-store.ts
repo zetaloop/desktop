@@ -368,7 +368,7 @@ import {
 import { updateStore } from '../../ui/lib/update-store'
 import { BypassReasonType } from '../../ui/secret-scanning/bypass-push-protection-dialog'
 import { getRepoHooks } from '../hooks/get-repo-hooks'
-import { isDifftOnPath } from '../is-difft-on-path'
+import { getDifftAvailabilityError } from '../is-difft-on-path'
 
 const LastSelectedRepositoryIDKey = 'last-selected-repository-id'
 
@@ -2347,7 +2347,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       await this.lookupSelectedExternalEditor()
     ).catch(e => log.error('Failed resolving current editor at startup', e))
 
-    this.isDifftOnPath = await isDifftOnPath()
+    await this.refreshDifftAvailability(false)
 
     const shellValue = localStorage.getItem(shellKey)
     this.selectedShell = shellValue ? parseShell(shellValue) : DefaultShell
@@ -8766,6 +8766,22 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.emitUpdate()
   }
 
+  private async refreshDifftAvailability(
+    showErrorPopup: boolean
+  ): Promise<void> {
+    const error = await getDifftAvailabilityError(true)
+    this.isDifftOnPath = error === null
+
+    if (!showErrorPopup || error === null) {
+      return
+    }
+
+    await this._showPopup({
+      type: PopupType.Error,
+      error: new Error(error),
+    })
+  }
+
   public async _setCopilotCustomStyle(
     copilotCustomStyle: string
   ): Promise<void> {
@@ -8786,6 +8802,10 @@ export class AppStore extends TypedBaseStore<IAppState> {
   ): Promise<void> {
     await setBoolean(enableDifftasticKey, enableDifftastic)
     this.enableDifftastic = enableDifftastic
+
+    if (enableDifftastic) {
+      await this.refreshDifftAvailability(true)
+    }
 
     if (repository === null) {
       this.emitUpdate()
