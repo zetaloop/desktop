@@ -110,7 +110,7 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
           <p>{error.message}</p>
           {files.length > 0 && (
             <>
-              <p>Files that exceed the limit</p>
+              <p>以下文件超过大小限制</p>
               <ul>
                 {files.map(file => (
                   <li key={file}>{file}</li>
@@ -119,9 +119,11 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
             </>
           )}
           <p>
-            See{' '}
-            <LinkButton uri="https://gh.io/lfs">https://gh.io/lfs</LinkButton>{' '}
-            for more information on managing large files on GitHub
+            前往{' '}
+            <LinkButton uri="https://docs.github.com/zh/repositories/working-with-files/managing-large-files">
+              https://gh.io/lfs
+            </LinkButton>{' '}
+            了解如何在 GitHub 上储存大文件
           </p>
         </>
       )
@@ -133,9 +135,7 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
         <>
           <p>{e.message}</p>
           <p>
-            <LinkButton uri={copilotPlansURL}>
-              Upgrade to increase your limit.
-            </LinkButton>
+            <LinkButton uri={copilotPlansURL}>升级可享受更高额度。</LinkButton>
           </p>
         </>
       )
@@ -146,32 +146,32 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
 
   private getTitle(error: Error) {
     if (isCopilotExceededQuotaError(error)) {
-      return 'Quota exceeded'
+      return '额度用尽'
     }
 
     switch (getDugiteError(error)) {
       case DugiteError.PushWithFileSizeExceedingLimit:
-        return 'File size limit exceeded'
+        return '文件过大'
     }
 
     switch (getRetryActionType(error)) {
       case RetryActionType.Clone:
-        return 'Clone failed'
+        return '克隆失败'
       case RetryActionType.Push:
-        return 'Failed to push'
+        return '推送失败'
     }
 
     if (isErrorWithMetaData(error)) {
       const { gitContext } = error.metadata
       switch (gitContext?.kind) {
         case 'create-repository':
-          return `Failed creating repository`
+          return `仓库创建失败`
         case 'commit':
           return `Commit failed`
       }
     }
 
-    return 'Error'
+    return '错误'
   }
 
   private renderContentAfterErrorMessage(error: Error) {
@@ -184,7 +184,7 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
     if (retryAction && retryAction.type === RetryActionType.Clone) {
       return (
         <p>
-          Would you like to retry cloning <Ref>{retryAction.name}</Ref>?
+          需要重试克隆 <Ref>{retryAction.name}</Ref> 吗？
         </p>
       )
     }
@@ -247,7 +247,7 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
     return (
       <DialogFooter>
         <OkCancelButtonGroup
-          okButtonText={__DARWIN__ ? 'Retry Clone' : 'Retry clone'}
+          okButtonText={__DARWIN__ ? '重试' : '重试'}
           onOkButtonClick={this.onRetryAction}
           onCancelButtonClick={this.onCloseButtonClick}
         />
@@ -259,9 +259,9 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
     return (
       <DialogFooter>
         <OkCancelButtonGroup
-          okButtonText="Close"
+          okButtonText="关闭"
           onOkButtonClick={this.onCloseButtonClick}
-          cancelButtonText={__DARWIN__ ? 'Open Preferences' : 'Open options'}
+          cancelButtonText={__DARWIN__ ? '打开设置' : '打开设置'}
           onCancelButtonClick={this.showPreferencesDialog}
         />
       </DialogFooter>

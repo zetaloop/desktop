@@ -77,14 +77,14 @@ export class MissingRepository extends React.Component<
     if (!isPathUnsafe) {
       buttons.push(
         <Button key="locate" onClick={this.locate} type="submit">
-          Locate…
+          选择路径…
         </Button>
       )
 
       if (this.canCloneAgain()) {
         buttons.push(
           <Button key="clone-again" onClick={this.cloneAgain}>
-            Clone Again
+            重新克隆
           </Button>
         )
       }
@@ -97,14 +97,14 @@ export class MissingRepository extends React.Component<
           disabled={this.state.isTrustingPath}
         >
           {this.state.isTrustingPath && <Loading />}
-          {__DARWIN__ ? 'Trust Repository' : 'Trust repository'}
+          {__DARWIN__ ? '信任该仓库' : '信任该仓库'}
         </Button>
       )
     }
 
     buttons.push(
       <Button key="remove" onClick={this.remove}>
-        Remove
+        删除
       </Button>
     )
 
@@ -112,18 +112,14 @@ export class MissingRepository extends React.Component<
       return (
         <UiView id="missing-repository-view">
           <div className="title-container">
-            <div className="title">
-              {this.props.repository.name} is potentially unsafe
-            </div>
+            <div className="title">{this.props.repository.name} 可能不安全</div>
             <div className="details">
               <p>
-                The Git repository at <Ref>{unsafePath}</Ref> appears to be
-                owned by another user on your machine. Adding untrusted
-                repositories may automatically execute files in the repository.
+                这个位于 <Ref>{unsafePath}</Ref>{' '}
+                的仓库属于您电脑上的其他用户。添加一个不安全的仓库可能会让其中的未知文件被自动运行。
               </p>
               <p>
-                If you trust the owner of the directory you can add an exception
-                for this directory in order to continue.
+                如果您确定该仓库是安全的，可以将它添加到信任列表，以便继续操作。
               </p>
             </div>
           </div>
@@ -136,11 +132,10 @@ export class MissingRepository extends React.Component<
     return (
       <UiView id="missing-repository-view">
         <div className="title-container">
-          <div className="title">Can't find "{this.props.repository.name}"</div>
+          <div className="title">找不到仓库 "{this.props.repository.name}"</div>
           <div className="details">
-            It was last seen at{' '}
-            <span className="path">{this.props.repository.path}</span>.{' '}
-            <LinkButton onClick={this.checkAgain}>Check&nbsp;again.</LinkButton>
+            它曾位于 <span className="path">{this.props.repository.path}</span>
+            。<LinkButton onClick={this.checkAgain}>重新检查。</LinkButton>
           </div>
         </div>
 

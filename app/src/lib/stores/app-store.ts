@@ -158,6 +158,7 @@ import {
   getAuthorIdentity,
   getChangedFiles,
   getCommitDiff,
+  getCommits,
   getMergeBase,
   getRemotes,
   getWorkingDirectoryDiff,
@@ -249,6 +250,8 @@ import {
   getObject,
   setObject,
   getFloatNumber,
+  getString,
+  setString,
 } from '../local-storage'
 import { ExternalEditorError, suggestedExternalEditor } from '../editors/shared'
 import { ApiRepositoriesStore } from './api-repositories-store'
@@ -476,6 +479,10 @@ const commitMessageGenerationDisclaimerLastSeenKey =
 const commitMessageGenerationButtonClickedKey =
   'commit-message-generation-button-clicked'
 
+const copilotUseCommitHistoryStyleKey = 'copilot-enable-commit-history-style'
+const copilotCustomStyleKey = 'copilot-custom-commit-style'
+const copilotDiffTruncationLimitKey = 'copilot-diff-truncation-limit'
+
 export const showChangesFilterKey = 'show-changes-filter'
 export const showChangesFilterDefault = true
 
@@ -633,6 +640,10 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   private underlineLinks: boolean = underlineLinksDefault
 
+  private copilotUseCommitHistoryStyle: boolean
+  private copilotCustomStyle: string
+  private copilotDiffTruncationLimit: number
+
   private commitMessageGenerationDisclaimerLastSeen: number | null = null
   private commitMessageGenerationButtonClicked: boolean = false
 
@@ -653,6 +664,16 @@ export class AppStore extends TypedBaseStore<IAppState> {
     private readonly copilotStore: CopilotStore
   ) {
     super()
+
+    this.copilotUseCommitHistoryStyle = getBoolean(
+      copilotUseCommitHistoryStyleKey,
+      false
+    )
+    this.copilotCustomStyle = getString(copilotCustomStyleKey, '')
+    this.copilotDiffTruncationLimit = getNumber(
+      copilotDiffTruncationLimitKey,
+      0
+    )
 
     this.showWelcomeFlow = !hasShownWelcomeFlow()
 
@@ -1141,6 +1162,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
       commitMessageGenerationButtonClicked:
         this.commitMessageGenerationButtonClicked,
       showChangesFilter: this.showChangesFilter,
+      copilotUseCommitHistoryStyle: this.copilotUseCommitHistoryStyle,
+      copilotCustomStyle: this.copilotCustomStyle,
+      copilotDiffTruncationLimit: this.copilotDiffTruncationLimit,
     }
   }
 
@@ -1851,9 +1875,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     if (shas.length === 0) {
       if (__DEV__) {
-        throw new Error(
-          "No currently selected sha yet we've been asked to switch file selection"
-        )
+        throw new Error('当前尚未选定提交 SHA，但却收到了切换文件选择的请求')
       } else {
         return
       }
@@ -2051,7 +2073,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private startBackgroundPruner(repository: Repository) {
     if (this.currentBranchPruner !== null) {
       fatalError(
-        `A branch pruner is already active and cannot start updating on ${repository.name}`
+        `在 ${repository.name} 上已经有一个分支修剪器在运行，因此不能开始新的更新任务`
       )
     }
 
@@ -2175,7 +2197,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   ) {
     if (this.currentBackgroundFetcher) {
       fatalError(
-        `We should only have on background fetcher active at once, but we're trying to start background fetching on ${repository.name} while another background fetcher is still active!`
+        `后台获取器一次只能有一个在运行。但是现在正在 ${repository.name} 上尝试启动一个后台获取，而另一个后台获取器仍在运行！`
       )
     }
 
@@ -2392,6 +2414,16 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.commitMessageGenerationDisclaimerLastSeen =
       getNumber(commitMessageGenerationDisclaimerLastSeenKey) ?? null
+
+    this.copilotUseCommitHistoryStyle = getBoolean(
+      copilotUseCommitHistoryStyleKey,
+      false
+    )
+    this.copilotCustomStyle = getString(copilotCustomStyleKey, '')
+    this.copilotDiffTruncationLimit = getNumber(
+      copilotDiffTruncationLimitKey,
+      0
+    )
 
     this.commitMessageGenerationButtonClicked = getBoolean(
       commitMessageGenerationButtonClickedKey,
@@ -4278,8 +4310,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
   ) {
     this.updateCheckoutProgress(repository, {
       kind: 'checkout',
-      title: `Refreshing ${__DARWIN__ ? 'Repository' : 'repository'}`,
-      description: 'Checking out',
+      title: `正在刷新${__DARWIN__ ? '仓库' : '仓库'}`,
+      description: '正在检出',
       value: 1,
       target: commitish,
     })
@@ -4538,9 +4570,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
         if (remoteName === null) {
           // This is based on the branches ref. It should not be null for a
           // remote branch
-          throw new Error(
-            `Could not determine remote name from: ${branch.ref}.`
-          )
+          throw new Error(`无法从该分支确定远程名称: ${branch.ref}.`)
         }
 
         const remote =
@@ -4642,9 +4672,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       branchesState.recentBranches.find(x => x.name !== branchToDelete.name)
 
     if (branchToCheckout === undefined) {
-      throw new Error(
-        `It's not possible to delete the only existing branch in a repository.`
-      )
+      throw new Error(`不可能删除仓库里唯一存在的分支。`)
     }
 
     return branchToCheckout
@@ -4684,11 +4712,11 @@ export class AppStore extends TypedBaseStore<IAppState> {
     const { tip } = state.branchesState
 
     if (tip.kind === TipState.Unborn) {
-      throw new Error('The current branch is unborn.')
+      throw new Error('当前分支未初始化。')
     }
 
     if (tip.kind === TipState.Detached) {
-      throw new Error('The current repository is in a detached HEAD state.')
+      throw new Error('当前仓库 HEAD 指针分离。')
     }
 
     if (tip.kind === TipState.Valid) {
@@ -4722,7 +4750,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
       const remoteName = branch.upstreamRemoteName || remote.name
 
-      const pushTitle = `Pushing to ${remoteName}`
+      const pushTitle = `正在推送到 ${remoteName}`
 
       // Emit an initial progress even before our push begins
       // since we're doing some work to get remotes up front.
@@ -4787,7 +4815,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       if (safeRemote.name !== remote.name) {
         sendNonFatalException(
           'remoteNameMismatch',
-          new Error('The current remote name differs from the branch remote')
+          new Error('分支关联的远程仓库名称与当前尝试操作的远程仓库名称不匹配')
         )
       }
 
@@ -4827,15 +4855,13 @@ export class AppStore extends TypedBaseStore<IAppState> {
             })
           })
 
-          const refreshTitle = __DARWIN__
-            ? 'Refreshing Repository'
-            : 'Refreshing repository'
+          const refreshTitle = __DARWIN__ ? '正在刷新仓库' : '正在刷新仓库'
           const refreshStartProgress = pushWeight + fetchWeight
 
           this.updatePushPullFetchProgress(repository, {
             kind: 'generic',
             title: refreshTitle,
-            description: 'Fast-forwarding branches',
+            description: '快进合并分支',
             value: refreshStartProgress,
           })
 
@@ -4963,18 +4989,18 @@ export class AppStore extends TypedBaseStore<IAppState> {
       const remote = gitStore.currentRemote
 
       if (!remote) {
-        throw new Error('The repository has no remotes.')
+        throw new Error('该仓库没有远程仓库。')
       }
 
       const state = this.repositoryStateCache.get(repository)
       const tip = state.branchesState.tip
 
       if (tip.kind === TipState.Unborn) {
-        throw new Error('The current branch is unborn.')
+        throw new Error('当前分支未初始化。')
       }
 
       if (tip.kind === TipState.Detached) {
-        throw new Error('The current repository is in a detached HEAD state.')
+        throw new Error('当前仓库 HEAD 指针分离。')
       }
 
       if (tip.kind === TipState.Valid) {
@@ -4995,7 +5021,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
           }
         }
 
-        const title = `Pulling ${remote.name}`
+        const title = `正在拉取 ${remote.name}`
         const kind = 'pull'
         this.updatePushPullFetchProgress(repository, {
           kind,
@@ -5077,14 +5103,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
           }
 
           const refreshStartProgress = pullWeight + fetchWeight
-          const refreshTitle = __DARWIN__
-            ? 'Refreshing Repository'
-            : 'Refreshing repository'
+          const refreshTitle = __DARWIN__ ? '正在刷新仓库' : '正在刷新仓库'
 
           this.updatePushPullFetchProgress(repository, {
             kind: 'generic',
             title: refreshTitle,
-            description: 'Fast-forwarding branches',
+            description: '快进合并分支',
             value: refreshStartProgress,
           })
 
@@ -5251,7 +5275,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     ) {
       return this._showPopup({
         type: PopupType.WarnForcePush,
-        operation: 'Amend',
+        operation: '修订',
         onBegin: () => {
           this._startAmendingRepository(repository, commit, isLocalCommit, true)
         },
@@ -5452,14 +5476,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
           )
         }
 
-        const refreshTitle = __DARWIN__
-          ? 'Refreshing Repository'
-          : 'Refreshing repository'
+        const refreshTitle = __DARWIN__ ? '正在刷新仓库' : '正在刷新仓库'
 
         this.updatePushPullFetchProgress(repository, {
           kind: 'generic',
           title: refreshTitle,
-          description: 'Fast-forwarding branches',
+          description: '快进合并分支',
           value: fetchWeight,
         })
 
@@ -5672,10 +5694,68 @@ export class AppStore extends TypedBaseStore<IAppState> {
         return false
       }
 
+      const promptPrefixParts: string[] = []
+
+      if (this.copilotCustomStyle && this.copilotCustomStyle.trim() !== '') {
+        promptPrefixParts.push(
+          '// BEGIN CUSTOM INSTRUCTIONS\n' +
+            this.copilotCustomStyle.trim() +
+            '\n// END CUSTOM INSTRUCTIONS'
+        )
+      }
+
+      if (this.copilotUseCommitHistoryStyle) {
+        try {
+          const recentCommits: ReadonlyArray<Commit> = await getCommits(
+            repository,
+            undefined,
+            10
+          )
+
+          if (recentCommits.length > 0) {
+            const historyExamples = recentCommits
+              .map(
+                commit =>
+                  `- ${commit.summary}${
+                    commit.body ? `\n\n${commit.body}` : ''
+                  }`
+              )
+              .join('\n---\n')
+            promptPrefixParts.push(
+              '// BEGIN RECENT COMMITS\n' +
+                historyExamples +
+                '\n// END RECENT COMMITS'
+            )
+          }
+        } catch (error) {
+          log.error('Failed to get recent commits for Copilot style:', error)
+          promptPrefixParts.push(
+            '// BEGIN RECENT COMMITS\n// (Could not fetch recent commits)\n// END RECENT COMMITS'
+          )
+        }
+      }
+
+      let finalDiffContent = diff
+      const limit = this.copilotDiffTruncationLimit
+      if (limit > 0 && finalDiffContent.length > limit) {
+        finalDiffContent = finalDiffContent.substring(0, limit)
+        finalDiffContent +=
+          '\n// ... (diff truncated to ' + limit + ' characters)\n'
+      }
+
+      if (promptPrefixParts.length > 0) {
+        const prefixComment = promptPrefixParts.join('\n')
+        finalDiffContent = `${prefixComment}\n\n${finalDiffContent}`
+      }
       try {
         const response = enableCopilotSdkCommitMessageGeneration(account)
-          ? await this.copilotStore.generateCommitMessage(diff, repository.path)
-          : await API.fromAccount(account).getDiffChangesCommitMessage(diff)
+          ? await this.copilotStore.generateCommitMessage(
+              finalDiffContent,
+              repository.path
+            )
+          : await API.fromAccount(account).getDiffChangesCommitMessage(
+              finalDiffContent
+            )
 
         this._setCommitMessage(repository, {
           summary: response.title,
@@ -6045,7 +6125,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
         if (match === null) {
           this.emitError(
             new ExternalEditorError(
-              `No suitable editors installed for GitHub Desktop to launch. Install ${suggestedExternalEditor.name} for your platform and restart GitHub Desktop to try again.`,
+              `未找到合适的编辑器。在电脑上安装 ${suggestedExternalEditor.name} 并重启 GitHub Desktop 再试一次吧。`,
               { suggestDefaultEditor: true }
             )
           )
@@ -6519,7 +6599,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       )
       this.tutorialAssessor.onNewTutorialRepository()
     } else {
-      const error = new Error(`${path} isn't a git repository.`)
+      const error = new Error(`${path} 不是 Git 仓库。`)
       this.emitError(error)
     }
   }
@@ -6610,7 +6690,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
           this.emitError(
             new Error(
-              `Failed to move the repository directory to ${TrashNameLabel}.\n\nA common reason for this is that the directory or one of its files is open in another program.`
+              `无法将仓库文件夹放到${TrashNameLabel}。\n\n通常这是因为仓库文件被其他软件打开和占用了。`
             )
           )
           return
@@ -6659,15 +6739,17 @@ export class AppStore extends TypedBaseStore<IAppState> {
     invalidPaths: ReadonlyArray<string>
   ): string {
     if (invalidPaths.length === 1) {
-      return `${invalidPaths} isn't a Git repository.`
+      return `${invalidPaths} 不是一个 Git 仓库。`
     }
 
-    return `The following paths aren't Git repositories:\n\n${invalidPaths
+    return `以下路径不是 Git 仓库：\n\n${invalidPaths
       .slice(0, MaxInvalidFoldersToDisplay)
       .map(path => `- ${path}`)
       .join('\n')}${
       invalidPaths.length > MaxInvalidFoldersToDisplay
-        ? `\n\n(and ${invalidPaths.length - MaxInvalidFoldersToDisplay} more)`
+        ? `\n\n（还有另外${
+            invalidPaths.length - MaxInvalidFoldersToDisplay
+          }个）`
         : ''
     }`
   }
@@ -7041,9 +7123,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
         remote = await addRemote(repository, forkRemoteName, headCloneUrl)
       } catch (e) {
         this.emitError(
-          new Error(
-            `Couldn't find PR branch, adding remote failed: ${e.message}`
-          )
+          new Error(`找不到 PR 分支，添加远程仓库失败: ${e.message}`)
         )
         return
       }
@@ -7083,9 +7163,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
     if (existingBranch === undefined) {
       this.emitError(
         new Error(
-          `Couldn't find branch '${headRefName}' in remote '${remote.name}'. ` +
-            `A common reason for this is that the PR author has deleted their ` +
-            `branch or their forked repository.`
+          `在远程端 '${remote.name}' 中找不到分支 '${headRefName}'。` +
+            `通常可能是因为 PR 作者从他们的复刻仓库里删掉了该分支。`
         )
       )
       return
@@ -7419,11 +7498,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       if (err instanceof GitError) {
         this.emitError(err)
       } else {
-        this.emitError(
-          new Error(
-            `Failed creating the tutorial repository.\n\n${err.message}`
-          )
-        )
+        this.emitError(new Error(`无法创建教程仓库。\n\n${err.message}`))
       }
     } finally {
       this._closePopup(PopupType.CreateTutorialRepository)
@@ -7437,7 +7512,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   ) {
     // This shouldn't happen... but in case throw error.
     const lastCommit = forceUnwrap(
-      'Unable to initialize cherry-pick progress. No commits provided.',
+      '无法初始化摘取过程，未提供提交。',
       commits.at(-1)
     )
 
@@ -7914,9 +7989,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
         break
       case MultiCommitOperationKind.Rebase:
       case MultiCommitOperationKind.Merge:
-        throw new Error(
-          `Unexpected multi commit operation kind to undo ${kind}`
-        )
+        throw new Error(`无法撤销意外的多提交操作类型 ${kind}`)
       default:
         assertNever(kind, `Unsupported multi operation kind to undo ${kind}`)
     }
@@ -8578,6 +8651,31 @@ export class AppStore extends TypedBaseStore<IAppState> {
       setPreferAbsoluteDates(value)
       this.emitUpdate()
     }
+  }
+
+  public async _setCopilotUseCommitHistoryStyle(
+    copilotUseCommitHistoryStyle: boolean
+  ): Promise<void> {
+    await setBoolean(
+      copilotUseCommitHistoryStyleKey,
+      copilotUseCommitHistoryStyle
+    )
+    this.copilotUseCommitHistoryStyle = copilotUseCommitHistoryStyle
+    this.emitUpdate()
+  }
+
+  public async _setCopilotCustomStyle(
+    copilotCustomStyle: string
+  ): Promise<void> {
+    await setString(copilotCustomStyleKey, copilotCustomStyle)
+    this.copilotCustomStyle = copilotCustomStyle
+    this.emitUpdate()
+  }
+
+  public async _setCopilotDiffTruncationLimit(limit: number): Promise<void> {
+    await setNumber(copilotDiffTruncationLimitKey, limit)
+    this.copilotDiffTruncationLimit = limit
+    this.emitUpdate()
   }
 
   public _updateFileListFilter(
