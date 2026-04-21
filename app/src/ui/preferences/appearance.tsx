@@ -204,11 +204,11 @@ export class Appearance extends React.Component<
 
     return (
       <div className="appearance-section formatting-section">
-        <h2 id="formatting-heading">Formatting</h2>
+        <h2 id="formatting-heading">显示格式</h2>
 
         <Row>
           <Select
-            label={__DARWIN__ ? 'Date Format' : 'Date format'}
+            label={__DARWIN__ ? '日期格式' : '日期格式'}
             value={this.props.selectedDateFormat}
             onChange={this.onDateFormatChanged}
           >
@@ -220,7 +220,7 @@ export class Appearance extends React.Component<
           </Select>
 
           <Select
-            label={__DARWIN__ ? 'Time Format' : 'Time format'}
+            label={__DARWIN__ ? '时间格式' : '时间格式'}
             value={this.props.selectedTimeFormat}
             onChange={this.onTimeFormatChanged}
           >
@@ -233,7 +233,7 @@ export class Appearance extends React.Component<
         </Row>
 
         <Select
-          label={__DARWIN__ ? 'Number Format' : 'Number format'}
+          label={__DARWIN__ ? '数字格式' : '数字格式'}
           value={numberFormatToKey(this.props.selectedNumberFormat)}
           onChange={this.onNumberFormatChanged}
         >
@@ -249,7 +249,7 @@ export class Appearance extends React.Component<
 
         <Checkbox
           className="prefer-absolute-dates"
-          label="Prefer absolute dates over relative"
+          label="优先显示绝对日期"
           value={
             this.props.preferAbsoluteDates
               ? CheckboxValue.On
