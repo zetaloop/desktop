@@ -71,20 +71,18 @@ describe('rulesets and publish surfaces', () => {
     const view = render(<NoRemote onPublish={onPublish} />)
 
     const dialogContent = view.container.querySelector('.dialog-content')
-    const publishButton = screen.getByRole('button', { name: 'Publish' })
-    const helpLink = screen.getByRole('link', {
-      name: 'Learn more about remote repositories.',
-    })
+    const publishButton = screen.getByRole('button', { name: '发布' })
+    const helpLink = screen.getByRole('link', { name: '点击了解远程仓库' })
 
     assert.notEqual(dialogContent, null)
     assert.ok(
-      screen.getByText('Publish your repository to GitHub. Need help?', {
+      screen.getByText('把仓库发布到 GitHub 吧。是否需要帮助？', {
         exact: false,
       })
     )
     assert.equal(
       helpLink.getAttribute('href'),
-      'https://help.github.com/articles/about-remote-repositories/'
+      'https://docs.github.com/zh/get-started/getting-started-with-git/about-remote-repositories'
     )
 
     fireEvent.click(publishButton)

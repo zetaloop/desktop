@@ -35,14 +35,14 @@ describe('branch empty states', () => {
     const { createCalls } = renderNoBranches()
 
     const button = screen.getByRole('button', {
-      name: __DARWIN__ ? 'Create New Branch' : 'Create new branch',
+      name: __DARWIN__ ? '新建分支' : '新建分支',
     })
     const image = document.querySelector('.no-branches .blankslate-image')
     const protip = document.querySelector('.no-branches .protip')
 
     assert.notEqual(image, null)
-    assert.ok(screen.getByText("Sorry, I can't find that branch"))
-    assert.ok(screen.getByText('Do you want to create a new branch instead?'))
+    assert.ok(screen.getByText('抱歉，找不到该分支'))
+    assert.ok(screen.getByText('您想创建这个分支吗？'))
     assert.ok(
       protip?.textContent?.includes(__DARWIN__ ? '⌘⇧N' : 'Ctrl+Shift+N')
     )
@@ -61,7 +61,7 @@ describe('branch empty states', () => {
     assert.ok(screen.getByText('No matching branches were found.'))
     assert.equal(
       screen.queryByRole('button', {
-        name: __DARWIN__ ? 'Create New Branch' : 'Create new branch',
+        name: __DARWIN__ ? '新建分支' : '新建分支',
       }),
       null
     )
@@ -79,7 +79,7 @@ describe('branch empty states', () => {
       />
     )
 
-    assert.ok(screen.getByText("Sorry, I can't find that pull request!"))
+    assert.ok(screen.getByText('抱歉，找不到该拉取请求'))
 
     view.rerender(
       <NoPullRequests
@@ -92,8 +92,8 @@ describe('branch empty states', () => {
       />
     )
 
-    assert.ok(screen.getByText('Hang tight'))
-    assert.ok(screen.getByText('Loading pull requests as fast as I can!'))
+    assert.ok(screen.getByText('请稍候'))
+    assert.ok(screen.getByText('正在以最快速度加载拉取请求啦！'))
   })
 
   it('renders default-branch and feature-branch calls to action and invokes their callbacks', () => {
@@ -119,8 +119,8 @@ describe('branch empty states', () => {
       />
     )
 
-    assert.ok(screen.getByText("You're all set!"))
-    assert.ok(screen.getByText('No open pull requests in'))
+    assert.ok(screen.getByText('一切准备就绪！'))
+    assert.ok(screen.getByText('没有打开的拉取请求'))
     assert.ok(screen.getByText('desktop'))
     assert.notEqual(
       view.container.querySelector('.no-pull-requests .blankslate-image'),
@@ -128,7 +128,7 @@ describe('branch empty states', () => {
     )
 
     const createBranchButton = screen.getByRole('button', {
-      name: 'create a new branch',
+      name: '新建分支',
     })
 
     fireEvent.click(createBranchButton)
@@ -147,7 +147,7 @@ describe('branch empty states', () => {
     )
 
     const createPullRequestButton = screen.getByRole('button', {
-      name: 'create a pull request',
+      name: '创建拉取请求',
     })
 
     fireEvent.click(createPullRequestButton)

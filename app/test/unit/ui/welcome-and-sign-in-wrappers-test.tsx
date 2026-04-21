@@ -85,8 +85,8 @@ describe('welcome and sign-in wrappers', () => {
       </SignIn>
     )
 
-    const input = screen.getByLabelText('Enterprise address')
-    const continueButton = screen.getByRole('button', { name: 'Continue' })
+    const input = screen.getByLabelText('企业版网址')
+    const continueButton = screen.getByRole('button', { name: '继续' })
 
     fireEvent.change(input, {
       target: { value: 'https://enterprise.example.com' },
@@ -110,12 +110,12 @@ describe('welcome and sign-in wrappers', () => {
       </SignIn>
     )
 
-    assert.ok(screen.getByText("You're already signed in to", { exact: false }))
+    assert.ok(screen.getByText('您已登录', { exact: false }))
     assert.ok(screen.getByText('github.com', { exact: false }))
     assert.ok(screen.getByText('mona'))
 
     const browserLink = screen.getByRole('link', {
-      name: 'Sign in using your browser',
+      name: '通过浏览器登录',
     })
 
     fireEvent.click(browserLink)
@@ -161,8 +161,8 @@ describe('welcome and sign-in wrappers', () => {
       />
     )
 
-    assert.ok(screen.getByText('Sign in to your GitHub Enterprise'))
-    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+    assert.ok(screen.getByText('登录 GitHub 企业版'))
+    fireEvent.click(screen.getByRole('button', { name: '取消' }))
 
     assert.deepEqual(advancedSteps, ['Start'])
   })
@@ -189,15 +189,15 @@ describe('welcome and sign-in wrappers', () => {
       />
     )
 
-    assert.ok(screen.getByText('Configure Git'))
+    assert.ok(screen.getByText('配置 Git'))
     assert.ok(
-      screen.getByText('This is used to identify the commits you create.', {
+      screen.getByText('这些信息会标记在您的提交上。', {
         exact: false,
       })
     )
-    assert.ok(screen.getByRole('button', { name: 'Finish' }))
+    assert.ok(screen.getByRole('button', { name: '完成' }))
 
-    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+    fireEvent.click(screen.getByRole('button', { name: '取消' }))
 
     assert.deepEqual(advancedSteps, ['Start'])
     assert.equal(doneCount, 0)

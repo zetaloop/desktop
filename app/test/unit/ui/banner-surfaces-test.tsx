@@ -38,7 +38,7 @@ describe('banner surfaces', () => {
     const banner = view.container.querySelector('#test-banner.banner')
     const link = screen.getByRole('link', { name: 'Learn more' })
     const dismissButton = screen.getByRole('button', {
-      name: 'Dismiss this message',
+      name: '已阅',
     })
 
     assert.notEqual(banner, null)
@@ -73,7 +73,7 @@ describe('banner surfaces', () => {
       </SuccessBanner>
     )
 
-    const undoButton = screen.getByRole('button', { name: 'Undo' })
+    const undoButton = screen.getByRole('button', { name: '撤销' })
 
     assert.ok(screen.getByText('Branch renamed successfully.'))
     assert.notEqual(document.querySelector('.success-contents'), null)
@@ -98,16 +98,14 @@ describe('banner surfaces', () => {
 
     assert.ok(screen.getByText('main'))
     assert.ok(screen.getByText('origin/main'))
-    assert.ok(
-      view.container.textContent?.includes('is already up to date with')
-    )
+    assert.ok(view.container.textContent?.includes('已与'))
 
     view.rerender(
       <BranchAlreadyUpToDate ourBranch="release" onDismissed={onDismissed} />
     )
 
     assert.ok(screen.getByText('release'))
-    assert.ok(view.container.textContent?.includes('is already up to date'))
+    assert.ok(view.container.textContent?.includes('已保持同步'))
   })
 
   it('renders cherry-pick undone messages with singular and plural commit copy', () => {
@@ -121,11 +119,7 @@ describe('banner surfaces', () => {
       />
     )
 
-    assert.ok(
-      view.container.textContent?.includes(
-        'Cherry-pick undone. Successfully removed the 1 copied commit from'
-      )
-    )
+    assert.ok(view.container.textContent?.includes('移除了1个提交'))
     assert.ok(screen.getByText('main'))
 
     view.rerender(
@@ -136,11 +130,7 @@ describe('banner surfaces', () => {
       />
     )
 
-    assert.ok(
-      view.container.textContent?.includes(
-        'Cherry-pick undone. Successfully removed the 3 copied commits from'
-      )
-    )
+    assert.ok(view.container.textContent?.includes('移除了3个提交'))
     assert.ok(screen.getByText('release'))
   })
 })

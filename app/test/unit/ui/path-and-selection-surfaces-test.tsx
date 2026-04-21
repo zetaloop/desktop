@@ -70,6 +70,6 @@ describe('path and selection surfaces', () => {
     assert.notEqual(panel, null)
     assert.notEqual(image, null)
     assert.equal(image?.getAttribute('alt'), '')
-    assert.ok(view.container.textContent?.includes('3 files selected'))
+    assert.ok(view.container.textContent?.includes('选中3个文件'))
   })
 })

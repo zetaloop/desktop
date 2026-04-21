@@ -60,22 +60,18 @@ describe('GitEmailNotFoundWarning', () => {
       '#git-email-not-found-warning-for-screen-readers.sr-only'
     )
     const link = screen.getByRole('link', {
-      name: 'Learn more about commit attribution',
+      name: '了解关于提交归属的详细信息',
     })
 
     assert.notEqual(warning, null)
-    assert.ok(
-      warning?.textContent?.includes('does not match your GitHub account')
-    )
+    assert.ok(warning?.textContent?.includes('不符合您的 GitHub 账号'))
     assert.equal(
       link.getAttribute('href'),
-      'https://docs.github.com/en/github/committing-changes-to-your-project/why-are-my-commits-linked-to-the-wrong-user'
+      'https://docs.github.com/zh/github/committing-changes-to-your-project/why-are-my-commits-linked-to-the-wrong-user'
     )
     assert.equal(srOnly?.getAttribute('aria-live'), 'polite')
     assert.ok(
-      srOnly?.textContent?.startsWith(
-        'This email address does not match your GitHub account.'
-      )
+      srOnly?.textContent?.startsWith('该邮箱地址不符合您的 GitHub 账号。')
     )
   })
 
@@ -90,10 +86,10 @@ describe('GitEmailNotFoundWarning', () => {
     const warning = view.container.querySelector('.git-email-not-found-warning')
 
     assert.notEqual(warning?.querySelector('.green-circle .check-icon'), null)
-    assert.ok(warning?.textContent?.includes('matches your GitHub account'))
+    assert.ok(warning?.textContent?.includes('符合您的 GitHub 账号'))
     assert.equal(
       screen.queryByRole('link', {
-        name: 'Learn more about commit attribution',
+        name: '了解关于提交归属的详细信息',
       }),
       null
     )
