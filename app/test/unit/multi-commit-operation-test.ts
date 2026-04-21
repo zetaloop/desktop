@@ -15,23 +15,23 @@ import { TipState } from '../../src/models/tip'
 describe('multi-commit-operation', () => {
   describe('isIdMultiCommitOperation', () => {
     it('returns true for Rebase', () => {
-      assert.equal(isIdMultiCommitOperation('Rebase'), true)
+      assert.equal(isIdMultiCommitOperation('重构'), true)
     })
 
     it('returns true for Cherry-pick', () => {
-      assert.equal(isIdMultiCommitOperation('Cherry-pick'), true)
+      assert.equal(isIdMultiCommitOperation('摘取'), true)
     })
 
     it('returns true for Squash', () => {
-      assert.equal(isIdMultiCommitOperation('Squash'), true)
+      assert.equal(isIdMultiCommitOperation('压缩'), true)
     })
 
     it('returns true for Merge', () => {
-      assert.equal(isIdMultiCommitOperation('Merge'), true)
+      assert.equal(isIdMultiCommitOperation('合并'), true)
     })
 
     it('returns true for Reorder', () => {
-      assert.equal(isIdMultiCommitOperation('Reorder'), true)
+      assert.equal(isIdMultiCommitOperation('重排'), true)
     })
 
     it('returns false for unknown operations', () => {

@@ -38,14 +38,14 @@ describe('CopyButton', () => {
     advanceTimersBy(1000)
 
     await waitFor(() => {
-      const liveRegion = screen.getByText(/^Copied!/, { selector: 'div' })
-      assert.ok(liveRegion.textContent?.startsWith('Copied!'))
+      const liveRegion = screen.getByText(/^已复制！/, { selector: 'div' })
+      assert.ok(liveRegion.textContent?.startsWith('已复制！'))
     })
 
     advanceTimersBy(2000)
 
     await waitFor(() => {
-      assert.equal(screen.queryByText(/^Copied!/, { selector: 'div' }), null)
+      assert.equal(screen.queryByText(/^已复制！/, { selector: 'div' }), null)
     })
   })
 })

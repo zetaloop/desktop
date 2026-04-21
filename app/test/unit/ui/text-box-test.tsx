@@ -102,7 +102,7 @@ describe('TextBox', () => {
     const input = screen.getByRole('searchbox', {
       name: 'Filter branches',
     }) as HTMLInputElement
-    const clearButton = screen.getByRole('button', { name: 'Clear' })
+    const clearButton = screen.getByRole('button', { name: '清空' })
 
     fireEvent.click(clearButton)
 
@@ -110,7 +110,7 @@ describe('TextBox', () => {
     assert.equal(document.activeElement, input)
     assert.deepEqual(changedValues, [''])
     assert.equal(clearedCount, 1)
-    assert.ok(view.container.textContent?.includes('Input cleared'))
+    assert.ok(view.container.textContent?.includes('输入已清空'))
   })
 
   it('clears or blurs search inputs when escape is pressed', () => {

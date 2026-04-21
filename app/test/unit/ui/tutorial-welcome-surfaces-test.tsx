@@ -51,17 +51,15 @@ describe('tutorial welcome surfaces', () => {
       image => image.getAttribute('alt')
     )
 
-    assert.ok(screen.getByText('Welcome to GitHub Desktop'))
+    assert.ok(screen.getByText('欢迎使用 GitHub Desktop'))
     assert.ok(
-      screen.getByText(
-        'Use this tutorial to get comfortable with Git, GitHub, and GitHub Desktop.'
-      )
+      screen.getByText('通过该教程来让您熟悉 Git、GitHub 和 GitHub Desktop。')
     )
     assert.equal(definitions.length, 3)
     assert.deepEqual(images, [
-      'Html syntax icon',
-      'People with discussion bubbles overhead',
-      'Server stack with cloud',
+      'Html 语法图标',
+      '头顶着讨论气泡的人的图像',
+      '云上的服务器机架图像',
     ])
   })
 
@@ -150,16 +148,14 @@ describe('tutorial welcome surfaces', () => {
       />
     )
 
-    const heading = screen.getByRole('heading', { name: "You're done!" })
-    const openExploreLabel = __DARWIN__ ? 'Open in Browser' : 'Open in browser'
-    const createRepositoryLabel = __DARWIN__
-      ? 'Create Repository'
-      : 'Create repository'
-    const addRepositoryLabel = __DARWIN__ ? 'Add Repository' : 'Add repository'
+    const heading = screen.getByRole('heading', { name: '完成啦！' })
+    const openExploreLabel = '打开浏览器'
+    const createRepositoryLabel = '新建仓库'
+    const addRepositoryLabel = '添加仓库'
 
     assert.equal(document.activeElement, heading)
     assert.equal(announcements, 1)
-    assert.ok(screen.getByRole('img', { name: 'Hands clapping' }))
+    assert.ok(screen.getByRole('img', { name: '拍手' }))
 
     screen.getByRole('button', { name: openExploreLabel }).click()
     screen.getByRole('button', { name: createRepositoryLabel }).click()

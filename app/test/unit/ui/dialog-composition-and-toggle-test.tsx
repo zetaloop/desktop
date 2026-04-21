@@ -63,7 +63,7 @@ describe('dialog composition and toggle components', () => {
 
     const title = view.container.querySelector('h1#rename-branch-title')
     const spinner = view.container.querySelector('svg.octicon.icon.spin')
-    const closeButton = screen.getByRole('button', { name: 'Close' })
+    const closeButton = screen.getByRole('button', { name: '关闭' })
 
     assert.equal(title?.textContent, 'Rename Branch')
     assert.notEqual(spinner, null)
@@ -77,7 +77,7 @@ describe('dialog composition and toggle components', () => {
       <DialogHeader title="Rename Branch" showCloseButton={false} />
     )
 
-    assert.equal(screen.queryByRole('button', { name: 'Close' }), null)
+    assert.equal(screen.queryByRole('button', { name: '关闭' }), null)
   })
 
   it('renders a default dialog footer with a single submit button', () => {
@@ -93,7 +93,7 @@ describe('dialog composition and toggle components', () => {
     assert.notEqual(buttonGroup, null)
     assert.equal(button.getAttribute('type'), 'submit')
     assert.equal(button.getAttribute('aria-disabled'), 'true')
-    assert.equal(screen.queryByRole('button', { name: 'Cancel' }), null)
+    assert.equal(screen.queryByRole('button', { name: '取消' }), null)
   })
 
   it('toggles unchecked and checked state for uncontrolled toggle buttons', () => {

@@ -89,9 +89,9 @@ describe('visual helper surfaces', () => {
     )
 
     assert.equal(warnings.length, 2)
-    assert.ok(view.container.textContent?.includes('This branch is tracking'))
+    assert.ok(view.container.textContent?.includes('该分支跟踪远程分支'))
     assert.ok(view.container.textContent?.includes('origin/main'))
-    assert.ok(view.container.textContent?.includes('A branch named'))
+    assert.ok(view.container.textContent?.includes('已存在同名远程分支'))
     assert.ok(view.container.textContent?.includes('feature'))
   })
 
@@ -117,6 +117,6 @@ describe('visual helper surfaces', () => {
     )
 
     assert.equal(view.container.textContent, '')
-    assert.equal(screen.queryByText(/branch named/i), null)
+    assert.equal(screen.queryByText(/已存在同名远程分支/), null)
   })
 })
