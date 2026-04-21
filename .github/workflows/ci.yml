@@ -1,10 +1,24 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - development
-  pull_request:
+  # push:
+  #   branches:
+  #     - development
+  # pull_request:
+  workflow_dispatch:
+    inputs:
+      upload-artifacts:
+        default: true
+        required: false
+        type: boolean
+      environment:
+        default: beta
+        type: string
+        required: true
+      sign:
+        type: boolean
+        default: false
+        required: false
   workflow_call:
     inputs:
       repository:
@@ -64,7 +78,8 @@ jobs:
       - name: Ensure a clean working directory
         run: git diff --name-status --exit-code
   build:
-    name: ${{ matrix.friendlyName }} ${{ matrix.arch }}
+    name:
+      ${{ matrix.friendlyName }} ${{ matrix.arch }} ${{ inputs.environment }}
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
@@ -72,12 +87,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14-xlarge, windows-2022]
+        os: [macos-26, windows-2025]
         arch: [x64, arm64]
         include:
-          - os: macos-14-xlarge
+          - os: macos-26
             friendlyName: macOS
-          - os: windows-2022
+          - os: windows-2025
             friendlyName: Windows
     timeout-minutes: 60
     environment: ${{ inputs.environment }}

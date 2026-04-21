@@ -393,7 +393,6 @@ export interface IAppState {
 
   /** Whether the changes filter is shown */
   readonly showChangesFilter: boolean
-
   /**
    * Per-feature Copilot model selections. An absent key means the default
    * model will be used for that feature.
@@ -408,6 +407,13 @@ export interface IAppState {
 
   /** Whether Copilot is available (i.e. a GitHub.com account is signed in). */
   readonly copilotAvailable: boolean
+
+  /** Custom Copilot settings */
+  readonly copilotUseCommitHistoryStyle: boolean
+
+  readonly copilotCustomStyle: string
+
+  readonly copilotDiffTruncationLimit: number
 }
 
 export enum FoldoutType {

@@ -313,7 +313,6 @@ export class FilterChangesList extends React.Component<
   private includeAllCheckBoxRef = React.createRef<Checkbox>()
   private filterListRef =
     React.createRef<AugmentedSectionFilterList<IChangesListItem>>()
-
   /** Compute the 'Include All' checkbox value */
   private getCheckAllValue = memoizeOne(
     (
@@ -359,7 +358,6 @@ export class FilterChangesList extends React.Component<
       return getCheckBoxValueFromIncludeAll(filteredStatus.includeAll)
     }
   )
-
   public constructor(props: IFilterChangesListProps) {
     super(props)
 
@@ -375,7 +373,6 @@ export class FilterChangesList extends React.Component<
       groups,
     }
   }
-
   public componentWillReceiveProps(nextProps: IFilterChangesListProps) {
     // No need to update state unless we haven't done it yet or the
     // selected file id list has changed.
@@ -392,7 +389,6 @@ export class FilterChangesList extends React.Component<
       })
     }
   }
-
   private createListItems(
     files: ReadonlyArray<WorkingDirectoryFileChange>
   ): IFilterListGroup<IChangesListItem> {
@@ -407,7 +403,6 @@ export class FilterChangesList extends React.Component<
       items,
     }
   }
-
   private onIncludeAllChanged = (event: React.FormEvent<HTMLInputElement>) => {
     const include = event.currentTarget.checked
     const filteredItemPaths = Array.from(
@@ -416,7 +411,6 @@ export class FilterChangesList extends React.Component<
     )
     this.props.onIncludeChanged(filteredItemPaths, include)
   }
-
   private renderChangedFile = (
     changeListItem: IChangesListItem,
     matches: IMatches
@@ -460,9 +454,9 @@ export class FilterChangesList extends React.Component<
       isCommitting || rebaseConflictState !== null || isUncommittableSubmodule
 
     const checkboxTooltip = isUncommittableSubmodule
-      ? 'This submodule change cannot be added to a commit in this repository because it contains changes that have not been committed.'
+      ? '子模块内的改动需要先在子模块内提交，才能一起提交到仓库。子模块内的改动尚未提交。'
       : isPartiallyCommittableSubmodule
-      ? 'Only changes that have been committed within the submodule will be added to this repository. You need to commit any other modified or untracked changes in the submodule before including them in this repository.'
+      ? '子模块内的改动需要先在子模块内提交，才能一起提交到仓库。子模块内还有一些改动尚未提交。'
       : undefined
 
     return (
@@ -479,18 +473,15 @@ export class FilterChangesList extends React.Component<
       />
     )
   }
-
   private onDiscardAllChanges = () => {
     this.props.onDiscardChangesFromFiles(
       this.props.workingDirectory.files,
       true
     )
   }
-
   private onStashChanges = () => {
     this.props.dispatcher.createStashForCurrentBranch(this.props.repository)
   }
-
   private onDiscardChanges = (files: ReadonlyArray<string>) => {
     const workingDirectory = this.props.workingDirectory
 
@@ -524,20 +515,18 @@ export class FilterChangesList extends React.Component<
       }
     }
   }
-
   private getDiscardChangesMenuItemLabel = (files: ReadonlyArray<string>) => {
     const label =
       files.length === 1
         ? __DARWIN__
-          ? `Discard Changes`
-          : `Discard changes`
+          ? `放弃改动`
+          : `放弃改动`
         : __DARWIN__
-        ? `Discard ${files.length} Selected Changes`
-        : `Discard ${files.length} selected changes`
+        ? `放弃${files.length}个改动`
+        : `放弃${files.length}个改动`
 
     return this.props.askForConfirmationOnDiscardChanges ? `${label}…` : label
   }
-
   private onContextMenu = (event: React.MouseEvent<any>) => {
     event.preventDefault()
 
@@ -552,16 +541,14 @@ export class FilterChangesList extends React.Component<
       this.props.conflictState !== null ||
       hasConflictedFiles(this.props.workingDirectory)
 
-    const stashAllChangesLabel = __DARWIN__
-      ? 'Stash All Changes'
-      : 'Stash all changes'
+    const stashAllChangesLabel = __DARWIN__ ? '暂存所有改动' : '暂存所有改动'
     const confirmStashAllChangesLabel = __DARWIN__
-      ? 'Stash All Changes…'
-      : 'Stash all changes…'
+      ? '暂存所有改动…'
+      : '暂存所有改动…'
 
     const items: IMenuItem[] = [
       {
-        label: __DARWIN__ ? 'Discard All Changes…' : 'Discard all changes…',
+        label: __DARWIN__ ? '放弃所有改动…' : '放弃所有改动…',
         action: this.onDiscardAllChanges,
         enabled: hasLocalChanges,
       },
@@ -574,7 +561,6 @@ export class FilterChangesList extends React.Component<
 
     showContextualMenu(items)
   }
-
   private getDiscardChangesMenuItem = (
     paths: ReadonlyArray<string>
   ): IMenuItem => {
@@ -583,7 +569,6 @@ export class FilterChangesList extends React.Component<
       action: () => this.onDiscardChanges(paths),
     }
   }
-
   private getCopyPathMenuItem = (
     file: WorkingDirectoryFileChange
   ): IMenuItem => {
@@ -595,7 +580,6 @@ export class FilterChangesList extends React.Component<
       },
     }
   }
-
   private getCopyRelativePathMenuItem = (
     file: WorkingDirectoryFileChange
   ): IMenuItem => {
@@ -604,7 +588,6 @@ export class FilterChangesList extends React.Component<
       action: () => clipboard.writeText(Path.normalize(file.path)),
     }
   }
-
   private getCopySelectedPathsMenuItem = (
     files: WorkingDirectoryFileChange[]
   ): IMenuItem => {
@@ -618,7 +601,6 @@ export class FilterChangesList extends React.Component<
       },
     }
   }
-
   private getCopySelectedRelativePathsMenuItem = (
     files: WorkingDirectoryFileChange[]
   ): IMenuItem => {
@@ -630,7 +612,6 @@ export class FilterChangesList extends React.Component<
       },
     }
   }
-
   private getRevealInFileManagerMenuItem = (
     file: WorkingDirectoryFileChange
   ): IMenuItem => {
@@ -640,7 +621,6 @@ export class FilterChangesList extends React.Component<
       enabled: file.status.kind !== AppFileStatusKind.Deleted,
     }
   }
-
   private getOpenInExternalEditorMenuItem = (
     file: WorkingDirectoryFileChange,
     enabled: boolean
@@ -648,7 +628,8 @@ export class FilterChangesList extends React.Component<
     const { externalEditorLabel } = this.props
 
     const openInExternalEditor = externalEditorLabel
-      ? `Open in ${externalEditorLabel}`
+      ? `打开 ${externalEditorLabel}` // 去除中文间多余空格
+          .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
       : DefaultEditorLabel
 
     return {
@@ -659,7 +640,6 @@ export class FilterChangesList extends React.Component<
       enabled,
     }
   }
-
   private getDefaultContextMenu(
     file: WorkingDirectoryFileChange
   ): ReadonlyArray<IMenuItem> {
@@ -705,8 +685,8 @@ export class FilterChangesList extends React.Component<
       const enabled = Path.basename(path) !== GitIgnoreFileName
       items.push({
         label: __DARWIN__
-          ? 'Ignore File (Add to .gitignore)'
-          : 'Ignore file (add to .gitignore)',
+          ? '忽略该文件（.gitignore）' // 译：请保留（.gitignore）这个提示，因为 Git 忽略规则还有本地的
+          : '忽略该文件（.gitignore）',
         action: () => this.props.onIgnoreFile(path),
         enabled,
       })
@@ -727,8 +707,8 @@ export class FilterChangesList extends React.Component<
 
         items.push({
           label: __DARWIN__
-            ? 'Ignore Folder (Add to .gitignore)'
-            : 'Ignore folder (add to .gitignore)',
+            ? '忽略文件夹（.gitignore）'
+            : '忽略文件夹（.gitignore）',
           submenu,
           enabled,
         })
@@ -736,8 +716,8 @@ export class FilterChangesList extends React.Component<
     } else if (paths.length > 1) {
       items.push({
         label: __DARWIN__
-          ? `Ignore ${paths.length} Selected Files (Add to .gitignore)`
-          : `Ignore ${paths.length} selected files (add to .gitignore)`,
+          ? `忽略${paths.length}个文件（.gitignore）`
+          : `忽略${paths.length}个文件（.gitignore）`,
         action: () => {
           // Filter out any .gitignores that happens to be selected, ignoring
           // those doesn't make sense.
@@ -756,8 +736,8 @@ export class FilterChangesList extends React.Component<
       .forEach(extension => {
         items.push({
           label: __DARWIN__
-            ? `Ignore All ${extension} Files (Add to .gitignore)`
-            : `Ignore all ${extension} files (add to .gitignore)`,
+            ? `忽略所有${extension}文件（.gitignore）` // 短的英文不加空格，长句才加
+            : `忽略所有${extension}文件（.gitignore）`,
           action: () => this.props.onIgnorePattern(`*${extension}`),
         })
       })
@@ -766,17 +746,13 @@ export class FilterChangesList extends React.Component<
       items.push(
         { type: 'separator' },
         {
-          label: __DARWIN__
-            ? 'Include Selected Files'
-            : 'Include selected files',
+          label: __DARWIN__ ? '勾选这些文件' : '勾选这些文件',
           action: () => {
             selectedFiles.map(file => this.props.onIncludeChanged(file, true))
           },
         },
         {
-          label: __DARWIN__
-            ? 'Exclude Selected Files'
-            : 'Exclude selected files',
+          label: __DARWIN__ ? '不勾选这些文件' : '不勾选这些文件',
           action: () => {
             selectedFiles.map(file => this.props.onIncludeChanged(file, false))
           },
@@ -807,7 +783,6 @@ export class FilterChangesList extends React.Component<
 
     return items
   }
-
   private getRebaseContextMenu(
     file: WorkingDirectoryFileChange
   ): ReadonlyArray<IMenuItem> {
@@ -841,7 +816,6 @@ export class FilterChangesList extends React.Component<
 
     return items
   }
-
   private onItemContextMenu = (
     item: IChangesListItem,
     event: React.MouseEvent<HTMLDivElement>
@@ -861,19 +835,19 @@ export class FilterChangesList extends React.Component<
 
     showContextualMenu(items)
   }
-
   private getPlaceholderMessage(
     files: ReadonlyArray<WorkingDirectoryFileChange>,
     prepopulateCommitSummary: boolean
   ) {
     if (!prepopulateCommitSummary) {
-      return 'Summary (required)'
+      return '摘要（必填）'
     }
 
     const firstFile = files[0]
     const fileName = basename(firstFile.path)
 
     switch (firstFile.status.kind) {
+      // Desktop-CN: 这里是提交的默认摘要，需保持英文
       case AppFileStatusKind.New:
       case AppFileStatusKind.Untracked:
         return `Create ${fileName}`
@@ -887,11 +861,9 @@ export class FilterChangesList extends React.Component<
         return `Update ${fileName}`
     }
   }
-
   private onScroll = (scrollTop: number, _clientHeight: number) => {
     this.props.onChangesListScrolled(scrollTop)
   }
-
   private renderCommitMessageForm = (): JSX.Element => {
     const {
       rebaseConflictState,
@@ -1026,19 +998,15 @@ export class FilterChangesList extends React.Component<
       />
     )
   }
-
   private onSuccessfulCommitCreated = () => {
     this.clearFilter()
   }
-
   private onCoAuthorsUpdated = (coAuthors: ReadonlyArray<Author>) =>
     this.props.dispatcher.setCoAuthors(this.props.repository, coAuthors)
-
   private onShowCoAuthoredByChanged = (showCoAuthors: boolean) => {
     const { dispatcher, repository } = this.props
     dispatcher.setShowCoAuthoredBy(repository, showCoAuthors)
   }
-
   private onConfirmCommitWithUnknownCoAuthors = (
     coAuthors: ReadonlyArray<UnknownAuthor>,
     onCommitAnyway: () => void
@@ -1046,16 +1014,12 @@ export class FilterChangesList extends React.Component<
     const { dispatcher } = this.props
     dispatcher.showUnknownAuthorsCommitWarning(coAuthors, onCommitAnyway)
   }
-
   private onRefreshAuthor = () =>
     this.props.dispatcher.refreshAuthor(this.props.repository)
-
   private onCommitMessageFocusSet = () =>
     this.props.dispatcher.setCommitMessageFocus(false)
-
   private onPersistCommitMessage = (message: ICommitMessage) =>
     this.props.dispatcher.setCommitMessage(this.props.repository, message)
-
   private onGenerateCommitMessage = (
     filesSelected: ReadonlyArray<WorkingDirectoryFileChange>,
     mustOverrideExistingMessage: boolean
@@ -1074,22 +1038,17 @@ export class FilterChangesList extends React.Component<
           filesSelected
         )
   }
-
   private onShowPopup = (p: Popup) => this.props.dispatcher.showPopup(p)
   private onShowFoldout = (f: Foldout) => this.props.dispatcher.showFoldout(f)
-
   private onCommitSpellcheckEnabledChanged = (enabled: boolean) =>
     this.props.dispatcher.setCommitSpellcheckEnabled(enabled)
-
   private onStopAmending = () =>
     this.props.dispatcher.stopAmendingRepository(this.props.repository)
-
   private onShowCreateForkDialog = () => {
     if (isRepositoryWithGitHubRepository(this.props.repository)) {
       this.props.dispatcher.showCreateForkDialog(this.props.repository)
     }
   }
-
   private onStashEntryClicked = () => {
     const { isShowingStashEntry, dispatcher, repository } = this.props
 
@@ -1103,7 +1062,6 @@ export class FilterChangesList extends React.Component<
       dispatcher.incrementMetric('stashViewCount')
     }
   }
-
   private renderStashedChanges() {
     if (this.props.stashEntry === null) {
       return null
@@ -1125,16 +1083,14 @@ export class FilterChangesList extends React.Component<
         }
       >
         <Octicon className="stack-icon" symbol={StashIcon} />
-        <div className="text">Stashed Changes</div>
+        <div className="text">暂存区</div>
         <Octicon symbol={octicons.chevronRight} />
       </button>
     )
   }
-
   private onChangedFileDoubleClick = (item: IChangesListItem) => {
     this.props.onOpenItemInExternalEditor(item.change.path)
   }
-
   private onItemKeyDown = (
     _item: IChangesListItem,
     event: React.KeyboardEvent<HTMLDivElement>
@@ -1150,7 +1106,6 @@ export class FilterChangesList extends React.Component<
 
     return
   }
-
   public focus() {
     if (this.props.showChangesFilter) {
       this.filterOptionsButtonRef?.focus()
@@ -1159,7 +1114,6 @@ export class FilterChangesList extends React.Component<
 
     this.includeAllCheckBoxRef.current?.focus()
   }
-
   private onChangedFileClick = (
     item: IChangesListItem,
     source: ClickSource
@@ -1170,7 +1124,6 @@ export class FilterChangesList extends React.Component<
 
     this.props.onRowClick?.(fileIndex, source)
   }
-
   private onFilterTextChanged = (text: string) => {
     if (this.props.fileListFilter.filterText === '' && text !== '') {
       this.props.dispatcher.incrementMetric('typedInChangesFilterCount')
@@ -1178,7 +1131,6 @@ export class FilterChangesList extends React.Component<
 
     this.props.dispatcher.setChangesListFilterText(this.props.repository, text)
   }
-
   private onFilterListResultsChanged = (
     filteredItems: ReadonlyArray<IChangesListItem>
   ) => {
@@ -1186,14 +1138,12 @@ export class FilterChangesList extends React.Component<
     filteredItems.forEach(f => filteredSet.set(f.id, f))
     this.setState({ filteredItems: filteredSet })
   }
-
   private onFileSelectionChanged = (items: ReadonlyArray<IChangesListItem>) => {
     const rows = items.map(i =>
       this.props.workingDirectory.findFileIndexByID(i.change.id)
     )
     this.props.onFileSelectionChanged(rows)
   }
-
   private onFilesToCommitNotVisible = (onCommitAnyway: () => void) => {
     this.props.dispatcher.showPopup({
       type: PopupType.ConfirmCommitFilteredChanges,
@@ -1201,11 +1151,9 @@ export class FilterChangesList extends React.Component<
       showFilesToBeCommitted: this.showFilesToBeCommitted,
     })
   }
-
   private clearFilter = () => {
     this.props.dispatcher.setChangesListFilterText(this.props.repository, '')
   }
-
   private showFilesToBeCommitted = () => {
     this.props.dispatcher.incrementMetric(
       'adjustedFiltersForHiddenChangesCount'
@@ -1223,17 +1171,14 @@ export class FilterChangesList extends React.Component<
       true
     )
   }
-
   private onTextBoxRef = (component: TextBox | null) => {
     this.filterTextBox = component ?? undefined
   }
-
   private onFilterKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (this.filterListRef.current) {
       this.filterListRef.current.onKeyDown(event)
     }
   }
-
   private renderFilterRow = () => {
     return (
       <div
@@ -1246,7 +1191,6 @@ export class FilterChangesList extends React.Component<
       </div>
     )
   }
-
   private renderCheckBoxRow = () => {
     const { workingDirectory, rebaseConflictState, isCommitting } = this.props
     const { files } = workingDirectory
@@ -1263,9 +1207,10 @@ export class FilterChangesList extends React.Component<
       files.length === 0 || isCommitting || rebaseConflictState !== null
 
     const checkAllLabel = `${
-      visibleFiles !== files.length ? `${formatNumber(visibleFiles)} of ` : ''
-    }
-    ${formatNumber(files.length)} changed file${plural(files.length)}`
+      visibleFiles !== files.length
+        ? `${formatNumber(visibleFiles)}/${formatNumber(files.length)} `
+        : `${formatNumber(files.length)}`
+    }个文件改动${plural(files.length)}`
 
     return (
       <div className="checkbox-container">
@@ -1281,7 +1226,6 @@ export class FilterChangesList extends React.Component<
       </div>
     )
   }
-
   private renderFilterBox = () => {
     if (!this.props.showChangesFilter) {
       return null
@@ -1305,7 +1249,7 @@ export class FilterChangesList extends React.Component<
         <TextBox
           ref={this.onTextBoxRef}
           displayClearButton={true}
-          placeholder={'Filter'}
+          placeholder={'筛选'}
           className="filter-list-filter-field"
           onValueChanged={this.onFilterTextChanged}
           onKeyDown={this.onFilterKeyDown}
@@ -1314,18 +1258,12 @@ export class FilterChangesList extends React.Component<
       </div>
     )
   }
-
   private applyFilters = (item: IChangesListItem) => {
     return applyFilters(
       item,
       this.props.showChangesFilter,
       this.props.fileListFilter
     )
-  }
-
-  private getListAriaLabel = () => {
-    const { files } = this.props.workingDirectory
-    return `${formatNumber(files.length)} changed file${plural(files.length)}`
   }
 
   public render() {
@@ -1392,7 +1330,6 @@ export class FilterChangesList extends React.Component<
       </>
     )
   }
-
   private renderHiddenChangesWarning = () => {
     const { files } = this.props.workingDirectory
     const filesSelected = files.filter(
@@ -1413,16 +1350,14 @@ export class FilterChangesList extends React.Component<
     return (
       <div className="hidden-changes-warning" id="hidden-changes-warning">
         <Octicon symbol={octicons.alert} />
-        <span className="sr-only">Warning:</span>
-        <span>Hidden changes will be committed. </span>
+        <span className="sr-only">警告:</span>
+        <span>一些要提交的文件改动被隐藏了。</span>
         <LinkButton onClick={this.showFilesToBeCommitted}>
-          Adjust the filters to see all {formatNumber(filesSelected.length)}{' '}
-          changes
+          显示全部{formatNumber(filesSelected.length)}个改动
         </LinkButton>
       </div>
     )
   }
-
   private renderNoChanges = () => {
     if (!hasActiveFilters(this.props.fileListFilter)) {
       return null
@@ -1440,7 +1375,7 @@ export class FilterChangesList extends React.Component<
       <div className="no-changes-filtered">
         <img src={BlankSlateImage} className="blankslate-image" alt="" />
 
-        <div className="title">No files match your current filters</div>
+        <div className="title">找不到符合条件的文件改动</div>
 
         <div className="subtitle">
           {getNoResultsMessage(this.props.fileListFilter)}
@@ -1451,13 +1386,12 @@ export class FilterChangesList extends React.Component<
             className="clear-filters-button"
             onClick={this.onClearAllFilters}
           >
-            Clear filters
+            清除筛选
           </Button>
         )}
       </div>
     )
   }
-
   private onFilterToIncludedInCommit = () => {
     if (!this.props.fileListFilter.isIncludedInCommit) {
       this.props.dispatcher.incrementMetric(
@@ -1469,7 +1403,6 @@ export class FilterChangesList extends React.Component<
       !this.props.fileListFilter.isIncludedInCommit
     )
   }
-
   private onFilterNewFiles = () => {
     if (!this.props.fileListFilter.isNewFile) {
       this.props.dispatcher.incrementMetric('appliesNewFilesChangesFilterCount')
@@ -1479,7 +1412,6 @@ export class FilterChangesList extends React.Component<
       !this.props.fileListFilter.isNewFile
     )
   }
-
   private onFilterModifiedFiles = () => {
     if (!this.props.fileListFilter.isModifiedFile) {
       this.props.dispatcher.incrementMetric(
@@ -1491,7 +1423,6 @@ export class FilterChangesList extends React.Component<
       !this.props.fileListFilter.isModifiedFile
     )
   }
-
   private onFilterDeletedFiles = () => {
     if (!this.props.fileListFilter.isDeletedFile) {
       this.props.dispatcher.incrementMetric(
@@ -1503,7 +1434,6 @@ export class FilterChangesList extends React.Component<
       !this.props.fileListFilter.isDeletedFile
     )
   }
-
   private onFilterExcludedFiles = () => {
     if (!this.props.fileListFilter.isExcludedFromCommit) {
       this.props.dispatcher.incrementMetric(
@@ -1515,7 +1445,6 @@ export class FilterChangesList extends React.Component<
       !this.props.fileListFilter.isExcludedFromCommit
     )
   }
-
   private onClearAllFilters = () => {
     this.props.dispatcher.incrementMetric(
       'appliesClearAllChangesListFilterCount'
@@ -1531,6 +1460,10 @@ export class FilterChangesList extends React.Component<
     this.props.dispatcher.setFilterNewFiles(this.props.repository, false)
     this.props.dispatcher.setFilterModifiedFiles(this.props.repository, false)
     this.props.dispatcher.setFilterDeletedFiles(this.props.repository, false)
+  }
+  private getListAriaLabel = () => {
+    const { files } = this.props.workingDirectory
+    return `${formatNumber(files.length)}个文件改动${plural(files.length)}`
   }
 
   private onChangedFileFocus = (changeListItem: IChangesListItem) => {

@@ -35,7 +35,7 @@ export class MoveToApplicationsFolder extends React.Component<
   public render() {
     return (
       <Dialog
-        title="Move GitHub Desktop to the Applications folder?"
+        title="将 GitHub Desktop 移动到应用程序文件夹？"
         id="move-to-applications-folder"
         backdropDismissable={false}
         onDismissed={this.props.onDismissed}
@@ -44,17 +44,13 @@ export class MoveToApplicationsFolder extends React.Component<
       >
         <DialogContent>
           <p>
-            We've detected that you're not running GitHub Desktop from the
-            Applications folder of your machine. This could cause problems with
-            the app, including impacting your ability to sign in.
+            您当前在应用程序文件夹外运行了 GitHub
+            Desktop，这可能导致无法登录等问题。
           </p>
-          <p>
-            Do you want to move GitHub Desktop to the Applications folder now?
-            This will also restart the app.
-          </p>
+          <p>需要帮您移到应用程序文件夹里吗？软件将会重新打开。</p>
           <div>
             <Checkbox
-              label="Do not show this message again"
+              label="不再显示"
               value={
                 this.state.askToMoveToApplicationsFolder
                   ? CheckboxValue.Off
@@ -73,9 +69,9 @@ export class MoveToApplicationsFolder extends React.Component<
     return (
       <DialogFooter>
         <OkCancelButtonGroup
-          okButtonText="Move and Restart"
-          okButtonTitle="This will move GitHub Desktop to the Applications folder in your machine and restart the app."
-          cancelButtonText="Not Now"
+          okButtonText="立刻移动"
+          okButtonTitle="把 GitHub Desktop 移动到应用程序文件夹并重新打开"
+          cancelButtonText="以后再说"
           onCancelButtonClick={this.onNotNow}
         />
       </DialogFooter>
