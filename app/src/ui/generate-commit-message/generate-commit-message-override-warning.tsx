@@ -63,7 +63,7 @@ export class GenerateCommitMessageOverrideWarning extends React.Component<
             <Row>
               <p id="generate-commit-message-override-warning-tip">
                 提示: 您可使用{' '}
-                <LinkButton uri="https://docs.github.com/zh/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions">
+                <LinkButton uri="https://gh.io/desktop-copilot-custom-instructions">
                   Copilot 指令
                 </LinkButton>{' '}
                 来调整提交消息的风格。
