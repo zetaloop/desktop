@@ -306,8 +306,8 @@ export class CompareSidebar extends React.Component<
           displayClearButton={true}
           placeholder={
             __DARWIN__
-              ? '搜索提交（标题、说明、标签或哈希）'
-              : '搜索提交（标题、说明、标签或哈希）'
+              ? '搜索提交标题、描述、标签或哈希'
+              : '搜索提交标题、描述、标签或哈希'
           }
           value={commitSearchText}
           onValueChanged={this.onCommitSearchTextChanged}
