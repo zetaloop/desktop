@@ -177,7 +177,7 @@ describe('commit message warning dialogs', () => {
       'input[type="checkbox"]'
     ) as HTMLInputElement | null
     const tipLink = view.container.querySelector(
-      'a[href="https://gh.io/desktop-copilot-custom-instructions"]'
+      'a[href="https://docs.github.com/zh/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions"]'
     )
     const overrideButton = Array.from(
       view.container.querySelectorAll('button')
@@ -199,7 +199,7 @@ describe('commit message warning dialogs', () => {
     )
     assert.equal(
       tipLink!.getAttribute('href'),
-      'https://gh.io/desktop-copilot-custom-instructions'
+      'https://docs.github.com/zh/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions'
     )
     assert.equal(checkbox?.checked, false)
 
