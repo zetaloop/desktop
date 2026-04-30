@@ -89,15 +89,12 @@ describe('getCopilotErrorDisplayInfo', () => {
     const displayInfo = getCopilotErrorDisplayInfo(error)
 
     assert.notEqual(displayInfo, null)
-    assert.equal(displayInfo?.title, 'Quota exceeded')
+    assert.equal(displayInfo?.title, '用量已达上限')
     assert.equal(
       displayInfo?.message,
       'You have used all available Copilot premium requests.'
     )
-    assert.equal(
-      displayInfo?.retryAfterMessage,
-      'You can try again in 120 seconds.'
-    )
+    assert.equal(displayInfo?.retryAfterMessage, '请在120秒后再试。')
     assert.equal(displayInfo?.actionText, undefined)
     assert.equal(displayInfo?.actionURL, undefined)
   })
@@ -116,7 +113,7 @@ describe('getCopilotErrorDisplayInfo', () => {
     const displayInfo = getCopilotErrorDisplayInfo(error)
 
     assert.notEqual(displayInfo, null)
-    assert.equal(displayInfo?.title, 'Session quota exceeded')
+    assert.equal(displayInfo?.title, '会话次数已达上限')
     assert.equal(
       displayInfo?.message,
       'You have reached the session limit for Copilot requests.'
@@ -138,12 +135,12 @@ describe('getCopilotErrorDisplayInfo', () => {
     const displayInfo = getCopilotErrorDisplayInfo(error)
 
     assert.notEqual(displayInfo, null)
-    assert.equal(displayInfo?.title, 'Copilot billing not configured')
+    assert.equal(displayInfo?.title, '未配置 Copilot 计费')
     assert.equal(
       displayInfo?.message,
       'Configure billing in GitHub Settings to continue.'
     )
-    assert.equal(displayInfo?.actionText, 'Open GitHub Copilot settings')
+    assert.equal(displayInfo?.actionText, '打开 GitHub Copilot 设置')
     assert.equal(displayInfo?.actionURL, 'https://github.com/settings/copilot')
   })
 
@@ -156,7 +153,7 @@ describe('getCopilotErrorDisplayInfo', () => {
     const displayInfo = getCopilotErrorDisplayInfo(error)
 
     assert.notEqual(displayInfo, null)
-    assert.equal(displayInfo?.title, 'Copilot billing issue')
+    assert.equal(displayInfo?.title, 'Copilot 计费问题')
     assert.equal(displayInfo?.message, 'You have reached your quota limit.')
     assert.equal(displayInfo?.actionText, undefined)
   })
