@@ -34,7 +34,7 @@ export class CopilotPreferences extends React.Component<ICopilotPreferencesProps
       <DialogContent>
         <div className="copilot-section">
           <h2 id="copilot-model-heading">
-            {__DARWIN__ ? 'Language Models' : 'Language models'}
+            {__DARWIN__ ? '语言模型' : '语言模型'}
           </h2>
           {this.renderModelPicker()}
         </div>
@@ -44,12 +44,7 @@ export class CopilotPreferences extends React.Component<ICopilotPreferencesProps
 
   private renderModelPicker() {
     if (!this.props.copilotAvailable) {
-      return (
-        <p>
-          Sign in to a GitHub.com account in the Accounts tab to configure
-          Copilot settings.
-        </p>
-      )
+      return <p>请在账户分页登录 GitHub.com 账户，然后配置 Copilot 设置。</p>
     }
 
     const { copilotModels, selectedCopilotModels } = this.props
@@ -57,24 +52,22 @@ export class CopilotPreferences extends React.Component<ICopilotPreferencesProps
       selectedCopilotModels['commit-message-generation'] ?? null
 
     if (copilotModels === null) {
-      return <p>Loading available models…</p>
+      return <p>正在加载可用模型…</p>
     }
 
     if (copilotModels.length === 0) {
-      return <p>No models available. Check your Copilot subscription.</p>
+      return <p>没有可用模型。请检查 Copilot 订阅。</p>
     }
 
     return (
       <Select
-        label={
-          __DARWIN__ ? 'Commit Message Generation' : 'Commit message generation'
-        }
+        label={__DARWIN__ ? '提交消息生成' : '提交消息生成'}
         value={selectedModel ?? DefaultCopilotModel}
         onChange={this.onCommitMessageModelChanged}
       >
         {copilotModels.map(m => (
           <option key={m.id} value={m.id}>
-            {m.id === DefaultCopilotModel ? `${m.name} (default)` : m.name}
+            {m.id === DefaultCopilotModel ? `${m.name}（默认）` : m.name}
           </option>
         ))}
       </Select>

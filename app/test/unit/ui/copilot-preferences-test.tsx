@@ -48,7 +48,7 @@ describe('CopilotPreferences', () => {
 
     assert.ok(
       screen.getByText(
-        'Sign in to a GitHub.com account in the Accounts tab to configure Copilot settings.'
+        '请在账户分页登录 GitHub.com 账户，然后配置 Copilot 设置。'
       )
     )
     assert.strictEqual(
@@ -68,7 +68,7 @@ describe('CopilotPreferences', () => {
       />
     )
 
-    assert.ok(screen.getByText('Loading available models…'))
+    assert.ok(screen.getByText('正在加载可用模型…'))
     assert.strictEqual(
       screen.queryByRole('combobox'),
       null,
@@ -86,9 +86,7 @@ describe('CopilotPreferences', () => {
       />
     )
 
-    assert.ok(
-      screen.getByText('No models available. Check your Copilot subscription.')
-    )
+    assert.ok(screen.getByText('没有可用模型。请检查 Copilot 订阅。'))
     assert.strictEqual(
       screen.queryByRole('combobox'),
       null,
@@ -111,7 +109,7 @@ describe('CopilotPreferences', () => {
 
     const options = view.container.querySelectorAll('option')
     assert.strictEqual(options.length, 2)
-    assert.strictEqual(options[0].textContent, 'GPT-5 mini (default)')
+    assert.strictEqual(options[0].textContent, 'GPT-5 mini（默认）')
     assert.strictEqual(options[1].textContent, 'Claude Sonnet')
   })
 
@@ -222,12 +220,12 @@ describe('CopilotPreferences', () => {
     // which isn't in the list — the browser selects the first option.
     assert.strictEqual(select.value, 'model-a')
 
-    // No option should have the "(default)" suffix
+    // No option should have the "（默认）" suffix
     const options = view.container.querySelectorAll('option')
     for (const opt of options) {
       assert.ok(
-        !opt.textContent?.includes('(default)'),
-        `Option "${opt.textContent}" should not show (default) suffix`
+        !opt.textContent?.includes('（默认）'),
+        `Option "${opt.textContent}" should not show （默认） suffix`
       )
     }
   })
