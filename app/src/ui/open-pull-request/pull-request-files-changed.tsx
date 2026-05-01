@@ -56,6 +56,8 @@ interface IPullRequestFilesChangedProps {
   /** Whether we should hide whitespace in diff. */
   readonly hideWhitespaceInDiff: boolean
 
+  readonly enableDifftastic: boolean
+
   /** Label for selected external editor */
   readonly externalEditorLabel?: string
 
@@ -279,10 +281,19 @@ export class PullRequestFilesChanged extends React.Component<
             onHideWhitespaceChangesChanged={this.onHideWhitespaceInDiffChanged}
             showSideBySideDiff={showSideBySideDiff}
             onShowSideBySideDiffChanged={this.onShowSideBySideDiffChanged}
+            enableDifftastic={this.props.enableDifftastic}
+            onEnableDifftasticChanged={this.onEnableDifftasticChanged}
             onDiffOptionsOpened={this.onDiffOptionsOpened}
           />
         </div>
       </div>
+    )
+  }
+
+  private onEnableDifftasticChanged = (enableDifftastic: boolean) => {
+    return this.props.dispatcher.setEnableDifftastic(
+      enableDifftastic,
+      this.props.repository
     )
   }
 

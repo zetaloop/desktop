@@ -8899,8 +8899,36 @@ export class AppStore extends TypedBaseStore<IAppState> {
       await this.refreshDifftAvailability(true)
     }
 
+    this.emitUpdate()
+
     if (repository === null) {
-      this.emitUpdate()
+      return
+    }
+
+    const currentPopup = this.popupManager.currentPopup
+    if (
+      currentPopup?.type === PopupType.StartPullRequest &&
+      currentPopup.repository === repository
+    ) {
+      const file =
+        this.repositoryStateCache.get(repository).pullRequestState
+          ?.commitSelection?.file
+
+      if (file != null) {
+        return this._changePullRequestFileSelection(repository, file)
+      }
+
+      return
+    }
+
+    const state = this.repositoryStateCache.get(repository)
+    if (state.selectedSection === RepositorySectionTab.History) {
+      const file = state.commitSelection.file
+
+      if (file !== null) {
+        return this._changeFileSelection(repository, file)
+      }
+
       return
     }
 

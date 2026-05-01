@@ -2443,6 +2443,7 @@ export class App extends React.Component<IAppProps, IAppState> {
             dispatcher={this.props.dispatcher}
             fileListWidth={pullRequestFilesListWidth}
             hideWhitespaceInDiff={hideWhitespaceInPullRequestDiff}
+            enableDifftastic={this.state.enableDifftastic}
             imageDiffType={imageDiffType}
             nonLocalCommitSHA={nonLocalCommitSHA}
             pullRequestState={pullRequestState}
@@ -3467,6 +3468,7 @@ export class App extends React.Component<IAppProps, IAppState> {
           hideWhitespaceInChangesDiff={state.hideWhitespaceInChangesDiff}
           hideWhitespaceInHistoryDiff={state.hideWhitespaceInHistoryDiff}
           showDiffCheckMarks={state.showDiffCheckMarks}
+          enableDifftastic={state.enableDifftastic}
           preferAbsoluteDates={state.preferAbsoluteDates}
           showSideBySideDiff={state.showSideBySideDiff}
           focusCommitMessage={state.focusCommitMessage}

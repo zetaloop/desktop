@@ -63,6 +63,8 @@ interface ISelectedCommitsProps {
   readonly onViewCommitOnGitHub: (SHA: string, filePath?: string) => void
   readonly hideWhitespaceInDiff: boolean
 
+  readonly enableDifftastic: boolean
+
   /** Whether we should display side by side diffs. */
   readonly showSideBySideDiff: boolean
 
@@ -193,6 +195,8 @@ export class SelectedCommits extends React.Component<
         onShowSideBySideDiffChanged={this.onShowSideBySideDiffChanged}
         hideWhitespaceInDiff={this.props.hideWhitespaceInDiff}
         onHideWhitespaceInDiffChanged={this.onHideWhitespaceInDiffChanged}
+        enableDifftastic={this.props.enableDifftastic}
+        onEnableDifftasticChanged={this.onEnableDifftasticChanged}
         onDiffOptionsOpened={this.props.onDiffOptionsOpened}
       />
     )
@@ -240,6 +244,13 @@ export class SelectedCommits extends React.Component<
 
   private onShowSideBySideDiffChanged = (showSideBySideDiff: boolean) => {
     this.props.dispatcher.onShowSideBySideDiffChanged(showSideBySideDiff)
+  }
+
+  private onEnableDifftasticChanged = (enableDifftastic: boolean) => {
+    return this.props.dispatcher.setEnableDifftastic(
+      enableDifftastic,
+      this.props.repository
+    )
   }
 
   private onCommitSummaryReset = () => {

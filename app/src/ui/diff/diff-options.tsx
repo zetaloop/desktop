@@ -21,6 +21,9 @@ interface IDiffOptionsProps {
   readonly showSideBySideDiff: boolean
   readonly onShowSideBySideDiffChanged: (showSideBySideDiff: boolean) => void
 
+  readonly enableDifftastic: boolean
+  readonly onEnableDifftasticChanged: (enableDifftastic: boolean) => void
+
   /** Called when the user opens the diff options popover */
   readonly onDiffOptionsOpened: () => void
 }
@@ -81,6 +84,12 @@ export class DiffOptions extends React.Component<
     )
   }
 
+  private onEnableDifftasticChanged = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    return this.props.onEnableDifftasticChanged(event.currentTarget.checked)
+  }
+
   public render() {
     const buttonLabel = `差异对比${__DARWIN__ ? '设置' : '设置'}`
     return (
@@ -121,6 +130,7 @@ export class DiffOptions extends React.Component<
       >
         <h3 id="diff-options-popover-header">{header}</h3>
         {this.renderHideWhitespaceChanges()}
+        {this.renderEnableDifftastic()}
         {this.renderShowSideBySide()}
       </Popover>
     )
@@ -175,6 +185,21 @@ export class DiffOptions extends React.Component<
             如果隐藏空白字符差异，将会禁用单独选中某几行文本的功能。
           </p>
         )}
+      </fieldset>
+    )
+  }
+
+  private renderEnableDifftastic() {
+    return (
+      <fieldset>
+        <legend>集成</legend>
+        <Checkbox
+          value={
+            this.props.enableDifftastic ? CheckboxValue.On : CheckboxValue.Off
+          }
+          onChange={this.onEnableDifftasticChanged}
+          label="使用 Difftastic 渲染差异"
+        />
       </fieldset>
     )
   }
