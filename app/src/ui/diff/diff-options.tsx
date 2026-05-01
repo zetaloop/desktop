@@ -129,8 +129,8 @@ export class DiffOptions extends React.Component<
         onClickOutside={this.closePopover}
       >
         <h3 id="diff-options-popover-header">{header}</h3>
-        {this.renderHideWhitespaceChanges()}
         {this.renderEnableDifftastic()}
+        {this.renderHideWhitespaceChanges()}
         {this.renderShowSideBySide()}
       </Popover>
     )
