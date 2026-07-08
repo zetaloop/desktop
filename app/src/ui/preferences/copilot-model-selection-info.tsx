@@ -73,7 +73,7 @@ export class CopilotModelSelectionInfo extends React.Component<
     return (
       <div className="copilot-model-picker-cost-details-row">
         <dt>{label}</dt>
-        <dd>{value ?? 'Unavailable'}</dd>
+        <dd>{value ?? '不可用'}</dd>
       </div>
     )
   }
@@ -118,30 +118,27 @@ export class CopilotModelSelectionInfo extends React.Component<
               {selectionInfo.contextWindow === null
                 ? null
                 : this.renderCostDetailsRow(
-                    'Context',
+                    '上下文',
                     selectionInfo.contextWindow
                   )}
               {selectionInfo.reasoningEffortLevels === null
                 ? null
                 : this.renderCostDetailsRow(
-                    'Reasoning',
+                    '推理',
                     selectionInfo.reasoningEffortLevels
                   )}
             </dl>
           ) : null}
 
           <div className="copilot-model-picker-cost-details-section">
-            <h4>AI credits per {tokenPriceDetails.batchSize} tokens</h4>
+            <h4>每 {tokenPriceDetails.batchSize} tokens 消耗的 AI 额度</h4>
             <dl>
-              {this.renderCostDetailsRow('Input', tokenPriceDetails.inputPrice)}
+              {this.renderCostDetailsRow('输入', tokenPriceDetails.inputPrice)}
               {this.renderCostDetailsRow(
-                'Cached input',
+                '缓存输入',
                 tokenPriceDetails.cachePrice
               )}
-              {this.renderCostDetailsRow(
-                'Output',
-                tokenPriceDetails.outputPrice
-              )}
+              {this.renderCostDetailsRow('输出', tokenPriceDetails.outputPrice)}
             </dl>
           </div>
         </div>
@@ -163,14 +160,14 @@ export class CopilotModelSelectionInfo extends React.Component<
             ariaControls={costDetailsContentId}
             ariaDescribedBy={costDetailsContentId}
             ariaExpanded={this.state.showCostDetails}
-            ariaLabel="Show Copilot model credit costs"
+            ariaLabel="显示 Copilot 模型额度消耗"
             className="copilot-model-picker-selection-info-button"
             applyTooltipAriaDescribedBy={false}
             onButtonRef={this.onCostDetailsButtonRef}
             onClick={this.onCostDetailsButtonClick}
             onKeyDown={this.onCostDetailsButtonKeyDown}
             size="small"
-            tooltip="Show credit costs"
+            tooltip="显示额度消耗"
           >
             <Octicon symbol={octicons.info} />
           </Button>

@@ -337,14 +337,19 @@ export class BranchList extends React.Component<
       : null
 
     return (
+      // desktop-cn: make it looks slightly better
       <div className="branches-list-item-tooltip list-item-tooltip">
         <div>
-          <div className="label">Full Name: </div>
+          <div className="label" style={{ minWidth: 35 }}>
+            名称：
+          </div>
           {name}
         </div>
         {absoluteDate && (
           <div>
-            <div className="label">Last Modified: </div>
+            <div className="label" style={{ minWidth: 35 }}>
+              时间：
+            </div>
             {absoluteDate}
           </div>
         )}
@@ -387,11 +392,11 @@ export class BranchList extends React.Component<
 
   private getGroupLabel(identifier: BranchGroupIdentifier) {
     if (identifier === 'default') {
-      return __DARWIN__ ? 'Default Branch' : 'Default branch'
+      return __DARWIN__ ? '默认分支' : '默认分支'
     } else if (identifier === 'recent') {
-      return __DARWIN__ ? 'Recent Branches' : 'Recent branches'
+      return __DARWIN__ ? '最近分支' : '最近分支'
     } else if (identifier === 'other') {
-      return __DARWIN__ ? 'Other Branches' : 'Other branches'
+      return __DARWIN__ ? '其他分支' : '其他分支'
     } else {
       return assertNever(identifier, `Unknown identifier: ${identifier}`)
     }
@@ -410,7 +415,7 @@ export class BranchList extends React.Component<
   private onRenderNewButton = () => {
     return this.props.canCreateNewBranch ? (
       <Button className="new-branch-button" onClick={this.onCreateNewBranch}>
-        {__DARWIN__ ? 'New Branch' : 'New branch'}
+        {__DARWIN__ ? '新建分支' : '新建分支'}
       </Button>
     ) : null
   }

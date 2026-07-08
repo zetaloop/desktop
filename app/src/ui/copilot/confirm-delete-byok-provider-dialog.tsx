@@ -20,7 +20,7 @@ export class ConfirmDeleteCopilotBYOKProviderDialog extends React.Component<ICon
     return (
       <Dialog
         id="confirm-delete-copilot-byok-provider"
-        title={__DARWIN__ ? 'Remove Custom Provider' : 'Remove custom provider'}
+        title={__DARWIN__ ? '移除自定义提供商' : '移除自定义提供商'}
         type="warning"
         onSubmit={this.onConfirm}
         onDismissed={this.props.onDismissed}
@@ -29,15 +29,14 @@ export class ConfirmDeleteCopilotBYOKProviderDialog extends React.Component<ICon
       >
         <DialogContent>
           <p id="confirm-delete-copilot-byok-provider-message">
-            Are you sure you want to remove the custom provider{' '}
-            <Ref>{this.props.provider.name}</Ref>?{' '}
+            确定要移除自定义提供商 <Ref>{this.props.provider.name}</Ref> 吗？{' '}
             {this.renderSecretConsequence()}
           </p>
         </DialogContent>
         <DialogFooter>
           <OkCancelButtonGroup
             destructive={true}
-            okButtonText={__DARWIN__ ? 'Remove' : 'Remove'}
+            okButtonText={__DARWIN__ ? '移除' : '移除'}
           />
         </DialogFooter>
       </Dialog>
@@ -47,11 +46,11 @@ export class ConfirmDeleteCopilotBYOKProviderDialog extends React.Component<ICon
   private renderSecretConsequence() {
     switch (this.props.provider.authKind) {
       case 'apiKey':
-        return 'Its API key will also be removed from your keychain.'
+        return '它的 API key 也会从钥匙串中移除。'
       case 'bearer':
-        return 'Its bearer token will also be removed from your keychain.'
+        return '它的 bearer token 也会从钥匙串中移除。'
       case 'none':
-        return 'Any models you have configured for it will no longer be available.'
+        return '您为它配置的模型将不再可用。'
     }
   }
 

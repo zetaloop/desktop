@@ -85,7 +85,7 @@ const shouldAutoCheckForUpdatesOnLaunch =
 
 async function clickCheckForUpdatesIfAvailable(target: Page | Locator) {
   const checkBtn = target.locator(
-    'button.button-component:has-text("Check for Updates")'
+    'button.button-component:has-text("检查更新")'
   )
 
   if (
@@ -116,7 +116,7 @@ test.describe('GitHub Desktop - App Launch', () => {
     await skipButton.waitFor({ state: 'visible', timeout: 30000 })
     await skipButton.click()
 
-    const nameInput = page.locator('input[placeholder="Your Name"]')
+    const nameInput = page.locator('input[placeholder="您的名字"]')
     await nameInput.waitFor({ state: 'visible', timeout: 15000 })
     if ((await nameInput.inputValue()) === '') {
       await nameInput.fill('GitHub Desktop E2E')
@@ -129,7 +129,7 @@ test.describe('GitHub Desktop - App Launch', () => {
       await emailInput.fill('desktop-e2e@example.com')
     }
 
-    await page.locator('button:has-text("Finish")').click()
+    await page.locator('button:has-text("完成")').click()
     await page.waitForSelector('#welcome', { state: 'hidden', timeout: 15000 })
 
     await dismissMoveToApplicationsDialog(page)
@@ -139,9 +139,7 @@ test.describe('GitHub Desktop - App Launch', () => {
       .locator(`//*[contains(normalize-space(), "${smokeRepoFileName}")]`)
       .first()
     const addButton = page
-      .locator(
-        '//*[contains(normalize-space(), "Add an Existing Repository from your Local Drive") or contains(normalize-space(), "Add an Existing Repository from your local drive")]'
-      )
+      .locator('//*[contains(normalize-space(), "添加仓库")]')
       .first()
     const addRepositoryDialog = page.locator('dialog#add-existing-repository')
 
@@ -162,17 +160,13 @@ test.describe('GitHub Desktop - App Launch', () => {
 
       await addRepositoryDialog.waitFor({ state: 'visible', timeout: 15000 })
       const pathInput = addRepositoryDialog.locator(
-        'input[placeholder="repository path"]'
+        'input[placeholder="仓库的位置"]'
       )
       await pathInput.waitFor({ state: 'visible', timeout: 15000 })
       if ((await pathInput.inputValue()) !== smokeRepoPath) {
         await pathInput.fill(smokeRepoPath)
       }
-      await addRepositoryDialog
-        .locator(
-          'button:has-text("Add Repository"), button:has-text("Add repository")'
-        )
-        .click()
+      await addRepositoryDialog.locator('button:has-text("添加")').click()
     }
 
     await repoFile.waitFor({ state: 'visible', timeout: 15000 })
@@ -186,9 +180,7 @@ test.describe('GitHub Desktop - App Launch', () => {
     })
 
     // ── Commit ──────────────────────────────────────────────────────
-    const commitButton = page.locator(
-      '[aria-label="Create commit"] .commit-button'
-    )
+    const commitButton = page.locator('[aria-label="创建提交"] .commit-button')
     await commitButton.waitFor({ state: 'visible', timeout: 15000 })
     await dismissMoveToApplicationsDialog(page)
     await commitButton.click()
@@ -222,11 +214,7 @@ test.describe('GitHub Desktop - App Launch', () => {
       input.dispatchEvent(new Event('change', { bubbles: true }))
     }, smokeBranch)
 
-    await createBranchDialog
-      .locator(
-        'button:has-text("Create Branch"), button:has-text("Create branch")'
-      )
-      .click()
+    await createBranchDialog.locator('button:has-text("创建分支")').click()
 
     await expect
       .poll(() => getSmokeRepoCurrentBranch(), { timeout: 15000 })
@@ -297,7 +285,7 @@ test.describe('Auto-update', () => {
       const versionText = await aboutDialog
         .locator('.selectable-text')
         .textContent()
-      expect(versionText).toMatch(/Version \d+\.\d+\.\d+/)
+      expect(versionText).toContain(`版本 ${getVersion()}`)
     })
 
     test('shows up-to-date status after no-update check', async ({
@@ -316,7 +304,7 @@ test.describe('Auto-update', () => {
           },
           { timeout: 15000, intervals: [1000] }
         )
-        .toContain('you have the latest version')
+        .toContain('已是最新版本')
     })
 
     test('closes the About dialog', async ({ mainWindow: page }) => {
@@ -357,7 +345,7 @@ test.describe('Auto-update', () => {
           },
           { timeout: 15000, intervals: [1000] }
         )
-        .toMatch(/checking|downloading|ready to be installed/)
+        .toMatch(/正在检查更新|正在下载更新|更新已准备就绪/)
 
       // Close dialog
       await page.locator('#about button[type="submit"]').click()
@@ -404,7 +392,7 @@ test.describe('Auto-update', () => {
           },
           { timeout: 15000, intervals: [1000] }
         )
-        .toContain('downloading update')
+        .toContain('正在下载更新')
 
       await page.locator('#about button[type="submit"]').click()
       await aboutDialog
@@ -419,7 +407,7 @@ test.describe('Auto-update', () => {
       await dialog.waitFor({ state: 'visible', timeout: 5000 })
 
       await expect(dialog.locator('.updating-message')).toContainText(
-        'Do not close GitHub Desktop while the update is in progress'
+        '更新正在安装中，请不要退出 GitHub Desktop，否则软件可能会损坏。'
       )
 
       // Reset mock and trigger quit again to test Quit Anyway

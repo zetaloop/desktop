@@ -24,14 +24,10 @@ describe('small action and dialog surfaces', () => {
       <CICheckRunNoStepItem onViewCheckExternally={onViewCheckExternally} />
     )
 
-    const button = screen.getByRole('link', { name: 'View check details' })
+    const button = screen.getByRole('link', { name: '查看详情' })
     const image = view.container.querySelector('.ci-check-run-no-steps img')
 
-    assert.ok(
-      screen.getByText('There are no steps to display for this check.', {
-        exact: false,
-      })
-    )
+    assert.ok(screen.getByText('该检查没有步骤。', { exact: false }))
     assert.notEqual(image, null)
     assert.equal(image?.getAttribute('alt'), '')
 
@@ -68,10 +64,11 @@ describe('small action and dialog surfaces', () => {
 
     render(<CLIInstalled onDismissed={onDismissed} />)
 
-    const title = screen.getByText(
-      __DARWIN__ ? 'Command Line Tool Installed' : 'Command line tool installed'
-    )
-    const okButton = screen.getByRole('button', { name: 'Ok', hidden: true })
+    const title = screen.getByText('命令行工具已安装')
+    const okButton = screen.getByRole('button', {
+      name: '好的',
+      hidden: true,
+    })
 
     assert.ok(title)
     assert.ok(screen.getByText('/usr/local/bin/github'))

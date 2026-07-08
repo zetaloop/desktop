@@ -122,7 +122,7 @@ describe('git/checkout', () => {
 
     await assert.rejects(
       checkoutBranch(repository, remoteBranch, null),
-      /A branch with that name already exists./
+      /同名分支已存在。/
     )
   })
 

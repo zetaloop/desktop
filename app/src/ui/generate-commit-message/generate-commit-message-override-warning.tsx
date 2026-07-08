@@ -47,7 +47,7 @@ export class GenerateCommitMessageOverrideWarning extends React.Component<
 
     return (
       <Dialog
-        title="Commit message override"
+        title="覆盖提交消息"
         id="generate-commit-message-override-warning"
         type="warning"
         onDismissed={this.props.onDismissed}
@@ -57,23 +57,22 @@ export class GenerateCommitMessageOverrideWarning extends React.Component<
       >
         <DialogContent>
           <Row id="generate-commit-message-override-warning-body">
-            The commit message you have entered will be overridden by the
-            generated commit message.
+            用 AI 生成的提交消息覆盖现有消息内容。
           </Row>
           {this.props.showCopilotInstructionsTip ? (
             <Row>
               <p id="generate-commit-message-override-warning-tip">
-                Tip: You can use{' '}
-                <LinkButton uri="https://gh.io/desktop-copilot-custom-instructions">
-                  Copilot Instructions
+                提示: 您可使用{' '}
+                <LinkButton uri="https://docs.github.com/zh/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions">
+                  Copilot 指令
                 </LinkButton>{' '}
-                to customize how commit messages are generated.
+                来调整提交消息的风格。
               </p>
             </Row>
           ) : null}
           <Row>
             <Checkbox
-              label="Do not show this message again"
+              label="不再显示"
               value={
                 this.state.confirmCommitMessageOverride
                   ? CheckboxValue.Off
@@ -84,7 +83,7 @@ export class GenerateCommitMessageOverrideWarning extends React.Component<
           </Row>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup destructive={true} okButtonText="Override" />
+          <OkCancelButtonGroup destructive={true} okButtonText="确认覆盖" />
         </DialogFooter>
       </Dialog>
     )

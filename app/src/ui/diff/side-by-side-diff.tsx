@@ -1380,7 +1380,7 @@ export class SideBySideDiff extends React.Component<
     this.expandHunk(diff.hunks[hunkIndex], kind)
 
     this.ariaLiveChangeSignal = !this.ariaLiveChangeSignal
-    this.setState({ ariaLiveMessage: 'Expanded' })
+    this.setState({ ariaLiveMessage: '已展开' })
   }
 
   private onClickHunk = (hunkStartLine: number, select: boolean) => {
@@ -1419,13 +1419,13 @@ export class SideBySideDiff extends React.Component<
 
     const items: IMenuItem[] = [
       {
-        label: 'Copy',
+        label: '复制',
         // When using role="copy", the enabled attribute is not taken into account.
         role: selectionLength > 0 ? 'copy' : undefined,
         enabled: selectionLength > 0,
       },
       {
-        label: __DARWIN__ ? 'Select All' : 'Select all',
+        label: __DARWIN__ ? '全选' : '全选',
         action: () => this.onSelectAll(),
       },
     ]
@@ -1480,7 +1480,7 @@ export class SideBySideDiff extends React.Component<
 
     return this.diffToRestore === null
       ? {
-          label: __DARWIN__ ? 'Expand Whole File' : 'Expand whole file',
+          label: __DARWIN__ ? '展开整个文件' : '展开整个文件',
           action: this.onExpandWholeFile,
           // If there is only one hunk that can't be expanded, disable this item
           enabled:
@@ -1488,9 +1488,7 @@ export class SideBySideDiff extends React.Component<
             diff.hunks[0].expansionType !== DiffHunkExpansionType.None,
         }
       : {
-          label: __DARWIN__
-            ? 'Collapse Expanded Lines'
-            : 'Collapse expanded lines',
+          label: __DARWIN__ ? '折叠整个文件' : '折叠整个文件',
           action: this.onCollapseExpandedLines,
         }
   }
@@ -1514,7 +1512,7 @@ export class SideBySideDiff extends React.Component<
     this.ariaLiveChangeSignal = !this.ariaLiveChangeSignal
     this.setState({
       diff: updatedDiff,
-      ariaLiveMessage: 'Expanded',
+      ariaLiveMessage: '已展开',
     })
   }
 
@@ -1572,19 +1570,19 @@ export class SideBySideDiff extends React.Component<
     let type = ''
 
     if (rangeType === DiffRangeType.Additions) {
-      type = __DARWIN__ ? 'Added' : 'added'
+      type = __DARWIN__ ? '新增' : '新增'
     } else if (rangeType === DiffRangeType.Deletions) {
-      type = __DARWIN__ ? 'Removed' : 'removed'
+      type = __DARWIN__ ? '删除' : '删除'
     } else if (rangeType === DiffRangeType.Mixed) {
-      type = __DARWIN__ ? 'Modified' : 'modified'
+      type = __DARWIN__ ? '修改' : '修改'
     } else {
       assertNever(rangeType, `Invalid range type: ${rangeType}`)
     }
 
-    const plural = numLines > 1 ? 's' : ''
+    const plural = numLines > 1 ? '' : ''
     return __DARWIN__
-      ? `Discard ${type} Line${plural}${suffix}`
-      : `Discard ${type} line${plural}${suffix}`
+      ? `放弃${type}行${plural}${suffix}`
+      : `放弃${type}行${plural}${suffix}`
   }
 
   private onDiscardChanges(startLine: number, endLine: number = startLine) {
@@ -1631,7 +1629,7 @@ export class SideBySideDiff extends React.Component<
     const { searchResults } = this.state
 
     if (searchQuery?.trim() === '') {
-      this.resetSearch(true, 'No results')
+      this.resetSearch(true, '找不到')
     } else if (searchQuery === this.state.searchQuery && searchResults) {
       this.continueSearch(searchResults, direction)
     } else {
@@ -1648,9 +1646,9 @@ export class SideBySideDiff extends React.Component<
     )
 
     if (searchResults === undefined || searchResults.length === 0) {
-      this.resetSearch(true, `No results for "${searchQuery}"`)
+      this.resetSearch(true, `找不到 "${searchQuery}"`)
     } else {
-      const ariaLiveMessage = `Result 1 of ${searchResults.length} for "${searchQuery}"`
+      const ariaLiveMessage = `查找 "${searchQuery}" 结果${searchResults.length}个中的第1个`
 
       this.scrollToSearchResult(0)
 
@@ -1679,9 +1677,9 @@ export class SideBySideDiff extends React.Component<
       (selectedSearchResult + delta + searchResults.length) %
       searchResults.length
 
-    const ariaLiveMessage = `Result ${selectedSearchResult + 1} of ${
+    const ariaLiveMessage = `查找 "${searchQuery}" 结果${
       searchResults.length
-    } for "${searchQuery}"`
+    }个中的第${selectedSearchResult + 1}个`
 
     this.scrollToSearchResult(selectedSearchResult)
 
@@ -1880,6 +1878,17 @@ function getDiffRowsFromHunk(
   return rows
 }
 
+function inlineRangesToLineTokens(
+  ranges: ReadonlyArray<readonly [number, number]>,
+  tokenClass: string
+): ILineTokens {
+  const tokens: ILineTokens = {}
+  for (const [offset, length] of ranges) {
+    tokens[offset] = { length, token: tokenClass }
+  }
+  return tokens
+}
+
 function getModifiedRows(
   addedOrDeletedLines: ReadonlyArray<ModifiedLine>,
   showSideBySideDiff: boolean
@@ -1904,26 +1913,37 @@ function getModifiedRows(
   const diffTokensBefore = new Array<ILineTokens | undefined>()
   const diffTokensAfter = new Array<ILineTokens | undefined>()
 
-  // To match the behavior of github.com, we only highlight differences between
-  // lines on hunks that have the same number of added and deleted lines.
-  const shouldDisplayDiffInChunk = addedLines.length === deletedLines.length
+  const pairedModifiedLineCount = Math.min(
+    addedLines.length,
+    deletedLines.length
+  )
 
-  if (shouldDisplayDiffInChunk) {
-    for (let i = 0; i < deletedLines.length; i++) {
-      const addedLine = addedLines[i]
-      const deletedLine = deletedLines[i]
+  for (let i = 0; i < pairedModifiedLineCount; i++) {
+    const addedLine = addedLines[i]
+    const deletedLine = deletedLines[i]
 
-      if (
-        addedLine.line.content.length < MaxIntraLineDiffStringLength &&
-        deletedLine.line.content.length < MaxIntraLineDiffStringLength
-      ) {
-        const { before, after } = getDiffTokens(
-          deletedLine.line.content,
-          addedLine.line.content
-        )
-        diffTokensBefore[i] = before
-        diffTokensAfter[i] = after
-      }
+    const beforeRanges = deletedLine.line.inlineChangedRanges
+    const afterRanges = addedLine.line.inlineChangedRanges
+
+    if (beforeRanges !== undefined && afterRanges !== undefined) {
+      diffTokensBefore[i] = inlineRangesToLineTokens(
+        beforeRanges,
+        'diff-delete-inner'
+      )
+      diffTokensAfter[i] = inlineRangesToLineTokens(
+        afterRanges,
+        'diff-add-inner'
+      )
+    } else if (
+      addedLine.line.content.length < MaxIntraLineDiffStringLength &&
+      deletedLine.line.content.length < MaxIntraLineDiffStringLength
+    ) {
+      const { before, after } = getDiffTokens(
+        deletedLine.line.content,
+        addedLine.line.content
+      )
+      diffTokensBefore[i] = before
+      diffTokensAfter[i] = after
     }
   }
 

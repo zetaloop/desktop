@@ -52,11 +52,11 @@ export function formatDate(
   { date = true, time = true, dateStyle, timeStyle }: IFormatDateOptions = {}
 ): string {
   if (isNaN(value.valueOf())) {
-    return 'Invalid date'
+    return '无效日期'
   }
 
   if (!enableFormattingPreferences()) {
-    return getDateFormatter('en-US', { dateStyle, timeStyle }).format(value)
+    return getDateFormatter('zh-CN', { dateStyle, timeStyle }).format(value)
   }
 
   let formatString: string

@@ -25,18 +25,18 @@ describe('RelativeTime', () => {
   it('renders recent relative text without a tooltip wrapper when disabled', () => {
     render(<RelativeTime date={new Date(now - 30 * 1000)} tooltip={false} />)
 
-    const text = screen.getByText('just now')
+    const text = screen.getByText('此刻')
 
     assert.equal(text.tagName, 'SPAN')
-    assert.equal(text.textContent, 'just now')
+    assert.equal(text.textContent, '此刻')
   })
 
   it('renders recent relative text with the default tooltip-enabled path', () => {
     render(<RelativeTime date={new Date(now - 30 * 1000)} />)
 
-    const text = screen.getByText('just now')
+    const text = screen.getByText('此刻')
 
-    assert.equal(text.textContent, 'just now')
+    assert.equal(text.textContent, '此刻')
   })
 
   it('updates its rendered text when the date prop changes', () => {
@@ -44,23 +44,23 @@ describe('RelativeTime', () => {
       <RelativeTime date={new Date(now - 2 * 60 * 1000)} tooltip={false} />
     )
 
-    assert.equal(screen.getByText('2 minutes ago').textContent, '2 minutes ago')
+    assert.equal(screen.getByText('2分钟前').textContent, '2分钟前')
 
     view.rerender(
       <RelativeTime date={new Date(now - 2 * 60 * 60 * 1000)} tooltip={false} />
     )
 
-    assert.equal(screen.getByText('2 hours ago').textContent, '2 hours ago')
+    assert.equal(screen.getByText('2小时前').textContent, '2小时前')
   })
 
   it('refreshes once the scheduled timeout elapses', () => {
     render(<RelativeTime date={new Date(now - 44 * 1000)} tooltip={false} />)
 
-    assert.equal(screen.getByText('just now').textContent, 'just now')
+    assert.equal(screen.getByText('此刻').textContent, '此刻')
 
     advanceTimersBy(16 * 1000)
 
-    assert.equal(screen.getByText('1 minute ago').textContent, '1 minute ago')
+    assert.equal(screen.getByText('1分钟前').textContent, '1分钟前')
   })
 
   it('renders an absolute date for older timestamps when onlyRelative is false', () => {

@@ -15,7 +15,7 @@ interface IHookFailedProps {
 /** A component to confirm and then discard changes. */
 export class HookFailed extends React.Component<IHookFailedProps> {
   private getDialogTitle() {
-    return `${this.props.hookName} ${__DARWIN__ ? 'Failed' : 'failed'}`
+    return `${this.props.hookName} ${__DARWIN__ ? '失败' : '失败'}`
   }
 
   private onDismissed = () => {
@@ -41,7 +41,7 @@ export class HookFailed extends React.Component<IHookFailedProps> {
       >
         <DialogContent>
           <p id="hook-failure-message">
-            The {this.props.hookName} hook failed. What would you like to do?
+            挂钩 {this.props.hookName} 运行失败了，如何处置？
           </p>
           <Terminal
             terminalOutput={this.props.terminalOutput}
@@ -53,8 +53,8 @@ export class HookFailed extends React.Component<IHookFailedProps> {
         <DialogFooter>
           <OkCancelButtonGroup
             destructive={true}
-            okButtonText={'Ignore and Continue'}
-            cancelButtonText={'Abort'}
+            okButtonText={'忽略并继续'}
+            cancelButtonText={'终止'}
           />
         </DialogFooter>
       </Dialog>

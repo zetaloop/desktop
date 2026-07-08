@@ -38,6 +38,23 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
+
+    .commit-search-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .commit-search {
+      padding: var(--spacing-half);
+      border-bottom: var(--base-border);
+      background: var(--background-color);
+
+      .fancy-text-box-component {
+        width: 100%;
+      }
+    }
   }
 
   .merge-status {

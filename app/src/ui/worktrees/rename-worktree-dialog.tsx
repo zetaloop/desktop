@@ -66,14 +66,14 @@ export class RenameWorktreeDialog extends React.Component<
     return (
       <Dialog
         id="rename-worktree"
-        title={__DARWIN__ ? 'Rename Worktree' : 'Rename worktree'}
+        title={__DARWIN__ ? '重命名工作树' : '重命名工作树'}
         loading={this.state.renaming}
         onSubmit={this.onSubmit}
         onDismissed={this.props.onDismissed}
       >
         <DialogContent>
           <TextBox
-            label="Name"
+            label="名称"
             value={this.state.newName}
             onValueChanged={this.onNameChanged}
           />
@@ -81,7 +81,7 @@ export class RenameWorktreeDialog extends React.Component<
 
         <DialogFooter>
           <OkCancelButtonGroup
-            okButtonText={`Rename ${currentName}`}
+            okButtonText={`重命名 ${currentName}`}
             okButtonDisabled={disabled}
           />
         </DialogFooter>

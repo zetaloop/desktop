@@ -21,6 +21,45 @@ function getEditMenuItems(): ReadonlyArray<MenuItem> {
   // the world if we don't have edit menu items.
   const items = menu && menu.submenu ? menu.submenu.items : []
 
+  // 汉化菜单。
+  const labelMap = {
+    undo: '撤销',
+    redo: '重做',
+    cut: '剪切',
+    copy: '复制',
+    paste: '粘贴',
+    delete: '删除',
+    selectall: '全选',
+  }
+  for (const [index, item] of items.entries()) {
+    if (item.role && item.role in labelMap) {
+      item.label = labelMap[item.role as keyof typeof labelMap]
+    } else if (item.label && item.label === 'Substitutions') {
+      items[index] = Menu.buildFromTemplate([
+        {
+          label: '替换',
+          submenu: [
+            { label: '显示替换', role: 'showSubstitutions' },
+            { type: 'separator' },
+            { label: '智能引号', role: 'toggleSmartQuotes' },
+            { label: '智能破折号', role: 'toggleSmartDashes' },
+            { label: '文本替换', role: 'toggleTextReplacement' },
+          ],
+        },
+      ]).items[0]
+    } else if (item.label && item.label === 'Speech') {
+      items[index] = Menu.buildFromTemplate([
+        {
+          label: '语音',
+          submenu: [
+            { label: '开始朗读', role: 'startSpeaking' },
+            { label: '停止朗读', role: 'stopSpeaking' },
+          ],
+        },
+      ]).items[0]
+    }
+  }
+
   // We don't use styled inputs anywhere at the moment
   // so let's skip this for now and when/if we do we
   // can make it configurable from the callee

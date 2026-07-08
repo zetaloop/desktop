@@ -1,6 +1,12 @@
 import * as React from 'react'
 import * as Path from 'path'
-import { IDiff, ImageDiffType } from '../../models/diff'
+import {
+  IDiff,
+  ImageDiffType,
+  getDifftRenderFailure,
+  getDifftRenderedLanguage,
+  isDifftRenderedDiff,
+} from '../../models/diff'
 import { Repository } from '../../models/repository'
 import { CommittedFileChange } from '../../models/status'
 import { SeamlessDiffSwitcher } from '../diff/seamless-diff-switcher'
@@ -25,6 +31,8 @@ import { clamp } from '../../lib/clamp'
 import { getDotComAPIEndpoint } from '../../lib/api'
 import { createCommitURL } from '../../lib/commit-url'
 import { DiffOptions } from '../diff/diff-options'
+import { Octicon } from '../octicons'
+import * as octicons from '../octicons/octicons.generated'
 
 interface IPullRequestFilesChangedProps {
   readonly repository: Repository
@@ -47,6 +55,8 @@ interface IPullRequestFilesChangedProps {
 
   /** Whether we should hide whitespace in diff. */
   readonly hideWhitespaceInDiff: boolean
+
+  readonly enableDifftastic: boolean
 
   /** Label for selected external editor */
   readonly externalEditorLabel?: string
@@ -164,9 +174,7 @@ export class PullRequestFilesChanged extends React.Component<
     if (!fileExistsOnDisk) {
       showContextualMenu([
         {
-          label: __DARWIN__
-            ? 'File Does Not Exist on Disk'
-            : 'File does not exist on disk',
+          label: __DARWIN__ ? '文件在电脑上不存在' : '文件在电脑上不存在',
           enabled: false,
         },
       ])
@@ -179,7 +187,8 @@ export class PullRequestFilesChanged extends React.Component<
     const isSafeExtension = isSafeFileExtension(extension)
     const openInExternalEditor =
       externalEditorLabel !== undefined
-        ? `Open in ${externalEditorLabel}`
+        ? `打开 ${externalEditorLabel}` // 去除中文间多余空格
+            .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
         : DefaultEditorLabel
 
     const items: IMenuItem[] = [
@@ -216,7 +225,7 @@ export class PullRequestFilesChanged extends React.Component<
       gitHubRepository && gitHubRepository.endpoint !== getDotComAPIEndpoint()
 
     items.push({
-      label: `View on GitHub${isEnterprise ? ' Enterprise' : ''}`,
+      label: `打开 GitHub${isEnterprise ? ' 企业版' : ''}`,
       action: () => this.onViewOnGitHub(file),
       enabled: nonLocalCommitSHA !== null && gitHubRepository !== null,
     })
@@ -239,22 +248,52 @@ export class PullRequestFilesChanged extends React.Component<
   }
 
   private renderHeader() {
-    const { hideWhitespaceInDiff } = this.props
+    const { hideWhitespaceInDiff, diff } = this.props
     const { showSideBySideDiff } = this.state
+    const difftFailure = getDifftRenderFailure(diff)
+    const difftLanguage = getDifftRenderedLanguage(diff)
+    const difftTitle =
+      difftFailure !== null
+        ? `差异使用 Difftastic 渲染失败：${difftFailure}`
+        : difftLanguage === null
+        ? '差异使用 Difftastic 渲染'
+        : `差异使用 Difftastic 渲染：${difftLanguage}`
+
+    const difftIndicatorClassName =
+      difftFailure === null
+        ? 'status difft-rendered-indicator difft-rendered-indicator-success'
+        : 'status difft-rendered-indicator difft-rendered-indicator-failure'
+
     return (
       <div className="files-changed-header">
-        <div className="commits-displayed">
-          Showing changes from all commits
+        <div className="commits-displayed">将被拉取过去的提交</div>
+        <div className="row">
+          {isDifftRenderedDiff(diff) || difftFailure !== null ? (
+            <Octicon
+              symbol={octicons.zap}
+              className={difftIndicatorClassName}
+              title={difftTitle}
+            />
+          ) : null}
+          <DiffOptions
+            isInteractiveDiff={false}
+            hideWhitespaceChanges={hideWhitespaceInDiff}
+            onHideWhitespaceChangesChanged={this.onHideWhitespaceInDiffChanged}
+            showSideBySideDiff={showSideBySideDiff}
+            onShowSideBySideDiffChanged={this.onShowSideBySideDiffChanged}
+            enableDifftastic={this.props.enableDifftastic}
+            onEnableDifftasticChanged={this.onEnableDifftasticChanged}
+            onDiffOptionsOpened={this.onDiffOptionsOpened}
+          />
         </div>
-        <DiffOptions
-          isInteractiveDiff={false}
-          hideWhitespaceChanges={hideWhitespaceInDiff}
-          onHideWhitespaceChangesChanged={this.onHideWhitespaceInDiffChanged}
-          showSideBySideDiff={showSideBySideDiff}
-          onShowSideBySideDiffChanged={this.onShowSideBySideDiffChanged}
-          onDiffOptionsOpened={this.onDiffOptionsOpened}
-        />
       </div>
+    )
+  }
+
+  private onEnableDifftasticChanged = (enableDifftastic: boolean) => {
+    return this.props.dispatcher.setEnableDifftastic(
+      enableDifftastic,
+      this.props.repository
     )
   }
 
@@ -268,7 +307,7 @@ export class PullRequestFilesChanged extends React.Component<
         maximumWidth={fileListWidth.max}
         onResize={this.onFileListResize}
         onReset={this.onFileListSizeReset}
-        description="Pull request file list"
+        description="拉取请求文件列表"
       >
         <FileList
           files={files}

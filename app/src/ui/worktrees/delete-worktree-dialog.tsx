@@ -43,7 +43,7 @@ export class DeleteWorktreeDialog extends React.Component<
     return (
       <Dialog
         id="delete-worktree"
-        title={__DARWIN__ ? 'Delete Worktree' : 'Delete worktree'}
+        title={__DARWIN__ ? '删除工作树' : '删除工作树'}
         type="warning"
         onSubmit={this.onSubmit}
         onDismissed={this.props.onDismissed}
@@ -54,10 +54,10 @@ export class DeleteWorktreeDialog extends React.Component<
       >
         <DialogContent>
           <p id="delete-worktree-confirmation">
-            Are you sure you want to delete the worktree <Ref>{name}</Ref>?
+            确定要删除工作树 <Ref>{name}</Ref> 吗？
           </p>
           <Checkbox
-            label="Do not show this message again"
+            label="不再显示此消息"
             value={
               this.state.confirmWorktreeRemoval
                 ? CheckboxValue.Off
@@ -67,7 +67,7 @@ export class DeleteWorktreeDialog extends React.Component<
           />
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup destructive={true} okButtonText="Delete" />
+          <OkCancelButtonGroup destructive={true} okButtonText="删除" />
         </DialogFooter>
       </Dialog>
     )

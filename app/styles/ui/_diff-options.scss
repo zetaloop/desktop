@@ -57,9 +57,8 @@
     margin: 0px;
     padding: 0px;
 
-    margin-top: 0.5em;
-    &:not(:last-child) {
-      margin-bottom: 0.5em;
+    & + fieldset {
+      margin-top: 0.5em;
     }
   }
 

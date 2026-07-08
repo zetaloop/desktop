@@ -213,6 +213,8 @@ export class CopilotConflictsChanges extends React.Component<
     this.setState({ hideWhitespaceInDiff })
   }
 
+  private onEnableDifftasticChanged = () => {}
+
   private onDiffOptionsOpened = () => {
     this.props.dispatcher.incrementMetric('diffOptionsViewedCount')
   }
@@ -325,6 +327,8 @@ export class CopilotConflictsChanges extends React.Component<
             onHideWhitespaceChangesChanged={this.onHideWhitespaceInDiffChanged}
             showSideBySideDiff={showSideBySideDiff}
             onShowSideBySideDiffChanged={this.onShowSideBySideDiffChanged}
+            enableDifftastic={false}
+            onEnableDifftasticChanged={this.onEnableDifftasticChanged}
             onDiffOptionsOpened={this.onDiffOptionsOpened}
           />
         </div>

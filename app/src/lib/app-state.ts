@@ -413,7 +413,6 @@ export interface IAppState {
 
   /** Whether the changes filter is shown */
   readonly showChangesFilter: boolean
-
   /**
    * Per-feature Copilot model selections. An absent key means the default
    * model will be used for that feature.
@@ -431,6 +430,20 @@ export interface IAppState {
    * the user has not configured any custom providers.
    */
   readonly byokProviders: ReadonlyArray<IBYOKProvider>
+
+  /** Whether Copilot is available (i.e. a GitHub.com account is signed in). */
+  readonly copilotAvailable: boolean
+
+  /** Custom Copilot settings */
+  readonly copilotUseCommitHistoryStyle: boolean
+
+  readonly copilotCustomStyle: string
+
+  readonly copilotDiffTruncationLimit: number
+
+  readonly enableDifftastic: boolean
+
+  readonly isDifftOnPath: boolean
 }
 
 export enum FoldoutType {
@@ -941,6 +954,9 @@ export interface ICompareState {
   /** The text entered into the compare branch filter text box */
   readonly filterText: string
 
+  /** The text entered into the commit search box */
+  readonly commitSearchText: string
+
   /** The SHA associated with the most recent history state */
   readonly tip: string | null
 
@@ -983,6 +999,9 @@ export interface ICompareFormUpdate {
 
   /** Thew new state of the branches list */
   readonly showBranchList: boolean
+
+  /** The updated commit search text */
+  readonly commitSearchText: string
 }
 
 export interface IViewHistory {

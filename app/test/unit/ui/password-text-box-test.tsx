@@ -22,9 +22,7 @@ describe('PasswordTextBox', () => {
     )
 
     const input = screen.getByLabelText('Password') as HTMLInputElement
-    const toggle = screen.getByRole('button', {
-      name: 'Toggle password visibility',
-    })
+    const toggle = screen.getByRole('button', { name: '切换密码可见性' })
 
     assert.equal(input.type, 'password')
     assert.equal(toggle.getAttribute('aria-pressed'), 'false')

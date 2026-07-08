@@ -66,7 +66,7 @@ export class RenameBranch extends React.Component<
     return (
       <Dialog
         id="rename-branch"
-        title={__DARWIN__ ? 'Rename Branch' : 'Rename branch'}
+        title={__DARWIN__ ? '重命名分支' : '重命名分支'}
         onDismissed={this.props.onDismissed}
         onSubmit={this.renameBranch}
         focusCloseButtonOnOpen={true}
@@ -74,7 +74,7 @@ export class RenameBranch extends React.Component<
         <DialogContent>
           {renderBranchHasRemoteWarning(this.props.branch)}
           <RefNameTextBox
-            label="Name"
+            label="名称"
             ariaDescribedBy={hasError ? this.ERRORS_ID : undefined}
             initialValue={this.props.branch.name}
             onValueChange={this.onNameChange}
@@ -89,7 +89,7 @@ export class RenameBranch extends React.Component<
 
         <DialogFooter>
           <OkCancelButtonGroup
-            okButtonText={`Rename ${this.props.branch.name}`}
+            okButtonText={`重命名 ${this.props.branch.name}`}
             okButtonDisabled={disabled}
           />
         </DialogFooter>

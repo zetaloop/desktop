@@ -677,6 +677,11 @@ export class CopilotStore extends BaseStore {
     this.initializeFromAccounts()
   }
 
+  /** Returns whether Copilot can be offered for any signed-in account. */
+  public get isAvailable(): boolean {
+    return this.signedInAccountKeys.size > 0
+  }
+
   /** Initialize account-scoped cache state from the current accounts. */
   private async initializeFromAccounts(): Promise<void> {
     const accounts = await this.accountsStore.getAll()
@@ -721,7 +726,7 @@ export class CopilotStore extends BaseStore {
     repositoryPath?: string
   ): Promise<CopilotClient> {
     if (!account.token) {
-      throw new Error('Cannot create Copilot client: Account has no token')
+      throw new Error('无法创建 Copilot 客户端: 账号没有令牌')
     }
 
     // This relies on the fact that Copilot CLI is bundled with the app, but not
@@ -1031,7 +1036,7 @@ export class CopilotStore extends BaseStore {
       throwIfCancelled()
 
       if (!response || !response.data.content) {
-        throw new Error('No response from Copilot')
+        throw new Error('Copilot 未作回应')
       }
 
       return parseCopilotCommitMessage(response.data.content)

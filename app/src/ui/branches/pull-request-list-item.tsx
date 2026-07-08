@@ -82,9 +82,9 @@ export class PullRequestListItem extends React.Component<
     const dateText = getPreferAbsoluteDates()
       ? formatDate(this.props.created)
       : formatRelative(this.props.created.getTime() - Date.now())
-    const subtitle = `#${this.props.number} opened ${dateText} by ${this.props.author}`
+    const subtitle = `#${this.props.number} 由 ${this.props.author} 开启于${dateText}`
 
-    return this.props.draft ? `${subtitle} • Draft` : subtitle
+    return this.props.draft ? `${subtitle} • 草稿` : subtitle
   }
 
   private onMouseEnter = (e: React.MouseEvent) => {

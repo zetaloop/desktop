@@ -48,7 +48,7 @@ export class DeleteWorktreeFailedDialog extends React.Component<
     return (
       <Dialog
         id="delete-worktree-failed"
-        title={__DARWIN__ ? 'Delete Worktree Failed' : 'Delete worktree failed'}
+        title={__DARWIN__ ? '删除工作树失败' : '删除工作树失败'}
         type="error"
         onSubmit={this.onSubmit}
         onDismissed={this.onDismissed}
@@ -60,20 +60,16 @@ export class DeleteWorktreeFailedDialog extends React.Component<
         <DialogContent>
           <div id="delete-worktree-failed-message">
             <p>
-              Deleting the worktree <Ref>{name}</Ref> failed.
+              删除工作树 <Ref>{name}</Ref> 失败。
             </p>
             {this.renderErrorMessage()}
             <p>
-              Would you like to forcefully delete the worktree <Ref>{name}</Ref>
-              ?
+              是否要强制删除工作树 <Ref>{name}</Ref>？
             </p>
           </div>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup
-            destructive={true}
-            okButtonText="Forcefully delete"
-          />
+          <OkCancelButtonGroup destructive={true} okButtonText="强制删除" />
         </DialogFooter>
       </Dialog>
     )

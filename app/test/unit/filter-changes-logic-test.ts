@@ -304,8 +304,8 @@ describe('filter-changes-logic', () => {
       }
 
       const message = getNoResultsMessage(filters)
-      assert(message?.includes('Included in commit'))
-      assert(message?.includes('New files'))
+      assert(message?.includes('将要提交'))
+      assert(message?.includes('属于新增'))
     })
 
     it('should format three or more filters with commas and and', () => {
@@ -320,7 +320,7 @@ describe('filter-changes-logic', () => {
 
       assert.equal(
         getNoResultsMessage(filters),
-        `Sorry, I can't find any changed files matching the following filters: "src", Included in commit, Modified files, and Deleted files`
+        `需要同时符合以下条件："src"、将要提交、属于修改、属于删除`
       )
     })
   })

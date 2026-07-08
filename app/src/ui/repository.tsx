@@ -52,6 +52,7 @@ interface IRepositoryViewProps {
   readonly hideWhitespaceInChangesDiff: boolean
   readonly hideWhitespaceInHistoryDiff: boolean
   readonly showSideBySideDiff: boolean
+  readonly enableDifftastic: boolean
   readonly showDiffCheckMarks: boolean
   readonly preferAbsoluteDates: boolean
   readonly askForConfirmationOnDiscardChanges: boolean
@@ -223,12 +224,12 @@ export class RepositoryView extends React.Component<
     return (
       <TabBar selectedIndex={selectedTab} onTabClicked={this.onTabClicked}>
         <span className="with-indicator" id="changes-tab">
-          <span>Changes</span>
+          <span>文件改动</span>
           {this.renderChangesBadge()}
         </span>
 
         <div className="with-indicator" id="history-tab">
-          <span>History</span>
+          <span>历史提交</span>
         </div>
       </TabBar>
     )
@@ -414,7 +415,7 @@ export class RepositoryView extends React.Component<
           minimumWidth={this.props.sidebarWidth.min}
           onReset={this.handleSidebarWidthReset}
           onResize={this.handleSidebarResize}
-          description="Repository sidebar"
+          description="仓库侧边栏"
         >
           {this.renderTabs()}
           {this.renderSidebarContents()}
@@ -510,6 +511,7 @@ export class RepositoryView extends React.Component<
         onOpenInExternalEditor={this.props.onOpenInExternalEditor}
         onViewCommitOnGitHub={this.props.onViewCommitOnGitHub}
         hideWhitespaceInDiff={this.props.hideWhitespaceInHistoryDiff}
+        enableDifftastic={this.props.enableDifftastic}
         showSideBySideDiff={this.props.showSideBySideDiff}
         onOpenBinaryFile={this.onOpenBinaryFile}
         onOpenSubmodule={this.onOpenSubmodule}
@@ -604,6 +606,7 @@ export class RepositoryView extends React.Component<
           isCommitting={this.props.state.isCommitting}
           imageDiffType={this.props.imageDiffType}
           hideWhitespaceInDiff={this.props.hideWhitespaceInChangesDiff}
+          enableDifftastic={this.props.enableDifftastic}
           showSideBySideDiff={this.props.showSideBySideDiff}
           showDiffCheckMarks={this.props.showDiffCheckMarks}
           onOpenBinaryFile={this.onOpenBinaryFile}

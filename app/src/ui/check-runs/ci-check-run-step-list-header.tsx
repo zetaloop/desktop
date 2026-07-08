@@ -30,7 +30,7 @@ export class CICheckRunStepListHeader extends React.PureComponent<ICICheckRunSte
       return null
     }
 
-    const tooltip = `Re-run ${checkRun.name}`
+    const tooltip = `重新运行 ${checkRun.name}`
     return (
       <Button
         className="job-rerun"
@@ -50,7 +50,7 @@ export class CICheckRunStepListHeader extends React.PureComponent<ICICheckRunSte
       return null
     }
 
-    const label = `View ${checkRun.name} on GitHub`
+    const label = `在 GitHub 上查看 ${checkRun.name}`
     return (
       <Button
         role="link"

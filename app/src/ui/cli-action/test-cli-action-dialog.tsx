@@ -60,7 +60,7 @@ export class TestCLIActionDialog extends React.Component<
     return (
       <Dialog
         id="test-cli-action"
-        title="Dispatch CLI Action"
+        title="分发 CLI 操作"
         onSubmit={this.onSubmit}
         onDismissed={this.props.onDismissed}
       >
@@ -68,15 +68,15 @@ export class TestCLIActionDialog extends React.Component<
           onTabClicked={this.onTabClicked}
           selectedIndex={this.state.selectedTabIndex}
         >
-          <span>Open repository</span>
-          <span>Clone URL</span>
+          <span>打开仓库</span>
+          <span>克隆 URL</span>
         </TabBar>
 
         <DialogContent>{this.renderActiveTab()}</DialogContent>
 
         <DialogFooter>
           <OkCancelButtonGroup
-            okButtonText="Dispatch"
+            okButtonText="分发"
             okButtonDisabled={!this.isActionValid()}
           />
         </DialogFooter>
@@ -92,7 +92,7 @@ export class TestCLIActionDialog extends React.Component<
         return (
           <Row>
             <TextBox
-              label="Path"
+              label="路径"
               placeholder="/path/to/repository"
               value={this.state.path}
               onValueChanged={this.onPathChanged}
@@ -114,7 +114,7 @@ export class TestCLIActionDialog extends React.Component<
             </Row>
             <Row>
               <TextBox
-                label="Branch (optional)"
+                label="分支（可选）"
                 placeholder="main"
                 value={this.state.branch}
                 onValueChanged={this.onBranchChanged}

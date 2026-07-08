@@ -1,5 +1,5 @@
 import { getTempFilePath } from '../file-system'
-import { IGitProgress, IGitProgressInfo, IGitOutput } from './git'
+import { IGitProgress, IGitProgressInfo, IGitOutput, translateLn } from './git'
 import { formatBytes } from '../../ui/lib/bytes'
 import { open } from 'fs/promises'
 
@@ -53,7 +53,12 @@ export class GitLFSProgressParser {
   public parse(line: string): IGitProgress | IGitOutput {
     const matches = line.match(LFSProgressLineRe)
     if (!matches || matches.length !== 7) {
-      return { kind: 'context', percent: 0, text: line }
+      return {
+        kind: 'context',
+        percent: 0,
+        text: translateLn(line),
+        text_: line,
+      }
     }
 
     const direction = matches[1]
@@ -67,7 +72,12 @@ export class GitLFSProgressParser {
       isNaN(fileTransferred) ||
       isNaN(fileSize)
     ) {
-      return { kind: 'context', percent: 0, text: line }
+      return {
+        kind: 'context',
+        percent: 0,
+        text: translateLn(line),
+        text_: line,
+      }
     }
 
     this.files.set(fileName, {
@@ -103,7 +113,8 @@ export class GitLFSProgressParser {
       total: totalEstimated,
       percent: 0,
       done: false,
-      text: `${verb} ${fileName} (${finishedFiles} out of an estimated ${fileCount} completed, ${transferProgress})`,
+      text: `${verb} ${fileName} (总共${fileCount}个，已完成${finishedFiles}个，${transferProgress})`,
+      text_: line,
     }
 
     return {
@@ -116,13 +127,13 @@ export class GitLFSProgressParser {
   private directionToHumanFacingVerb(direction: string): string {
     switch (direction) {
       case 'download':
-        return 'Downloading'
+        return '正在下载'
       case 'upload':
-        return 'Uploading'
+        return '正在上传'
       case 'checkout':
-        return 'Checking out'
+        return '正在检出'
       default:
-        return 'Downloading'
+        return '正在下载'
     }
   }
 }

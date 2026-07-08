@@ -34,7 +34,7 @@ describe('BranchListItem', () => {
     )
 
     assert.equal(screen.getByText('main').textContent, 'main')
-    assert.equal(screen.getByText('just now').textContent, 'just now')
+    assert.equal(screen.getByText('此刻').textContent, '此刻')
   })
 
   it('drops dragged commits onto a non-current branch', () => {

@@ -179,11 +179,11 @@ export class RepositoriesList extends React.Component<
     }
 
     return (
-      'The currently checked out branch is' +
-      (behind ? ` ${commitGrammar(behind)} behind ` : '') +
-      (behind && ahead ? 'and' : '') +
-      (ahead ? ` ${commitGrammar(ahead)} ahead of ` : '') +
-      'its tracked branch.'
+      '它比跟踪分支' +
+      (behind ? `落后${commitGrammar(behind)}` : '') +
+      (behind && ahead ? '、' : '') +
+      (ahead ? `领先${commitGrammar(ahead)}` : '') +
+      '。'
     )
   }
 
@@ -197,28 +197,37 @@ export class RepositoriesList extends React.Component<
     const realName = gitHubRepo ? gitHubRepo.fullName : repository.name
     const aheadBehindTooltip = this.getAheadBehindTooltip(aheadBehind)
     const hasChanges = changedFilesCount > 0
-    const uncommittedChangesTooltip = hasChanges
-      ? `There are uncommitted changes in this repository.`
-      : null
+    const uncommittedChangesTooltip = hasChanges ? `有未提交的改动。` : null
 
     const ahead = aheadBehind?.ahead ?? 0
     const behind = aheadBehind?.behind ?? 0
 
     return (
+      // desktop-cn: make it looks slightly better
       <div className="repository-list-item-tooltip list-item-tooltip">
         <div>
-          <div className="label">Full Name: </div>
+          <div className="label" style={{ minWidth: 35 }}>
+            名称：
+          </div>
           {realName}
           {alias && <> ({alias})</>}
         </div>
         <div>
-          <div className="label">Path: </div>
+          <div className="label" style={{ minWidth: 35 }}>
+            路径：
+          </div>
           {repository.path}
         </div>
         {aheadBehindTooltip && (
           <div>
-            <div className="label">
-              <div className="ahead-behind">
+            <div className="label" style={{ minWidth: 35 }}>
+              <div
+                className="ahead-behind"
+                style={{
+                  verticalAlign: 'text-bottom',
+                  padding: ahead > 0 && behind > 0 ? 0 : undefined,
+                }}
+              >
                 {ahead > 0 && <Octicon symbol={octicons.arrowUp} />}
                 {behind > 0 && <Octicon symbol={octicons.arrowDown} />}
               </div>
@@ -228,7 +237,7 @@ export class RepositoriesList extends React.Component<
         )}
         {uncommittedChangesTooltip && (
           <div>
-            <div className="label">
+            <div className="label" style={{ minWidth: 35 }}>
               <span className="change-indicator-wrapper">
                 <Octicon symbol={octicons.dotFill} />
               </span>
@@ -245,11 +254,11 @@ export class RepositoriesList extends React.Component<
     if (kind === 'enterprise') {
       return group.host
     } else if (kind === 'other') {
-      return 'Other'
+      return '其他来源'
     } else if (kind === 'dotcom') {
       return group.owner.login
     } else if (kind === 'recent') {
-      return 'Recent'
+      return '最近'
     } else {
       assertNever(kind, `Unknown repository group kind ${kind}`)
     }
@@ -376,7 +385,7 @@ export class RepositoriesList extends React.Component<
         ariaExpanded={this.state.newRepositoryMenuExpanded}
         onKeyDown={this.onNewRepositoryButtonKeyDown}
       >
-        Add
+        添加
         <Octicon symbol={octicons.triangleDown} />
       </Button>
     )
@@ -394,21 +403,21 @@ export class RepositoriesList extends React.Component<
     return (
       <div className="no-items no-results-found">
         <img src={BlankSlateImage} className="blankslate-image" alt="" />
-        <div className="title">Sorry, I can't find that repository</div>
+        <div className="title">抱歉，找不到该仓库</div>
 
         <div className="protip">
-          ProTip! Press{' '}
+          小技巧！在软件里按{' '}
           <div className="kbd-shortcut">
             <KeyboardShortcut darwinKeys={['⌘', 'O']} keys={['Ctrl', 'O']} />
           </div>{' '}
-          to quickly add a local repository, and{' '}
+          可以添加本地仓库，
           <div className="kbd-shortcut">
             <KeyboardShortcut
               darwinKeys={['⇧', '⌘', 'O']}
               keys={['Ctrl', 'Shift', 'O']}
             />
           </div>{' '}
-          to clone from anywhere within the app
+          可以克隆在线仓库
         </div>
       </div>
     )
@@ -417,17 +426,15 @@ export class RepositoriesList extends React.Component<
   private onNewRepositoryButtonClick = () => {
     const items: IMenuItem[] = [
       {
-        label: __DARWIN__ ? 'Clone Repository…' : 'Clone repository…',
+        label: __DARWIN__ ? '克隆在线仓库…' : '克隆在线仓库…',
         action: this.onCloneRepository,
       },
       {
-        label: __DARWIN__ ? 'Create New Repository…' : 'Create new repository…',
+        label: __DARWIN__ ? '新建仓库…' : '新建仓库…',
         action: this.onCreateNewRepository,
       },
       {
-        label: __DARWIN__
-          ? 'Add Existing Repository…'
-          : 'Add existing repository…',
+        label: __DARWIN__ ? '添加本地仓库…' : '添加本地仓库…',
         action: this.onAddExistingRepository,
       },
     ]

@@ -117,11 +117,11 @@ describe('commit message warning dialogs', () => {
 
     const dialog = view.container.querySelector('dialog')
     const learnMore = view.container.querySelector(
-      'a[href="https://gh.io/copilot-for-desktop-transparency"]'
+      'a[href="https://docs.github.com/zh/copilot/responsible-use-of-github-copilot-features/responsible-use-of-github-copilot-in-github-desktop"]'
     )
     const submitButton = Array.from(
       view.container.querySelectorAll('button')
-    ).find(button => button.textContent?.includes('I understand'))
+    ).find(button => button.textContent?.includes('我已知悉'))
 
     assert.notEqual(dialog, null)
     assert.notEqual(learnMore, null)
@@ -131,7 +131,7 @@ describe('commit message warning dialogs', () => {
     assertAnnouncementIncludes(dialog!, 'copilot-disclaimer-body')
     assert.equal(
       learnMore!.getAttribute('href'),
-      'https://gh.io/copilot-for-desktop-transparency'
+      'https://docs.github.com/zh/copilot/responsible-use-of-github-copilot-features/responsible-use-of-github-copilot-in-github-desktop'
     )
 
     fireEvent.click(submitButton!)
@@ -174,18 +174,18 @@ describe('commit message warning dialogs', () => {
       'input[type="checkbox"]'
     ) as HTMLInputElement | null
     const tipLink = view.container.querySelector(
-      'a[href="https://gh.io/desktop-copilot-custom-instructions"]'
+      'a[href="https://docs.github.com/zh/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions"]'
     )
     const overrideButton = Array.from(
       view.container.querySelectorAll('button')
-    ).find(button => button.textContent?.includes('Override'))
+    ).find(button => button.textContent?.includes('确认覆盖'))
 
     assert.notEqual(dialog, null)
     assert.notEqual(checkbox, null)
     assert.notEqual(tipLink, null)
     assert.notEqual(overrideButton, null)
     assert.equal(dialog?.getAttribute('role'), 'alertdialog')
-    assert.ok(screen.getByText('Commit message override'))
+    assert.ok(screen.getByText('覆盖提交消息'))
     assertAnnouncementIncludes(
       dialog!,
       'generate-commit-message-override-warning-body'
@@ -196,7 +196,7 @@ describe('commit message warning dialogs', () => {
     )
     assert.equal(
       tipLink!.getAttribute('href'),
-      'https://gh.io/desktop-copilot-custom-instructions'
+      'https://docs.github.com/zh/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions'
     )
     assert.equal(checkbox?.checked, false)
 
@@ -239,9 +239,6 @@ describe('commit message warning dialogs', () => {
       dialog!,
       'generate-commit-message-override-warning-body'
     )
-    assert.equal(
-      screen.queryByRole('link', { name: 'Copilot Instructions' }),
-      null
-    )
+    assert.equal(screen.queryByRole('link', { name: 'Copilot 指令' }), null)
   })
 })

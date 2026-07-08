@@ -2,6 +2,7 @@ import { git, HookCallbackOptions, parseCommitSHA } from './core'
 import { stageFiles } from './update-index'
 import { Repository } from '../../models/repository'
 import { WorkingDirectoryFileChange } from '../../models/status'
+import { ILargeTextDiff, ITextDiff } from '../../models/diff'
 import { unstageAll } from './reset'
 import { ManualConflictResolution } from '../../models/manual-conflict-resolution'
 import { stageManualConflictResolution } from './stage'
@@ -21,6 +22,8 @@ export async function createCommit(
     noVerify?: boolean
     signOff?: boolean
     allowEmpty?: boolean
+    partialDiffsByFileID?: ReadonlyMap<string, ITextDiff | ILargeTextDiff>
+    requireDisplayedDiffForPartial?: boolean
   } & HookCallbackOptions
 ): Promise<string> {
   // Clear the staging area, our diffs reflect the difference between the
@@ -28,7 +31,10 @@ export async function createCommit(
   // do the same thing.
   await unstageAll(repository)
 
-  await stageFiles(repository, files)
+  await stageFiles(repository, files, {
+    partialDiffsByFileID: options?.partialDiffsByFileID,
+    requireDisplayedDiffForPartial: options?.requireDisplayedDiffForPartial,
+  })
 
   const args = ['-F', '-']
 

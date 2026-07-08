@@ -167,7 +167,7 @@ export class CompareSidebar extends React.Component<
       <div id="compare-view" role="tabpanel" aria-labelledby="history-tab">
         <div className="compare-form">
           <FancyTextBox
-            ariaLabel="Branch filter"
+            ariaLabel="分支筛选器"
             symbol={octicons.gitBranch}
             displayClearButton={true}
             placeholder={placeholderText}
@@ -216,79 +216,152 @@ export class CompareSidebar extends React.Component<
   }
 
   private renderCommitList() {
-    const { formState, commitSHAs } = this.props.compareState
+    const { formState, commitSearchText } = this.props.compareState
+    const filteredCommitSHAs = this.getFilteredCommitSHAs()
+    const isSearching = commitSearchText.trim().length > 0
 
     let emptyListMessage: string | JSX.Element
-    if (formState.kind === HistoryTabMode.History) {
-      emptyListMessage = 'No history'
+    if (filteredCommitSHAs.length === 0 && isSearching) {
+      emptyListMessage = '没有匹配的提交'
+    } else if (formState.kind === HistoryTabMode.History) {
+      emptyListMessage = '无提交历史'
     } else {
       const currentlyComparedBranchName = formState.comparisonBranch.name
 
       emptyListMessage =
         formState.comparisonMode === ComparisonMode.Ahead ? (
           <p>
-            The compared branch (<Ref>{currentlyComparedBranchName}</Ref>) is up
-            to date with your branch
+            所选分支 (<Ref>{currentlyComparedBranchName}</Ref>) 已与当前分支同步
           </p>
         ) : (
           <p>
-            Your branch is up to date with the compared branch (
-            <Ref>{currentlyComparedBranchName}</Ref>)
+            当前分支已与所选分支 (<Ref>{currentlyComparedBranchName}</Ref>) 同步
           </p>
         )
     }
 
     return (
-      <CommitList
-        ref={this.commitListRef}
-        gitHubRepository={this.props.repository.gitHubRepository}
-        isLocalRepository={this.props.isLocalRepository}
-        commitLookup={this.props.commitLookup}
-        commitSHAs={commitSHAs}
-        selectedSHAs={this.props.selectedCommitShas}
-        shasToHighlight={this.props.shasToHighlight}
-        localCommitSHAs={this.props.localCommitSHAs}
-        canResetToCommits={formState.kind === HistoryTabMode.History}
-        canUndoCommits={formState.kind === HistoryTabMode.History}
-        canAmendCommits={formState.kind === HistoryTabMode.History}
-        emoji={this.props.emoji}
-        reorderingEnabled={formState.kind === HistoryTabMode.History}
-        onViewCommitOnGitHub={this.props.onViewCommitOnGitHub}
-        onUndoCommit={this.onUndoCommit}
-        onResetToCommit={this.onResetToCommit}
-        onRevertCommit={
-          ableToRevertCommit(this.props.compareState.formState)
-            ? this.props.onRevertCommit
-            : undefined
-        }
-        onAmendCommit={this.props.onAmendCommit}
-        onCommitsSelected={this.onCommitsSelected}
-        onScroll={this.onScroll}
-        onCreateBranch={this.onCreateBranch}
-        onCheckoutCommit={this.onCheckoutCommit}
-        onCreateTag={this.onCreateTag}
-        onDeleteTag={this.onDeleteTag}
-        onCherryPick={this.onCherryPick}
-        onDropCommitInsertion={this.onDropCommitInsertion}
-        onKeyboardReorder={this.onKeyboardReorder}
-        onCancelKeyboardReorder={this.onCancelKeyboardReorder}
-        onSquash={this.onSquash}
-        emptyListMessage={emptyListMessage}
-        onCompareListScrolled={this.props.onCompareListScrolled}
-        compareListScrollTop={this.props.compareListScrollTop}
-        tagsToPush={this.props.tagsToPush ?? []}
-        onRenderCommitDragElement={this.onRenderCommitDragElement}
-        onRemoveCommitDragElement={this.onRemoveCommitDragElement}
-        disableReordering={formState.kind === HistoryTabMode.Compare}
-        disableSquashing={formState.kind === HistoryTabMode.Compare}
-        isMultiCommitOperationInProgress={
-          this.props.isMultiCommitOperationInProgress
-        }
-        keyboardReorderData={this.state.keyboardReorderData}
-        accounts={this.props.accounts}
-        preferAbsoluteDates={this.props.preferAbsoluteDates}
-      />
+      <div className="commit-search-container">
+        {this.renderCommitSearchBox()}
+        <CommitList
+          ref={this.commitListRef}
+          gitHubRepository={this.props.repository.gitHubRepository}
+          isLocalRepository={this.props.isLocalRepository}
+          commitLookup={this.props.commitLookup}
+          commitSHAs={filteredCommitSHAs}
+          selectedSHAs={this.props.selectedCommitShas}
+          shasToHighlight={this.props.shasToHighlight}
+          localCommitSHAs={this.props.localCommitSHAs}
+          canResetToCommits={formState.kind === HistoryTabMode.History}
+          canUndoCommits={formState.kind === HistoryTabMode.History}
+          canAmendCommits={formState.kind === HistoryTabMode.History}
+          emoji={this.props.emoji}
+          reorderingEnabled={formState.kind === HistoryTabMode.History}
+          onViewCommitOnGitHub={this.props.onViewCommitOnGitHub}
+          onUndoCommit={this.onUndoCommit}
+          onResetToCommit={this.onResetToCommit}
+          onRevertCommit={
+            ableToRevertCommit(this.props.compareState.formState)
+              ? this.props.onRevertCommit
+              : undefined
+          }
+          onAmendCommit={this.props.onAmendCommit}
+          onCommitsSelected={this.onCommitsSelected}
+          onScroll={this.onScroll}
+          onCreateBranch={this.onCreateBranch}
+          onCheckoutCommit={this.onCheckoutCommit}
+          onCreateTag={this.onCreateTag}
+          onDeleteTag={this.onDeleteTag}
+          onCherryPick={this.onCherryPick}
+          onDropCommitInsertion={this.onDropCommitInsertion}
+          onKeyboardReorder={this.onKeyboardReorder}
+          onCancelKeyboardReorder={this.onCancelKeyboardReorder}
+          onSquash={this.onSquash}
+          emptyListMessage={emptyListMessage}
+          onCompareListScrolled={this.props.onCompareListScrolled}
+          compareListScrollTop={this.props.compareListScrollTop}
+          tagsToPush={this.props.tagsToPush ?? []}
+          onRenderCommitDragElement={this.onRenderCommitDragElement}
+          onRemoveCommitDragElement={this.onRemoveCommitDragElement}
+          disableReordering={formState.kind === HistoryTabMode.Compare}
+          disableSquashing={formState.kind === HistoryTabMode.Compare}
+          isMultiCommitOperationInProgress={
+            this.props.isMultiCommitOperationInProgress
+          }
+          keyboardReorderData={this.state.keyboardReorderData}
+          accounts={this.props.accounts}
+          preferAbsoluteDates={this.props.preferAbsoluteDates}
+        />
+      </div>
     )
+  }
+
+  private renderCommitSearchBox() {
+    const { commitSearchText } = this.props.compareState
+    return (
+      <div className="commit-search">
+        <FancyTextBox
+          ariaLabel="提交搜索"
+          symbol={octicons.search}
+          displayClearButton={true}
+          placeholder={
+            __DARWIN__
+              ? '搜索提交标题、描述、标签或哈希'
+              : '搜索提交标题、描述、标签或哈希'
+          }
+          value={commitSearchText}
+          onValueChanged={this.onCommitSearchTextChanged}
+          onSearchCleared={this.onCommitSearchCleared}
+          onRef={this.onCommitSearchRef}
+        />
+      </div>
+    )
+  }
+
+  private onCommitSearchTextChanged = (commitSearchText: string) => {
+    this.props.dispatcher.updateCompareForm(this.props.repository, {
+      commitSearchText,
+    })
+  }
+
+  private onCommitSearchCleared = () => {
+    this.props.dispatcher.updateCompareForm(this.props.repository, {
+      commitSearchText: '',
+    })
+  }
+
+  private onCommitSearchRef = () => {
+    /* no-op to satisfy FancyTextBox onRef requirement */
+  }
+
+  private getFilteredCommitSHAs() {
+    const { commitSearchText, commitSHAs } = this.props.compareState
+    const query = commitSearchText.trim().toLowerCase()
+    if (query.length === 0) {
+      return commitSHAs
+    }
+
+    return commitSHAs.filter(sha => {
+      const commit = this.props.commitLookup.get(sha)
+      if (commit === undefined) {
+        return sha.toLowerCase().includes(query)
+      }
+
+      return this.doesCommitMatchQuery(commit, query)
+    })
+  }
+
+  private doesCommitMatchQuery(commit: Commit, query: string) {
+    if (
+      commit.summary.toLowerCase().includes(query) ||
+      commit.body.toLowerCase().includes(query) ||
+      commit.sha.toLowerCase().includes(query) ||
+      commit.shortSha.toLowerCase().includes(query)
+    ) {
+      return true
+    }
+
+    return commit.tags.some(tag => tag.toLowerCase().includes(query))
   }
 
   private onCancelKeyboardReorder = () => {
@@ -310,7 +383,7 @@ export class CompareSidebar extends React.Component<
     ) {
       defaultErrorHandler(
         new Error(
-          `Unable to reorder. Reordering replays all commits up to the last one required for the reorder. A merge commit cannot exist among those commits.`
+          `无法重排。重排操作需要逐个重新应用所有需要调整顺序的提交，这中间不能有合并提交。`
         ),
         this.props.dispatcher
       )
@@ -420,10 +493,8 @@ export class CompareSidebar extends React.Component<
     return (
       <div className="compare-content">
         <TabBar selectedIndex={selectedTab} onTabClicked={this.onTabClicked}>
-          <span>{`Behind (${formatNumber(
-            formState.aheadBehind.behind
-          )})`}</span>
-          <span>{`Ahead (${formatNumber(formState.aheadBehind.ahead)})`}</span>
+          <span>{`落后 (${formatNumber(formState.aheadBehind.behind)})`}</span>
+          <span>{`领先 (${formatNumber(formState.aheadBehind.ahead)})`}</span>
         </TabBar>
         {this.renderActiveTab(formState)}
       </div>
@@ -690,7 +761,7 @@ export class CompareSidebar extends React.Component<
     ) {
       defaultErrorHandler(
         new Error(
-          `Unable to squash. Squashing replays all commits up to the last one required for the squash. A merge commit cannot exist among those commits.`
+          `无法压缩。压缩操作需要逐个重新应用所有需要调整顺序的提交，这中间不能有合并提交。`
         ),
         this.props.dispatcher
       )
@@ -709,8 +780,8 @@ export class CompareSidebar extends React.Component<
         description: squashedDescription,
         timestamp: Date.now(),
       },
-      dialogTitle: `Squash ${allCommitsInSquash.length} Commits`,
-      dialogButtonText: `Squash ${allCommitsInSquash.length} Commits`,
+      dialogTitle: `压缩${allCommitsInSquash.length}个提交`,
+      dialogButtonText: `压缩${allCommitsInSquash.length}个提交`,
       prepopulateCommitSummary: true,
       onSubmitCommitMessage: async (context: ICommitContext) => {
         this.props.dispatcher.closePopup(PopupType.CommitMessage)
@@ -732,11 +803,9 @@ function getPlaceholderText(state: ICompareState) {
   const { branches, formState } = state
 
   if (!branches.some(b => !b.isDesktopForkRemoteBranch)) {
-    return __DARWIN__ ? 'No Branches to Compare' : 'No branches to compare'
+    return __DARWIN__ ? '没有可以比较的分支' : '没有可以比较的分支'
   } else if (formState.kind === HistoryTabMode.History) {
-    return __DARWIN__
-      ? 'Select Branch to Compare…'
-      : 'Select branch to compare…'
+    return __DARWIN__ ? '选择要比较的分支…' : '选择要比较的分支…'
   } else {
     return undefined
   }

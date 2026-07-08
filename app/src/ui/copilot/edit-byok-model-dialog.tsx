@@ -55,11 +55,11 @@ export class EditCopilotBYOKModelDialog extends React.Component<
     const isEditing = this.props.model !== null
     const title = isEditing
       ? __DARWIN__
-        ? 'Edit Model'
-        : 'Edit model'
+        ? '编辑模型'
+        : '编辑模型'
       : __DARWIN__
-      ? 'Add Model'
-      : 'Add model'
+      ? '添加模型'
+      : '添加模型'
 
     return (
       <Dialog
@@ -74,38 +74,36 @@ export class EditCopilotBYOKModelDialog extends React.Component<
         <DialogContent>
           <Row className="copilot-byok-field">
             <TextBox
-              label={__DARWIN__ ? 'Display Name' : 'Display name'}
+              label={__DARWIN__ ? '显示名称' : '显示名称'}
               value={this.state.name}
               onValueChanged={this.onNameChanged}
               placeholder="GPT-4o"
               autoFocus={true}
             />
             <p className="copilot-byok-field-hint">
-              The friendly name shown in the Copilot model picker.
+              在 Copilot 模型选择器中显示的易读名称。
             </p>
           </Row>
           <Row className="copilot-byok-field">
             <TextBox
-              label={__DARWIN__ ? 'Model Identifier' : 'Model identifier'}
+              label={__DARWIN__ ? '模型标识符' : '模型标识符'}
               value={this.state.id}
               onValueChanged={this.onIdChanged}
               placeholder="gpt-4o"
               required={true}
             />
             <p className="copilot-byok-field-hint">
-              The exact name your provider expects (e.g. <code>gpt-4o</code>,{' '}
+              提供商要求的准确名称（例如 <code>gpt-4o</code>、
               <code>llama3</code>).
             </p>
           </Row>
           <Row className="copilot-byok-field">
             <Select
-              label={__DARWIN__ ? 'Reasoning Effort' : 'Reasoning effort'}
+              label={__DARWIN__ ? '推理强度' : '推理强度'}
               value={this.state.reasoningEffort}
               onChange={this.onReasoningEffortChanged}
             >
-              <option value={NoReasoningEffort}>
-                Default (provider's choice)
-              </option>
+              <option value={NoReasoningEffort}>默认（由提供商决定）</option>
               {ReasoningEffortOrder.map(effort => (
                 <option key={effort} value={effort}>
                   {formatReasoningEffort(effort)}
@@ -113,15 +111,14 @@ export class EditCopilotBYOKModelDialog extends React.Component<
               ))}
             </Select>
             <p className="copilot-byok-field-hint">
-              Reasoning models (o1, o3, GPT-5 reasoning variants, etc.) think
-              before responding. Higher levels are slower but produce better
-              answers on complex tasks. Leave on <em>Default</em> for
-              non-reasoning models or to let the provider pick.
+              推理模型（o1、o3、GPT-5
+              推理变体等）会先思考再回答。更高强度更慢，但复杂任务效果更好。非推理模型或希望由提供商决定时，请保留
+              <em>默认</em>。
             </p>
           </Row>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup okButtonText={isEditing ? 'Save' : 'Add'} />
+          <OkCancelButtonGroup okButtonText={isEditing ? '保存' : '添加'} />
         </DialogFooter>
       </Dialog>
     )
@@ -167,10 +164,10 @@ export class EditCopilotBYOKModelDialog extends React.Component<
   private validate(): string | null {
     const id = this.state.id.trim()
     if (id === '') {
-      return 'Please enter a model identifier.'
+      return '请输入模型标识符。'
     }
     if (this.props.otherModelIds.includes(id)) {
-      return `Another model with the identifier '${id}' already exists.`
+      return `已存在标识符为 '${id}' 的其他模型。`
     }
     return null
   }

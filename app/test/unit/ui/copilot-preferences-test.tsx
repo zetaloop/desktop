@@ -318,13 +318,11 @@ describe('CopilotPreferences', () => {
     )
 
     assert.ok(
-      screen.getByText(
-        'Sign in to an account with a Copilot license to configure Copilot settings.'
-      )
+      screen.getByText('请登录具有 Copilot 许可的账号来配置 Copilot 设置。')
     )
 
     const signInButton = screen.getByRole('button', {
-      name: 'Sign In',
+      name: '登录',
     })
     fireEvent.click(signInButton)
 
@@ -350,11 +348,9 @@ describe('CopilotPreferences', () => {
     )
 
     assert.ok(
-      screen.getByText(
-        'Sign in to an account with a Copilot license to configure Copilot settings.'
-      )
+      screen.getByText('请登录具有 Copilot 许可的账号来配置 Copilot 设置。')
     )
-    assert.strictEqual(screen.queryByText('Checking Copilot access…'), null)
+    assert.strictEqual(screen.queryByText('正在检查 Copilot 访问权限…'), null)
     assert.strictEqual(screen.queryByRole('combobox'), null)
   })
 
@@ -371,7 +367,7 @@ describe('CopilotPreferences', () => {
       />
     )
 
-    assert.ok(screen.getByText('Checking Copilot access…'))
+    assert.ok(screen.getByText('正在检查 Copilot 访问权限…'))
     assert.strictEqual(screen.queryByRole('combobox'), null)
   })
 
@@ -388,7 +384,7 @@ describe('CopilotPreferences', () => {
       />
     )
 
-    assert.ok(screen.getByText('Checking Copilot access…'))
+    assert.ok(screen.getByText('正在检查 Copilot 访问权限…'))
     assert.strictEqual(screen.queryByRole('combobox'), null)
   })
 
@@ -411,11 +407,11 @@ describe('CopilotPreferences', () => {
 
     assert.ok(
       screen.getByText(
-        'Copilot features in GitHub Desktop require a GitHub Copilot license.'
+        'GitHub Desktop 的 Copilot 功能需要 GitHub Copilot 许可。'
       )
     )
 
-    fireEvent.click(screen.getByRole('button', { name: 'View Copilot plans' }))
+    fireEvent.click(screen.getByRole('button', { name: '查看 Copilot 方案' }))
 
     assert.strictEqual(called, 1)
     assert.strictEqual(screen.queryByRole('combobox'), null)
@@ -440,12 +436,12 @@ describe('CopilotPreferences', () => {
 
     assert.ok(
       screen.getByText(
-        'A Copilot license is available for your account, but "Copilot in GitHub Desktop" is disabled in your Copilot feature settings.'
+        '您的账号有 Copilot 许可，但 Copilot 功能设置中关闭了“GitHub Desktop 中的 Copilot”。'
       )
     )
 
     fireEvent.click(
-      screen.getByRole('button', { name: 'Open Copilot feature settings' })
+      screen.getByRole('button', { name: '打开 Copilot 功能设置' })
     )
 
     assert.strictEqual(called, 1)
@@ -474,7 +470,7 @@ describe('CopilotPreferences', () => {
     )
 
     assert.ok(screen.getAllByRole('button', { name: /Auto/ }).length > 0)
-    assert.strictEqual(screen.queryByText('View Copilot plans'), null)
+    assert.strictEqual(screen.queryByText('查看 Copilot 方案'), null)
   })
 
   it('ignores GHES accounts while checking Copilot access', () => {
@@ -496,29 +492,27 @@ describe('CopilotPreferences', () => {
 
     assert.ok(
       screen.getByText(
-        'Copilot features in GitHub Desktop require a GitHub Copilot license.'
+        'GitHub Desktop 的 Copilot 功能需要 GitHub Copilot 许可。'
       )
     )
     assert.strictEqual(screen.queryByRole('combobox'), null)
-    assert.strictEqual(screen.queryByText('Checking Copilot access…'), null)
+    assert.strictEqual(screen.queryByText('正在检查 Copilot 访问权限…'), null)
   })
 
   it('shows loading message when models not yet fetched', () => {
     render(<CopilotPreferences {...defaults()} copilotModels={null} />)
-    assert.ok(screen.getByText('Loading available models…'))
+    assert.ok(screen.getByText('正在加载可用模型…'))
   })
 
   it('shows no-models message when fetch completed with empty result', () => {
     render(<CopilotPreferences {...defaults()} copilotModels={[]} />)
-    assert.ok(screen.getByText('No Copilot models available.'))
+    assert.ok(screen.getByText('没有可用模型。请检查 Copilot 订阅。'))
   })
 
   it('renders a Copilot group with the available models', async () => {
     const view = render(<CopilotPreferences {...defaults()} />)
     const modelPickerButton = getModelPickerButton(view.container)
-    const pickerLabel = __DARWIN__
-      ? 'Commit Message Generation'
-      : 'Commit message generation'
+    const pickerLabel = __DARWIN__ ? '生成提交消息' : '生成提交消息'
 
     assert.strictEqual(
       modelPickerButton.getAttribute('aria-label'),
@@ -911,7 +905,7 @@ describe('CopilotPreferences', () => {
     )
     const tabs = view.container.querySelectorAll('[role="tab"]')
     const providersTab = Array.from(tabs).find(t =>
-      (t.textContent ?? '').toLowerCase().includes('providers')
+      (t.textContent ?? '').includes('提供商')
     )
     assert.ok(providersTab)
   })
@@ -929,13 +923,13 @@ describe('CopilotPreferences', () => {
     )
     const tabs = view.container.querySelectorAll('[role="tab"]')
     const providersTab = Array.from(tabs).find(t =>
-      (t.textContent ?? '').toLowerCase().includes('providers')
+      (t.textContent ?? '').includes('提供商')
     )
     assert.ok(providersTab)
     fireEvent.click(providersTab!)
     const buttons = view.container.querySelectorAll('button')
     const addButton = Array.from(buttons).find(b =>
-      (b.textContent ?? '').toLowerCase().includes('add provider')
+      (b.textContent ?? '').includes('添加提供商')
     )
     assert.ok(addButton)
     fireEvent.click(addButton!)
