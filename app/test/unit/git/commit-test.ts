@@ -2,7 +2,7 @@ import { describe, it, TestContext } from 'node:test'
 import assert from 'node:assert'
 import * as path from 'path'
 import { readFile, unlink, writeFile } from 'fs/promises'
-import { pathExists } from '../../../src/ui/lib/path-exists'
+import { pathExists } from '../../../src/lib/path-exists'
 
 import { Repository } from '../../../src/models/repository'
 import {

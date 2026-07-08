@@ -152,7 +152,8 @@ export class RepositoriesStore extends TypedBaseStore<
       repo.missing,
       repo.alias,
       repo.workflowPreferences,
-      repo.isTutorialRepository
+      repo.isTutorialRepository,
+      repo.gitDir
     )
   }
 
@@ -199,7 +200,8 @@ export class RepositoriesStore extends TypedBaseStore<
   public async addTutorialRepository(
     path: string,
     endpoint: string,
-    apiRepo: IAPIFullRepository
+    apiRepo: IAPIFullRepository,
+    gitDir?: string
   ) {
     await this.db.transaction(
       'rw',
@@ -218,6 +220,7 @@ export class RepositoriesStore extends TypedBaseStore<
           missing: false,
           lastStashCheckDate: null,
           isTutorialRepository: true,
+          gitDir,
         })
       }
     )
@@ -232,6 +235,7 @@ export class RepositoriesStore extends TypedBaseStore<
    */
   public async addRepository(
     path: string,
+    gitDir: string | undefined,
     opts?: AddRepositoryOptions
   ): Promise<Repository> {
     const repository = await this.db.transaction(
@@ -252,6 +256,7 @@ export class RepositoriesStore extends TypedBaseStore<
           missing: opts?.missing ?? false,
           lastStashCheckDate: null,
           alias: null,
+          gitDir,
         }
         const id = await this.db.repositories.add(dbRepo)
         return this.toRepository({ id, ...dbRepo })
@@ -287,7 +292,29 @@ export class RepositoriesStore extends TypedBaseStore<
       missing,
       repository.alias,
       repository.workflowPreferences,
-      repository.isTutorialRepository
+      repository.isTutorialRepository,
+      repository.gitDir
+    )
+  }
+
+  /** Update the repository's `gitDir` path. */
+  public async updateRepositoryGitDir(
+    repository: Repository,
+    gitDir: string
+  ): Promise<Repository> {
+    await this.db.repositories.update(repository.id, { gitDir })
+
+    this.emitUpdatedRepositories()
+
+    return new Repository(
+      repository.path,
+      repository.id,
+      repository.gitHubRepository,
+      repository.missing,
+      repository.alias,
+      repository.workflowPreferences,
+      repository.isTutorialRepository,
+      gitDir
     )
   }
 
@@ -324,9 +351,15 @@ export class RepositoriesStore extends TypedBaseStore<
   /** Update the repository's path. */
   public async updateRepositoryPath(
     repository: Repository,
-    path: string
+    path: string,
+    gitDir: string | undefined,
+    missing: boolean = false
   ): Promise<Repository> {
-    await this.db.repositories.update(repository.id, { missing: false, path })
+    await this.db.repositories.update(repository.id, {
+      missing,
+      path,
+      gitDir,
+    })
 
     this.emitUpdatedRepositories()
 
@@ -334,11 +367,57 @@ export class RepositoriesStore extends TypedBaseStore<
       path,
       repository.id,
       repository.gitHubRepository,
-      false,
+      missing,
       repository.alias,
       repository.workflowPreferences,
-      repository.isTutorialRepository
+      repository.isTutorialRepository,
+      gitDir
     )
+  }
+
+  /**
+   * Switch the repository to a different worktree path, persisting the main
+   * worktree path as a stable anchor for recovery.
+   *
+   * If another repository already exists at the target path, returns that
+   * repository instead of modifying the current one.
+   *
+   * @param repository  The repository to switch
+   * @param worktreePath The path of the worktree to switch to
+   */
+  public async switchWorktree(
+    repository: Repository,
+    worktreePath: string,
+    missing = false
+  ): Promise<{ repository: Repository; existingRepository: boolean }> {
+    const existing = await this.db.repositories.get({ path: worktreePath })
+
+    if (existing !== undefined) {
+      return {
+        repository: await this.toRepository(existing),
+        existingRepository: true,
+      }
+    }
+
+    await this.db.repositories.update(repository.id, {
+      path: worktreePath,
+      missing,
+    })
+
+    this.emitUpdatedRepositories()
+
+    return {
+      repository: new Repository(
+        worktreePath,
+        repository.id,
+        repository.gitHubRepository,
+        missing,
+        repository.alias,
+        repository.workflowPreferences,
+        repository.isTutorialRepository
+      ),
+      existingRepository: false,
+    }
   }
 
   /**
@@ -483,7 +562,8 @@ export class RepositoriesStore extends TypedBaseStore<
       repo.missing,
       repo.alias,
       repo.workflowPreferences,
-      repo.isTutorialRepository
+      repo.isTutorialRepository,
+      repo.gitDir
     )
 
     assertIsRepositoryWithGitHubRepository(updatedRepo)

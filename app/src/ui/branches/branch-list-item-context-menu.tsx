@@ -1,39 +1,40 @@
 import { IMenuItem } from '../../lib/menu-item'
 import { clipboard } from 'electron'
+import { Branch, BranchType } from '../../models/branch'
 
 interface IBranchContextMenuConfig {
-  name: string
-  isLocal: boolean
+  branch: Branch
   onRenameBranch?: (branchName: string) => void
   onViewBranchOnGitHub?: () => void
   onViewPullRequestOnGitHub?: () => void
   onDeleteBranch?: (branchName: string) => void
+  onCheckoutInNewWorktree?: (branch: Branch) => void
 }
 
 export function generateBranchContextMenuItems(
   config: IBranchContextMenuConfig
 ): IMenuItem[] {
   const {
-    name,
-    isLocal,
+    branch,
     onRenameBranch,
     onViewBranchOnGitHub,
     onViewPullRequestOnGitHub,
     onDeleteBranch,
+    onCheckoutInNewWorktree,
   } = config
   const items = new Array<IMenuItem>()
 
   if (onRenameBranch !== undefined) {
     items.push({
       label: '重命名…',
-      action: () => onRenameBranch(name),
-      enabled: isLocal,
+      action: () => onRenameBranch(branch.name),
+      enabled: branch.type === BranchType.Local,
     })
   }
 
   items.push({
-    label: __DARWIN__ ? '复制名称' : '复制名称',
-    action: () => clipboard.writeText(name),
+    label: __DARWIN__ ? '复制分支名称' : '复制分支名称',
+    action: () => clipboard.writeText(branch.name),
   })
 
   if (onViewBranchOnGitHub !== undefined) {
@@ -50,12 +51,19 @@ export function generateBranchContextMenuItems(
     })
   }
 
+  if (onCheckoutInNewWorktree !== undefined) {
+    items.push({
+      label: __DARWIN__ ? '检出到新工作树…' : '检出到新工作树…',
+      action: () => onCheckoutInNewWorktree(branch),
+    })
+  }
+
   items.push({ type: 'separator' })
 
   if (onDeleteBranch !== undefined) {
     items.push({
       label: '删除…',
-      action: () => onDeleteBranch(name),
+      action: () => onDeleteBranch(branch.name),
     })
   }
 

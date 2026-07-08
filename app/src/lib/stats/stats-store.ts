@@ -43,6 +43,8 @@ import { ValidNotificationPullRequestReviewState } from '../valid-notification-p
 import { useExternalCredentialHelperKey } from '../trampoline/use-external-credential-helper'
 import { getUserAgent } from '../http'
 import { getHooksEnvEnabled } from '../hooks/config'
+import { parseModelKey } from '../copilot/byok'
+import { DefaultCopilotModel } from '../stores/copilot-store'
 
 type PullRequestReviewStatFieldInfix =
   | 'Approved'
@@ -261,6 +263,20 @@ const DefaultDailyMeasures: IDailyMeasures = {
   secretsDetectedOnPushBypassedAsWillFixLaterCount: 0,
   secretsDetectedOnPushDelegatedBypassLinkClickedCount: 0,
   secretRemediationInstructionsLinkClickedCount: 0,
+  worktreeSwitchCount: 0,
+  worktreeCreatedCount: 0,
+  worktreeDeletedCount: 0,
+  worktreeMaxCount: 0,
+  initiateResolveConflictsWithCopilotCount: 0,
+  copilotConflictResolutionAcceptedCount: 0,
+  copilotConflictResolutionWithOverridesCount: 0,
+  copilotConflictResolutionSwitchToManualCount: 0,
+  copilotConflictResolutionStoppedCount: 0,
+  copilotConflictResolutionErrorCount: 0,
+  copilotConflictResolutionOver15sCount: 0,
+  copilotConflictResolutionOver30sCount: 0,
+  copilotConflictResolutionOver60sCount: 0,
+  copilotConflictResolutionOver120sCount: 0,
 }
 
 // A subtype of IDailyMeasures filtered to contain only its numeric properties
@@ -432,6 +448,9 @@ interface ICalculatedStats {
 
   /** Whether or not the user has the git hooks environment enabled */
   readonly gitHooksEnvEnabled: boolean
+
+  /** The resolved model ID for Copilot conflict resolution */
+  readonly copilotConflictResolutionModel: string
 }
 
 type DailyStats = ICalculatedStats &
@@ -651,7 +670,34 @@ export class StatsStore implements IStatsStore {
       useExternalCredentialHelper,
       filteringChangesEnabled,
       gitHooksEnvEnabled: getHooksEnvEnabled(),
+      copilotConflictResolutionModel:
+        this.getSelectedCopilotConflictResolutionModel(),
     }
+  }
+
+  /**
+   * Reads the user's selected Copilot conflict resolution model from
+   * localStorage and resolves it to the actual model ID string.
+   */
+  private getSelectedCopilotConflictResolutionModel(): string {
+    try {
+      const raw = localStorage.getItem('selected-copilot-models')
+      if (raw !== null) {
+        const parsed: unknown = JSON.parse(raw)
+        if (typeof parsed === 'object' && parsed !== null) {
+          const selection = (parsed as Record<string, unknown>)[
+            'conflict-resolution'
+          ]
+          if (typeof selection === 'string' && selection.length > 0) {
+            const key = parseModelKey(selection)
+            return key.modelId || DefaultCopilotModel
+          }
+        }
+      }
+    } catch {
+      // Fall through to default
+    }
+    return DefaultCopilotModel
   }
 
   private getOnboardingStats(): IOnboardingStats {
@@ -1146,6 +1192,13 @@ export class StatsStore implements IStatsStore {
       reviewType,
       'DialogSwitchToPullRequestCount'
     )
+  }
+
+  /** Mark the maximum number of worktrees observed in a repository */
+  public recordWorktreeCount(count: number): Promise<void> {
+    return this.updateDailyMeasures(m => ({
+      worktreeMaxCount: Math.max(m.worktreeMaxCount, count),
+    }))
   }
 
   public increment = (k: keyof NumericMeasures, n = 1) =>

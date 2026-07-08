@@ -8,6 +8,8 @@ export type MenuEvent =
   | 'add-local-repository'
   | 'create-branch'
   | 'show-branches'
+  | 'show-worktrees'
+  | 'create-worktree'
   | 'remove-repository'
   | 'create-repository'
   | 'rename-branch'
@@ -87,6 +89,7 @@ const TestMenuEvents = [
   'test-update-existing-git-lfs-filters',
   'test-upstream-already-exists',
   'test-about-dialog',
+  'test-cli-action',
 ] as const
 
 export type TestMenuEvent = typeof TestMenuEvents[number]

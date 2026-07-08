@@ -16,7 +16,7 @@ import { Branch, BranchType } from '../../../src/models/branch'
 import { getStatusOrThrow } from '../../helpers/status'
 import { exec } from 'dugite'
 import { TestStatsStore } from '../../helpers/test-stats-store'
-import { pathExists } from '../../../src/ui/lib/path-exists'
+import { pathExists } from '../../../src/lib/path-exists'
 
 describe('git/checkout', () => {
   it('throws when invalid characters are used for branch name', async t => {

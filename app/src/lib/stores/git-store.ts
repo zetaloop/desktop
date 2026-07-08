@@ -1459,7 +1459,10 @@ export class GitStore extends BaseStore {
 
   /** Update the last fetched date. */
   public async updateLastFetched() {
-    const fetchHeadPath = Path.join(this.repository.path, '.git', 'FETCH_HEAD')
+    const fetchHeadPath = Path.join(
+      this.repository.resolvedGitDir,
+      'FETCH_HEAD'
+    )
 
     try {
       const fstat = await stat(fetchHeadPath)

@@ -20,6 +20,8 @@ interface IRepositoryListItemContextMenuConfig {
   onRemoveRepository: (repository: Repositoryish) => void
   onChangeRepositoryAlias: (repository: Repository) => void
   onRemoveRepositoryAlias: (repository: Repository) => void
+  onCreateWorktree?: (repository: Repository) => void
+  onShowWorktrees?: (repository: Repository) => void
 }
 
 export const generateRepositoryListContextMenu = (
@@ -40,6 +42,7 @@ export const generateRepositoryListContextMenu = (
 
   const items: ReadonlyArray<IMenuItem> = [
     ...buildAliasMenuItems(config),
+    ...buildWorktreeMenuItems(config),
     {
       label: __DARWIN__ ? '复制名称' : '复制名称',
       action: () => clipboard.writeText(repository.name),
@@ -100,6 +103,38 @@ const buildAliasMenuItems = (
     items.push({
       label: __DARWIN__ ? '删除别名' : '删除别名',
       action: () => config.onRemoveRepositoryAlias(repository),
+    })
+  }
+
+  return items
+}
+
+const buildWorktreeMenuItems = (
+  config: IRepositoryListItemContextMenuConfig
+): ReadonlyArray<IMenuItem> => {
+  const { repository, onCreateWorktree, onShowWorktrees } = config
+
+  if (!(repository instanceof Repository)) {
+    return []
+  }
+
+  if (onCreateWorktree === undefined && onShowWorktrees === undefined) {
+    return []
+  }
+
+  const items: Array<IMenuItem> = []
+
+  if (onShowWorktrees !== undefined) {
+    items.push({
+      label: __DARWIN__ ? 'Show Worktrees' : 'Show worktrees',
+      action: () => onShowWorktrees(repository),
+    })
+  }
+
+  if (onCreateWorktree !== undefined) {
+    items.push({
+      label: __DARWIN__ ? 'New Worktree…' : 'New worktree…',
+      action: () => onCreateWorktree(repository),
     })
   }
 

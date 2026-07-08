@@ -3,6 +3,7 @@ import { describe, it } from 'node:test'
 
 import {
   getCopilotErrorDisplayInfo,
+  getCopilotPaymentRequiredErrorFromSessionError,
   parseCopilotPaymentRequiredError,
 } from '../../src/lib/copilot-error'
 
@@ -156,5 +157,72 @@ describe('getCopilotErrorDisplayInfo', () => {
     assert.equal(displayInfo?.title, 'Copilot 计费问题')
     assert.equal(displayInfo?.message, 'You have reached your quota limit.')
     assert.equal(displayInfo?.actionText, undefined)
+  })
+})
+
+describe('getCopilotPaymentRequiredErrorFromSessionError', () => {
+  it('returns null when statusCode is not 402', () => {
+    const error = getCopilotPaymentRequiredErrorFromSessionError({
+      message: 'Rate limited',
+      statusCode: 429,
+    })
+
+    assert.equal(error, null)
+  })
+
+  it('returns null when statusCode is missing', () => {
+    const error = getCopilotPaymentRequiredErrorFromSessionError({
+      message: 'Something went wrong',
+    })
+
+    assert.equal(error, null)
+  })
+
+  it('strips the leading status code and trailing request id', () => {
+    const error = getCopilotPaymentRequiredErrorFromSessionError({
+      message:
+        '402 You have exceeded your monthly quota (Request ID: FF1D:1ACFBF:162DA98:181E678:69FC54DF)',
+      statusCode: 402,
+      errorCode: 'quota_exceeded',
+    })
+
+    assert.notEqual(error, null)
+    assert.equal(error?.message, 'You have exceeded your monthly quota')
+    assert.equal(error?.code, 'quota_exceeded')
+  })
+
+  it('preserves the message when no prefix or suffix is present', () => {
+    const error = getCopilotPaymentRequiredErrorFromSessionError({
+      message: 'You have exceeded your monthly quota',
+      statusCode: 402,
+    })
+
+    assert.equal(error?.message, 'You have exceeded your monthly quota')
+    assert.equal(error?.code, undefined)
+  })
+
+  it('falls back to a default message when the cleaned message is empty', () => {
+    const error = getCopilotPaymentRequiredErrorFromSessionError({
+      message: '402 (Request ID: ABC)',
+      statusCode: 402,
+      errorCode: 'billing_not_configured',
+    })
+
+    assert.equal(
+      error?.message,
+      'GitHub Copilot billing is not configured for this account.'
+    )
+    assert.equal(error?.code, 'billing_not_configured')
+  })
+
+  it('ignores unknown errorCode values', () => {
+    const error = getCopilotPaymentRequiredErrorFromSessionError({
+      message: '402 You have exceeded your monthly quota',
+      statusCode: 402,
+      errorCode: 'something_else',
+    })
+
+    assert.equal(error?.message, 'You have exceeded your monthly quota')
+    assert.equal(error?.code, undefined)
   })
 })

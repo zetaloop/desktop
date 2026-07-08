@@ -10,7 +10,7 @@ import {
   AppFileStatusKind,
   WorkingDirectoryFileChange,
 } from '../../../src/models/status'
-import { GenerateCommitMessageDisclaimer } from '../../../src/ui/generate-commit-message/generate-commit-message-disclaimer'
+import { CopilotDisclaimer } from '../../../src/ui/copilot/copilot-disclaimer'
 import { GenerateCommitMessageOverrideWarning } from '../../../src/ui/generate-commit-message/generate-commit-message-override-warning'
 import type { Dispatcher } from '../../../src/ui/dispatcher'
 import { fireEvent, render, screen, waitFor } from '../../helpers/ui/render'
@@ -104,18 +104,18 @@ describe('commit message warning dialogs', () => {
       dismissed++
     }
 
+    function onAccepted() {
+      dispatcher.updateCommitMessageGenerationDisclaimerLastSeen()
+      dispatcher.generateCommitMessage(repository, filesSelected)
+    }
+
     const view = render(
-      <GenerateCommitMessageDisclaimer
-        dispatcher={toDispatcher(dispatcher)}
-        repository={repository}
-        filesSelected={filesSelected}
-        onDismissed={onDismissed}
-      />
+      <CopilotDisclaimer onAccepted={onAccepted} onDismissed={onDismissed}>
+        Review and edit the generated message carefully before use.
+      </CopilotDisclaimer>
     )
 
-    const dialog = view.container.querySelector(
-      'dialog#generate-commit-message-disclaimer'
-    )
+    const dialog = view.container.querySelector('dialog')
     const learnMore = view.container.querySelector(
       'a[href="https://docs.github.com/zh/copilot/responsible-use-of-github-copilot-features/responsible-use-of-github-copilot-in-github-desktop"]'
     )
@@ -128,10 +128,7 @@ describe('commit message warning dialogs', () => {
     assert.notEqual(submitButton, null)
     assert.equal(dialog?.getAttribute('role'), 'alertdialog')
     assert.ok(screen.getByText('GitHub Copilot'))
-    assertAnnouncementIncludes(
-      dialog!,
-      'generate-commit-message-disclaimer-body'
-    )
+    assertAnnouncementIncludes(dialog!, 'copilot-disclaimer-body')
     assert.equal(
       learnMore!.getAttribute('href'),
       'https://docs.github.com/zh/copilot/responsible-use-of-github-copilot-features/responsible-use-of-github-copilot-in-github-desktop'

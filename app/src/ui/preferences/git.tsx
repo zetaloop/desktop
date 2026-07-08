@@ -123,7 +123,7 @@ export class Git extends React.Component<IGitProps> {
 
             <div
               id="git-hooks-cache-description"
-              className="git-settings-description"
+              className="settings-description"
             >
               开启缓存可以提升性能。但如果您的挂钩依赖于经常变动的环境变量，请关闭缓存。
             </div>

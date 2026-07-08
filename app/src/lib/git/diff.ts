@@ -23,7 +23,8 @@ import {
 
 import { DiffParser } from '../diff-parser'
 import { getOldPathOrDefault } from '../get-old-path'
-import { readFile } from 'fs/promises'
+import { readFile, writeFile, unlink } from 'fs/promises'
+import { getTempFilePath } from '../file-system'
 import { forceUnwrap } from '../fatal-error'
 import { git } from './core'
 import { NullTreeSHA } from './diff-index'
@@ -536,6 +537,130 @@ export async function getWorkingDirectoryDiff(
           })
       : undefined
   )
+}
+
+/**
+ * Compute a diff between the working-tree file and either Copilot's
+ * resolved content string or the content from a specific merge index stage.
+ *
+ * The baseline is always the on-disk file (which still has conflict markers
+ * during an active merge). This gives a consistent view across all three
+ * resolution options (Copilot, current, incoming) — the user sees exactly
+ * what each choice changes relative to the file's current state.
+ *
+ * Two calling conventions:
+ *
+ * 1. **Content mode** — pass a `content` string (e.g. Copilot's resolved
+ *    text) to diff directly against the working-tree file.
+ * 2. **Stage mode** — pass `stage: 'ours' | 'theirs'` to read from the
+ *    merge index (`git show :2:<path>` or `git show :3:<path>`).
+ *    These always refer to git's definition: `ours` = stage 2 (HEAD at
+ *    merge time), `theirs` = stage 3 (the commit being merged in). Note
+ *    that during a rebase, git swaps these — the upstream branch is "ours"
+ *    and the rebased commit is "theirs". The caller is responsible for
+ *    mapping user-facing labels to the correct git side.
+ *
+ * If the requested stage blob doesn't exist (e.g. file deleted on that
+ * side in a modify/delete conflict), the target content is empty, showing
+ * the on-disk content as entirely deleted.
+ *
+ * Uses `git diff --no-index` with temp files.
+ */
+export async function getResolutionDiff(
+  repository: Repository,
+  filePath: string,
+  options: { content: string } | { stage: 'ours' | 'theirs' },
+  hideWhitespaceInDiff: boolean = false
+): Promise<IDiff> {
+  const gitStage =
+    'stage' in options ? (options.stage === 'ours' ? ':2' : ':3') : undefined
+
+  // Always diff against the working-tree file (which still has conflict
+  // markers). This gives a consistent baseline for all three resolution
+  // choices (Copilot, current, incoming) so the user sees exactly what each
+  // option changes relative to the file's current state on disk.
+  const baseContent = await readFile(
+    Path.join(repository.path, filePath),
+    'utf8'
+  )
+  let targetContent: string
+
+  if (gitStage === undefined) {
+    // Direct content mode (e.g. Copilot's resolved text).
+    if (!('content' in options)) {
+      return { kind: DiffType.Unrenderable }
+    }
+    targetContent = options.content
+  } else {
+    // Stage mode — read the chosen side from the merge index.
+    // If the blob doesn't exist (e.g. file deleted on that side in a
+    // modify/delete conflict), use empty content to show full deletion.
+    try {
+      const buffer = await getBlobContents(repository, gitStage, filePath)
+      targetContent = buffer.toString('utf-8')
+    } catch {
+      targetContent = ''
+    }
+  }
+
+  const tempBase = getTempFilePath('resolution-diff-base')
+  const tempTarget = getTempFilePath('resolution-diff-target')
+
+  try {
+    await writeFile(tempBase, baseContent, 'utf8')
+    await writeFile(tempTarget, targetContent, 'utf8')
+
+    const args = [
+      'diff',
+      ...(hideWhitespaceInDiff ? ['-w'] : []),
+      '--no-ext-diff',
+      '--patch-with-raw',
+      '-z',
+      '--no-color',
+      '--no-index',
+      '--',
+      tempBase,
+      tempTarget,
+    ]
+
+    const { stdout } = await git(args, repository.path, 'getResolutionDiff', {
+      successExitCodes: new Set([0, 1]),
+      encoding: 'buffer',
+    })
+
+    if (!isValidBuffer(stdout)) {
+      return { kind: DiffType.Unrenderable }
+    }
+
+    const diff = diffFromRawDiffOutput(stdout)
+
+    if (isDiffTooLarge(diff)) {
+      return {
+        kind: DiffType.LargeText,
+        text: diff.contents,
+        hunks: diff.hunks,
+        maxLineNumber: diff.maxLineNumber,
+        hasHiddenBidiChars: diff.hasHiddenBidiChars,
+        renderedByDifft: false,
+        renderedByDifftLanguage: null,
+        difftRenderFailure: null,
+      }
+    }
+
+    return {
+      kind: DiffType.Text,
+      text: diff.contents,
+      hunks: diff.hunks,
+      maxLineNumber: diff.maxLineNumber,
+      hasHiddenBidiChars: diff.hasHiddenBidiChars,
+      renderedByDifft: false,
+      renderedByDifftLanguage: null,
+      difftRenderFailure: null,
+    }
+  } finally {
+    await unlink(tempBase).catch(() => {})
+    await unlink(tempTarget).catch(() => {})
+  }
 }
 
 /**

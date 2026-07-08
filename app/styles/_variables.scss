@@ -390,6 +390,7 @@ $overlay-background-color: rgba(0, 0, 0, 0.4);
   --diff-line-padding-y: 2px;
 
   --diff-text-color: #{$gray-900};
+  --diff-alt-text-color: #{$gray-700};
   --diff-border-color: #{$gray-200};
   --diff-gutter-color: #{$gray-200};
   --diff-gutter-background-color: var(--background-color);

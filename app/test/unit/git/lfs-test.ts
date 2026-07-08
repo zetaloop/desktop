@@ -34,6 +34,37 @@ describe('git-lfs', () => {
       const usingLFS = await isUsingLFS(repository)
       assert(usingLFS)
     })
+
+    it('returns false if a non-LFS Git filter is configured', async t => {
+      const repository = await setupEmptyRepository(t)
+      const attributesPath = Path.join(
+        repository.path,
+        '.git',
+        'info',
+        'attributes'
+      )
+
+      await writeFile(attributesPath, '* filter=annex\n')
+
+      const usingLFS = await isUsingLFS(repository)
+      assert(!usingLFS)
+    })
+
+    it('returns true if LFS tracks a path alongside a non-LFS Git filter', async t => {
+      const repository = await setupEmptyRepository(t)
+      const attributesPath = Path.join(
+        repository.path,
+        '.git',
+        'info',
+        'attributes'
+      )
+
+      await writeFile(attributesPath, '* filter=annex\n')
+      await exec(['lfs', 'track', '*.psd'], repository.path)
+
+      const usingLFS = await isUsingLFS(repository)
+      assert(usingLFS)
+    })
   })
 
   describe('isTrackedByLFS', () => {

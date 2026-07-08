@@ -1195,7 +1195,7 @@ export class List extends React.Component<IListProps, IListState> {
         <ListRow
           key={params.key}
           id={id}
-          role={this.props.role === 'list' ? 'listitem' : undefined}
+          role={this.props.role === 'list' ? 'listitem' : 'option'}
           onRowRef={this.onRowRef}
           rowCount={this.props.rowCount}
           rowIndex={{ section: 0, row: rowIndex }}

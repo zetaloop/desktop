@@ -98,10 +98,7 @@ export class Advanced extends React.Component<
             onChange={this.onRepositoryIndicatorsEnabledChanged}
             ariaDescribedBy="periodic-fetch-description"
           />
-          <div
-            id="periodic-fetch-description"
-            className="git-settings-description"
-          >
+          <div id="periodic-fetch-description" className="settings-description">
             <p>
               这些小图标显示仓库是否有本地和远程的改动，它需要定期获取所有仓库。
             </p>
@@ -137,7 +134,7 @@ export class Advanced extends React.Component<
           />
           <div
             id="use-external-credential-helper-description"
-            className="git-settings-description"
+            className="settings-description"
           >
             <p>
               使用{' '}

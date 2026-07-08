@@ -75,6 +75,51 @@ function isPaymentRequiredErrorCode(
   )
 }
 
+/**
+ * Builds a {@link CopilotError} from a Copilot SDK `session.error` event
+ * payload when its upstream HTTP status code is 402 (Payment Required).
+ * Returns null for any other status (or no status), so callers can
+ * distinguish payment-required failures from generic session errors.
+ */
+export function getCopilotPaymentRequiredErrorFromSessionError(data: {
+  readonly message?: string
+  readonly statusCode?: number
+  readonly errorCode?: string
+}): CopilotError | null {
+  if (data.statusCode !== HttpStatusCode.PaymentRequired) {
+    return null
+  }
+
+  const code = isPaymentRequiredErrorCode(data.errorCode)
+    ? data.errorCode
+    : undefined
+  const cleaned = cleanSessionErrorMessage(data.message ?? '', data.statusCode)
+  const message =
+    cleaned.length > 0 ? cleaned : getFallbackPaymentRequiredMessage(code)
+
+  return new CopilotError(message, HttpStatusCode.PaymentRequired, {
+    paymentRequiredErrorCode: code,
+  })
+}
+
+/**
+ * SDK `session.error` messages are sometimes formatted as
+ * `"<statusCode> <message> (Request ID: <id>)"`. Strip the leading status
+ * code and trailing request-id annotation so the user sees just the
+ * human-readable reason.
+ *
+ * Exported for testing.
+ */
+export function cleanSessionErrorMessage(
+  message: string,
+  statusCode: number
+): string {
+  return message
+    .replace(new RegExp(`^\\s*${statusCode}\\s+`), '')
+    .replace(/\s*\(Request ID:[^)]*\)\s*$/i, '')
+    .trim()
+}
+
 function getFallbackPaymentRequiredMessage(
   code: CopilotPaymentRequiredErrorCode | undefined
 ) {

@@ -209,6 +209,43 @@ describe('BranchPruner', () => {
     assert(branchesAfterPruning.includes('master'))
     assert(branchesAfterPruning.includes('other-branch'))
   })
+
+  it('does not prune branches checked out in a linked worktree', async t => {
+    const lastPruneDate = new Date(offsetFromNow(-1, 'day'))
+
+    const repoPath = await setupFixtureRepository(t, 'branch-prune-tests')
+
+    // Create a linked worktree with `deleted-branch-1` checked out.
+    // This branch would normally be pruned (merged, upstream gone),
+    // but the worktree checkout should protect it.
+    const worktreePath = repoPath + '-worktree'
+    await exec(['worktree', 'add', worktreePath, 'deleted-branch-1'], repoPath)
+
+    const repo = await setupRepository(
+      repoPath,
+      repositoriesStore,
+      repositoriesStateCache,
+      true,
+      'master',
+      lastPruneDate
+    )
+
+    const branchPruner = new BranchPruner(
+      repo,
+      gitStoreCache,
+      repositoriesStore,
+      repositoriesStateCache,
+      () => Promise.resolve()
+    )
+
+    await branchPruner.runOnce()
+    const branchesAfterPruning = await getBranchesFromGit(repo)
+
+    assert(
+      branchesAfterPruning.includes('deleted-branch-1'),
+      'expected deleted-branch-1 to be preserved because it is checked out in a linked worktree'
+    )
+  })
 })
 
 async function getBranchesFromGit(repository: Repository) {

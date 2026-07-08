@@ -7,7 +7,7 @@ import {
   RegistryValue,
   RegistryValueType,
 } from 'registry-js'
-import { pathExists } from '../../ui/lib/path-exists'
+import { pathExists } from '../path-exists'
 
 import { IFoundEditor } from './found-editor'
 import memoizeOne from 'memoize-one'

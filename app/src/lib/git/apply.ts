@@ -1,4 +1,3 @@
-import { GitError as DugiteError } from 'dugite'
 import { readFile } from 'fs/promises'
 import * as Path from 'path'
 import { git } from './core'
@@ -13,7 +12,7 @@ import {
   DiffSelection,
   DiffLineType,
 } from '../../models/diff'
-import { Repository, WorkingTree } from '../../models/repository'
+import { Repository } from '../../models/repository'
 import { getWorkingDirectoryDiff } from './diff'
 import { formatPatch, formatPatchToDiscardChanges } from '../patch-formatter'
 import { assertNever } from '../fatal-error'
@@ -217,38 +216,6 @@ function splitLines(text: string): ReadonlyArray<string> {
   const lines = text.split(/\r\n|\n|\r/)
   const hasTrailingNewline = /(?:\r\n|\n|\r)$/.test(text)
   return hasTrailingNewline ? lines.slice(0, -1) : lines
-}
-
-/**
- * Test a patch to see if it will apply cleanly.
- *
- * @param workTree work tree (which should be checked out to a specific commit)
- * @param patch a Git patch (or patch series) to try applying
- * @returns whether the patch applies cleanly
- *
- * See `formatPatch` to generate a patch series from existing Git commits
- */
-export async function checkPatch(
-  workTree: WorkingTree,
-  patch: string
-): Promise<boolean> {
-  const result = await git(
-    ['apply', '--check', '-'],
-    workTree.path,
-    'checkPatch',
-    {
-      stdin: patch,
-      stdinEncoding: 'utf8',
-      expectedErrors: new Set<DugiteError>([DugiteError.PatchDoesNotApply]),
-    }
-  )
-
-  if (result.gitError === DugiteError.PatchDoesNotApply) {
-    // other errors will be thrown if encountered, so this is fine for now
-    return false
-  }
-
-  return true
 }
 
 /**

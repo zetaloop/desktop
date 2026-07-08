@@ -18,7 +18,7 @@ import {
 import { hasWritePermission } from '../../models/github-repository'
 import { RetryActionType } from '../../models/retry-actions'
 import { parseFilesToBeOverwritten } from '../lib/parse-files-to-be-overwritten'
-import { pathExists } from '../lib/path-exists'
+import { pathExists } from '../../lib/path-exists'
 import {
   ISecretLocation,
   ISecretScanResult,

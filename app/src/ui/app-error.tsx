@@ -322,19 +322,19 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
   }
 }
 
-function getUnderlyingError(error: Error): Error {
+export function getUnderlyingError(error: Error): Error {
   return isErrorWithMetaData(error) ? error.underlyingError : error
 }
 
-function isErrorWithMetaData(error: Error): error is ErrorWithMetadata {
+export function isErrorWithMetaData(error: Error): error is ErrorWithMetadata {
   return error instanceof ErrorWithMetadata
 }
 
-function isGitError(error: Error): error is GitError {
+export function isGitError(error: Error): error is GitError {
   return error instanceof GitError
 }
 
-function isRawGitError(error: Error | null) {
+export function isRawGitError(error: Error | null) {
   if (!error) {
     return false
   }

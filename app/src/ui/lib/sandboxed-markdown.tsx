@@ -48,6 +48,13 @@ interface ISandboxedMarkdownProps {
   /** An area label to explain to screen reader users what the contents of the
    * iframe are before they navigate into them. */
   readonly ariaLabel: string
+
+  /**
+   * Optional additional CSS injected after the base markdown stylesheet
+   * inside the sandboxed iframe. Use this to override heading sizes, margins,
+   * or other typographic styles without breaking iframe isolation.
+   */
+  readonly customCSS?: string
 }
 
 interface ISandboxedMarkdownState {
@@ -256,6 +263,8 @@ export class SandboxedMarkdown extends React.PureComponent<
         max-width: 100%;
         height: auto;
       }
+
+      ${this.props.customCSS ?? ''}
     </style>`
   }
 

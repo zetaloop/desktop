@@ -64,8 +64,10 @@ import { isDotCom } from '../../lib/endpoint-capabilities'
 import { WorkingDirectoryFileChange } from '../../models/status'
 import {
   enableCommitMessageGeneration,
+  enableCopilotSdkCommitMessageGeneration,
   enableHooksEnvironment,
 } from '../../lib/feature-flag'
+import { getAccountForCommitMessageGeneration } from '../../lib/get-account-for-repository'
 import { AriaLiveContainer } from '../accessibility/aria-live-container'
 import { HookProgress } from '../../lib/git'
 import { assertNever } from '../../lib/fatal-error'
@@ -176,6 +178,8 @@ interface ICommitMessageProps {
     mustOverrideExistingMessage: boolean
   ) => void
 
+  readonly onCancelGenerateCommitMessage?: () => void
+
   /**
    * Called when the component has given the commit message focus due to
    * `focusCommitMessage` being set. Used to reset the `focusCommitMessage`
@@ -201,12 +205,6 @@ interface ICommitMessageProps {
   /** Optional to add an id to a message that should be provided as an aria
    * description of the submit button */
   readonly submitButtonAriaDescribedBy?: string
-
-  /**
-   * Whether there are any hooks in the repository that could be
-   * skipped during commit with the --no-verify flag
-   */
-  readonly hasCommitHooks: boolean
 
   /**
    * Whether or not to skip blocking commit hooks when creating commits
@@ -962,6 +960,14 @@ export class CommitMessage extends React.Component<
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault()
+
+    if (this.props.isGeneratingCommitMessage) {
+      if (this.canCancelGenerateCommitMessage) {
+        this.props.onCancelGenerateCommitMessage?.()
+      }
+      return
+    }
+
     const { commitMessage } = this.state
 
     this.props.onGenerateCommitMessage?.(
@@ -994,10 +1000,18 @@ export class CommitMessage extends React.Component<
     const noFilesSelected = filesSelected.length === 0
     const noChangesAvailable = !commitToAmend && noFilesSelected
 
-    const ariaLabel = isGeneratingCommitMessage
-      ? '正在生成提交消息…'
-      : '用 Copilot 生成提交消息' +
-        (noChangesAvailable ? '，请勾选要提交的文件' : '')
+    let ariaLabel = '用 Copilot 生成提交消息'
+    const canCancelGenerateCommitMessage = this.canCancelGenerateCommitMessage
+    const showCancelGenerateCommitMessage =
+      isGeneratingCommitMessage === true && canCancelGenerateCommitMessage
+
+    if (!isGeneratingCommitMessage && noChangesAvailable) {
+      ariaLabel += '，请勾选要提交的文件'
+    } else if (showCancelGenerateCommitMessage) {
+      ariaLabel = '取消生成提交消息'
+    } else if (isGeneratingCommitMessage) {
+      ariaLabel = '正在生成提交消息…'
+    }
 
     return (
       <>
@@ -1009,14 +1023,21 @@ export class CommitMessage extends React.Component<
           tooltip={ariaLabel}
           disabled={
             isCommitting === true ||
-            isGeneratingCommitMessage ||
-            noChangesAvailable
+            (isGeneratingCommitMessage === true &&
+              !canCancelGenerateCommitMessage) ||
+            (!isGeneratingCommitMessage && noChangesAvailable)
           }
         >
           <AriaLiveContainer
             message={isGeneratingCommitMessage ? '正在生成提交消息…' : ''}
           />
-          <Octicon symbol={octicons.copilot} />
+          <Octicon
+            symbol={
+              showCancelGenerateCommitMessage
+                ? octicons.squareCircle
+                : octicons.copilot
+            }
+          />
           {shouldShowGenerateCommitMessageCallOut && (
             <span className="call-to-action-bubble">新功能</span>
           )}
@@ -1057,7 +1078,7 @@ export class CommitMessage extends React.Component<
 
     const items: IMenuItem[] = []
 
-    if (enableHooksEnvironment() && this.props.hasCommitHooks) {
+    if (enableHooksEnvironment()) {
       items.push({
         type: 'checkbox',
         checked: this.props.skipCommitHooks,
@@ -1184,6 +1205,22 @@ export class CommitMessage extends React.Component<
     return (
       accounts.some(enableCommitMessageGeneration) &&
       onGenerateCommitMessage !== undefined
+    )
+  }
+
+  /**
+   * Whether an in-flight commit message generation can be cancelled.
+   */
+  private get canCancelGenerateCommitMessage() {
+    const account = getAccountForCommitMessageGeneration(
+      this.props.accounts,
+      this.props.repository
+    )
+
+    return (
+      account !== undefined &&
+      enableCopilotSdkCommitMessageGeneration(account) &&
+      this.props.onCancelGenerateCommitMessage !== undefined
     )
   }
 

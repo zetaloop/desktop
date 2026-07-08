@@ -1,4 +1,4 @@
-import { pathExists } from '../../ui/lib/path-exists'
+import { pathExists } from '../path-exists'
 import { join } from 'path'
 import which from 'which'
 import { bash, cmd, powershell } from './shell-escape'

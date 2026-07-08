@@ -1,9 +1,7 @@
-import * as Path from 'path'
-
 import { git, IGitStringExecutionOptions } from './core'
 import { Repository } from '../../models/repository'
 import { SubmoduleEntry } from '../../models/submodule'
-import { pathExists } from '../../ui/lib/path-exists'
+import { pathExists } from '../path-exists'
 import {
   executionOptionsWithProgress,
   IGitOutput,
@@ -16,6 +14,8 @@ import {
 import { AuthenticationErrors } from './authentication'
 import { IRemote } from '../../models/remote'
 import { Progress } from '../../models/progress'
+import { join, resolve } from 'path'
+import { readFile } from 'fs/promises'
 
 /**
  * Update submodules after a git operation.
@@ -133,13 +133,28 @@ export async function listSubmodules(
   repository: Repository
 ): Promise<ReadonlyArray<SubmoduleEntry>> {
   const [submodulesFile, submodulesDir] = await Promise.all([
-    pathExists(Path.join(repository.path, '.gitmodules')),
-    pathExists(Path.join(repository.path, '.git', 'modules')),
+    pathExists(join(repository.path, '.gitmodules')),
+    pathExists(join(repository.path, '.git', 'modules')),
   ])
 
   if (!submodulesFile && !submodulesDir) {
-    log.info('No submodules found. Skipping "git submodule status"')
-    return []
+    // repo path + .gitmodules and + .git/modules covers the vast majority of
+    // "normal" repositories but if we're in a linked worktree the modules
+    // directory is actually in the git common dir so we'll also check for the
+    // existence of the modules directory there as well before giving up on the
+    // existence of submodules in this repo. We're reading the commondir file
+    // ourselves here instead of calling out to git to avoid the cost of
+    // spawning a process on Windows
+    const commonDirPath = join(repository.resolvedGitDir, 'commondir')
+    const commonDir = await readFile(commonDirPath, 'utf8')
+      .then(content => content.replace(/\r?\n$/, ''))
+      .then(p => (p ? resolve(repository.resolvedGitDir, p) : null))
+      .catch(() => null)
+
+    if (!commonDir || !(await pathExists(join(commonDir, 'modules')))) {
+      log.info('No submodules found. Skipping "git submodule status"')
+      return []
+    }
   }
 
   // We don't recurse when listing submodules here because we don't have a good

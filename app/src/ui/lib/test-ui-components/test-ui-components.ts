@@ -161,6 +161,8 @@ export function showTestUI(
       return showFakeUpstreamAlreadyExists()
     case 'test-about-dialog':
       return dispatcher.showPopup({ type: PopupType.TestAbout })
+    case 'test-cli-action':
+      return dispatcher.showPopup({ type: PopupType.TestCLIAction })
     default:
       return assertNever(name, `Unknown menu event name: ${name}`)
   }

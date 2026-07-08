@@ -1,21 +1,33 @@
 import { LicenseLookup } from 'legal-eagle'
-import { readFileSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 
 export const copilotCLILicenseName = 'GitHub-CLI-1.0.0'
 
-const copilotCLIPkgPath = join(
-  __dirname,
-  '..',
-  '..',
-  'app',
-  'node_modules',
-  '@github',
-  'copilot',
-  'package.json'
-)
-const copilotCLIVersion = JSON.parse(readFileSync(copilotCLIPkgPath, 'utf8'))
-  .version as string
+interface IPackageJSON {
+  readonly version: string
+  readonly optionalDependencies?: Readonly<Record<string, string>>
+}
+
+const appNodeModulesPath = join(__dirname, '..', '..', 'app', 'node_modules')
+
+const getPackageJSONPath = (packageName: string) =>
+  join(appNodeModulesPath, ...packageName.split('/'), 'package.json')
+
+const readPackageJSON = (packageName: string): IPackageJSON =>
+  JSON.parse(readFileSync(getPackageJSONPath(packageName), 'utf8'))
+
+const readOptionalPackageJSON = (
+  packageName: string
+): IPackageJSON | undefined => {
+  const packageJSONPath = getPackageJSONPath(packageName)
+
+  return existsSync(packageJSONPath)
+    ? JSON.parse(readFileSync(packageJSONPath, 'utf8'))
+    : undefined
+}
+
+const copilotCLIPkg = readPackageJSON('@github/copilot')
 const copilotCLILicense = `GitHub Copilot CLI License
 
 1. License Grant
@@ -61,17 +73,30 @@ const copilotCLILicenseEntry = {
   repository: 'git+https://github.com/github/copilot-cli',
 }
 
-const copilotCLILicenseEntries: LicenseLookup = {
-  [`@github/copilot@${copilotCLIVersion}`]: copilotCLILicenseEntry,
+const copilotCLILicenseEntries: LicenseLookup = {}
+
+const addCopilotCLILicenseEntry = (
+  packageName: string,
+  version: string
+): void => {
+  copilotCLILicenseEntries[`${packageName}@${version}`] = copilotCLILicenseEntry
 }
 
-const platforms = ['darwin', 'linux', 'win32']
-const architectures = ['arm64', 'x64']
+addCopilotCLILicenseEntry('@github/copilot', copilotCLIPkg.version)
 
-for (const platform of platforms) {
-  for (const architecture of architectures) {
-    const key = `@github/copilot-${platform}-${architecture}@${copilotCLIVersion}`
-    copilotCLILicenseEntries[key] = copilotCLILicenseEntry
+for (const [packageName, version] of Object.entries(
+  copilotCLIPkg.optionalDependencies ?? {}
+)) {
+  if (!packageName.startsWith('@github/copilot-')) {
+    continue
+  }
+
+  addCopilotCLILicenseEntry(packageName, version)
+
+  const installedPackage = readOptionalPackageJSON(packageName)
+
+  if (installedPackage !== undefined) {
+    addCopilotCLILicenseEntry(packageName, installedPackage.version)
   }
 }
 

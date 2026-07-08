@@ -38,24 +38,45 @@ const knownHooks = [
   'post-index-change',
 ]
 
+// getRepoHooks is used by withHooksEnv which is used by git in core.ts so we
+// have to be careful to not accidentally run into a circular dependency here
+// where we invoke git which calls us which calls git which calls us, etc. To
+// avoid that we call dugite directly here.
+const git = (args: string[], path: string) =>
+  exec(args, path).then(({ exitCode, stdout, stderr }) => {
+    return exitCode === 0
+      ? stdout
+      : Promise.reject(
+          new Error(`Git command failed with exit code ${exitCode}: ${stderr}`)
+        )
+  })
+
+const getHooksPath = async (path: string) =>
+  resolve(
+    path,
+    (await git(['rev-parse', '--git-path', 'hooks'], path)).replace(
+      /\r?\n$/,
+      ''
+    )
+  )
+
+const getConfigValue = (path: string, key: string) =>
+  git(['config', '-z', '--get', key], path).then(x => x.split('\0')[0])
+
 /**
  * Returns the names of executable Git hooks found in the given repository.
  *
  * @param path   The file system path to the Git repository (root of working
  *               directory).
+ * @param gitDir The path to the .git directory for this repository. Used as
+ *               the default hooks location when core.hooksPath is not set.
  * @param filter An optional array of hook names to filter the results.
  *               Including '*' will return all hooks.
  */
 export async function* getRepoHooks(path: string, filter?: string[]) {
-  const { exitCode, stdout } = await exec(
-    ['config', '-z', '--get', 'core.hooksPath'],
-    path
-  )
-
-  const hooksPath =
-    exitCode === 0
-      ? resolve(path, stdout.split('\0')[0])
-      : join(path, '.git', 'hooks')
+  const hooksPath = await getConfigValue(path, 'core.hooksPath')
+    .catch(() => getHooksPath(path))
+    .then(p => resolve(path, p))
 
   const files = await readdir(hooksPath, { withFileTypes: true })
     .then(entries => entries.filter(x => x.isFile()))

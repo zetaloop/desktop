@@ -5,6 +5,7 @@ import { Repository } from '../../models/repository'
 import { PopupType } from '../../models/popup'
 import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
 import { ErrorWithMetadata } from '../../lib/error-with-metadata'
+import { RetryActionType } from '../../models/retry-actions'
 import {
   IDiff,
   getDifftRenderFailure,
@@ -131,6 +132,11 @@ export class StashDiffHeader extends React.Component<
     } catch (err) {
       const errorWithMetadata = new ErrorWithMetadata(err, {
         repository: repository,
+        retryAction: {
+          type: RetryActionType.PopStash,
+          stashEntry,
+          repository,
+        },
       })
       dispatcher.postError(errorWithMetadata)
     } finally {

@@ -97,12 +97,6 @@ interface ICommitMessageDialogProps {
   readonly accounts: ReadonlyArray<Account>
 
   /**
-   * Whether there are any hooks in the repository that could be
-   * skipped during commit with the --no-verify flag
-   */
-  readonly hasCommitHooks: boolean
-
-  /**
    * Whether or not to skip blocking commit hooks when creating commits
    * by means of passing the `--no-verify` flag to git commit
    */
@@ -206,7 +200,6 @@ export class CommitMessageDialog extends React.Component<
             isCommitting={false}
             hookProgress={null}
             onShowCommitProgress={undefined}
-            hasCommitHooks={this.props.hasCommitHooks}
             skipCommitHooks={this.props.skipCommitHooks}
             signOffCommits={this.props.signOffCommits}
             allowEmptyCommit={this.props.allowEmptyCommit}

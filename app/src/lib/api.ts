@@ -54,6 +54,7 @@ type ViewerCopilotResponse = {
       readonly copilotEndpoints: {
         readonly api: string
       }
+      readonly copilotLicenseType: string
       readonly isCopilotDesktopEnabled: boolean
     }
   }
@@ -63,6 +64,7 @@ type ViewerCopilotResponse = {
 type UserCopilotInfo = {
   readonly isCopilotDesktopEnabled: boolean
   readonly copilotEndpoint: string
+  readonly copilotLicenseType: string
 }
 
 /** Response type Copilot chat completions response API */
@@ -2109,6 +2111,7 @@ export class API {
           api
         }
 
+        copilotLicenseType
         isCopilotDesktopEnabled
       }
     }
@@ -2117,6 +2120,9 @@ export class API {
     try {
       const response = await this.ghRequest('POST', '/graphql', {
         body: { query: graphql },
+        customHeaders: {
+          'GraphQL-Features': 'copilot_iap_max_sku',
+        },
       })
       if (response === null) {
         return undefined
@@ -2128,6 +2134,7 @@ export class API {
       return {
         copilotEndpoint: viewer.copilotEndpoints.api,
         isCopilotDesktopEnabled: viewer.isCopilotDesktopEnabled,
+        copilotLicenseType: viewer.copilotLicenseType,
       }
     } catch (e) {
       log.warn(`fetchUserCopilotInfo: failed with endpoint ${this.endpoint}`, e)
@@ -2227,7 +2234,8 @@ export async function fetchUser(
       user.plan?.name,
       copilotInfo?.copilotEndpoint,
       copilotInfo?.isCopilotDesktopEnabled,
-      features
+      features,
+      copilotInfo?.copilotLicenseType
     )
   } catch (e) {
     log.warn(`fetchUser: failed with endpoint ${endpoint}`, e)

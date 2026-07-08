@@ -1,5 +1,11 @@
-import type { ModelInfo } from '@github/copilot-sdk'
 import type { CopilotModelSelections } from './stores/copilot-store'
+import type { IBYOKProvider } from './copilot/byok'
+import type { IConflictResolutionModelDisplay } from './copilot/conflict-resolution-model'
+import type {
+  IFileResolution,
+  IConflictResolutionProgress,
+  ICopilotResolutionSummary,
+} from './copilot-conflict-resolution'
 import { Account } from '../models/account'
 import { CommitIdentity } from '../models/commit-identity'
 import { IDiff, ImageDiffType } from '../models/diff'
@@ -8,6 +14,7 @@ import { Branch, IAheadBehind } from '../models/branch'
 import { Tip } from '../models/tip'
 import { Commit } from '../models/commit'
 import { CommittedFileChange, WorkingDirectoryStatus } from '../models/status'
+import { WorktreeEntry } from '../models/worktree'
 import { CloningRepository } from '../models/cloning-repository'
 import { IMenu } from '../models/app-menu'
 import { IRemote } from '../models/remote'
@@ -57,6 +64,7 @@ import { IAPIRepoRuleset } from './api'
 import { ICustomIntegration } from './custom-integration'
 import { Emoji } from './emoji'
 import { IUpdateState } from '../ui/lib/update-store'
+import type { Model } from '@github/copilot-sdk/dist/generated/rpc'
 
 export enum SelectionType {
   Repository,
@@ -197,6 +205,9 @@ export interface IAppState {
   /** The width of the resizable branch drop down button in the toolbar. */
   readonly branchDropdownWidth: IConstrainedValue
 
+  /** The width of the resizable worktree drop down button in the toolbar. */
+  readonly worktreeDropdownWidth: IConstrainedValue
+
   /** The width of the resizable push/pull button in the toolbar. */
   readonly pushPullButtonWidth: IConstrainedValue
 
@@ -244,6 +255,9 @@ export interface IAppState {
 
   /** Should the app prompt the user to confirm commit message override? */
   readonly askForConfirmationOnCommitMessageOverride: boolean
+
+  /** Should the app prompt the user to confirm worktree removal? */
+  readonly askForConfirmationOnWorktreeRemoval: boolean
 
   /** How the app should handle uncommitted changes when switching branches */
   readonly uncommittedChangesStrategy: UncommittedChangesStrategy
@@ -391,6 +405,12 @@ export interface IAppState {
 
   readonly commitMessageGenerationButtonClicked: boolean
 
+  readonly copilotConflictResolutionDisclaimerLastSeen: number | null
+
+  readonly copilotConflictResolutionClickCount: number
+
+  readonly alwaysUseCopilotForConflictResolution: boolean
+
   /** Whether the changes filter is shown */
   readonly showChangesFilter: boolean
   /**
@@ -403,7 +423,13 @@ export interface IAppState {
    * The list of available Copilot models fetched from the SDK.
    * Null when the list has not been fetched yet.
    */
-  readonly copilotModels: ReadonlyArray<ModelInfo> | null
+  readonly copilotModels: ReadonlyArray<Model> | null
+
+  /**
+   * The list of user-configured Copilot model providers (BYOK). Empty when
+   * the user has not configured any custom providers.
+   */
+  readonly byokProviders: ReadonlyArray<IBYOKProvider>
 
   /** Whether Copilot is available (i.e. a GitHub.com account is signed in). */
   readonly copilotAvailable: boolean
@@ -426,6 +452,7 @@ export enum FoldoutType {
   AppMenu,
   AddMenu,
   PushPull,
+  Worktree,
 }
 
 export type AppMenuFoldout = {
@@ -449,6 +476,7 @@ export type Foldout =
   | BranchFoldout
   | AppMenuFoldout
   | { type: FoldoutType.PushPull }
+  | { type: FoldoutType.Worktree }
 
 export enum RepositorySectionTab {
   Changes,
@@ -550,6 +578,9 @@ export interface IRepositoryState {
 
   readonly branchesState: IBranchesState
 
+  /** The worktrees associated with this repository. */
+  readonly worktrees: ReadonlyArray<WorktreeEntry>
+
   /** The commits loaded, keyed by their full SHA. */
   readonly commitLookup: Map<string, Commit>
 
@@ -576,6 +607,9 @@ export interface IRepositoryState {
 
   /** Is generating a commit message? */
   readonly isGeneratingCommitMessage: boolean
+
+  /** Controller used to cancel an in-flight commit message generation. */
+  readonly commitMessageGenerationAbortController: AbortController | null
 
   /** Commit being amended, or null if none. */
   readonly commitToAmend: Commit | null
@@ -619,12 +653,6 @@ export interface IRepositoryState {
   /** State associated with a multi commit operation such as rebase,
    * cherry-pick, squash, reorder... */
   readonly multiCommitOperationState: IMultiCommitOperationState | null
-
-  /**
-   * Whether there are any hooks in the repository that could be
-   * skipped during commit with the --no-verify flag
-   */
-  readonly hasCommitHooks: boolean
 
   /**
    * Whether or not to skip blocking commit hooks when creating commits
@@ -1057,6 +1085,49 @@ export interface IMultiCommitOperationState {
    * operation, and therefore, should be warned on aborting the operation.
    */
   readonly userHasResolvedConflicts: boolean
+
+  /**
+   * Whether the user has opted into Copilot-powered conflict resolution for
+   * this operation. When true, subsequent conflict rounds will automatically
+   * route through ShowCopilotConflictsLoading instead of ShowConflicts.
+   */
+  readonly useCopilotConflictResolution: boolean
+
+  /**
+   * Resolutions returned by Copilot for the current conflict round. Null when
+   * Copilot hasn't been invoked or has not yet completed. Set after a
+   * successful resolution so the result dialog can display per-file reasoning.
+   */
+  readonly copilotResolutions: ReadonlyArray<IFileResolution> | null
+
+  /**
+   * Progress of the in-flight Copilot conflict resolution request. Null when
+   * no resolution is in progress.
+   */
+  readonly copilotResolutionProgress: IConflictResolutionProgress | null
+
+  /**
+   * Bundled context for rendering the Copilot resolution summary card —
+   * the markdown produced by the model plus the real metadata Desktop uses
+   * to render the branch-flow header and the "For more context" links.
+   * Null when Copilot hasn't been invoked or has not yet completed.
+   */
+  readonly copilotResolutionSummary: ICopilotResolutionSummary | null
+
+  /**
+   * Controller used to cancel the in-flight Copilot conflict resolution. Set
+   * while a resolution is running so the loading dialog's "Stop" button can
+   * actually tear down the underlying SDK turn (rather than just navigating the
+   * UI away). Null when no resolution is in progress.
+   */
+  readonly copilotResolutionAbortController: AbortController | null
+
+  /**
+   * The model display captured at the time Copilot conflict resolution was
+   * started. Shown in the result dialog header so that changing the model
+   * setting mid-operation doesn't confuse the user.
+   */
+  readonly copilotResolutionModel: IConflictResolutionModelDisplay | null
 
   /**
    * The commit id of the tip of the branch user is modifying in the operation.

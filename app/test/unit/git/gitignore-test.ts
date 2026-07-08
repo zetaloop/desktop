@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
 import { readFile, writeFile } from 'fs/promises'
-import { pathExists } from '../../../src/ui/lib/path-exists'
+import { pathExists } from '../../../src/lib/path-exists'
 import * as Path from 'path'
 import { exec } from 'dugite'
 

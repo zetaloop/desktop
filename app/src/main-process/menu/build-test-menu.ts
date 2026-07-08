@@ -119,6 +119,10 @@ export function buildTestMenu() {
       click: emit('test-notification'),
     },
     {
+      label: '分发 CLI 操作',
+      click: emit('test-cli-action'),
+    },
+    {
       label: '弹窗',
       submenu: [
         {
